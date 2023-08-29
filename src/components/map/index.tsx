@@ -5,14 +5,6 @@ import ReactMapGL, { ViewState, ViewStateChangeEvent, useMap } from 'react-map-g
 import cx from 'clsx';
 import MapLibreGL from 'maplibre-gl';
 
-// * If you plan to use Mapbox (and not a fork):
-// * 1) Remove maplibre-gl
-// * 2) Remove maplibre-gl.css import
-// * 3) Install Mapbox v1/v2 (v2 requires token)
-// * 4) If you have installed v2: provide the token to the map through the `mapboxAccessToken` property
-// * 5) Remove the `mapLib` property on the map component
-// * 6) Replace the mapStyles on the map
-
 import { DEFAULT_VIEW_STATE } from './constants';
 import type { CustomMapProps } from './types';
 
