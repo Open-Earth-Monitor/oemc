@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <h1>Hello, Next.js!</h1>;
+  return <h1>Discover and Empower with Monitoring Solutions.</h1>;
 }
