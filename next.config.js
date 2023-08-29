@@ -21,6 +21,14 @@ const nextConfig = {
   // ? https://nextjs.org/docs/advanced-features/output-file-tracing#automatically-copying-traced-files
   output: 'standalone',
   poweredByHeader: false,
+  async rewrites() {
+    return [
+      {
+        source: '/layers/:path*',
+        destination: 'https://api.earthmonitor.org/:path*',
+      },
+    ];
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,

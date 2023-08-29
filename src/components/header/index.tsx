@@ -21,7 +21,7 @@ export const Header: FC = () => {
   const pathname = usePathname();
 
   return (
-    <header className="flex items-center justify-between border-b border-b-brand-100">
+    <header className="border-b-brand-100 flex items-center justify-between border-b">
       <Image
         alt="Open-earth-monitor"
         src="/images/OEM-logo.svg"
@@ -36,7 +36,7 @@ export const Header: FC = () => {
           return (
             <Link
               className={cn({
-                'min-w-[130px] border border-brand-100 py-4 text-center text-secondary-200': true,
+                'border-brand-100 min-w-[130px] border py-4 text-center text-secondary-200': true,
                 'bg-secondary-200 text-brand-600': isActive,
               })}
               href={link.href}

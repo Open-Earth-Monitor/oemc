@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const API = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
+  // baseURL: '/layers',
   headers: { 'Content-Type': 'application/json' },
   // transformResponse: (data) => {
   //   try {
@@ -28,19 +29,5 @@ const API = axios.create({
   //   return qs.stringify(parsedParams, { arrayFormat: 'comma' });
   // },
 });
-
-// API.interceptors.response.use((response) => {
-//   if (response.headers['content-type'].includes('application/json')) {
-//     return {
-//       ...response,
-//       data: {
-//         ...response.data,
-//         data: !!response.data && dataFormatter.deserialize(response.data), // JSON API deserialize
-//       },
-//     };
-//   }
-
-//   return response;
-// });
 
 export default API;

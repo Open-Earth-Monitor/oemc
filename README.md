@@ -86,3 +86,11 @@ Here's a step by step guide on how to address vulnerabilities found in productio
    - `yarn-audit-fix` (see [repository](https://github.com/antongolub/yarn-audit-fix)) is a tool that applies the fixes from `npm audit fix` to Yarn installations
    - The tool might also not be able to fix the vulnerability. If so, continue with the steps below.
 5. If the action fails, then you will have to manually update the dependencies until the vulnerability is solved
+
+
+## Env variables
+
+| Variable name                 | Description                                                             |  Default value                      |
+|-------------------------------|-------------------------------------------------------------------------|------------------------------------:|
+| NEXT_PUBLIC_API_URL           | URL of the API for datasets Data. 										  | http://localhost:3000   			|
+| 
