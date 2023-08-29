@@ -8,23 +8,27 @@ import { useRouter, usePathname } from 'next/navigation';
 import { AnyLayer, GeoJSONSourceOptions, RasterSource } from 'mapbox-gl';
 
 import { useLayerSource } from 'hooks/map';
-import { FAKE_DATA } from 'hooks/map';
 
 import type { LayerComponentProps } from '../types';
-
 const LAYER: AnyLayer = {
   id: `example-layer`,
   type: 'raster',
 };
 
 const ExampleLayer = ({ beforeId }: LayerComponentProps) => {
-  const { data } = useLayerSource({
-    layer_id: 'l3',
-  });
+  const { data, isFetched, isLoading } = useLayerSource(
+    {
+      layer_id: 'l3',
+    },
+    {
+      layer_id: 'l1',
+    }
+  );
+
   const router = useRouter();
   const pathname = usePathname();
 
-  const { gs_base_wms, gs_name, range } = FAKE_DATA;
+  const { gs_base_wms, gs_name, range } = data;
 
   useEffect(() => {
     router.replace(`${pathname}/?layers=[l1]`);
@@ -36,18 +40,21 @@ const ExampleLayer = ({ beforeId }: LayerComponentProps) => {
     ],
     [gs_base_wms, gs_name, range]
   );
-  const SOURCE: RasterSource & GeoJSONSourceOptions = {
-    id: 'example-source',
-    type: 'raster',
-    tiles,
-    minzoom: 0,
-    maxzoom: 12,
-  };
 
-  return (
-    <Source {...SOURCE}>
-      <Layer {...LAYER} beforeId={beforeId} />
-    </Source>
-  );
+  const SOURCE: RasterSource & GeoJSONSourceOptions = useMemo(() => {
+    if (gs_name)
+      return {
+        id: gs_name,
+        type: 'raster',
+        tiles,
+        minzoom: 0,
+        maxzoom: 12,
+      };
+    else null;
+  }, [gs_name, tiles]);
+
+  return SOURCE ? (
+    <Source {...SOURCE}>{isFetched && <Layer {...LAYER} beforeId={beforeId} />}</Source>
+  ) : null;
 };
 export default ExampleLayer;

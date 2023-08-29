@@ -7,8 +7,8 @@ import { Layer } from 'react-map-gl';
 
 import { useDebounce } from 'usehooks-ts';
 
-import Map from 'components/map';
-import { Bbox } from 'components/map/types';
+import Map from '@/components/map';
+import { Bbox } from '@/components/map/types';
 
 // Map
 import LayerManager from './layer-manager';
@@ -42,7 +42,7 @@ const MapImplementation = () => {
 
   return (
     <MapProvider>
-      <div className="relative h-[400px] w-full">
+      <div className="absolute bottom-0 left-0 right-0 top-[59px]">
         <Map
           maxZoom={MAX_ZOOM}
           bounds={DEFAULT_BOUNDS}

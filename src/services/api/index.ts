@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
+  baseURL: '/api', // process.env.NEXT_PUBLIC_API_URL,
   // baseURL: '/layers',
   headers: { 'Content-Type': 'application/json' },
   // transformResponse: (data) => {
