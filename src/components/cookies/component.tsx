@@ -2,8 +2,6 @@ import Link from 'next/link';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { Button } from '@/components/ui/button';
-
 import type { CookiesProps } from './types';
 
 export const Cookies: React.FC<CookiesProps> = ({ open, onAccept, onReject }: CookiesProps) => {
@@ -36,17 +34,11 @@ export const Cookies: React.FC<CookiesProps> = ({ open, onAccept, onReject }: Co
               <p className="text-base">
                 This website uses cookies to ensure you get the best experience on our website. Read
                 our{' '}
-                <Link href="/privacy-policy" className="font-semibold text-black underline">
+                <Link href="/privacy-policy" className="text-black font-semibold underline">
                   cookie policy
                 </Link>{' '}
                 to know more.
               </p>
-              <div className="flex justify-end gap-3">
-                <Button variant="secondary" onClick={onReject}>
-                  Deny
-                </Button>
-                <Button onClick={onAccept}>Accept</Button>
-              </div>
             </div>
           </motion.div>
         </div>

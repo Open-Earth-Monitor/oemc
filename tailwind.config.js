@@ -32,6 +32,12 @@ module.exports = {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
         },
+        black: {
+          400: 'hsla(210, 54%, 9%, 1)',
+        },
+        brand: {
+          600: 'hsla(210, 53%, 7%, 1)',
+        },
         secondary: {
           200: 'hsl(60, 100%, 95%)',
           foreground: 'hsl(var(--secondary-foreground))',
