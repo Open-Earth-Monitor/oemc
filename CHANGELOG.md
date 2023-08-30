@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Unreleased
 
 ### Added
+- Satoshi Font, main navigation, and test for navigation functionality [OEMC-18](https://vizzuality.atlassian.net/browse/OEMC-18)
 
 
 ### Changed
