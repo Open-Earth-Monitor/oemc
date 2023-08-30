@@ -2,7 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const forms = require('@tailwindcss/forms');
-const lineClamp = require('@tailwindcss/line-clamp');
 const typography = require('@tailwindcss/typography');
 
 module.exports = {
@@ -24,19 +23,24 @@ module.exports = {
     },
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        brand: {
+          100: 'hsl(60, 5%, 19%)',
+          600: 'hsl(210, 53%, 7%)',
+        },
+
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
+          200: 'hsl(60, 100%, 95%)',
           foreground: 'hsl(var(--secondary-foreground))',
         },
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
@@ -79,5 +83,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate'), forms, lineClamp, typography],
+  plugins: [require('tailwindcss-animate'), forms, typography],
 };
