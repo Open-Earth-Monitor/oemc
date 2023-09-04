@@ -6,7 +6,7 @@ import ReactMapGL, { ViewState, ViewStateChangeEvent, useMap } from 'react-map-g
 
 import cx from 'clsx';
 import MapLibreGL from 'maplibre-gl';
-import { useDebounce } from 'usehooks-ts';
+// import { useDebounce } from 'usehooks-ts';
 
 import { DEFAULT_VIEW_STATE } from './constants';
 import type { CustomMapProps } from './types';
@@ -21,7 +21,7 @@ export const CustomMap: FC<CustomMapProps> = ({
   constrainedAxis,
   initialViewState,
   bounds,
-  onMapViewStateChange,
+  // onMapViewStateChange,
   dragPan,
   dragRotate,
   scrollZoom,
@@ -133,7 +133,7 @@ export const CustomMap: FC<CustomMapProps> = ({
   return (
     <div
       className={cx({
-        'relative z-0 h-screen w-full print:md:h-[90vh]': true,
+        'relative z-0 h-full w-full': true,
         [className]: !!className,
       })}
     >
