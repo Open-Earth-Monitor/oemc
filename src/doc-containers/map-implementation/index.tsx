@@ -8,6 +8,11 @@ import { Layer } from 'react-map-gl';
 import { useDebounce } from 'usehooks-ts';
 
 import Map from '@/components/map';
+// Controls
+import Controls from '@/components/map/controls';
+import BookmarkControl from '@/components/map/controls/bookmark';
+import FitBoundsControl from '@/components/map/controls/fit-bounds';
+import ZoomControl from '@/components/map/controls/zoom';
 import { Bbox } from '@/components/map/types';
 
 // Map
@@ -65,6 +70,11 @@ const MapImplementation = () => {
                 }}
               />
               <LayerManager layers={['example']} />
+              <Controls>
+                <ZoomControl />
+                <FitBoundsControl bounds={DEFAULT_BOUNDS} />
+                {/* <BookmarkControl bounds={DEFAULT_BOUNDS} /> */}
+              </Controls>
             </>
           )}
         </Map>
