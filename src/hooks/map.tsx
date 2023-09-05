@@ -3,22 +3,16 @@ import { AxiosResponse } from 'axios';
 
 import API from 'services/api';
 
-import type { UseParamsOptions, FakeDataTypes } from './types';
+import type { UseParamsOptions, LayerTypes } from './types';
 
-export function useLayers(
-  params?: UseParamsOptions,
-  queryOptions?: UseQueryOptions<FakeDataTypes[], Error>
-) {
+export function useLayers(queryOptions?: UseQueryOptions<LayerTypes[], Error>) {
   const fetchLayer = () =>
     API.request({
       method: 'GET',
       url: '/layers',
-      // params: {
-      //   ...params,
-      // },
       ...queryOptions,
-    }).then((response: AxiosResponse<FakeDataTypes[]>) => response.data);
-  return useQuery(['layer', params], fetchLayer, {
+    }).then((response: AxiosResponse<LayerTypes[]>) => response.data);
+  return useQuery(['layer'], fetchLayer, {
     select: (data) => data,
     ...queryOptions,
   });
@@ -26,19 +20,19 @@ export function useLayers(
 
 export function useLayerSource(
   params?: UseParamsOptions,
-  routeAPIparams?: UseParamsOptions, // TODO: remove this when API gets ready
-  queryOptions?: UseQueryOptions<FakeDataTypes, Error>
+  queryOptions?: UseQueryOptions<LayerTypes, Error>
 ) {
-  const { layer_id } = routeAPIparams;
   const fetchLayer = () =>
     API.request({
       method: 'GET',
-      url: `/layers/${layer_id}`, // TODO: remove route when API gets ready
-      // params: {
-      //   ...params, // TODO: add back when API gets ready
-      // },
+      url: `/layers`,
+      params: {
+        ...params,
+      },
       ...queryOptions,
-    }).then((response: AxiosResponse<FakeDataTypes>) => response.data);
+    }).then((response: AxiosResponse<LayerTypes[]>) =>
+      response.data.find((d) => d.layer_id === params?.layer_id)
+    );
   return useQuery(['layer', params], fetchLayer, {
     placeholderData: {
       gs_base_wms: '',

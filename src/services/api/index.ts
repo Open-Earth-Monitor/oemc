@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: '/api', // process.env.NEXT_PUBLIC_API_URL,
-  // baseURL: '/layers',
-  headers: { 'Content-Type': 'application/json' },
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  maxBodyLength: Infinity,
+  headers: {},
   // transformResponse: (data) => {
   //   try {
   //     const parsedData = JSON.parse(data);

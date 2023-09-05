@@ -24,9 +24,6 @@ const ExampleLayer = ({ beforeId }: LayerComponentProps) => {
       layer_id: layerId,
     },
     {
-      layer_id: layerId,
-    },
-    {
       enabled: !!layerId,
     }
   );

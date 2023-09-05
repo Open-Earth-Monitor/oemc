@@ -4,7 +4,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import type { CookiesProps } from './types';
 
-export const Cookies: React.FC<CookiesProps> = ({ open, onAccept, onReject }: CookiesProps) => {
+export const Cookies: React.FC<CookiesProps> = ({
+  open,
+}: // onAccept,
+// onReject
+CookiesProps) => {
   return (
     <AnimatePresence>
       {open && (
