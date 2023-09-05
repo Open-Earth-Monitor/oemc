@@ -1,9 +1,9 @@
 import { FC, useCallback, useState, PropsWithChildren, useId } from 'react';
 
 import cx from 'clsx';
+import LEGEND_SVG from 'svgs/map/legend.svg?sprite';
 
 import Icon from 'components/icon';
-import LEGEND_SVG from 'svgs/map/legend.svg?sprite';
 import ARROW_DOWN_SVG from 'svgs/ui/arrow-down.svg?sprite';
 
 import SortableList from './sortable/list';
@@ -28,7 +28,7 @@ export const Legend: FC<LegendPropsWithChildren> = ({
   return (
     <div
       className={cx({
-        'flex grow flex-col rounded-3xl bg-black': true,
+        'bg-black flex grow flex-col rounded-3xl': true,
         [className]: !!className,
       })}
     >
@@ -59,11 +59,11 @@ export const Legend: FC<LegendPropsWithChildren> = ({
             maxHeight,
           }}
         >
-          <div className="pointer-events-none absolute left-0 top-0 z-10 h-4 w-full bg-gradient-to-b from-black via-black" />
+          <div className="from-black via-black pointer-events-none absolute left-0 top-0 z-10 h-4 w-full bg-gradient-to-b" />
           <div className="overflow-y-auto overflow-x-hidden">
             <SortableList onChangeOrder={onChangeOrder}>{children}</SortableList>
           </div>
-          <div className="pointer-events-none absolute bottom-0 left-0 z-10 h-3 w-full bg-gradient-to-t from-black via-black" />
+          <div className="from-black via-black pointer-events-none absolute bottom-0 left-0 z-10 h-3 w-full bg-gradient-to-t" />
         </div>
       )}
     </div>

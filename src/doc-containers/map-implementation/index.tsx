@@ -42,7 +42,7 @@ const MapImplementation = () => {
 
   return (
     <MapProvider>
-      <div className="absolute bottom-0 left-0 right-0 top-[59px]">
+      <div className="absolute bottom-0 left-0 right-0 top-0">
         <Map
           maxZoom={MAX_ZOOM}
           bounds={DEFAULT_BOUNDS}
