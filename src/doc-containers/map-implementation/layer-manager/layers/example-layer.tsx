@@ -1,9 +1,9 @@
 'use client';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { Source, Layer } from 'react-map-gl';
 
-import { useRouter, usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import { AnyLayer, GeoJSONSourceOptions, RasterSource } from 'mapbox-gl';
 
@@ -16,23 +16,22 @@ const LAYER: AnyLayer = {
 };
 
 const ExampleLayer = ({ beforeId }: LayerComponentProps) => {
-  const { data, isFetched, isLoading } = useLayerSource(
+  const params = useSearchParams();
+  const layersId = params.get('layers');
+  const layerId = layersId && layersId.substring(1, layersId.length - 1).split(',')[0];
+  const { data, isFetched } = useLayerSource(
     {
-      layer_id: 'l3',
+      layer_id: layerId,
     },
     {
-      layer_id: 'l1',
+      layer_id: layerId,
+    },
+    {
+      enabled: !!layerId,
     }
   );
 
-  const router = useRouter();
-  const pathname = usePathname();
-
   const { gs_base_wms, gs_name, range } = data;
-
-  useEffect(() => {
-    router.replace(`${pathname}/?layers=[l1]`);
-  }, [router, pathname]);
 
   const tiles = useMemo(
     () => [
@@ -44,7 +43,7 @@ const ExampleLayer = ({ beforeId }: LayerComponentProps) => {
   const SOURCE: RasterSource & GeoJSONSourceOptions = useMemo(() => {
     if (gs_name)
       return {
-        id: gs_name,
+        id: 'layer-source',
         type: 'raster',
         tiles,
         minzoom: 0,

@@ -9,10 +9,11 @@ export const metadata: Metadata = {
 };
 
 const MapPage: React.FC = () => (
-  <div className="flex h-screen w-screen">
+  <main className="relative flex h-screen w-screen flex-1">
     <Sidebar />
+
     <Map />
-  </div>
+  </main>
 );
 
 export default MapPage;
