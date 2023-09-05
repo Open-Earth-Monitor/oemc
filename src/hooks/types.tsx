@@ -2,7 +2,7 @@ export type UseParamsOptions = Readonly<{
   layer_id: string;
 }>;
 
-export type FakeDataTypes = Readonly<{
+export type LayerTypes = Readonly<{
   gs_base_wms: string;
   gs_name: string;
   gs_dimension: string;
@@ -26,4 +26,24 @@ export type FakeDataTypes = Readonly<{
   title: string;
   unit: null;
   use_case: null;
+}>;
+
+export type GeoStoryTypes = Readonly<{
+  author: string;
+  date_created: string;
+  description: string;
+  id: string;
+  layers: LayerTypes[];
+  title: string;
+  use_case_link: string;
+}>;
+
+export type MonitorTypes = Readonly<{
+  author: string;
+  coverage: string;
+  date_created: string;
+  description: string;
+  geostories: GeoStoryTypes[];
+  id: string;
+  title: string;
 }>;
