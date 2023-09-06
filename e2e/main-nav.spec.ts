@@ -7,7 +7,8 @@ test('test main navigation', async ({ page }) => {
   const navigationBar = page.getByTestId('main-navigation');
   for (const link of navLinks) {
     await navigationBar.getByRole('link', { name: link.name }).click();
-    await page.waitForTimeout(2 * 1000);
+    // this await is just to make the test run slower so Firefox don't fail
+    await page.waitForTimeout(2 * 4000);
     await page.goto(link.href);
   }
 });

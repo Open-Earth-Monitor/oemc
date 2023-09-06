@@ -21,32 +21,34 @@ export const Header: FC = () => {
   const pathname = usePathname();
 
   return (
-    <header className="border-b-brand-100 flex items-center justify-between border-b">
-      <Image
-        alt="Open-earth-monitor"
-        src="/images/OEM-logo.svg"
-        width={130}
-        height={35}
-        className="inline-flex"
-      />
-      <nav className="flex justify-between" data-testid="main-navigation">
-        {navLinks.map((link) => {
-          const isActive = pathname === link.href || (pathname === '/' && link.href === '/hub');
+    <header className="w-full border-b border-b-brand-100">
+      <div className="m-auto flex max-w-7xl items-center justify-between">
+        <Image
+          alt="Open-earth-monitor"
+          src="/images/OEM-logo.svg"
+          width={130}
+          height={35}
+          className="inline-flex"
+        />
+        <nav className="flex justify-between" data-testid="main-navigation">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href || (pathname === '/' && link.href === '/hub');
 
-          return (
-            <Link
-              className={cn({
-                'border-brand-100 min-w-[130px] border py-4 text-center text-secondary-200': true,
-                'bg-secondary-200 text-brand-600': isActive,
-              })}
-              href={link.href}
-              key={link.name}
-            >
-              {link.name}
-            </Link>
-          );
-        })}
-      </nav>
+            return (
+              <Link
+                className={cn({
+                  'min-w-[130px] border border-brand-100 py-4 text-center text-secondary-200': true,
+                  'bg-secondary-200 text-brand-600': isActive,
+                })}
+                href={link.href}
+                key={link.name}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
     </header>
   );
 };

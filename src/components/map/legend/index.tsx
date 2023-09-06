@@ -28,7 +28,7 @@ export const Legend: FC<LegendPropsWithChildren> = ({
   return (
     <div
       className={cx({
-        'bg-black flex grow flex-col rounded-3xl': true,
+        'flex grow flex-col rounded-3xl bg-black': true,
         [className]: !!className,
       })}
     >
@@ -59,11 +59,11 @@ export const Legend: FC<LegendPropsWithChildren> = ({
             maxHeight,
           }}
         >
-          <div className="from-black via-black pointer-events-none absolute left-0 top-0 z-10 h-4 w-full bg-gradient-to-b" />
+          <div className="pointer-events-none absolute left-0 top-0 z-10 h-4 w-full bg-gradient-to-b from-black via-black" />
           <div className="overflow-y-auto overflow-x-hidden">
             <SortableList onChangeOrder={onChangeOrder}>{children}</SortableList>
           </div>
-          <div className="from-black via-black pointer-events-none absolute bottom-0 left-0 z-10 h-3 w-full bg-gradient-to-t" />
+          <div className="pointer-events-none absolute bottom-0 left-0 z-10 h-3 w-full bg-gradient-to-t from-black via-black" />
         </div>
       )}
     </div>

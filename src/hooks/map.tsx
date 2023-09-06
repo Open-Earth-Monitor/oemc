@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 
 import API from 'services/api';
 
-import type { UseParamsOptions, LayerTypes } from './types';
+import type { UseParamsOptions, LayerTypes } from '../types/datasets';
 
 export function useLayers(queryOptions?: UseQueryOptions<LayerTypes[], Error>) {
   const fetchLayer = () =>
@@ -30,9 +30,7 @@ export function useLayerSource(
         ...params,
       },
       ...queryOptions,
-    }).then((response: AxiosResponse<LayerTypes[]>) =>
-      response.data.find((d) => d.layer_id === params?.layer_id)
-    );
+    }).then((response: AxiosResponse<LayerTypes[]>) => response.data[0]);
   return useQuery(['layer', params], fetchLayer, {
     placeholderData: {
       gs_base_wms: '',
