@@ -38,7 +38,7 @@ CookiesProps) => {
               <p className="text-base">
                 This website uses cookies to ensure you get the best experience on our website. Read
                 our{' '}
-                <Link href="/privacy-policy" className="text-black font-semibold underline">
+                <Link href="/privacy-policy" className="font-semibold text-black underline">
                   cookie policy
                 </Link>{' '}
                 to know more.

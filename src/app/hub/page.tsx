@@ -6,8 +6,8 @@ export const metadata: Metadata = {
 };
 
 const Hub: React.FC = () => (
-  <div>
-    <h1 className="max-w-[50%] text-7xl text-white">
+  <div className="m-auto max-w-7xl">
+    <h1 className="max-w-[50%] py-2 text-7xl text-white">
       Discover and Empower with Monitoring Solutions.
     </h1>
   </div>

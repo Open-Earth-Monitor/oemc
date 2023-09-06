@@ -6,7 +6,7 @@ import ReactMapGL, { ViewState, ViewStateChangeEvent, useMap } from 'react-map-g
 
 import cx from 'clsx';
 import MapLibreGL from 'maplibre-gl';
-import { useDebouncedCallback } from 'use-debounce';
+// import { useDebounce } from 'usehooks-ts';
 
 import { DEFAULT_VIEW_STATE } from './constants';
 import type { CustomMapProps } from './types';
@@ -49,9 +49,9 @@ export const CustomMap: FC<CustomMapProps> = ({
   /**
    * CALLBACKS
    */
-  const debouncedViewStateChange = useDebouncedCallback((_viewState: ViewState) => {
-    if (onMapViewStateChange) onMapViewStateChange(_viewState);
-  }, 250);
+  // const debouncedViewStateChange = useDebounce((_viewState: ViewState) => {
+  //   if (onMapViewStateChange) onMapViewStateChange(_viewState);
+  // }, 250);
 
   const handleFitBounds = useCallback(() => {
     const { bbox, options } = bounds;
@@ -81,9 +81,9 @@ export const CustomMap: FC<CustomMapProps> = ({
         longitude: constrainedAxis === 'x' ? localViewState.longitude : _viewState.longitude,
       };
       setLocalViewState(newViewState);
-      debouncedViewStateChange(newViewState);
+      // debouncedViewStateChange(newViewState);
     },
-    [constrainedAxis, localViewState.latitude, localViewState.longitude, debouncedViewStateChange]
+    [constrainedAxis, localViewState.latitude, localViewState.longitude]
   );
 
   const handleMapLoad = useCallback(

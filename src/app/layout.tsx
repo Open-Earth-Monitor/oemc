@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <html lang="en" className={`${satoshi.className} h-screen w-screen`}>
-        <body className="inter mx-auto h-screen max-w-7xl bg-brand-600">
+        <body className="inter mx-auto h-screen bg-brand-600">
           <Header />
           <main>{children}</main>
         </body>
