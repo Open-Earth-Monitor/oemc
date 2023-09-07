@@ -8,17 +8,26 @@ type UseParams = {
   monitor_id?: string;
 };
 
-export function useMonitor(params: UseParams, queryOptions?: UseQueryOptions<MonitorTypes, Error>) {
+export function useMonitor(
+  params: UseParams,
+  queryOptions?: UseQueryOptions<MonitorTypes, Error, MonitorTypes>
+) {
   const fetchMonitors = () =>
     API.request({
       method: 'GET',
       url: '/monitors',
-      params: {
-        ...params,
-      },
+      params,
       ...queryOptions,
-    }).then((response: AxiosResponse<{ monitors: MonitorTypes[] }>) => response.data.monitors[0]);
-  return useQuery(['monitors', params], fetchMonitors, {
+    }).then((response: AxiosResponse<{ monitors: MonitorTypes[] }>) =>
+      response.data.monitors.find((monitor) => monitor.id === params.monitor_id)
+    );
+  return useQuery(['monitor', params], fetchMonitors, {
+    placeholderData: {
+      id: '',
+      title: '',
+      description: '',
+      geostories: [],
+    },
     select: (data) => data,
     ...queryOptions,
   });
@@ -31,7 +40,7 @@ export function useMonitors(queryOptions?: UseQueryOptions<MonitorTypes[], Error
       url: '/monitors',
       ...queryOptions,
     }).then((response: AxiosResponse<{ monitors: MonitorTypes[] }>) => response.data.monitors);
-  return useQuery(['layer'], fetchMonitors, {
+  return useQuery(['monitors'], fetchMonitors, {
     select: (data) => {
       return data;
     },

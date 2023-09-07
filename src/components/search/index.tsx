@@ -10,7 +10,7 @@ import SEARCH_SVG from 'svgs/ui/search.svg?sprite';
 import { SIZES, THEME } from './constants';
 import type { SearchProps } from './types';
 
-export const Search: FC<SearchProps> = ({
+const Search: FC<SearchProps> = ({
   theme = 'dark',
   size = 'base',
   value,

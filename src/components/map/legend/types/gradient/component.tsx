@@ -4,7 +4,7 @@ import cx from 'clsx';
 
 import type { LegendTypeGradientProps } from './types';
 
-export const LegendTypeGradient: FC<LegendTypeGradientProps> = ({
+const LegendTypeGradient: FC<LegendTypeGradientProps> = ({
   className = '',
   items,
 }: LegendTypeGradientProps) => (

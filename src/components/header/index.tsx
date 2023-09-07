@@ -17,7 +17,7 @@ export const navLinks = [
     href: '/map',
   },
 ];
-export const Header: FC = () => {
+const Header: FC = () => {
   const pathname = usePathname();
 
   return (

@@ -2,7 +2,7 @@ import cx from 'clsx';
 
 import type { IconProps } from './types';
 
-export const Icon = ({ icon, className = 'w-5 h-5', style }: IconProps) => (
+const Icon = ({ icon, className = 'w-5 h-5', style }: IconProps) => (
   <svg
     className={cx({
       'fill-current': true,

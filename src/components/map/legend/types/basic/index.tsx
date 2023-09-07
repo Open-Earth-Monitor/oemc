@@ -4,7 +4,7 @@ import cx from 'clsx';
 
 import type { LegendTypeBasicProps } from './types';
 
-export const LegendTypeBasic: FC<LegendTypeBasicProps> = ({
+const LegendTypeBasic: FC<LegendTypeBasicProps> = ({
   className = '',
   items,
 }: LegendTypeBasicProps) => (
