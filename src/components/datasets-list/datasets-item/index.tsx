@@ -5,28 +5,14 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { cn } from '@/lib/classnames';
 
+import { useLayerSource } from '@/hooks/map';
+
 import ItemHeader from '@/components/datasets-list/datasets-item-header';
 import { Button } from '@/components/ui/button';
 
-export const DatasetsItem = ({
-  layer_id,
-  title,
-  description,
-  info,
-  downloadUrlBase,
-  filename,
-  share,
-  range,
-}: {
-  layer_id: string;
-  title: string;
-  description: string;
-  info?: string;
-  downloadUrlBase?: string;
-  filename?: string;
-  share?: string;
-  range?: string;
-}) => {
+export const DatasetsItem = ({ layer_id }: { layer_id: string }) => {
+  const { data } = useLayerSource({ layer_id });
+  const { title, description, download_url } = data;
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -44,11 +30,10 @@ export const DatasetsItem = ({
     <li key={layer_id} className="space-y-6 border-b border-b-brand-200 p-7.5 ">
       <ItemHeader
         title={title}
-        info={info}
-        share={share}
-        downloadUrlBase={downloadUrlBase}
-        filename={filename}
-        range={range}
+        layer_id={layer_id}
+        downloadUrlBase={download_url}
+        // filename={filename}
+        // range={range}
       />
       <p className="inter">{description}</p>
 

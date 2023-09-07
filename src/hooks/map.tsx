@@ -36,6 +36,12 @@ export function useLayerSource(
       gs_base_wms: '',
       gs_name: '',
       range: '',
+      author: '',
+      title: '',
+      description: '',
+      info: '',
+      download_url: '',
+      share: '',
     },
     select: (data) => ({
       ...data,
