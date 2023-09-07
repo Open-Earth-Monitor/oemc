@@ -28,6 +28,9 @@ module.exports = {
           200: 'hsla(210, 9%, 22%, 1)',
           600: 'hsl(210, 53%, 7%)',
         },
+        gray: {
+          900: 'hsla(184, 5%, 19%, 1)'
+        },
 
         primary: {
           DEFAULT: 'hsl(var(--primary))',
