@@ -6,7 +6,7 @@ import type { LegendItemProps } from './types';
 
 type LegendItemPropsWithChildren = PropsWithChildren<LegendItemProps>;
 
-export const LegendItem: FC<LegendItemPropsWithChildren> = ({
+const LegendItem: FC<LegendItemPropsWithChildren> = ({
   id,
   name,
   description,

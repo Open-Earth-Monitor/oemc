@@ -7,7 +7,7 @@ export type LayerTypes = Readonly<{
   gs_name: string;
   gs_dimension: string;
   range: string;
-  author: string;
+  author: string | null;
   coverage: string;
   description: string;
   download_url: string;

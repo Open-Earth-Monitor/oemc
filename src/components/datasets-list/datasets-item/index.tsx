@@ -11,9 +11,10 @@ import ItemHeader from '@/components/datasets-list/datasets-item-header';
 import { Button } from '@/components/ui/button';
 import { useURLayerParams } from '@/hooks';
 
-export const DatasetsItem: FC<{ layer_id: string }> = ({ layer_id }) => {
+const DatasetsItem: FC<{ layer_id: string }> = ({ layer_id }) => {
   const { data } = useLayerSource({ layer_id });
   const { title, description, download_url } = data;
+
   const router = useRouter();
   const pathname = usePathname();
 

@@ -8,7 +8,7 @@ import LOADING_SVG from 'svgs/ui/loading.svg?sprite';
 
 import type { LoadingProps } from './types';
 
-export const Loading: FC<LoadingProps> = ({
+const Loading: FC<LoadingProps> = ({
   visible = false,
   className = 'absolute',
   iconClassName = 'w-5 h-5',

@@ -4,7 +4,7 @@ import cx from 'clsx';
 
 import type { LegendTypeChoroplethProps } from './types';
 
-export const LegendTypeChoropleth: FC<LegendTypeChoroplethProps> = ({
+const LegendTypeChoropleth: FC<LegendTypeChoroplethProps> = ({
   className = '',
   items,
 }: LegendTypeChoroplethProps) => (

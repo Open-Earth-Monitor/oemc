@@ -8,7 +8,7 @@ import type { SortableItemProps } from './types';
 
 type SortableItemPropsWithChildren = PropsWithChildren<SortableItemProps>;
 
-export const SortableItem: FC<SortableItemPropsWithChildren> = ({
+const SortableItem: FC<SortableItemPropsWithChildren> = ({
   id,
   children,
 }: SortableItemPropsWithChildren) => {
