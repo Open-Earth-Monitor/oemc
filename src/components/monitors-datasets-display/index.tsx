@@ -2,7 +2,7 @@ import { MonitorTypes } from '@/types/datasets';
 
 import DatasetsList from '@/components/datasets-list';
 
-export const MonitorsList = ({ monitor }: { monitor: MonitorTypes }) => {
+export const MonitorDisplay = ({ monitor }: { monitor: MonitorTypes }) => {
   const { title, description, geostories } = monitor;
 
   return (
@@ -19,4 +19,4 @@ export const MonitorsList = ({ monitor }: { monitor: MonitorTypes }) => {
   );
 };
 
-export default MonitorsList;
+export default MonitorDisplay;
