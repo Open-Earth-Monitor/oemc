@@ -13,13 +13,20 @@ export const Sidebar: FC = () => {
   const { data: monitors } = useMonitors();
   const defaultMonitor = monitors?.[0];
   const params = useSearchParams();
+  const paramsMonitor = params.get('monitor_id');
   const monitor_id = useMemo<string>(
-    () => params.get('monitor_id') || defaultMonitor?.id,
-    [params, defaultMonitor]
+    () => paramsMonitor || defaultMonitor?.id,
+    [paramsMonitor, defaultMonitor]
   );
-  const { data, isLoading, isFetched, isError } = useMonitor({
-    monitor_id: monitor_id,
-  });
+  const { data, isLoading, isFetched, isError } = useMonitor(
+    {
+      monitor_id: monitor_id,
+    },
+    {
+      enabled: !!monitor_id,
+    }
+  );
+
   return (
     <aside className="absolute bottom-16 left-5 top-5 z-50 w-[30vw] min-w-[526px] overflow-y-auto bg-brand-600 p-7.5">
       <Tabs defaultValue="datasets">

@@ -7,25 +7,25 @@ export type LayerTypes = Readonly<{
   gs_name: string;
   gs_dimension: string;
   range: string;
-  author: null;
+  author: string;
   coverage: string;
   description: string;
-  download_url: null;
+  download_url: string;
   filename: string;
   geo_story: string;
   layer_id: string;
-  license: null;
+  license: string;
   location_query_url: string;
-  metadata_url: null;
+  metadata_url: string;
   monitor: string;
   polygon_query_url: string;
   range_labels: string;
   regex: string;
   srv_path: string;
-  theme: null;
+  theme: string;
   title: string;
-  unit: null;
-  use_case: null;
+  unit: string;
+  use_case: string;
 }>;
 
 export type GeoStoryTypes = Readonly<{
