@@ -21,7 +21,7 @@ export const Sidebar: FC = () => {
     monitor_id: monitor_id,
   });
   return (
-    <aside className="absolute bottom-16 left-5 top-5 z-50 w-[30vw] overflow-y-auto bg-brand-600 p-7.5">
+    <aside className="absolute bottom-16 left-5 top-5 z-50 w-[30vw] min-w-[526px] overflow-y-auto bg-brand-600 p-7.5">
       <Tabs defaultValue="datasets">
         <TabsList>
           <TabsTrigger value="datasets">Datasets</TabsTrigger>
