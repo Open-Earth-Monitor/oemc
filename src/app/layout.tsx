@@ -1,7 +1,14 @@
 'use client';
 import { ReactNode, useState } from 'react';
 
+import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // import type { Metadata } from 'next';
@@ -37,7 +44,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <html lang="en" className={`${satoshi.className} h-screen w-screen`}>
+      <html lang="en" className={`${satoshi.className} ${inter.variable} h-screen w-screen`}>
         <body className="inter mx-auto h-screen bg-brand-600">
           <Header />
           {children}
