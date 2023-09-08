@@ -42,7 +42,8 @@ export const DatasetsItem = ({ layer_id }: { layer_id: string }) => {
         type="button"
         className={cn({ 'w-full': true, '': isActive })}
         onClick={handleClick}
-        variant={isActive ? 'secondary' : 'default'}
+        variant={isActive ? 'default_active' : 'default'}
+        size="sm"
       >
         {isActive ? 'Hide' : 'Show'} layer on the map
       </Button>
