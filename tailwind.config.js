@@ -24,20 +24,27 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          100: 'hsl(60, 5%, 19%)',
-          200: 'hsla(210, 9%, 22%, 1)',
-          600: 'hsl(210, 53%, 7%)',
+          50: 'hsl(210, 9%, 22%, 1)', // no ui kit
+          100: 'hsl(211, 52%, 15%)',
+          150: 'hsl(209, 53%, 14%)',
+          200: 'hsl(210, 53%, 13%)',
+          300: 'hsl(211, 53%, 12%)',
+          400: 'hsl(210, 54%, 9%)',
+          500: 'hsl(210, 53%, 7%)',
         },
-        gray: {
-          900: 'hsla(184, 5%, 19%, 1)',
-        },
-
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
-          200: 'hsl(60, 100%, 95%)',
+          500: 'hsl(60, 100%, 95%)',
+          600: 'hsl(60, 16%, 76%)',
+          700: 'hsl(180, 3%, 55%)',
+          800: 'hsl(180, 3%, 35%)',
+          900: 'hsl(184, 5%, 19%)',
+          950: 'hsl(60, 6%, 10%,)',
+          1000: 'hsl(60, 5%, 19%)', // no ui kit
+
           foreground: 'hsl(var(--secondary-foreground))',
         },
         border: 'hsl(var(--border))',

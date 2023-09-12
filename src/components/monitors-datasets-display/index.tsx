@@ -7,7 +7,7 @@ export const MonitorDisplay = ({ monitor }: { monitor: MonitorTypes }) => {
 
   return (
     <div>
-      <div className="space-y-2 bg-secondary-200 p-7.5 text-brand-600">
+      <div className="space-y-2 bg-secondary-500 p-7.5 text-brand-500">
         <span className="inter text-xs">MONITOR</span>
         <h2 className="text-5xl">{title}</h2>
         <p>{description}</p>

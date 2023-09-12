@@ -42,7 +42,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
   return (
     <div
       className={cx({
-        'inline-flex flex-col rounded-sm bg-brand-600 p-1 text-secondary-200': true,
+        'inline-flex flex-col rounded-sm bg-brand-500 p-1 text-secondary-500': true,
         [className]: !!className,
       })}
     >
