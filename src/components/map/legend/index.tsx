@@ -1,23 +1,31 @@
-import { FC, useCallback, useState, PropsWithChildren, useId } from 'react';
+import { useCallback, useState, useId, useMemo } from 'react';
 
-import cx from 'clsx';
-import LEGEND_SVG from 'svgs/map/legend.svg?sprite';
+import { useSearchParams } from 'next/navigation';
 
-import Icon from 'components/icon';
-import ARROW_DOWN_SVG from 'svgs/ui/arrow-down.svg?sprite';
+import type { LayerSettingTypes } from '@//types/layers';
 
-import SortableList from './sortable/list';
-import type { LegendProps } from './types';
+import { useLayerSource } from '@/hooks/map';
 
-type LegendPropsWithChildren = PropsWithChildren<LegendProps>;
+import OpacitySetting from './opacity';
+import RemoveLayer from './remove';
+import LayerVisibility from './visibility';
 
-export const Legend: FC<LegendPropsWithChildren> = ({
-  children,
-  className = '',
-  maxHeight,
-  onChangeOrder,
-}: LegendPropsWithChildren) => {
+export const Legend = () => {
   const [active, setActive] = useState(true);
+  const params = useSearchParams();
+  const layerParams = params.get('layers');
+  const layerParamsParsed = useMemo<null | LayerSettingTypes[]>(() => {
+    if (layerParams === null) return null;
+    else return JSON.parse(layerParams) as LayerSettingTypes[];
+  }, [layerParams]);
+
+  const layerId = useMemo<LayerSettingTypes['id']>(
+    () => layerParamsParsed?.[0]?.id,
+    [layerParamsParsed]
+  );
+
+  const { data } = useLayerSource({ layer_id: layerId }, { enabled: !!layerId });
+  const { title } = data;
 
   const id = useId();
 
@@ -26,44 +34,33 @@ export const Legend: FC<LegendPropsWithChildren> = ({
   }, [active]);
 
   return (
-    <div
-      className={cx({
-        'flex grow flex-col rounded-3xl bg-black': true,
-        [className]: !!className,
-      })}
-    >
-      <button
-        type="button"
-        aria-expanded={active}
-        aria-controls={id}
-        className="font-heading relative flex w-full items-center space-x-2 px-5 py-3 text-xs uppercase text-white"
-        onClick={onToggleActive}
-      >
-        <Icon icon={LEGEND_SVG} className="h-4 w-4 text-gray-300" />
-        <span>Legend</span>
-
-        <Icon
-          icon={ARROW_DOWN_SVG}
-          className={cx({
-            'absolute right-5 top-1/2 h-3 w-3 -translate-y-1/2 transform text-blue-500 transition-transform':
-              true,
-            'rotate-180': active,
-          })}
-        />
-      </button>
-
-      {active && (
-        <div
-          className="relative flex grow flex-col overflow-hidden rounded-3xl"
-          style={{
-            maxHeight,
-          }}
-        >
-          <div className="pointer-events-none absolute left-0 top-0 z-10 h-4 w-full bg-gradient-to-b from-black via-black" />
-          <div className="overflow-y-auto overflow-x-hidden">
+    <div className="inter absolute bottom-16 right-10 z-50 flex grow flex-col px-5 py-1 text-xs text-secondary-500">
+      {layerId && (
+        <div className="rounded-sm border border-secondary-500 bg-brand-500">
+          <button
+            type="button"
+            aria-expanded={active}
+            aria-controls={id}
+            className="relative flex w-full items-center space-x-2 px-5 py-1.5 text-xs uppercase text-white"
+            onClick={onToggleActive}
+          >
+            <span>Legend</span>
+          </button>
+        </div>
+      )}
+      {active && layerId && (
+        <div className="relative flex justify-between space-x-4 rounded-sm bg-brand-500 px-5 py-2.5 text-xs text-secondary-500">
+          {/* <div className="overflow-y-auto overflow-x-hidden">
             <SortableList onChangeOrder={onChangeOrder}>{children}</SortableList>
+          </div> */}
+          <p>{title}</p>
+          <div className="flex space-x-2 divide-x divide-secondary-900">
+            <div className="flex space-x-2">
+              <OpacitySetting />
+              <LayerVisibility />
+            </div>
+            <RemoveLayer className="pl-2" />
           </div>
-          <div className="pointer-events-none absolute bottom-0 left-0 z-10 h-3 w-full bg-gradient-to-t from-black via-black" />
         </div>
       )}
     </div>

@@ -1,11 +1,15 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useMemo, useCallback, useState } from 'react';
 
 import { ViewState, MapProvider } from 'react-map-gl';
 import { Layer } from 'react-map-gl';
 
+import { useSearchParams } from 'next/navigation';
+
 import { useDebounce } from 'usehooks-ts';
+
+import type { LayerSettingTypes } from '@//types/layers';
 
 import Map from '@/components/map';
 // Controls
@@ -13,10 +17,12 @@ import Controls from '@/components/map/controls';
 import BookmarkControl from '@/components/map/controls/bookmark';
 import FitBoundsControl from '@/components/map/controls/fit-bounds';
 import ZoomControl from '@/components/map/controls/zoom';
+import Legend from '@/components/map/legend';
 import { Bbox } from '@/components/map/types';
 
 // Map
 import LayerManager from './layer-manager';
+
 const DEFAULT_BBOX: Bbox = [-173.488154, -60.809359, 164.011846, 67.836775];
 const MAX_ZOOM = 20;
 const DEFAULT_BOUNDS = {
@@ -44,6 +50,13 @@ const MapImplementation = () => {
   const handleViewState = useCallback((vw: ViewState) => {
     setViewState(vw);
   }, []);
+  const params = useSearchParams();
+  const layersId = params.get('layers');
+  const layersIdParsed = useMemo<null | LayerSettingTypes[]>(() => {
+    if (layersId === null) return null;
+    else return JSON.parse(layersId) as LayerSettingTypes[];
+  }, [layersId]);
+  const layerId = useMemo<LayerSettingTypes['id']>(() => layersIdParsed?.[0]?.id, [layersIdParsed]);
 
   return (
     <MapProvider>
@@ -75,6 +88,7 @@ const MapImplementation = () => {
                 <FitBoundsControl bounds={DEFAULT_BOUNDS} />
                 {/* <BookmarkControl bounds={DEFAULT_BOUNDS} /> */}
               </Controls>
+              <Legend />
             </>
           )}
         </Map>

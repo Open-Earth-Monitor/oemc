@@ -11,11 +11,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'border-2 border-secondary-200 text-xs text-secondary-200 hover:bg-secondary-200 hover:bg-opacity-[0.1] hover:text-secondary-200 hover:border-secondary-200 hover:shadow-[-2px_2px_rgb(255, 255, 230)]',
+          'border-2 border-secondary-500 text-xs text-secondary-500 hover:bg-secondary-500 hover:bg-opacity-[0.1] hover:text-secondary-500 hover:border-secondary-500 hover:shadow-[-2px_2px_rgb(255, 255, 230)]',
         default_active:
-          'border-2 border-secondary-200 bg-secondary-200 text-brand-600 hover:bg-opacity-[0.1] hover:text-secondary-200 hover:border-secondary-200 hover:shadow-[-2px_2px_rgb(255, 255, 230)]',
-        secondary:
-          'hover:shadow-[2px_2px_black] border-2 border-brand-600 bg-secondary-200 text-brand-600 hover:bg-opacity-[0.1] hover:text-secondary-200 hover:border-secondary-200 hover:shadow-[-2px_2px_rgb(255, 255, 230)]',
+          'border-2 border-secondary-500 bg-secondary-500 text-brand-500 hover:bg-opacity-[0.1] hover:text-secondary-500 hover:border-secondary-500 hover:shadow-[-2px_2px_rgb(255, 255, 230)]',
+        light:
+          'hover:shadow-[2px_2px_black] border-2 border-brand-500 bg-secondary-500 text-brand-500 hover:bg-opacity-[0.1] hover:text-secondary-500 hover:border-secondary-500 hover:shadow-[-2px_2px_rgb(255, 255, 230)]',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
       },

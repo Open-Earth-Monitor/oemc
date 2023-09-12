@@ -19,6 +19,7 @@ Unreleased
 - Dataset info displayed on the sidebar [OEMC-21](https://vizzuality.atlassian.net/browse/OEMC-21?atlOrigin=eyJpIjoiZmM3NzkwNjlhMjA0NDUwOWExNDhiOGM0ODMwYTRkZGEiLCJwIjoiaiJ9)
 - Implement monitors directory [OEMC-65](https://vizzuality.atlassian.net/browse/OEMC-65?atlOrigin=eyJpIjoiZGZmYjJiNTg1NmY3NDhiM2I5NTNmMWZmMTIwZjA2NDMiLCJwIjoiaiJ9)
 
+- Legend settings (change opacity in layer, layer toggle visibility, remove layer) [OEMC-59](https://vizzuality.atlassian.net/browse/OEMC-59?atlOrigin=eyJpIjoiNDI0NzBkYmExODFmNGVjODllZDk3NTAyNjY4M2YwYzAiLCJwIjoiaiJ9)
 
 
 ### Changed

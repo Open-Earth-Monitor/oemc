@@ -24,7 +24,7 @@ export const BookmarkControl: FC<BookmarkControlProps> = ({
     <button
       aria-label="Fit to bounds"
       className={cx({
-        'rounded-sm bg-brand-600 p-1 text-secondary-200 disabled:cursor-default disabled:opacity-50':
+        'rounded-sm bg-brand-500 p-1 text-secondary-500 disabled:cursor-default disabled:opacity-50':
           true,
         'hover:bg-gray-700 active:bg-gray-600': !!bounds,
         [className]: !!className,

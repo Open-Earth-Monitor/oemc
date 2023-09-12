@@ -26,11 +26,10 @@ export function useLayerSource(
     API.request({
       method: 'GET',
       url: `/layers`,
-      params: {
-        ...params,
-      },
+      params,
       ...queryOptions,
     }).then((response: AxiosResponse<LayerTypes[]>) => response.data[0]);
+
   return useQuery(['layer', params], fetchLayer, {
     placeholderData: {
       gs_base_wms: '',
