@@ -2,11 +2,9 @@ import { FC, useCallback, MouseEvent } from 'react';
 
 import { useMap } from 'react-map-gl';
 
+import { PlusIcon } from '@heroicons/react/20/solid';
+import { MinusIcon } from '@heroicons/react/20/solid';
 import cx from 'clsx';
-
-import Icon from 'components/icon';
-import ZOOM_IN_SVG from 'svgs/map/zoom-in.svg?sprite';
-import ZOOM_OUT_SVG from 'svgs/map/zoom-out.svg?sprite';
 
 import type { ZoomControlProps } from './types';
 
@@ -56,7 +54,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
         disabled={zoom >= maxZoom}
         onClick={increaseZoom}
       >
-        <Icon icon={ZOOM_IN_SVG} />
+        <PlusIcon className="text-secondary-500" />
       </button>
       <button
         className={cx({
@@ -68,7 +66,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
         disabled={zoom <= minZoom}
         onClick={decreaseZoom}
       >
-        <Icon icon={ZOOM_OUT_SVG} />
+        <MinusIcon className="text-secondary-500" />
       </button>
     </div>
   );

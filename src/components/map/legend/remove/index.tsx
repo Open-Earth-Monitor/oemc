@@ -2,10 +2,9 @@ import { FC, useCallback } from 'react';
 
 import { useRouter, usePathname } from 'next/navigation';
 
-import { cn } from '@/lib/classnames';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
-import Icon from 'components/icon';
-import CLOSE_SVG from 'svgs/ui/close.svg?sprite';
+import { cn } from '@/lib/classnames';
 
 export const RemoveLayer: FC<{ className?: string }> = ({ className }) => {
   const pathname = usePathname();
@@ -22,7 +21,7 @@ export const RemoveLayer: FC<{ className?: string }> = ({ className }) => {
       onClick={onRemoveLayer}
       aria-label="Toggle layer visibility"
     >
-      <Icon icon={CLOSE_SVG} className="h-3 w-3 text-secondary-900" />
+      <XMarkIcon className="text-secondary-200 h-4 w-4" />
     </button>
   );
 };
