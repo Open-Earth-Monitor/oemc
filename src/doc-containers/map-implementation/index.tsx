@@ -1,15 +1,11 @@
 'use client';
 
-import { useMemo, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { ViewState, MapProvider } from 'react-map-gl';
 import { Layer } from 'react-map-gl';
 
-import { useSearchParams } from 'next/navigation';
-
 import { useDebounce } from 'usehooks-ts';
-
-import type { LayerSettingTypes } from '@//types/layers';
 
 import Map from '@/components/map';
 // Controls
@@ -50,17 +46,10 @@ const MapImplementation = () => {
   const handleViewState = useCallback((vw: ViewState) => {
     setViewState(vw);
   }, []);
-  const params = useSearchParams();
-  const layersId = params.get('layers');
-  const layersIdParsed = useMemo<null | LayerSettingTypes[]>(() => {
-    if (layersId === null) return null;
-    else return JSON.parse(layersId) as LayerSettingTypes[];
-  }, [layersId]);
-  const layerId = useMemo<LayerSettingTypes['id']>(() => layersIdParsed?.[0]?.id, [layersIdParsed]);
 
   return (
     <MapProvider>
-      <div className="absolute bottom-0 left-0 right-0 top-0">
+      <div className="absolute bottom-0 left-0 top-0 w-screen">
         <Map
           maxZoom={MAX_ZOOM}
           bounds={DEFAULT_BOUNDS}
@@ -82,7 +71,7 @@ const MapImplementation = () => {
                   'background-opacity': 0,
                 }}
               />
-              <LayerManager layers={['example']} />
+              <LayerManager layers={['raster']} />
               <Controls>
                 <ZoomControl />
                 <FitBoundsControl bounds={DEFAULT_BOUNDS} />

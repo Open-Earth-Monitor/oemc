@@ -1,13 +1,12 @@
-import { FC, useState, useCallback, useMemo } from 'react';
+import { FC, useState, useCallback } from 'react';
 
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { cn } from '@/lib/classnames';
 
-import type { LayerSettingTypes } from '@/types/layers';
-
 import { Slider } from '@/components/slider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useURLayerParams } from '@/hooks';
 import Icon from 'components/icon';
 import OPACITY_SVG from 'svgs/map/opacity.svg?sprite';
 export const OpacitySetting: FC = () => {
@@ -16,31 +15,27 @@ export const OpacitySetting: FC = () => {
   const handleOpacityVisibility = () => setOpacitySliderVisibility(!isOpenOpacitySliderVisibility);
   const router = useRouter();
   const pathname = usePathname();
-  const params = useSearchParams();
-  const layersParams = params.get('layers');
-  const layersParamsParsed = useMemo<null | LayerSettingTypes[]>(() => {
-    if (layersParams === null) return null;
-    else return JSON.parse(layersParams) as LayerSettingTypes[];
-  }, [layersParams]);
+
+  const { layerId } = useURLayerParams();
 
   const handleChange = useCallback(
     (e: number[]) => {
-      // Create the layers object
       // Encode the layers object as a JSON string
       const opacityValue = e[0] / 100;
       const encodedLayers = decodeURIComponent(
         JSON.stringify({
-          id: layersParamsParsed?.[0]?.id,
+          id: layerId,
           opacity: opacityValue,
         })
       );
 
-      // Construct the URL
       setOpacity(opacityValue);
+
+      // Construct the URL
       const url = `${pathname}/?layers=[${encodedLayers}]`;
       return router.replace(url);
     },
-    [setOpacity, pathname, router, layersParamsParsed]
+    [setOpacity, pathname, router, layerId]
   );
   return (
     <Popover onOpenChange={handleOpacityVisibility}>

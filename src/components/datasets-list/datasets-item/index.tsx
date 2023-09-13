@@ -1,29 +1,23 @@
 'use client';
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback } from 'react';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { cn } from '@/lib/classnames';
-
-import type { LayerSettingTypes } from '@//types/layers';
 
 import { useLayerSource } from '@/hooks/map';
 
 import ItemHeader from '@/components/datasets-list/datasets-item-header';
 import { Button } from '@/components/ui/button';
+import { useURLayerParams } from '@/hooks';
 
 export const DatasetsItem: FC<{ layer_id: string }> = ({ layer_id }) => {
   const { data } = useLayerSource({ layer_id });
   const { title, description, download_url } = data;
   const router = useRouter();
   const pathname = usePathname();
-  const params = useSearchParams();
-  const layersId = params.get('layers');
-  const layersIdParsed = useMemo<null | LayerSettingTypes[]>(() => {
-    if (layersId === null) return null;
-    else return JSON.parse(layersId) as LayerSettingTypes[];
-  }, [layersId]);
-  const layerId = useMemo<LayerSettingTypes['id']>(() => layersIdParsed?.[0]?.id, [layersIdParsed]);
+
+  const { layerId } = useURLayerParams();
 
   const isActive = layerId === layer_id;
 

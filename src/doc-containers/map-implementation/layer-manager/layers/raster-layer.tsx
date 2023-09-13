@@ -3,28 +3,16 @@ import { useMemo } from 'react';
 
 import { Source, Layer } from 'react-map-gl';
 
-import { useSearchParams } from 'next/navigation';
-
 import { GeoJSONSourceOptions, RasterLayer, RasterSource } from 'mapbox-gl';
 
-import type { LayerSettingTypes } from '@//types/layers';
-
+import { useURLayerParams } from 'hooks';
 import { useLayerSource } from 'hooks/map';
 
 import type { LayerComponentProps } from '../types';
 
-export const ExampleLayer = ({ beforeId }: LayerComponentProps) => {
-  const params = useSearchParams();
-  const layersId = params.get('layers');
-  const layersIdParsed = useMemo<null | LayerSettingTypes[]>(() => {
-    if (layersId === null) return null;
-    else return JSON.parse(layersId) as LayerSettingTypes[];
-  }, [layersId]);
-  const layerId = useMemo<LayerSettingTypes['id']>(() => layersIdParsed?.[0]?.id, [layersIdParsed]);
-  const layerOpacity = useMemo<LayerSettingTypes['opacity']>(
-    () => layersIdParsed?.[0]?.opacity,
-    [layersIdParsed]
-  );
+export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
+  const { layerId, layerOpacity } = useURLayerParams();
+
   const { data, isFetched } = useLayerSource(
     {
       layer_id: layerId,
@@ -41,7 +29,7 @@ export const ExampleLayer = ({ beforeId }: LayerComponentProps) => {
     [gs_base_wms, gs_name, range]
   );
   const LAYER: RasterLayer & { key: string } = {
-    id: 'example-layer',
+    id: 'raster-layer',
     key: range ? `${layerId}-${range}` : layerId,
     type: 'raster',
     paint: {
@@ -64,4 +52,4 @@ export const ExampleLayer = ({ beforeId }: LayerComponentProps) => {
     <Source {...SOURCE}>{isFetched && <Layer {...LAYER} beforeId={beforeId} />}</Source>
   ) : null;
 };
-export default ExampleLayer;
+export default RasterLayerComponent;

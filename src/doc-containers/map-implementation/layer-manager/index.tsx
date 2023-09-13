@@ -1,12 +1,12 @@
 import { FC } from 'react';
 
-import ExampleLayer from './layers/example-layer';
+import RasterLayerComponent from './layers/raster-layer';
 import type { LayerComponentProps } from './types';
 
 const LAYER_COMPONENTS: {
   [key: string]: FC<LayerComponentProps>;
 } = {
-  example: ExampleLayer,
+  raster: RasterLayerComponent,
 };
 
 const LayerManagerContainer = ({ layers }: { layers: string[] }) => {
