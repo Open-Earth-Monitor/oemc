@@ -2,11 +2,11 @@ import { useCallback, useState } from 'react';
 
 import { useRouter, usePathname } from 'next/navigation';
 
+import { EyeSlashIcon, EyeIcon } from '@heroicons/react/20/solid';
+
 import { cn } from '@/lib/classnames';
 
 import { useURLayerParams } from '@/hooks';
-import Icon from 'components/icon';
-import HIDE_SVG from 'svgs/map/hide.svg?sprite';
 
 export const LayerVisibility = () => {
   const [isLayerVisible, setLayerVisibility] = useState(true);
@@ -34,13 +34,21 @@ export const LayerVisibility = () => {
       onClick={onToggleLayerVisibility}
       aria-label="Toggle layer visibility"
     >
-      <Icon
-        icon={HIDE_SVG}
-        className={cn({
-          'h-4 w-4 text-secondary-500': true,
-          'text-secondary-900': !isLayerVisible,
-        })}
-      />
+      {isLayerVisible ? (
+        <EyeIcon
+          className={cn({
+            'h-4 w-4 text-secondary-500': true,
+            'text-secondary-900': !isLayerVisible,
+          })}
+        />
+      ) : (
+        <EyeSlashIcon
+          className={cn({
+            'h-4 w-4 text-secondary-500': true,
+            'text-secondary-900': !isLayerVisible,
+          })}
+        />
+      )}
     </button>
   );
 };

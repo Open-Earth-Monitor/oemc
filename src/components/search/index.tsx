@@ -1,11 +1,10 @@
 import { FC, useRef, ChangeEvent } from 'react';
 
+import { ChevronUpDownIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon } from '@heroicons/react/outline';
 import cx from 'clsx';
 
 import { Button } from '@/components/ui/button';
-import Icon from 'components/icon';
-import CLOSE_SVG from 'svgs/ui/close.svg?sprite';
-import SEARCH_SVG from 'svgs/ui/search.svg?sprite';
 
 import { SIZES, THEME } from './constants';
 import type { SearchProps } from './types';
@@ -35,8 +34,7 @@ const Search: FC<SearchProps> = ({
       method="get"
       onSubmit={(e) => e.preventDefault()}
     >
-      <Icon
-        icon={SEARCH_SVG}
+      <MagnifyingGlassIcon
         className={cx({
           'absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform': true,
           [THEME[theme]]: true,
@@ -75,7 +73,7 @@ const Search: FC<SearchProps> = ({
           }}
           aria-label="Empty search"
         >
-          <Icon icon={CLOSE_SVG} className="inline-block h-2 w-2" />
+          <ChevronUpDownIcon />
         </Button>
       )}
     </form>

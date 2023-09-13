@@ -2,10 +2,9 @@
 
 import { FC } from 'react';
 
+import { ArrowDownTrayIcon, ShareIcon } from '@heroicons/react/24/outline';
+
 import Info from '@/components/datasets-list/datasets-item-info';
-import Icon from 'components/icon';
-import DOWNLOAD_SVG from 'svgs/ui/download.svg?sprite';
-import SHARE_SVG from 'svgs/ui/share.svg?sprite';
 
 type DatasetsItemHeaderTypes = {
   layer_id: string;
@@ -34,10 +33,10 @@ export const DatasetsItemHeader: FC<DatasetsItemHeaderTypes> = ({
 
         {!!downloadUrlBase && (
           <a href={downloadUrlBase} target="_blank" rel="noopener noreferrer">
-            <Icon icon={DOWNLOAD_SVG} className="h-6 w-6 text-gray-300" />
+            <ArrowDownTrayIcon className="h-6 w-6 text-gray-300" />
           </a>
         )}
-        {<Icon icon={SHARE_SVG} className="h-6 w-6 text-gray-300" />}
+        {<ShareIcon className="h-6 w-6 text-gray-300" />}
       </div>
     </div>
   );

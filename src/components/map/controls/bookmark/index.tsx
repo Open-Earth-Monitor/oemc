@@ -1,10 +1,8 @@
 import { FC, useCallback, MouseEvent } from 'react';
 
+import { StarIcon } from '@heroicons/react/24/solid';
 import cx from 'clsx';
 import { useLocalStorage } from 'usehooks-ts';
-
-import Icon from 'components/icon';
-import BOOKMARK_SVG from 'svgs/map/bookmark.svg?sprite';
 
 import type { BookmarkControlProps } from './types';
 
@@ -33,7 +31,7 @@ export const BookmarkControl: FC<BookmarkControlProps> = ({
       disabled={!bounds}
       onClick={handleBookmark}
     >
-      <Icon icon={BOOKMARK_SVG} />
+      <StarIcon />
     </button>
   );
 };
