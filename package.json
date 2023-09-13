@@ -49,6 +49,7 @@
     "next": "^13.4.19",
     "postcss": "8.4.21",
     "react": "18.2.0",
+    "react-copy-to-clipboard": "5.1.0",
     "react-dom": "18.2.0",
     "react-map-gl": "7.0.25",
     "shadcn-ui": "latest",
@@ -79,6 +80,7 @@
     "prettier-plugin-tailwindcss": "^0.3.0",
     "react-icons": "4.11.0",
     "react-share": "4.4.1",
+    "svg-sprite-loader": "6.0.11",
     "svgo": "3.0.2",
     "svgo-loader": "^4.0.0",
     "typescript": "5.0.4"

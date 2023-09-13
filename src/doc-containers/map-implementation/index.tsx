@@ -12,7 +12,7 @@ import { useDebounce } from 'usehooks-ts';
 import Map from '@/components/map';
 // Controls
 import Controls from '@/components/map/controls';
-// import BookmarkControl from '@/components/map/controls/bookmark';
+import BookmarkControl from '@/components/map/controls/bookmark';
 import FitBoundsControl from '@/components/map/controls/fit-bounds';
 import ShareControl from '@/components/map/controls/share';
 import ZoomControl from '@/components/map/controls/zoom';
@@ -80,7 +80,7 @@ const MapImplementation = () => {
                 <Controls>
                   <ZoomControl />
                   <FitBoundsControl bounds={DEFAULT_BOUNDS} />
-                  {/* <BookmarkControl bounds={DEFAULT_BOUNDS} /> */}
+                  <BookmarkControl bounds={DEFAULT_BOUNDS} />
                   <ShareControl />
                 </Controls>
               )}
