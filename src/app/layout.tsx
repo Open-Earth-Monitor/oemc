@@ -13,8 +13,6 @@ const inter = Inter({
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // import type { Metadata } from 'next';
 
-import Header from '@/components/header';
-
 // Styles
 import 'maplibre-gl/dist/maplibre-gl.css';
 import '@/styles/globals.css';
@@ -44,11 +42,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <html lang="en" className={`${satoshi.className} ${inter.variable} h-screen w-screen`}>
-        <body className="inter mx-auto h-screen bg-brand-500">
-          <Header />
-          {children}
-        </body>
+      <html
+        lang="en"
+        className={`${satoshi.className} ${inter.variable} h-full min-h-screen w-screen`}
+      >
+        <body className="inter mx-auto h-full min-h-screen bg-brand-500">{children}</body>
       </html>
     </QueryClientProvider>
   );

@@ -1,34 +1,19 @@
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState } from 'react';
 
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/classnames';
 
-import type { LayerSettingTypes } from '@//types/layers';
-
+import { useURLayerParams } from '@/hooks';
 import Icon from 'components/icon';
 import HIDE_SVG from 'svgs/map/hide.svg?sprite';
 
 export const LayerVisibility = () => {
   const [isLayerVisible, setLayerVisibility] = useState(true);
-  const params = useSearchParams();
   const pathname = usePathname();
-  const layerParams = params.get('layers');
   const router = useRouter();
-  const layerParamsParsed = useMemo<null | LayerSettingTypes[]>(() => {
-    if (layerParams === null) return null;
-    else return JSON.parse(layerParams) as LayerSettingTypes[];
-  }, [layerParams]);
 
-  const layerId = useMemo<LayerSettingTypes['id']>(
-    () => layerParamsParsed?.[0]?.id,
-    [layerParamsParsed]
-  );
-
-  const layerOpacity = useMemo<LayerSettingTypes['opacity']>(
-    () => layerParamsParsed?.[0]?.opacity,
-    [layerParamsParsed]
-  );
+  const { layerId, layerOpacity } = useURLayerParams();
 
   const onToggleLayerVisibility = useCallback(() => {
     const encodedLayers = decodeURIComponent(

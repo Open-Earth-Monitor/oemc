@@ -1,1 +1,1 @@
-export { default } from './example-layer';
+export { default } from './raster-layer';
