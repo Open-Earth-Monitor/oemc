@@ -12,6 +12,7 @@ import Map from '@/components/map';
 import Controls from '@/components/map/controls';
 import BookmarkControl from '@/components/map/controls/bookmark';
 import FitBoundsControl from '@/components/map/controls/fit-bounds';
+import ShareControl from '@/components/map/controls/share';
 import ZoomControl from '@/components/map/controls/zoom';
 import Legend from '@/components/map/legend';
 import { Bbox } from '@/components/map/types';
@@ -76,6 +77,7 @@ const MapImplementation = () => {
                 <ZoomControl />
                 <FitBoundsControl bounds={DEFAULT_BOUNDS} />
                 {/* <BookmarkControl bounds={DEFAULT_BOUNDS} /> */}
+                <ShareControl />
               </Controls>
               <Legend />
             </>

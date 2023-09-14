@@ -2,9 +2,7 @@ import { FC } from 'react';
 
 import cx from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
-
-import Icon from 'components/icon';
-import LOADING_SVG from 'svgs/ui/loading.svg?sprite';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 import type { LoadingProps } from './types';
 
@@ -31,7 +29,7 @@ const Loading: FC<LoadingProps> = ({
             [className]: !!className,
           })}
         >
-          <Icon icon={LOADING_SVG} className={iconClassName} />
+          <AiOutlineLoading3Quarters className={iconClassName} />
         </motion.div>
       )}
     </AnimatePresence>

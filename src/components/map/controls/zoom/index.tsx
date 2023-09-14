@@ -2,9 +2,9 @@ import { FC, useCallback, MouseEvent } from 'react';
 
 import { useMap } from 'react-map-gl';
 
-import { PlusIcon } from '@heroicons/react/20/solid';
-import { MinusIcon } from '@heroicons/react/20/solid';
-import cx from 'clsx';
+import { cn } from '@/lib/classnames';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlineMinus } from 'react-icons/ai';
 
 import type { ZoomControlProps } from './types';
 
@@ -39,13 +39,13 @@ export const ZoomControl: FC<ZoomControlProps> = ({
 
   return (
     <div
-      className={cx({
+      className={cn({
         'inline-flex flex-col rounded-sm bg-brand-500 p-1 text-secondary-500': true,
         [className]: !!className,
       })}
     >
       <button
-        className={cx({
+        className={cn({
           ' disabled:cursor-default disabled:opacity-50': true,
           'hover:bg-gray-700 active:bg-gray-600': zoom < maxZoom,
         })}
@@ -54,10 +54,10 @@ export const ZoomControl: FC<ZoomControlProps> = ({
         disabled={zoom >= maxZoom}
         onClick={increaseZoom}
       >
-        <PlusIcon className="text-secondary-500" />
+        <AiOutlinePlus className="h-5 w-5 text-secondary-500" />
       </button>
       <button
-        className={cx({
+        className={cn({
           'disabled:cursor-default disabled:opacity-50': true,
           'hover:bg-gray-700 active:bg-gray-600': zoom > minZoom,
         })}
@@ -66,7 +66,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
         disabled={zoom <= minZoom}
         onClick={decreaseZoom}
       >
-        <MinusIcon className="text-secondary-500" />
+        <AiOutlineMinus className="h-5 w-5 text-secondary-500" />
       </button>
     </div>
   );

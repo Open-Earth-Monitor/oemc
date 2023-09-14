@@ -3,9 +3,7 @@ import { FC, useCallback, MouseEvent } from 'react';
 import { useMap } from 'react-map-gl';
 
 import cx from 'clsx';
-
-import Icon from 'components/icon';
-import FIT_BOUNDS_SVG from 'svgs/map/fit-bounds.svg?sprite';
+import { HiOutlineMapPin } from 'react-icons/hi2';
 
 import type { FitBoundsControlProps } from './types';
 
@@ -46,7 +44,7 @@ export const FitBoundsControl: FC<FitBoundsControlProps> = ({
       disabled={!bounds}
       onClick={handleFitBoundsChange}
     >
-      <Icon icon={FIT_BOUNDS_SVG} />
+      <HiOutlineMapPin className="h-5 w-5" />
     </button>
   );
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { LuInfo } from 'react-icons/lu';
 
 import { useLayerSource } from '@/hooks/map';
 
@@ -13,8 +13,7 @@ export const DatasetsItemInfo = ({ layer_id }: { layer_id: string }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        {' '}
-        <InformationCircleIcon className="h-6 w-6 text-gray-300" />
+        <LuInfo className="h-6 w-6 text-secondary-500" />
       </PopoverTrigger>
       <PopoverContent align="center" sideOffset={5}>
         <div className="flex flex-col">

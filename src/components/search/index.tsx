@@ -1,8 +1,8 @@
 import { FC, useRef, ChangeEvent } from 'react';
 
-import { ChevronUpDownIcon } from '@heroicons/react/24/outline';
-import { MagnifyingGlassIcon } from '@heroicons/react/outline';
 import cx from 'clsx';
+import { HiOutlineChevronUp } from 'react-icons/hi';
+import { HiMagnifyingGlass } from 'react-icons/hi2';
 
 import { Button } from '@/components/ui/button';
 
@@ -34,7 +34,7 @@ const Search: FC<SearchProps> = ({
       method="get"
       onSubmit={(e) => e.preventDefault()}
     >
-      <MagnifyingGlassIcon
+      <HiMagnifyingGlass
         className={cx({
           'absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform': true,
           [THEME[theme]]: true,
@@ -73,7 +73,7 @@ const Search: FC<SearchProps> = ({
           }}
           aria-label="Empty search"
         >
-          <ChevronUpDownIcon />
+          <HiOutlineChevronUp />
         </Button>
       )}
     </form>

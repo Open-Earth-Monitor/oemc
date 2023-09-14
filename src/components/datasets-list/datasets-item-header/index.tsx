@@ -2,7 +2,8 @@
 
 import { FC } from 'react';
 
-import { ArrowDownTrayIcon, ShareIcon } from '@heroicons/react/24/outline';
+import { HiOutlineShare } from 'react-icons/hi';
+import { HiArrowDownTray } from 'react-icons/hi2';
 
 import Info from '@/components/datasets-list/datasets-item-info';
 
@@ -21,13 +22,12 @@ export const DatasetsItemHeader: FC<DatasetsItemHeaderTypes> = ({
     <h3 className="text-2xl">{title}</h3>
     <div className="flex items-baseline space-x-2 pt-2">
       <Info layer_id={layer_id} />
-
       {!!downloadUrlBase && (
         <a href={downloadUrlBase} target="_blank" rel="noopener noreferrer">
-          <ArrowDownTrayIcon className="h-6 w-6 text-gray-300" />
+          <HiArrowDownTray className="h-6 w-6 text-gray-300" />
         </a>
       )}
-      <ShareIcon className="h-6 w-6 text-gray-300" />
+      {<HiOutlineShare className="h-6 w-6 text-gray-300" />}
     </div>
   </div>
 );

@@ -33,7 +33,7 @@ const Sidebar: FC = () => {
   );
 
   return (
-    <aside className="absolute bottom-3 left-5 top-3 z-50 w-[30vw] min-w-[526px] overflow-y-auto bg-brand-500 p-7.5">
+    <aside className="md:[30vw] absolute bottom-3 left-5 top-3 z-50 w-[526px] overflow-y-auto bg-brand-500 p-7.5">
       {!isMonitorsDirectoryOpen && (
         <div className="space-y-2 bg-secondary-500 p-7.5">
           <Button variant="dark" onClick={() => setMonitorsDirectoryVisibility(true)}>
