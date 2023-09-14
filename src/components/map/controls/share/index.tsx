@@ -20,7 +20,6 @@ export const ShareControl: FC<BookmarkControlProps> = ({
 }: BookmarkControlProps) => {
   const pathname = usePathname();
   const params = useSearchParams();
-
   const urlCopy = useMemo(
     () =>
       !!params.get('layers')

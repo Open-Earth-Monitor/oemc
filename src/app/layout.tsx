@@ -7,7 +7,7 @@ import Providers from '@/providers';
 // Styles
 import 'maplibre-gl/dist/maplibre-gl.css';
 import '@/styles/globals.css';
-
+import Header from '@/components/header';
 const satoshi = localFont({
   src: [
     {
@@ -27,7 +27,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${satoshi.className} h-full min-h-screen w-screen`}>
       <body className="font-inter mx-auto h-full min-h-screen bg-brand-500">
-        <Providers>{children}</Providers>
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   );

@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 const MapLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <div className="flex h-screen w-screen flex-col">
-      <Header />
       <div className="relative h-full w-full flex-1">
         {children}
         <Map />

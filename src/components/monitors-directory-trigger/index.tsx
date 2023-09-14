@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import { usePathname } from 'next/navigation';
 
@@ -27,7 +27,7 @@ const MapPage = () => {
   return (
     <Dialog open={isOpen}>
       {!!monitorId && (
-        <DialogTrigger className="w-full" asChild>
+        <DialogTrigger className="w-full">
           <button
             type="button"
             onClick={handleModal}
@@ -39,20 +39,24 @@ const MapPage = () => {
       )}
       <DialogContent className="max-w-90vw p-12">
         <DialogHeader>
-          <DialogTitle asChild>
+          <DialogTitle>
             <div className="divide-x-secondary-500 space-x-6 divide-x py-4">
               <h1 className="inline-block text-5xl">Monitors directory</h1>
               <span className="pl-6 text-2xl">Select one to discover</span>
             </div>
           </DialogTitle>
-          <DialogDescription asChild>
+          <DialogDescription>
             <MonitorsDirectory />
           </DialogDescription>
           {!!monitorId && (
-            <DialogClose className="absolute right-10 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+            <button
+              type="button"
+              onClick={handleModal}
+              className="absolute right-10 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+            >
               <Cross2Icon className="h-4 w-4" />
               <span className="sr-only">Close</span>
-            </DialogClose>
+            </button>
           )}
         </DialogHeader>
       </DialogContent>

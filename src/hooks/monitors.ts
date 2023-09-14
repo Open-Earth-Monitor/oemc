@@ -33,13 +33,13 @@ export function useMonitor(
   params: UseParams,
   queryOptions?: UseQueryOptions<MonitorTypes, Error, MonitorColorTypes>
 ) {
+  const { monitor_id } = params;
   const fetchMonitor = () =>
     API.request({
       method: 'GET',
-      url: `/monitors/${params.monitor_id}`,
-      params,
+      url: `/monitors/${monitor_id}`,
       ...queryOptions,
-    }).then((response: AxiosResponse<{ monitors: MonitorTypes[] }>) => response.data.monitors[0]);
+    }).then((response: AxiosResponse<MonitorTypes[]>) => response.data[0]);
   return useQuery(['monitor', params], fetchMonitor, {
     select: (data) => ({
       ...data,
@@ -58,7 +58,7 @@ export function useMonitors(
       method: 'GET',
       url: '/monitors',
       ...queryOptions,
-    }).then((response: AxiosResponse<{ monitors: MonitorTypes[] }>) => response.data.monitors);
+    }).then((response: AxiosResponse<MonitorTypes[]>) => response.data);
   return useQuery(['monitors'], fetchMonitors, {
     select: (data) => {
       return data.map((monitor) => ({
@@ -81,7 +81,7 @@ export function useMonitorLayers(
       method: 'GET',
       url: `/monitors/${monitor_id}/layers`,
       ...queryOptions,
-    }).then((response: AxiosResponse<{ layers: LayerTypes[] }>) => response.data.layers);
+    }).then((response: AxiosResponse<LayerTypes[]>) => response.data);
   return useQuery(['monitor-datasets', params], fetchMonitorLayers, {
     select: (data) => data,
     ...queryOptions,
@@ -98,7 +98,7 @@ export function useMonitorGeostories(
       method: 'GET',
       url: `/monitors/${monitor_id}/geostories`,
       ...queryOptions,
-    }).then((response: AxiosResponse<{ geostories: GeoStoryTypes[] }>) => response.data.geostories);
+    }).then((response: AxiosResponse<GeoStoryTypes[]>) => response.data);
   return useQuery(['monitors-geostories', params], fetchMonitorGeostories, {
     select: (data) => data,
     ...queryOptions,
