@@ -21,12 +21,13 @@ export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
       enabled: !!layerId,
     }
   );
-  const { gs_base_wms, gs_name, range } = data;
+
+  const { gs_base_wms, gs_name, range } = data ?? {};
   const tiles = useMemo(
     () => [
       `${gs_base_wms}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=true&LAYERS=${gs_name}&DIM_DATE=${range}&WIDTH=256&HEIGHT=256&CRS=EPSG:3857&STYLES=&BBOX={bbox-epsg-3857}`,
     ],
-    [gs_base_wms, gs_name, range]
+    [data]
   );
   const LAYER: RasterLayer & { key: string } = {
     id: 'raster-layer',

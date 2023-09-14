@@ -8,14 +8,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 export const DatasetsItemInfo = ({ layer_id }: { layer_id: string }) => {
   const { data } = useLayerSource({ layer_id });
-
-  const { author } = data;
+  const { author } = data ?? {};
 
   return (
     <Popover>
       <PopoverTrigger>
         {' '}
-        {<InformationCircleIcon className="h-6 w-6 text-gray-300" />}
+        <InformationCircleIcon className="h-6 w-6 text-gray-300" />
       </PopoverTrigger>
       <PopoverContent align="center" sideOffset={5}>
         <div className="flex flex-col">

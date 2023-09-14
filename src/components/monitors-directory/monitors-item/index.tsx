@@ -26,7 +26,7 @@ import { MonitorTypes } from '@/types/datasets';
 const MonitorsItem = ({ data }: { data: MonitorTypes }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const controls = useAnimationControls();
-  const { title, id, geostories } = data;
+  const { id, title, geostories } = data ?? {};
   const geostoriesLength = geostories.length;
   const geostoriesSentence = useMemo(
     () =>

@@ -22,12 +22,6 @@ export function useMonitor(
       response.data.monitors.find((monitor) => monitor.id === params.monitor_id)
     );
   return useQuery(['monitor', params], fetchMonitors, {
-    placeholderData: {
-      id: '',
-      title: '',
-      description: '',
-      geostories: [],
-    },
     select: (data) => data,
     ...queryOptions,
   });

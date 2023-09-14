@@ -31,17 +31,6 @@ export function useLayerSource(
     }).then((response: AxiosResponse<LayerTypes[]>) => response.data[0]);
 
   return useQuery(['layer', params], fetchLayer, {
-    placeholderData: {
-      gs_base_wms: '',
-      gs_name: '',
-      range: '',
-      author: '',
-      title: '',
-      description: '',
-      info: '',
-      download_url: '',
-      share: '',
-    },
     select: (data) => ({
       ...data,
       range: data?.range?.split(',')[0],

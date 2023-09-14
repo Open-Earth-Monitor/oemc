@@ -16,30 +16,20 @@ export const DatasetsItemHeader: FC<DatasetsItemHeaderTypes> = ({
   layer_id,
   title,
   downloadUrlBase,
-}) => {
-  // const downloadUrl = useMemo(() => {
-  //   if (!filename || !downloadUrlBase) return null;
-  //   return `${downloadUrlBase}/files/${filename.replace(
-  //     '.*',
-  //     `${range?.split(',')[0]}`
-  //   )}?download=1`;
-  // }, [filename, downloadUrlBase, range]);
+}) => (
+  <div className="flex items-start justify-between">
+    <h3 className="text-2xl">{title}</h3>
+    <div className="flex items-baseline space-x-2 pt-2">
+      <Info layer_id={layer_id} />
 
-  return (
-    <div className="flex items-start justify-between">
-      <h3 className="text-2xl">{title}</h3>
-      <div className="flex items-baseline space-x-2 pt-2">
-        {<Info layer_id={layer_id} />}
-
-        {!!downloadUrlBase && (
-          <a href={downloadUrlBase} target="_blank" rel="noopener noreferrer">
-            <ArrowDownTrayIcon className="h-6 w-6 text-gray-300" />
-          </a>
-        )}
-        {<ShareIcon className="h-6 w-6 text-gray-300" />}
-      </div>
+      {!!downloadUrlBase && (
+        <a href={downloadUrlBase} target="_blank" rel="noopener noreferrer">
+          <ArrowDownTrayIcon className="h-6 w-6 text-gray-300" />
+        </a>
+      )}
+      <ShareIcon className="h-6 w-6 text-gray-300" />
     </div>
-  );
-};
+  </div>
+);
 
 export default DatasetsItemHeader;

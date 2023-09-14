@@ -13,7 +13,6 @@ import { useURLayerParams } from '@/hooks';
 
 const DatasetsItem: FC<{ layer_id: string }> = ({ layer_id }) => {
   const { data } = useLayerSource({ layer_id });
-  const { title, description, download_url } = data;
 
   const router = useRouter();
   const pathname = usePathname();
@@ -35,6 +34,7 @@ const DatasetsItem: FC<{ layer_id: string }> = ({ layer_id }) => {
     isActive ? router.replace(`${pathname}`) : router.replace(url);
   }, [pathname, router, isActive, url]);
 
+  const { title, download_url, description } = data ?? {};
   return (
     <li key={layer_id} className="space-y-6 border-b border-b-brand-200 p-7.5 ">
       <ItemHeader
