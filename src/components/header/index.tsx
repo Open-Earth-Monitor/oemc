@@ -10,7 +10,7 @@ import { cn } from '@/lib/classnames';
 export const navLinks = [
   {
     name: 'Hub',
-    href: '/hub',
+    href: '/',
   },
   {
     name: 'Map',
@@ -32,8 +32,7 @@ const Header: FC = () => {
         />
         <nav className="flex justify-between" data-testid="main-navigation">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href || (pathname === '/' && link.href === '/hub');
-
+            const isActive = `/${pathname.split('/')[1]}` === link.href;
             return (
               <Link
                 className={cn({
