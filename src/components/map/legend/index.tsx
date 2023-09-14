@@ -13,14 +13,13 @@ export const Legend = () => {
   const { layerId } = useURLayerParams();
 
   const { data } = useLayerSource({ layer_id: layerId }, { enabled: !!layerId });
-  const { title } = data;
 
   const id = useId();
 
   const onToggleActive = useCallback(() => {
     setActive(!active);
   }, [active]);
-
+  const { title } = data ?? {};
   return (
     <div className="inter absolute bottom-3 right-10 z-50 flex grow flex-col px-5 py-1 text-xs text-secondary-500">
       {layerId && (
