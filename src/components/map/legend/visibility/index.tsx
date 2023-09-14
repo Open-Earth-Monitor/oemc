@@ -2,7 +2,8 @@ import { useCallback, useState } from 'react';
 
 import { useRouter, usePathname } from 'next/navigation';
 
-import { EyeSlashIcon, EyeIcon } from '@heroicons/react/20/solid';
+import { IoMdEyeOff } from 'react-icons/io';
+import { IoMdEye } from 'react-icons/io';
 
 import { cn } from '@/lib/classnames';
 
@@ -35,14 +36,14 @@ export const LayerVisibility = () => {
       aria-label="Toggle layer visibility"
     >
       {isLayerVisible ? (
-        <EyeIcon
+        <IoMdEye
           className={cn({
             'h-4 w-4 text-secondary-500': true,
             'text-secondary-900': !isLayerVisible,
           })}
         />
       ) : (
-        <EyeSlashIcon
+        <IoMdEyeOff
           className={cn({
             'h-4 w-4 text-secondary-500': true,
             'text-secondary-900': !isLayerVisible,

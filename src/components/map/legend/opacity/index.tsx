@@ -2,13 +2,13 @@ import { FC, useState, useCallback } from 'react';
 
 import { usePathname, useRouter } from 'next/navigation';
 
+import { MdOutlineOpacity } from 'react-icons/md';
+
 import { cn } from '@/lib/classnames';
 
 import { Slider } from '@/components/slider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useURLayerParams } from '@/hooks';
-import Icon from 'components/icon';
-import OPACITY_SVG from 'svgs/map/opacity.svg?sprite';
 export const OpacitySetting: FC = () => {
   const [isOpenOpacitySliderVisibility, setOpacitySliderVisibility] = useState<boolean>(false);
   const [opacity, setOpacity] = useState<number>(1);
@@ -40,10 +40,9 @@ export const OpacitySetting: FC = () => {
   return (
     <Popover onOpenChange={handleOpacityVisibility}>
       <PopoverTrigger>
-        <Icon
-          icon={OPACITY_SVG}
+        <MdOutlineOpacity
           className={cn({
-            'h-4 w-4 text-secondary-900 hover:text-secondary-500': true,
+            'h-5 w-5 text-secondary-900 hover:text-secondary-500': true,
             'text-secondary-500': isOpenOpacitySliderVisibility,
           })}
         />

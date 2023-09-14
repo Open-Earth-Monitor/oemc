@@ -1,7 +1,7 @@
 import { FC, useCallback, MouseEvent } from 'react';
 
-import { StarIcon } from '@heroicons/react/24/solid';
 import cx from 'clsx';
+import { AiTwotoneStar } from 'react-icons/ai';
 import { useLocalStorage } from 'usehooks-ts';
 
 import type { BookmarkControlProps } from './types';
@@ -31,7 +31,7 @@ export const BookmarkControl: FC<BookmarkControlProps> = ({
       disabled={!bounds}
       onClick={handleBookmark}
     >
-      <StarIcon />
+      <AiTwotoneStar />
     </button>
   );
 };

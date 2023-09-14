@@ -21,7 +21,6 @@
     "@dnd-kit/modifiers": "6.0.1",
     "@dnd-kit/sortable": "7.0.2",
     "@egjs/react-flicking": "4.10.9",
-    "@heroicons/react": "^2.0.18",
     "@mdx-js/loader": "^2.3.0",
     "@next/mdx": "13.4.19",
     "@radix-ui/react-checkbox": "1.0.4",
@@ -76,7 +75,8 @@
     "husky": "8.0.3",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0",
-    "svg-sprite-loader": "6.0.11",
+    "react-icons": "4.11.0",
+    "react-share": "4.4.1",
     "svgo": "3.0.2",
     "svgo-loader": "^4.0.0",
     "typescript": "5.0.4"

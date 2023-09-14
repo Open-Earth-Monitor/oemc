@@ -3,8 +3,8 @@ import { useState, useMemo, useCallback } from 'react';
 
 import Link from 'next/link';
 
-import { ChevronUpDownIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence, useAnimationControls } from 'framer-motion';
+import { HiOutlineChevronUp } from 'react-icons/hi';
 
 import { cn } from '@/lib/classnames';
 
@@ -50,7 +50,7 @@ const MonitorsItem = ({ data }: { data: MonitorTypes }) => {
         <div className="flex space-x-3">
           <AnimatePresence>
             {/* <motion.div whileHover="hover" variants={variants.icon}>
-              <ChevronUpDownIcon className="inline-block h-3 w-3 -rotate-90" />
+              <HiOutlineChevronUp className="inline-block h-3 w-3 -rotate-90" />
             </motion.div> */}
             <motion.h4 whileHover="hover">{title}.</motion.h4>
           </AnimatePresence>
@@ -58,7 +58,7 @@ const MonitorsItem = ({ data }: { data: MonitorTypes }) => {
       </Link>
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <button type="button" className="flex items-center space-x-3" onClick={handleVisibility}>
-        <ChevronUpDownIcon
+        <HiOutlineChevronUp
           className={cn({
             'inline-block h-3 w-3 -rotate-90 ': true,
             'rotate-0': isExpanded,
