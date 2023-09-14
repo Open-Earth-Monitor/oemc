@@ -8,8 +8,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components
 import MonitorsItem from './monitors-item';
 
 const MonitorsDirectory = () => {
-  const { data, isLoading, isFetched } = useMonitors();
-
+  const { data, isLoading, isFetched, isError } = useMonitors();
   return (
     <>
       <Loading visible={isLoading && !isFetched} className="m-auto flex justify-center py-4" />

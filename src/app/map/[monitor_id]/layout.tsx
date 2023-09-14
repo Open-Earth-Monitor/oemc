@@ -35,7 +35,7 @@ const MapLayout: FC<{ children: ReactNode }> = ({ children }) => {
     router.push(`/map/${monitor_id}/${e.currentTarget.id}`);
 
   return (
-    <aside className="md:[30vw] absolute bottom-3 left-5 top-3 z-40 w-[526px] space-y-6 overflow-y-auto bg-brand-500 p-7.5">
+    <aside className="md:[30vw] absolute bottom-3 left-5 top-3 z-40 w-[526px] space-y-6 overflow-y-auto bg-brand-400 p-7.5">
       <div className="space-y-2 px-6 py-5" style={{ backgroundColor: data?.color }}>
         <MonitorsDirectoryTrigger />
         <div className="space-y-2 text-brand-500">

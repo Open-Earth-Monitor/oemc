@@ -16,6 +16,7 @@ export const RemoveLayer: FC<{ className?: string }> = ({ className }) => {
 
   return (
     <button
+      data-testid="remove-layer"
       type="button"
       className={cn({ 'flex items-center justify-center': true, [className]: !!className })}
       onClick={onRemoveLayer}

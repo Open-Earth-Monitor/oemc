@@ -30,6 +30,7 @@ export const LayerVisibility = () => {
 
   return (
     <button
+      data-testid="layer-visibility"
       type="button"
       className="flex items-center justify-center"
       onClick={onToggleLayerVisibility}
