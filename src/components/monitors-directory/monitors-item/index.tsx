@@ -46,7 +46,7 @@ const MonitorsItem = ({ data }: { data: MonitorTypes }) => {
 
   return (
     <div className="first:b-t-secondary-50 border-b-secondary-50 space-y-3 border-b py-4 first:border-t">
-      <Link href={`/map?monitor_id=${id}`} className="inter flex items-center font-bold underline">
+      <Link href={`/map/${id}`} className="inter flex items-center font-bold underline">
         <div className="flex space-x-3">
           <AnimatePresence>
             {/* <motion.div whileHover="hover" variants={variants.icon}>
@@ -56,12 +56,15 @@ const MonitorsItem = ({ data }: { data: MonitorTypes }) => {
           </AnimatePresence>
         </div>
       </Link>
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <button type="button" className="flex items-center space-x-3" onClick={handleVisibility}>
+      <button
+        type="button"
+        className="flex items-center space-x-3"
+        onClick={() => void handleVisibility}
+      >
         <HiOutlineChevronUp
           className={cn({
-            'inline-block h-3 w-3 -rotate-90 ': true,
-            'rotate-0': isExpanded,
+            'inline-block h-3 w-3 rotate-90': true,
+            'rotate-180': isExpanded,
           })}
         />
         <p>

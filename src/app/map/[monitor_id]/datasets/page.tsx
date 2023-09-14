@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
 
-import MonitorsDirectory from '@/components/monitors-directory';
 export const metadata: Metadata = {
   title: 'Map - Open-Earth-Monitor Cyberinfrastructure',
   description: '...',
 };
 
-const MapPage: React.FC = () => <MonitorsDirectory />;
+const MapPage: React.FC = () => <div className="flex h-screen w-screen flex-col">Datasets</div>;
 
 export default MapPage;
