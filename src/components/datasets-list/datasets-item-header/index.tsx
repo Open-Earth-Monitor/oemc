@@ -8,20 +8,22 @@ import { HiArrowDownTray } from 'react-icons/hi2';
 import Info from '@/components/datasets-list/datasets-item-info';
 
 type DatasetsItemHeaderTypes = {
-  layer_id: string;
+  author: string;
   title: string;
   info?: string;
   downloadUrlBase?: string;
 };
 export const DatasetsItemHeader: FC<DatasetsItemHeaderTypes> = ({
-  layer_id,
+  author,
   title,
   downloadUrlBase,
 }) => (
   <div className="flex items-start justify-between">
-    <h3 className="text-2xl">{title}</h3>
-    <div className="flex items-baseline space-x-2 pt-2">
-      <Info layer_id={layer_id} />
+    <h3 data-testid="dataset-title" className="text-2xl font-bold">
+      {title}
+    </h3>
+    <div data-testid="dataset-description" className="flex items-baseline space-x-2 pt-2">
+      <Info author={author} />
       {!!downloadUrlBase && (
         <a href={downloadUrlBase} target="_blank" rel="noopener noreferrer">
           <HiArrowDownTray className="h-6 w-6 text-gray-300" />

@@ -47,3 +47,15 @@ export type MonitorTypes = Readonly<{
   id: string;
   title: string;
 }>;
+
+export type MonitorColorTypes = Readonly<{
+  author: string;
+  coverage: string;
+  date_created: string;
+  description: string;
+  geostories: GeoStoryTypes[];
+  id: string;
+  title: string;
+  color: string;
+  colorOpacity: string;
+}>;

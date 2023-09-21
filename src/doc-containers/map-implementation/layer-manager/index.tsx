@@ -13,6 +13,7 @@ const LayerManagerContainer = ({ layers }: { layers: string[] }) => {
   if (!layers) return null;
 
   const LAYERS_FILTERED = layers?.filter((layer) => !!LAYER_COMPONENTS[layer]);
+
   return (
     <>
       {LAYERS_FILTERED?.map((layer, i) => {

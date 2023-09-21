@@ -1,4 +1,6 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+
+import { useMonitors } from '@/hooks/monitors';
 
 import { navLinks } from 'components/header';
 test('test main navigation', async ({ page }) => {
@@ -9,5 +11,19 @@ test('test main navigation', async ({ page }) => {
     await navigationBar.getByRole('link', { name: link.name }).click();
     await page.waitForTimeout(8000);
     await page.goto(link.href);
+  }
+});
+
+test('monitors directory navigation', async ({ page }) => {
+  await page.goto('/map');
+  // const { data: monitors } = useMonitors();
+  // const monitorsIds = monitors.map((monitor) => monitor.id);
+  const monitorsIds = ['m1', 'm2'];
+
+  for (const link of monitorsIds) {
+    const navigationBar = page.getByTestId(link);
+    await navigationBar.click();
+    await page.waitForTimeout(8000);
+    await page.goto(`/map/${link}/datasets`);
   }
 });
