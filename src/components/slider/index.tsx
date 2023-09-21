@@ -16,7 +16,7 @@ const Slider = forwardRef<
     {...props}
   >
     <div className="flex w-full flex-col space-y-2">
-      <p className="inter m-auto rounded-xl border border-secondary-900 p-3 text-xs font-medium text-white">
+      <p className="font-inter m-auto rounded-xl border border-secondary-900 p-3 text-xs font-medium text-white">
         {props.value}%
       </p>
       <div className="relative py-1.5">

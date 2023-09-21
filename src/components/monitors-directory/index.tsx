@@ -3,18 +3,35 @@
 import { useMonitors } from '@/hooks/monitors';
 
 import Loading from '@/components/loading';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 import MonitorsItem from './monitors-item';
 
 const MonitorsDirectory = () => {
-  const { data, isLoading, isFetched, isFetching } = useMonitors();
+  const { data, isLoading, isFetched } = useMonitors();
 
   return (
-    <div className="bg-secondary-500 px-5 pb-1 pt-5">
-      <h3 className="max-w-[55%] pb-10 text-5xl font-bold text-brand-500">Monitors directory.</h3>
-      <Loading visible={isLoading || isFetching} className="m-auto flex justify-center py-4" />
-      {isFetched && data?.map((d) => <MonitorsItem key={d.id} data={d} />)}
-    </div>
+    <>
+      <Loading visible={isLoading && !isFetched} className="m-auto flex justify-center py-4" />
+      {isFetched && (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Monitors</TableHead>
+              <TableHead>Geostories</TableHead>
+              <TableHead>Publications</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data?.map((d) => (
+              <TableRow key={d.id}>
+                <MonitorsItem data={d} />
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+    </>
   );
 };
 

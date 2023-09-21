@@ -36,6 +36,9 @@ module.exports = {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
         },
+        fontFamily: {
+          inter: ['var(--font-inter)'],
+        },
         secondary: {
           500: 'hsl(60, 100%, 95%)',
           600: 'hsl(60, 16%, 76%)',
@@ -46,6 +49,10 @@ module.exports = {
           1000: 'hsl(60, 5%, 19%)', // no ui kit
 
           foreground: 'hsl(var(--secondary-foreground))',
+        },
+        monitors: {
+          blue: 'hsla(209, 94%, 87%, 1)',
+          green: 'hsla(133, 97%, 85%, 1)',
         },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

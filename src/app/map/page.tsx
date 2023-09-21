@@ -1,11 +1,5 @@
-import type { Metadata } from 'next';
+import MonitorsDirectoryTrigger from '@/components/monitors-directory-trigger';
 
-import MonitorsDirectory from '@/components/monitors-directory';
-export const metadata: Metadata = {
-  title: 'Map - Open-Earth-Monitor Cyberinfrastructure',
-  description: '...',
-};
-
-const MapPage: React.FC = () => <MonitorsDirectory />;
+const MapPage = () => <MonitorsDirectoryTrigger />;
 
 export default MapPage;

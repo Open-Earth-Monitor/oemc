@@ -5,6 +5,8 @@ import { useCallback, useState } from 'react';
 import { ViewState, MapProvider } from 'react-map-gl';
 import { Layer } from 'react-map-gl';
 
+import { usePathname } from 'next/navigation';
+
 import { useDebounce } from 'usehooks-ts';
 
 import Map from '@/components/map';
@@ -41,7 +43,8 @@ const INITIAL_VIEW_STATE = {
 
 const MapImplementation = () => {
   const [viewState, setViewState] = useState<Partial<ViewState>>({});
-
+  const pathname = usePathname();
+  const monitorId = pathname.split('/')[2];
   const debouncedViewStateValue = useDebounce<Partial<ViewState>>(viewState, 250);
 
   const handleViewState = useCallback((vw: ViewState) => {
@@ -60,28 +63,33 @@ const MapImplementation = () => {
           onMapViewStateChange={handleViewState}
           mapStyle={'https://demotiles.maplibre.org/style.json'}
         >
-          {() => (
-            <>
-              {/* This custom-layers layer serves as a separator to order
+          {(map) => {
+            console.log(map.getStyle());
+            return (
+              <>
+                {/* This custom-layers layer serves as a separator to order
               all the layers on the layer manager above the default map layers */}
-              <Layer
-                id="custom-layers"
-                type="background"
-                paint={{
-                  'background-color': '#000',
-                  'background-opacity': 0,
-                }}
-              />
-              <LayerManager layers={['raster']} />
-              <Controls>
-                <ZoomControl />
-                <FitBoundsControl bounds={DEFAULT_BOUNDS} />
-                {/* <BookmarkControl bounds={DEFAULT_BOUNDS} /> */}
-                <ShareControl />
-              </Controls>
-              <Legend />
-            </>
-          )}
+                <Layer
+                  id="custom-layers"
+                  type="background"
+                  paint={{
+                    'background-color': '#000',
+                    'background-opacity': 0,
+                  }}
+                />
+                <LayerManager layers={['raster']} />
+                {!!monitorId && (
+                  <Controls>
+                    <ZoomControl />
+                    <FitBoundsControl bounds={DEFAULT_BOUNDS} />
+                    {/* <BookmarkControl bounds={DEFAULT_BOUNDS} /> */}
+                    <ShareControl />
+                  </Controls>
+                )}
+                <Legend />
+              </>
+            );
+          }}
         </Map>
       </div>
     </MapProvider>

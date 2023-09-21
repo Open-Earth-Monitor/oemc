@@ -1,10 +1,5 @@
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Map - Open-Earth-Monitor Cyberinfrastructure',
-  description: '...',
+const GeostoriesPage: React.FC = () => {
+  return <p className="text-secondary-500">geostories</p>;
 };
 
-const MapPage: React.FC = () => <div className="flex h-screen w-screen flex-col">geostories</div>;
-
-export default MapPage;
+export default GeostoriesPage;
