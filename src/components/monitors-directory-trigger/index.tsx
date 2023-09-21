@@ -1,9 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-
+import { useState, useCallback, useEffect, use } from 'react';
 import { usePathname } from 'next/navigation';
-
 import { Cross2Icon, Half2Icon } from '@radix-ui/react-icons';
 
 import MonitorsDirectory from '@/components/monitors-directory';
@@ -19,12 +17,21 @@ import {
 } from '@/components/ui/dialog';
 
 const MapPage = () => {
-  const [isOpen, setModalVisibility] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const pathname = usePathname();
   const monitorId = pathname.split('/')[2];
-  const handleModal = useCallback(() => setModalVisibility(!isOpen), [isOpen]);
+  const handleModal = useCallback(() => setIsOpen(!isOpen), [isOpen]);
+
+  useEffect(() => setIsOpen(true), []);
+
+  useEffect(() => {
+    if (!monitorId) {
+      setIsOpen(true);
+    }
+  }, [monitorId]);
+
   return (
-    <Dialog defaultOpen={true} open={!!monitorId ? isOpen : true}>
+    <Dialog open={isOpen}>
       {!!monitorId && (
         <DialogTrigger className="w-full">
           <button
@@ -39,10 +46,10 @@ const MapPage = () => {
       <DialogContent className="max-w-90vw p-12">
         <DialogHeader>
           <DialogTitle asChild>
-            <h1 className="divide-x-secondary-500 space-x-6 divide-x py-4">
-              <span className="text-5xl">Monitors directory</span>
+            <div className="divide-x-secondary-500 space-x-6 divide-x py-4">
+              <h1 className="inline-block text-5xl">Monitors directory</h1>
               <span className="pl-6 text-2xl">Select one to discover</span>
-            </h1>
+            </div>
           </DialogTitle>
           <DialogDescription asChild>
             <MonitorsDirectory />
