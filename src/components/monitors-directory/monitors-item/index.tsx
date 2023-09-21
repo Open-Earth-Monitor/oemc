@@ -44,9 +44,10 @@ const MonitorsItem = ({ data }: { data: MonitorColorTypes }) => {
             style={{ backgroundColor: color }}
           />
           <Link
+            data-testid={id}
+            key={id}
             href={`/map/${id}/datasets`}
             className=" flex items-center font-bold"
-            data-testid={id}
           >
             <AnimatePresence>
               <div className="flex w-full flex-col">

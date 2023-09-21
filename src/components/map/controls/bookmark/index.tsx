@@ -10,7 +10,7 @@ export const BookmarkControl: FC<BookmarkControlProps> = ({
   bounds,
   className,
 }: BookmarkControlProps) => {
-  const [value, setValue] = useLocalStorage('map-bookmarks', '');
+  const [, setValue] = useLocalStorage('map-bookmarks', '');
   const handleBookmark = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
