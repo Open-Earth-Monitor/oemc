@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 
 import API from 'services/api';
 
-import type { MonitorTypes, MonitorColorTypes } from '../types/datasets';
+import type { MonitorTypes, MonitorColorTypes, LayerTypes, GeoStoryTypes } from '../types/datasets';
 type UseParams = {
   monitor_id?: string;
 };
@@ -33,16 +33,14 @@ export function useMonitor(
   params: UseParams,
   queryOptions?: UseQueryOptions<MonitorTypes, Error, MonitorColorTypes>
 ) {
-  const fetchMonitors = () =>
+  const fetchMonitor = () =>
     API.request({
       method: 'GET',
-      url: '/monitors',
+      url: `/monitors/${params.monitor_id}`,
       params,
       ...queryOptions,
-    }).then((response: AxiosResponse<{ monitors: MonitorTypes[] }>) =>
-      response.data.monitors.find((monitor) => monitor.id === params.monitor_id)
-    );
-  return useQuery(['monitor', params], fetchMonitors, {
+    }).then((response: AxiosResponse<{ monitors: MonitorTypes[] }>) => response.data.monitors[0]);
+  return useQuery(['monitor', params], fetchMonitor, {
     select: (data) => ({
       ...data,
       color: COLORS[data.id] as string,
@@ -69,6 +67,40 @@ export function useMonitors(
         colorOpacity: COLORS_OPACITY[monitor.id] as string,
       }));
     },
+    ...queryOptions,
+  });
+}
+
+export function useMonitorLayers(
+  params: UseParams,
+  queryOptions?: UseQueryOptions<LayerTypes[], Error>
+) {
+  const { monitor_id } = params;
+  const fetchMonitorLayers = () =>
+    API.request({
+      method: 'GET',
+      url: `/monitors/${monitor_id}/layers`,
+      ...queryOptions,
+    }).then((response: AxiosResponse<{ layers: LayerTypes[] }>) => response.data.layers);
+  return useQuery(['monitor-datasets', params], fetchMonitorLayers, {
+    select: (data) => data,
+    ...queryOptions,
+  });
+}
+
+export function useMonitorGeostories(
+  params: UseParams,
+  queryOptions?: UseQueryOptions<GeoStoryTypes[], Error>
+) {
+  const { monitor_id } = params;
+  const fetchMonitorGeostories = () =>
+    API.request({
+      method: 'GET',
+      url: `/monitors/${monitor_id}/geostories`,
+      ...queryOptions,
+    }).then((response: AxiosResponse<{ geostories: GeoStoryTypes[] }>) => response.data.geostories);
+  return useQuery(['monitors-geostories', params], fetchMonitorGeostories, {
+    select: (data) => data,
     ...queryOptions,
   });
 }

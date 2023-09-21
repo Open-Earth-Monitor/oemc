@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useCallback, useEffect, use } from 'react';
+import { useState, useCallback } from 'react';
+
 import { usePathname } from 'next/navigation';
-import { Cross2Icon, Half2Icon } from '@radix-ui/react-icons';
+
+import { Cross2Icon } from '@radix-ui/react-icons';
 
 import MonitorsDirectory from '@/components/monitors-directory';
 import { buttonVariants } from '@/components/ui/button';
@@ -17,23 +19,15 @@ import {
 } from '@/components/ui/dialog';
 
 const MapPage = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState<boolean>(pathname === '/map');
   const monitorId = pathname.split('/')[2];
   const handleModal = useCallback(() => setIsOpen(!isOpen), [isOpen]);
-
-  useEffect(() => setIsOpen(true), []);
-
-  useEffect(() => {
-    if (!monitorId) {
-      setIsOpen(true);
-    }
-  }, [monitorId]);
 
   return (
     <Dialog open={isOpen}>
       {!!monitorId && (
-        <DialogTrigger className="w-full">
+        <DialogTrigger className="w-full" asChild>
           <button
             type="button"
             onClick={handleModal}

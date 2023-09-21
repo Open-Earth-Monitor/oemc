@@ -2,9 +2,10 @@ import { FC, useCallback, MouseEvent } from 'react';
 
 import { useMap } from 'react-map-gl';
 
-import { cn } from '@/lib/classnames';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { AiOutlineMinus } from 'react-icons/ai';
+
+import { cn } from '@/lib/classnames';
 
 import type { ZoomControlProps } from './types';
 

@@ -20,10 +20,12 @@ test('monitors directory navigation', async ({ page }) => {
   // const monitorsIds = monitors.map((monitor) => monitor.id);
   const monitorsIds = ['m1', 'm2'];
 
-  for (const link of monitorsIds) {
-    const navigationBar = page.getByTestId(link);
+  for (const id of monitorsIds) {
+    const navigationBar = page.getByTestId(id);
+    await navigationBar.getByRole('link', { name: id }).click();
+
     await navigationBar.click();
     await page.waitForTimeout(8000);
-    await page.goto(`/map/${link}/datasets`);
+    await page.goto(`/map/${id}/datasets`);
   }
 });
