@@ -4,9 +4,7 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { flatten } from 'lodash';
-import { compact } from 'lodash';
-import { trimEnd } from 'lodash';
+import { flatten, compact, trimEnd } from 'lodash-es';
 import { AiFillStar } from 'react-icons/ai';
 import { useLocalStorage } from 'usehooks-ts';
 
