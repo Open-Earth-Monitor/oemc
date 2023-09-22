@@ -1971,6 +1971,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash-es@npm:^4.17.9":
+  version: 4.17.9
+  resolution: "@types/lodash-es@npm:4.17.9"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: a2c7ab8da13892f89ab86b61dd9a0125c767b9db7b9bdaac7fd8508c9fa884bbb19a9760dbdc1e7e698e3322b7a8ba03daa80832371da32a8bd42da0920be838
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.14.198
+  resolution: "@types/lodash@npm:4.14.198"
+  checksum: b290e4480707151bcec738bca40527915defe52a0d8e26c83685c674163a265e1a88cb2ee56b0fb587a89819d0cd5df86ada836aec3e9c2e4bf516e7d348d524
+  languageName: node
+  linkType: hard
+
 "@types/mapbox-gl@npm:^2.6.0":
   version: 2.7.14
   resolution: "@types/mapbox-gl@npm:2.7.14"
@@ -7740,6 +7756,7 @@ __metadata:
     "@tailwindcss/typography": 0.5.9
     "@tanstack/react-query": ^4.33.0
     "@types/google.analytics": 0.0.42
+    "@types/lodash-es": ^4.17.9
     "@types/node": 20.5.7
     "@types/react": 18.2.21
     "@types/react-dom": 18.0.11
@@ -9911,11 +9928,11 @@ __metadata:
 
 "typescript@patch:typescript@5.0.4#~builtin<compat/typescript>":
   version: 5.0.4
-  resolution: "typescript@patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=ad5954"
+  resolution: "typescript@patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=85af82"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 6a1fe9a77bb9c5176ead919cc4a1499ee63e46b4e05bf667079f11bf3a8f7887f135aa72460a4c3b016e6e6bb65a822cb8689a6d86cbfe92d22cc9f501f09213
+  checksum: bb309d320c59a26565fb3793dba550576ab861018ff3fd1b7fccabbe46ae4a35546bc45f342c0a0b6f265c801ccdf64ffd68f548f117ceb7f0eac4b805cd52a9
   languageName: node
   linkType: hard
 

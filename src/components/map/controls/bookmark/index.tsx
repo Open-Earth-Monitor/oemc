@@ -18,12 +18,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+
 export const BookmarkControl: FC = () => {
   const [bookmarkList] = useLocalStorage('map-bookmarks', '');
   const [bookmarkName, setBookmarkName] = useState('');
   const [isInputVisible, setInputVisibility] = useState(false);
+
   const pathname = usePathname();
-  const path = trimEnd(pathname, '/') as string;
+  const path = trimEnd(pathname, '/');
   const params = useSearchParams();
   const url = !!params.get('layers')
     ? `${process.env.NEXT_PUBLIC_BASE_URL}${path}?layers=${params.get('layers')}`
