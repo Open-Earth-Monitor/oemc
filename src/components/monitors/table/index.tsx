@@ -5,7 +5,7 @@ import { useMonitors } from '@/hooks/monitors';
 import Loading from '@/components/loading';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-import MonitorsItem from './monitors-item';
+import MonitorsItem from './item';
 
 const MonitorsDirectory = () => {
   const { data, isLoading, isFetched, isError } = useMonitors();

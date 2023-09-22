@@ -19,10 +19,9 @@ const GeostoriesPage = () => {
       {isLoading && <Loading visible={isLoading} />}
       {isFetched && !isError && (
         <ul className="space-y-2 text-brand-500">
-          <AnimatePresence>
-            {data.map(({ id, title }) => (
+          {data.map(({ id, title }) => (
+            <AnimatePresence key={id}>
               <motion.li
-                key={id}
                 style={{ backgroundColor: color }}
                 whileHover={{
                   boxShadow: `4px 4px ${color}`,
@@ -34,8 +33,8 @@ const GeostoriesPage = () => {
                 <span className="font-inter text-xs">GEOSTORY</span>
                 <h1 className="text-2xl">{title}</h1>
               </motion.li>
-            ))}
-          </AnimatePresence>
+            </AnimatePresence>
+          ))}
         </ul>
       )}
     </>
