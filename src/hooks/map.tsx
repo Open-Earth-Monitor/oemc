@@ -28,7 +28,7 @@ export function useLayerSource(
       url: `/layers`,
       params,
       ...queryOptions,
-    }).then((response: AxiosResponse<{ layers: LayerTypes[] }>) => response.data.layers[0]);
+    }).then((response: AxiosResponse<LayerTypes[]>) => response.data[0]);
 
   return useQuery(['layer', params], fetchLayer, {
     select: (data) => ({

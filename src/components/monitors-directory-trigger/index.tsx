@@ -27,7 +27,7 @@ const MapPage = () => {
   return (
     <Dialog open={isOpen}>
       {!!monitorId && (
-        <DialogTrigger className="w-full">
+        <DialogTrigger className="w-full" asChild>
           <button
             type="button"
             onClick={handleModal}
@@ -45,7 +45,7 @@ const MapPage = () => {
               <span className="pl-6 text-2xl">Select one to discover</span>
             </div>
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription asChild>
             <MonitorsDirectory />
           </DialogDescription>
           {!!monitorId && (
