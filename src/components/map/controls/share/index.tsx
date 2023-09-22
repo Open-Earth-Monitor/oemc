@@ -10,6 +10,7 @@ import { RiTwitterXLine, RiLinkedinFill } from 'react-icons/ri';
 
 import { cn } from '@/lib/classnames';
 
+import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import type { BookmarkControlProps } from './types';
@@ -53,8 +54,8 @@ export const ShareControl: FC<BookmarkControlProps> = ({
       <PopoverTrigger>
         <HiOutlineShare
           className={cn({
-            'h-7 w-7 rounded-sm bg-brand-500 px-1 py-0.5 text-secondary-500 disabled:cursor-default disabled:opacity-50':
-              true,
+            [CONTROL_BUTTON_STYLES.default]: true,
+            'h-8 w-8': true,
             'hover:bg-gray-700 active:bg-gray-600': !!bounds,
             [className]: !!className,
           })}

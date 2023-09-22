@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 import { usePathname } from 'next/navigation';
 
@@ -30,6 +30,7 @@ const MapPage = () => {
         <DialogTrigger className="w-full" asChild>
           <button
             type="button"
+            data-testid="monitors-directory-trigger"
             onClick={handleModal}
             className={buttonVariants({ variant: 'dark' })}
           >
@@ -49,14 +50,16 @@ const MapPage = () => {
             <MonitorsDirectory />
           </DialogDescription>
           {!!monitorId && (
-            <button
-              type="button"
-              onClick={handleModal}
-              className="absolute right-10 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
-            >
-              <Cross2Icon className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </button>
+            <DialogClose asChild>
+              <button
+                type="button"
+                onClick={handleModal}
+                className="absolute right-10 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+              >
+                <Cross2Icon className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </button>
+            </DialogClose>
           )}
         </DialogHeader>
       </DialogContent>

@@ -2,7 +2,6 @@ import { FC, ReactNode } from 'react';
 
 import type { Metadata } from 'next';
 
-import Header from '@/components/header';
 import Map from '@/doc-containers/map-implementation';
 export const metadata: Metadata = {
   title: 'Map - Open-Earth-Monitor Cyberinfrastructure',

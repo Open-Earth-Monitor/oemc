@@ -12,7 +12,7 @@ const MonitorsDirectory = () => {
   return (
     <>
       <Loading visible={isLoading && !isFetched} className="m-auto flex justify-center py-4" />
-      {isFetched && (
+      {isFetched && !isError && (
         <Table>
           <TableHeader>
             <TableRow>
@@ -21,7 +21,7 @@ const MonitorsDirectory = () => {
               <TableHead>Publications</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody data-testid="monitors-list">
             {data?.map((d) => (
               <TableRow key={d.id}>
                 <MonitorsItem data={d} />

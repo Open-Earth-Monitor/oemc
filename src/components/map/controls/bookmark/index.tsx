@@ -10,8 +10,7 @@ import { trimEnd } from 'lodash';
 import { AiFillStar } from 'react-icons/ai';
 import { useLocalStorage } from 'usehooks-ts';
 
-import { cn } from '@/lib/classnames';
-
+import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -21,7 +20,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-
 export const BookmarkControl: FC = () => {
   const [bookmarkList] = useLocalStorage('map-bookmarks', '');
   const [bookmarkName, setBookmarkName] = useState('');
@@ -69,7 +67,7 @@ export const BookmarkControl: FC = () => {
   return (
     <Sheet>
       <SheetTrigger className="rounded-sm bg-brand-500 p-1 hover:bg-gray-700 active:bg-gray-600 disabled:cursor-default disabled:opacity-5">
-        <AiFillStar className="h-5 w-5 text-secondary-600" />
+        <AiFillStar className={CONTROL_BUTTON_STYLES.default} />
       </SheetTrigger>
       <SheetContent className="top-[56px] bg-brand-150 bg-opacity-95 pl-10">
         <SheetHeader>

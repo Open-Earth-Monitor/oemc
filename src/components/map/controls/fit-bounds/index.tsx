@@ -5,8 +5,9 @@ import { useMap } from 'react-map-gl';
 import cx from 'clsx';
 import { HiOutlineMapPin } from 'react-icons/hi2';
 
-import type { FitBoundsControlProps } from './types';
+import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 
+import type { FitBoundsControlProps } from './types';
 export const FitBoundsControl: FC<FitBoundsControlProps> = ({
   mapId = 'current',
   bounds,
@@ -44,7 +45,7 @@ export const FitBoundsControl: FC<FitBoundsControlProps> = ({
       disabled={!bounds}
       onClick={handleFitBoundsChange}
     >
-      <HiOutlineMapPin className="h-5 w-5" />
+      <HiOutlineMapPin className={CONTROL_BUTTON_STYLES.default} />
     </button>
   );
 };

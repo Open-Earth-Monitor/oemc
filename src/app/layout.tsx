@@ -2,12 +2,12 @@ import { ReactNode } from 'react';
 
 import localFont from 'next/font/local';
 
-// import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Header from '@/components/header';
 import Providers from '@/providers';
 // Styles
 import 'maplibre-gl/dist/maplibre-gl.css';
 import '@/styles/globals.css';
-import Header from '@/components/header';
+
 const satoshi = localFont({
   src: [
     {

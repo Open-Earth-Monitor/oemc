@@ -7,8 +7,9 @@ import { AiOutlineMinus } from 'react-icons/ai';
 
 import { cn } from '@/lib/classnames';
 
-import type { ZoomControlProps } from './types';
+import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 
+import type { ZoomControlProps } from './types';
 export const ZoomControl: FC<ZoomControlProps> = ({
   mapId = 'current',
   className,
@@ -41,7 +42,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
   return (
     <div
       className={cn({
-        'inline-flex flex-col rounded-sm bg-brand-500 p-1 text-secondary-500': true,
+        'inline-flex flex-col rounded-sm bg-brand-400 p-1 text-secondary-500': true,
         [className]: !!className,
       })}
     >
@@ -55,7 +56,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
         disabled={zoom >= maxZoom}
         onClick={increaseZoom}
       >
-        <AiOutlinePlus className="h-5 w-5 text-secondary-500" />
+        <AiOutlinePlus className={CONTROL_BUTTON_STYLES.default} />
       </button>
       <button
         className={cn({
@@ -67,7 +68,7 @@ export const ZoomControl: FC<ZoomControlProps> = ({
         disabled={zoom <= minZoom}
         onClick={decreaseZoom}
       >
-        <AiOutlineMinus className="h-5 w-5 text-secondary-500" />
+        <AiOutlineMinus className={CONTROL_BUTTON_STYLES.default} />
       </button>
     </div>
   );
