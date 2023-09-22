@@ -23,7 +23,7 @@ export const BookmarkControl: FC = () => {
   const [bookmarkName, setBookmarkName] = useState('');
   const [isInputVisible, setInputVisibility] = useState(false);
   const pathname = usePathname();
-  const path = trimEnd(pathname, '/');
+  const path = trimEnd(pathname, '/') as string;
   const params = useSearchParams();
   const url = !!params.get('layers')
     ? `${process.env.NEXT_PUBLIC_BASE_URL}${path}?layers=${params.get('layers')}`
@@ -41,7 +41,7 @@ export const BookmarkControl: FC = () => {
     []
   );
 
-  const bookmarksList = useMemo(
+  const bookmarksList = useMemo<{ name: string; value: string }[]>(
     () =>
       flatten(
         Object.entries(localStorage).map((entry: string[]) =>

@@ -1,7 +1,7 @@
 'use client';
 import { useMemo, FC, ReactNode } from 'react';
 
-import { usePathname, useRouter, useParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { useMonitor, useMonitors } from '@/hooks/monitors';
 
