@@ -85,7 +85,7 @@ export const ShareControl: FC<BookmarkControlProps> = ({
               onClick={() => void handleCopy()}
             >
               <PiLinkSimpleBold className="text-secondary-200 h-5 w-5" />
-              <p className="py-0 text-xs">Copy URL link</p>
+              <p className="py-1 text-xs">Copy URL link</p>
             </button>
             <div className="flex items-center space-x-2">
               <TwitterShareButton

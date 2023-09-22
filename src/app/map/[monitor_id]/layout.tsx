@@ -1,7 +1,7 @@
 'use client';
 import { useMemo, FC, ReactNode } from 'react';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useParams } from 'next/navigation';
 
 import { useMonitor, useMonitors } from '@/hooks/monitors';
 
@@ -13,6 +13,8 @@ const MapLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { data: monitors } = useMonitors();
   const defaultMonitor = monitors?.[0];
   const pathname = usePathname();
+  // const params = useParams();
+
   const monitorId = pathname.split('/')[2];
   const tabId = pathname.split('/')[3];
 

@@ -6331,6 +6331,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash-es@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash-es@npm:4.17.21"
+  checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2
+  languageName: node
+  linkType: hard
+
 "lodash._reinterpolate@npm:^3.0.0":
   version: 3.0.0
   resolution: "lodash._reinterpolate@npm:3.0.0"
@@ -7749,6 +7756,7 @@ __metadata:
     eslint-plugin-prettier: ^4.2.1
     framer-motion: 10.12.16
     husky: 8.0.3
+    lodash-es: ^4.17.21
     lucide-react: ^0.257.0
     mapbox-gl: "npm:empty-npm-package@1.0.0"
     maplibre-gl: 3.3.1
