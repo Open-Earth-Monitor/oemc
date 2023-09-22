@@ -1,85 +1,35 @@
 'use client';
-import { useMemo, FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 
-import { useMonitor, useMonitors } from '@/hooks/monitors';
+import { useMonitor } from '@/hooks/monitors';
 
-import MonitorsDirectoryTrigger from '@/components/monitors-directory-trigger';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import MonitorCard from '@/components/monitors/card';
+import TabsNav from '@/components/tabs-nav';
 
-const MapLayout: FC<{ children: ReactNode }> = ({ children }) => {
-  const { data: monitors } = useMonitors();
-  const defaultMonitor = monitors?.[0];
+const MonitorLayout: FC<{ children: ReactNode }> = ({ children }) => {
+  const params = useParams();
   const pathname = usePathname();
-  // const params = useParams();
+  const monitorId = params?.monitor_id as string;
+  const tabId = pathname.split(`${monitorId}/`)[1];
 
-  const monitorId = pathname.split('/')[2];
-  const tabId = pathname.split('/')[3];
-
-  const router = useRouter();
-
-  const monitor_id = useMemo<string>(
-    () => monitorId || defaultMonitor?.id,
-    [monitorId, defaultMonitor]
-  );
   const { data, isFetched, isError } = useMonitor(
     {
-      monitor_id: monitor_id,
+      monitor_id: monitorId,
     },
     {
-      enabled: !!monitor_id,
+      enabled: !!monitorId,
     }
   );
 
-  const handleTabs = (e: { currentTarget: { id: string } }) =>
-    router.push(`/map/${monitor_id}/${e.currentTarget.id}`);
-
   return (
     <aside className="md:[30vw] absolute bottom-3 left-5 top-3 z-40 w-[526px] space-y-6 overflow-y-auto bg-brand-400 p-7.5">
-      <div className="space-y-2 px-6 py-5" style={{ backgroundColor: data?.color }}>
-        <MonitorsDirectoryTrigger />
-        <div className="space-y-2 text-brand-500">
-          <span className="font-inter text-xs">MONITOR</span>
-          {isFetched && !isError ? (
-            <h1 className="text-5xl">{data.title}</h1>
-          ) : (
-            <Skeleton className="h-[10px] w-[100px] rounded-sm" />
-          )}
-          {isFetched && !isError ? (
-            <p>{data.description}</p>
-          ) : (
-            <Skeleton className="h-[5px] w-full rounded-sm py-2" />
-          )}
-        </div>
-      </div>
-      <Tabs defaultValue={tabId}>
-        <TabsList>
-          <TabsTrigger
-            onClick={handleTabs}
-            id="datasets"
-            title="datasets"
-            value="datasets"
-            className="px-7.5 py-6"
-          >
-            Datasets
-          </TabsTrigger>
-          <TabsTrigger
-            onClick={handleTabs}
-            id="geostories"
-            title="geostories"
-            value="geostories"
-            className="px-7.5 py-6"
-          >
-            Geostories
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="datasets">{children}</TabsContent>
-        <TabsContent value="geostories">{children} </TabsContent>
-      </Tabs>
+      <MonitorCard data={data} isFetched={isFetched} isError={isError} />
+      <TabsNav monitorId={monitorId} tabId={tabId} />
+      {children}
     </aside>
   );
 };
 
-export default MapLayout;
+export default MonitorLayout;

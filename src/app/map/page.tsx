@@ -1,5 +1,5 @@
-import MonitorsDirectoryTrigger from '@/components/monitors-directory-trigger';
+import MonitorsDirectoryDialog from '@/components/monitors/dialog';
 
-const MapPage = () => <MonitorsDirectoryTrigger />;
+const MapLayout = () => <MonitorsDirectoryDialog isOpen={true} />;
 
-export default MapPage;
+export default MapLayout;

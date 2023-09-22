@@ -23,12 +23,9 @@ export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
   );
   const { gs_base_wms, gs_name, range } = data ?? {};
 
-  const tiles = useMemo(
-    () => [
-      `${gs_base_wms}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=true&LAYERS=${gs_name}&DIM_DATE=${range}&WIDTH=256&HEIGHT=256&CRS=EPSG:3857&STYLES=&BBOX={bbox-epsg-3857}`,
-    ],
-    [gs_base_wms, gs_name, range]
-  );
+  const tiles = [
+    `${gs_base_wms}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=true&LAYERS=${gs_name}&DIM_DATE=${range}&WIDTH=256&HEIGHT=256&CRS=EPSG:3857&STYLES=&BBOX={bbox-epsg-3857}`,
+  ];
   const LAYER: RasterLayer = {
     id: 'raster-layer',
     type: 'raster',
@@ -36,16 +33,14 @@ export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
       'raster-opacity': layerOpacity,
     },
   };
-  const SOURCE: RasterSource & GeoJSONSourceOptions = useMemo(
-    () => ({
-      id: 'layer-source',
-      type: 'raster',
-      tiles,
-      minzoom: 0,
-      maxzoom: 12,
-    }),
-    [tiles]
-  );
+  const SOURCE: RasterSource & GeoJSONSourceOptions & { key: string } = {
+    id: 'layer-source',
+    key: `${range}-${layerId}`,
+    type: 'raster',
+    tiles,
+    minzoom: 0,
+    maxzoom: 12,
+  };
 
   return (
     SOURCE && (
