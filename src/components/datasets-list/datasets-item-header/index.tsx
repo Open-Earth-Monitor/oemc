@@ -22,7 +22,7 @@ export const DatasetsItemHeader: FC<DatasetsItemHeaderTypes> = ({
     <h3 data-testid="dataset-title" className="text-2xl font-bold">
       {title}
     </h3>
-    <div data-testid="dataset-description" className="flex items-baseline space-x-2 pt-2">
+    <div className="flex items-baseline space-x-2 pt-2">
       <Info author={author} />
       {!!downloadUrlBase && (
         <a href={downloadUrlBase} target="_blank" rel="noopener noreferrer">
