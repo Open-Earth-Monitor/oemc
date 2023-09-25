@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Hub - Open-Earth-Monitor Cyberinfrastructure',
+  title: 'Hub - Open Earth Monitor Cyberinfrastructure',
   description: '...',
 };
 

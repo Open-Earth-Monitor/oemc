@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import localFont from 'next/font/local';
 
 import Header from '@/components/header';
-import Providers from '@/providers';
+import Providers from '@/utils/providers';
 // Styles
 import 'maplibre-gl/dist/maplibre-gl.css';
 import '@/styles/globals.css';

@@ -1,13 +1,37 @@
 'use client';
 
-import { forwardRef, ElementRef, ComponentPropsWithoutRef, HTMLAttributes } from 'react';
+import {
+  forwardRef,
+  ElementRef,
+  ComponentPropsWithoutRef,
+  HTMLAttributes,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 
 import { cn } from 'lib/classnames';
 
-const Dialog = DialogPrimitive.Root;
+const Dialog = ({ open, defaultOpen, onOpenChange, ...props }: DialogPrimitive.DialogProps) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsOpen(defaultOpen ?? open ?? false);
+  }, [defaultOpen, open]);
+
+  const handleOpenChanged = useCallback(
+    (open: boolean) => {
+      onOpenChange?.(open);
+      setIsOpen(open);
+    },
+    [onOpenChange]
+  );
+
+  return <DialogPrimitive.Root open={isOpen} {...props} onOpenChange={handleOpenChanged} />;
+};
 
 const DialogTrigger = DialogPrimitive.Trigger;
 

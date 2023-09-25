@@ -1,14 +1,8 @@
-import { FC, ReactNode } from 'react';
-
-import type { Metadata } from 'next';
+import { FC, PropsWithChildren } from 'react';
 
 import Map from '@/doc-containers/map-implementation';
-export const metadata: Metadata = {
-  title: 'Map - Open-Earth-Monitor Cyberinfrastructure',
-  description: '...',
-};
 
-const MapLayout: FC<{ children: ReactNode }> = ({ children }) => {
+const MapLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className="absolute bottom-0 left-0 top-[58px] w-full flex-1">
       {children}
