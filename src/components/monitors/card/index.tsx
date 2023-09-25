@@ -1,5 +1,5 @@
 'use client';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import type { MonitorColorTypes } from '@/types/datasets';
 
@@ -10,10 +10,9 @@ const MonitorCard: FC<{ data: MonitorColorTypes; isFetched: boolean; isError: bo
   isFetched,
   isError,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div className="space-y-2 px-6 py-5" style={{ backgroundColor: data?.color }}>
-      <MonitorsDirectoryDialog isOpen={isModalOpen} onClick={setIsModalOpen} />
+      <MonitorsDirectoryDialog />
       <div className="space-y-2 text-brand-500">
         <span className="font-inter text-xs">MONITOR</span>
         {isFetched && !isError ? (

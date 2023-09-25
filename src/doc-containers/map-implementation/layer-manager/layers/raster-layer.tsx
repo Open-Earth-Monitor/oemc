@@ -1,5 +1,4 @@
 'use client';
-import { useMemo } from 'react';
 
 import { Source, Layer } from 'react-map-gl';
 
