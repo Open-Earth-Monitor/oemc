@@ -44,7 +44,7 @@ const MonitorsItem = ({ data }: { data: MonitorColorTypes }) => {
             style={{ backgroundColor: color }}
           />
           <Link
-            data-testid={id}
+            data-testid={`monitor-item-${id}`}
             key={id}
             href={`/map/${id}/datasets`}
             className=" flex items-center font-bold"
