@@ -35,9 +35,13 @@ const DatasetsItem: FC<{
     isActive ? router.replace(`${pathname}`) : router.replace(url);
   }, [pathname, router, isActive, url]);
   return (
-    <li key={id} className="space-y-6 border-b border-b-brand-200 p-7.5 ">
+    <li
+      key={id}
+      className="space-y-6 border-b border-b-brand-200 p-7.5 "
+      data-testid={`dataset-item-${id}`}
+    >
       <ItemHeader title={title} author={author} downloadUrlBase={download_url} />
-      <p>{description}</p>
+      <p data-testid="dataset-description">{description}</p>
 
       <Button
         id={id}

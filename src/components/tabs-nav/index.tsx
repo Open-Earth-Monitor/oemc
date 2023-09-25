@@ -17,6 +17,7 @@ const TabsNav: FC<{ monitorId: string; tabId: string }> = ({ monitorId, tabId })
             true,
           'border-t-2 border-t-secondary-500': tab === tabId,
         })}
+        data-testid={`tab-${tab}`}
       >
         {tab}
       </Link>

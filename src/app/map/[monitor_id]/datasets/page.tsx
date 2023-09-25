@@ -16,7 +16,7 @@ const DatasetsPage = () => {
     <>
       {isLoading && <Loading visible={isLoading} />}
       {isFetched && !isError && (
-        <ul className="text-secondary-500">
+        <ul className="text-secondary-500" data-testid="datasets-list">
           {data.map(({ layer_id, title, download_url, description, author }) => (
             <DatasetsItem
               key={layer_id}
