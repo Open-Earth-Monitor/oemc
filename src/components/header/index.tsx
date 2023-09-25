@@ -11,10 +11,12 @@ export const navLinks = [
   {
     name: 'Hub',
     href: '/',
+    'data-testid': 'hub-link',
   },
   {
     name: 'Map',
     href: '/map',
+    'data-testid': 'map-link',
   },
 ];
 const Header: FC = () => {
@@ -42,6 +44,7 @@ const Header: FC = () => {
                 })}
                 href={link.href}
                 key={link.name}
+                data-testid={link['data-testid']}
               >
                 {link.name}
               </Link>
