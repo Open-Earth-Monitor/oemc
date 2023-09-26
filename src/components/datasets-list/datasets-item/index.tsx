@@ -50,7 +50,7 @@ const DatasetsItem: FC<{
 
       <Button
         id={id}
-        dataset-testid={id}
+        data-testid="dataset-layer-toggle-button"
         type="button"
         className={cn({ 'w-full': true, '': isActive })}
         onClick={handleClick}
