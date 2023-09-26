@@ -10,7 +10,7 @@ import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
 import LayerVisibility from './visibility';
 export const Legend = () => {
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(false);
   const { layerId } = useURLayerParams();
   const { data } = useLayerSource({ layer_id: layerId }, { enabled: !!layerId });
   const id = useId();
