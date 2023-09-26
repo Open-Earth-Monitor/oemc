@@ -14,19 +14,20 @@ export const LayerVisibility = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { layerId, layerOpacity } = useURLayerParams();
+  const { layerId, layerOpacity, layerYear } = useURLayerParams();
 
   const onToggleLayerVisibility = useCallback(() => {
     const encodedLayers = decodeURIComponent(
       JSON.stringify({
         id: layerId,
         opacity: isLayerVisible ? 0 : layerOpacity > 0 ? layerOpacity : 1,
+        ...(layerYear && { layerYear }),
       })
     );
     setLayerVisibility(!isLayerVisible);
     const url = `${pathname}/?layers=[${encodedLayers}]`;
     return router.replace(url);
-  }, [isLayerVisible, layerId, pathname, router, layerOpacity]);
+  }, [isLayerVisible, layerId, pathname, router, layerOpacity, layerYear]);
 
   return (
     <button

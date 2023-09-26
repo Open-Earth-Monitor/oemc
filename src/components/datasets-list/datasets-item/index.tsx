@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/classnames';
 
 import ItemHeader from '@/components/datasets-list/datasets-item-header';
+import TimeLine from '@/components/time-lime';
 import { Button } from '@/components/ui/button';
 import { useURLayerParams } from '@/hooks';
 
@@ -15,7 +16,8 @@ const DatasetsItem: FC<{
   download_url: string;
   description: string;
   author: string;
-}> = ({ id, title, download_url, description, author }) => {
+  range: { label: string; value: string }[] | null;
+}> = ({ id, title, download_url, description, author, range }) => {
   const router = useRouter();
   const pathname = usePathname();
   const { layerId } = useURLayerParams();
@@ -23,7 +25,7 @@ const DatasetsItem: FC<{
   const isActive = layerId === id;
 
   // Create the layers object
-  const layersObject = { id, opacity: 1 };
+  const layersObject = { id, opacity: 1, year: range?.[0]?.value };
 
   // Encode the layers object as a JSON string
   const encodedLayers = decodeURIComponent(JSON.stringify(layersObject));
@@ -34,6 +36,7 @@ const DatasetsItem: FC<{
   const handleClick = useCallback(() => {
     isActive ? router.replace(`${pathname}`) : router.replace(url);
   }, [pathname, router, isActive, url]);
+
   return (
     <li
       key={id}
@@ -42,6 +45,8 @@ const DatasetsItem: FC<{
     >
       <ItemHeader title={title} author={author} downloadUrlBase={download_url} />
       <p data-testid="dataset-description">{description}</p>
+
+      {range && <TimeLine range={range} layerId={id} />}
 
       <Button
         id={id}

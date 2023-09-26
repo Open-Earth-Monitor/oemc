@@ -3,7 +3,13 @@ import { AxiosResponse } from 'axios';
 
 import API from 'services/api';
 
-import type { MonitorTypes, MonitorColorTypes, LayerTypes, GeoStoryTypes } from '../types/datasets';
+import type {
+  MonitorTypes,
+  MonitorColorTypes,
+  LayerTypes,
+  GeoStoryTypes,
+  LayerParsedRangeTypes,
+} from '../types/datasets';
 type UseParams = {
   monitor_id?: string;
 };
@@ -73,7 +79,7 @@ export function useMonitors(
 
 export function useMonitorLayers(
   params: UseParams,
-  queryOptions?: UseQueryOptions<LayerTypes[], Error>
+  queryOptions?: UseQueryOptions<LayerTypes[], Error, LayerParsedRangeTypes[]>
 ) {
   const { monitor_id } = params;
   const fetchMonitorLayers = () =>
@@ -83,7 +89,14 @@ export function useMonitorLayers(
       ...queryOptions,
     }).then((response: AxiosResponse<LayerTypes[]>) => response.data);
   return useQuery(['monitor-datasets', params], fetchMonitorLayers, {
-    select: (data) => data,
+    select: (data) =>
+      data.map((d) => ({
+        ...d,
+        range: d?.range?.map((r) => ({
+          label: r.substring(0, 4),
+          value: r,
+        })),
+      })),
     ...queryOptions,
   });
 }

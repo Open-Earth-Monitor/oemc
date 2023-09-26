@@ -6,7 +6,33 @@ export type LayerTypes = Readonly<{
   gs_base_wms: string;
   gs_name: string;
   gs_dimension: string;
-  range: string;
+  range: string[] | null;
+  author: string | null;
+  coverage: string;
+  description: string;
+  download_url: string;
+  filename: string;
+  geo_story: string;
+  layer_id: string;
+  license: string;
+  location_query_url: string;
+  metadata_url: string;
+  monitor: string;
+  polygon_query_url: string;
+  range_labels: string;
+  regex: string;
+  srv_path: string;
+  theme: string;
+  title: string;
+  unit: string;
+  use_case: string;
+}>;
+
+export type LayerParsedRangeTypes = Readonly<{
+  gs_base_wms: string;
+  gs_name: string;
+  gs_dimension: string;
+  range: { label: string; value: string }[] | null;
   author: string | null;
   coverage: string;
   description: string;
