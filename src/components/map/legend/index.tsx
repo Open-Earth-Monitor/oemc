@@ -12,7 +12,6 @@ export const Legend = () => {
   const [active, setActive] = useState(true);
   const { layerId } = useURLayerParams();
   const { data } = useLayerSource({ layer_id: layerId }, { enabled: !!layerId });
-
   const id = useId();
 
   const onToggleActive = useCallback(() => {
