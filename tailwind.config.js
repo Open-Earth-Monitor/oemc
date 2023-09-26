@@ -9,7 +9,6 @@ module.exports = {
   content: [
     './src/app/**/*.{ts,tsx}',
     './src/components/**/*.{ts,tsx}',
-    './src/containers/**/*.@(tsx|ts)',
     // Remove this line if the documentation is not used
     './src/doc-containers/**/*.@(tsx|ts)',
   ],
