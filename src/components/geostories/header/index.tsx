@@ -13,7 +13,7 @@ const GeostoryHead: FC<{ data: GeostoryTypes; isFetched: boolean; isError: boole
     <div className="space-y-2 px-6 py-5">
       <div className="space-y-2 text-secondary-500">
         {/* TODO - get color from API when we get categories */}
-        <span className="font-inter text-xs" style={{ color: 'red' }}>
+        <span className="font-inter text-xs" style={{ color: 'hsl(60, 100%, 95%)' }}>
           GEOSTORY
         </span>
         {isFetched && !isError ? (

@@ -19,9 +19,9 @@ const GeostoriesPage = () => {
     <>
       {isLoading && <Loading visible={isLoading} />}
       {isFetched && !isError && (
-        <div className="space-y-4 text-brand-500">
+        <div className="text-brand-500" data-testid="geostories-list">
           {data.map(({ id, title }) => (
-            <Link key={id} href={`/map/geostories/${id}`} className="">
+            <Link key={id} href={`/map/geostories/${id}`} data-testid={`geostory-link-${id}`}>
               <AnimatePresence>
                 <motion.div
                   style={{ backgroundColor: color }}
@@ -31,9 +31,14 @@ const GeostoriesPage = () => {
                   }}
                   transition={{ duration: 0 }}
                   className="mb-5 space-y-2 px-6 py-5"
+                  data-testid={`geostory-item-${id}`}
                 >
-                  <span className="font-inter text-xs">GEOSTORY</span>
-                  <h1 className="text-2xl">{title}</h1>
+                  <span data-testid="geostory-tag" className="font-inter text-xs">
+                    GEOSTORY
+                  </span>
+                  <h1 className="text-2xl" data-testId={`geostory-title-${id}`}>
+                    {title}
+                  </h1>
                 </motion.div>
               </AnimatePresence>
             </Link>
