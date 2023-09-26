@@ -25,7 +25,12 @@ export const DatasetsItemHeader: FC<DatasetsItemHeaderTypes> = ({
     <div className="flex items-baseline space-x-2 pt-2">
       <Info author={author} />
       {!!downloadUrlBase && (
-        <a href={downloadUrlBase} target="_blank" rel="noopener noreferrer">
+        <a
+          href={downloadUrlBase}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-testid="dataset-download-button"
+        >
           <HiArrowDownTray className="h-6 w-6 text-gray-300" />
         </a>
       )}
