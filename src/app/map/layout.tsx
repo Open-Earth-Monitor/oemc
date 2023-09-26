@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from 'react';
 
-import Map from '@/doc-containers/map-implementation';
+import Map from '@/containers/map';
 
 const MapLayout: FC<PropsWithChildren> = ({ children }) => {
   return (

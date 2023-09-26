@@ -7,9 +7,10 @@ import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { HiPlay, HiPause } from 'react-icons/hi2';
 
 import BarChart from './chart';
-import type { TimeLineTypes } from './types';
+import type { TimeSeriesTypes } from './types';
 
-export const TimeLine: FC<TimeLineTypes> = ({ range, layerId }: TimeLineTypes) => {
+const timeStepDuration = 1500;
+export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTypes) => {
   const [yearIndex, setYearIndex] = useState(0);
   const [isPlaying, setPlaying] = useState(false);
   const pathname = usePathname();
@@ -33,7 +34,7 @@ export const TimeLine: FC<TimeLineTypes> = ({ range, layerId }: TimeLineTypes) =
 
         const url = `${pathname}/?layers=[${encodedLayers}]`;
         router.replace(url);
-      }, 1000);
+      }, timeStepDuration);
     } else {
       clearInterval(interval);
     }
@@ -52,15 +53,15 @@ export const TimeLine: FC<TimeLineTypes> = ({ range, layerId }: TimeLineTypes) =
       <button
         type="button"
         onClick={handlePlay}
-        className="border-text-brand-50 flex rounded-full border border-opacity-50 p-4"
+        className="flex rounded-full border border-brand-50 border-opacity-50 p-4"
       >
         {isPlaying ? (
-          <HiPause className="h-6 w-6 text-secondary-500" />
+          <HiPause className="h-5 w-5 text-secondary-500" />
         ) : (
-          <HiPlay className="h-6 w-6 text-secondary-500" />
+          <HiPlay className="h-5 w-5 text-secondary-500" />
         )}
       </button>
-      <ParentSize className="flex h-full w-full py-6">
+      <ParentSize className="flex h-full w-full">
         {({ width, height }) => (
           <BarChart
             id={layerId}
@@ -68,6 +69,7 @@ export const TimeLine: FC<TimeLineTypes> = ({ range, layerId }: TimeLineTypes) =
             height={height}
             range={range}
             selectedYear={range[yearIndex]?.label}
+            isPlaying={isPlaying}
           />
         )}
       </ParentSize>
@@ -75,4 +77,4 @@ export const TimeLine: FC<TimeLineTypes> = ({ range, layerId }: TimeLineTypes) =
   );
 };
 
-export default TimeLine;
+export default TimeSeries;

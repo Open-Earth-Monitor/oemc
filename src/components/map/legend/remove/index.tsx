@@ -18,11 +18,14 @@ export const RemoveLayer: FC<{ className?: string }> = ({ className }) => {
     <button
       data-testid="remove-layer"
       type="button"
-      className={cn({ 'flex items-center justify-center': true, [className]: !!className })}
+      className={cn({
+        'flex cursor-pointer items-center justify-center': true,
+        [className]: !!className,
+      })}
       onClick={onRemoveLayer}
       aria-label="Toggle layer visibility"
     >
-      <RxCross2 className="text-secondary-200 h-4 w-4" />
+      <RxCross2 className="h-6 w-6 text-brand-50 hover:text-secondary-500" />
     </button>
   );
 };

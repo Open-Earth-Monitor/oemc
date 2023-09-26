@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/classnames';
 
 import ItemHeader from '@/components/datasets-list/datasets-item-header';
-import TimeLine from '@/components/time-lime';
+import TimeSeries from '@/components/time-series';
 import { Button } from '@/components/ui/button';
 import { useURLayerParams } from '@/hooks';
 
@@ -40,13 +40,13 @@ const DatasetsItem: FC<{
   return (
     <li
       key={id}
-      className="space-y-6 border-b border-b-brand-200 p-7.5 "
+      className="space-y-6 border-b border-b-brand-200 p-6"
       data-testid={`dataset-item-${id}`}
     >
       <ItemHeader title={title} author={author} downloadUrlBase={download_url} />
       <p data-testid="dataset-description">{description}</p>
 
-      {range && <TimeLine range={range} layerId={id} />}
+      {range && <TimeSeries range={range} layerId={id} />}
 
       <Button
         id={id}

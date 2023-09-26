@@ -24,7 +24,7 @@ const Header: FC = () => {
 
   return (
     <header className="z-50 w-full border-b border-b-secondary-1000 bg-brand-500">
-      <div className="m-auto flex max-w-7xl items-center justify-between">
+      <div className="m-auto flex max-w-7xl items-center justify-between px-6">
         <Image
           alt="Open-earth-monitor"
           src="/images/OEM-logo.svg"

@@ -35,6 +35,7 @@ export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
     type: 'raster',
     paint: {
       'raster-opacity': layerOpacity,
+      'raster-fade-duration': 1000,
     },
   };
   const SOURCE: RasterSource & GeoJSONSourceOptions & { key: string } = {

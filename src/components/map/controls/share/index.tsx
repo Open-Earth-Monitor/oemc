@@ -55,18 +55,18 @@ export const ShareControl: FC<BookmarkControlProps> = ({
         <HiOutlineShare
           className={cn({
             [CONTROL_BUTTON_STYLES.default]: true,
-            'h-8 w-8': true,
+            'h-8 w-8 p-1': true,
             'hover:bg-gray-700 active:bg-gray-600': !!bounds,
             [className]: !!className,
           })}
         />
       </PopoverTrigger>
       <PopoverContent
-        sideOffset={-28}
-        alignOffset={28}
+        sideOffset={-32}
+        alignOffset={32}
         align="start"
         className={cn({
-          'ml-1 flex w-fit items-center space-x-4 border border-secondary-900 px-1 py-[3px]': true,
+          'top-0 ml-1 flex w-fit items-center space-x-4 border border-brand-50 px-1 py-[3px]': true,
           'py-0': urlCopyState,
         })}
       >
