@@ -16,9 +16,12 @@ const Slider = forwardRef<
     {...props}
   >
     <div className="flex w-full flex-col space-y-2">
-      <p className="font-inter m-auto rounded-xl border border-secondary-900 p-3 text-xs font-medium text-white">
+      <div
+        data-testid="slider-current-value"
+        className="font-inter m-auto rounded-xl border border-secondary-900 p-3 text-xs font-medium text-white"
+      >
         {props.value}%
-      </p>
+      </div>
       <div className="relative py-1.5">
         <SliderPrimitive.Track className=" h-3 w-full grow overflow-hidden rounded-full">
           <SliderPrimitive.Range className="absolute h-2.5 rounded-full bg-gradient-to-r from-secondary-500 to-secondary-800" />

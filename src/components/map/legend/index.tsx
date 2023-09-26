@@ -19,7 +19,10 @@ export const Legend = () => {
   }, [active]);
   const { title } = data ?? {};
   return (
-    <div className="font-inter absolute bottom-3 right-10 z-50 flex grow flex-col px-5 py-1 text-xs text-secondary-500">
+    <div
+      className="font-inter absolute bottom-3 right-10 z-50 flex grow flex-col px-5 py-1 text-xs text-secondary-500"
+      data-testid="map-legend"
+    >
       {layerId && (
         <div className="rounded-sm border border-secondary-500 bg-brand-500">
           <button
@@ -28,15 +31,22 @@ export const Legend = () => {
             aria-controls={id}
             className="relative flex w-full items-center space-x-2 px-5 py-1.5 text-xs uppercase text-white"
             onClick={onToggleActive}
+            data-testid="map-legend-toggle-button"
           >
             <span>Legend</span>
           </button>
         </div>
       )}
       {active && layerId && (
-        <div className="relative flex justify-between space-x-4 rounded-sm bg-brand-500 px-5 py-2.5 text-xs text-secondary-500">
-          <p>{title}</p>
-          <div className="flex space-x-2 divide-x divide-secondary-900">
+        <div
+          className="relative flex justify-between space-x-4 rounded-sm bg-brand-500 px-5 py-2.5 text-xs text-secondary-500"
+          data-testid="map-legend-item"
+        >
+          <p data-testid="map-legend-item-title">{title}</p>
+          <div
+            className="flex space-x-2 divide-x divide-secondary-900"
+            data-testid="map-legend-item-toolbar"
+          >
             <div className="flex space-x-2">
               <OpacitySetting />
               <LayerVisibility />

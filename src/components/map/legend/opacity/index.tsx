@@ -1,4 +1,4 @@
-import { FC, useState, useCallback } from 'react';
+import { FC, useEffect, useState, useCallback } from 'react';
 
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -9,6 +9,7 @@ import { cn } from '@/lib/classnames';
 import { Slider } from '@/components/slider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useURLayerParams } from '@/hooks';
+
 export const OpacitySetting: FC = () => {
   const [isOpenOpacitySliderVisibility, setOpacitySliderVisibility] = useState<boolean>(false);
   const [opacity, setOpacity] = useState<number>(1);
@@ -16,7 +17,7 @@ export const OpacitySetting: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { layerId } = useURLayerParams();
+  const { layerId, layerOpacity } = useURLayerParams();
 
   const handleChange = useCallback(
     (e: number[]) => {
@@ -29,17 +30,20 @@ export const OpacitySetting: FC = () => {
         })
       );
 
-      setOpacity(opacityValue);
-
       // Construct the URL
       const url = `${pathname}/?layers=[${encodedLayers}]`;
       return router.replace(url);
     },
-    [setOpacity, pathname, router, layerId]
+    [pathname, router, layerId]
   );
+
+  useEffect(() => {
+    setOpacity(layerOpacity);
+  }, [layerOpacity]);
+
   return (
     <Popover onOpenChange={handleOpacityVisibility}>
-      <PopoverTrigger>
+      <PopoverTrigger data-testid="layer-opacity-button">
         <MdOutlineOpacity
           className={cn({
             'h-5 w-5 text-secondary-900 hover:text-secondary-500': true,
@@ -60,6 +64,7 @@ export const OpacitySetting: FC = () => {
           min={0}
           max={100}
           step={1}
+          data-testid="layer-opacity-slider"
         />
       </PopoverContent>
     </Popover>
