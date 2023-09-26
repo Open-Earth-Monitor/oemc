@@ -7,7 +7,7 @@ import type {
   MonitorTypes,
   MonitorColorTypes,
   LayerTypes,
-  GeoStoryTypes,
+  GeostoryTypes,
   LayerParsedRangeTypes,
 } from '../types/datasets';
 type UseParams = {
@@ -103,7 +103,7 @@ export function useMonitorLayers(
 
 export function useMonitorGeostories(
   params: UseParams,
-  queryOptions?: UseQueryOptions<GeoStoryTypes[], Error>
+  queryOptions?: UseQueryOptions<GeostoryTypes[], Error>
 ) {
   const { monitor_id } = params;
   const fetchMonitorGeostories = () =>
@@ -111,7 +111,7 @@ export function useMonitorGeostories(
       method: 'GET',
       url: `/monitors/${monitor_id}/geostories`,
       ...queryOptions,
-    }).then((response: AxiosResponse<GeoStoryTypes[]>) => response.data);
+    }).then((response: AxiosResponse<GeostoryTypes[]>) => response.data);
   return useQuery(['monitors-geostories', params], fetchMonitorGeostories, {
     select: (data) => data,
     ...queryOptions,

@@ -28,7 +28,7 @@ export type LayerTypes = Readonly<{
   use_case: null;
 }>;
 
-export type GeoStoryTypes = Readonly<{
+export type GeostoryTypes = Readonly<{
   author: string;
   date_created: string;
   description: string;
@@ -43,7 +43,7 @@ export type MonitorTypes = Readonly<{
   coverage: string;
   date_created: string;
   description: string;
-  geostories: GeoStoryTypes[];
+  geostories: GeostoryTypes[];
   id: string;
   title: string;
 }>;
