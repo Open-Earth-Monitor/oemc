@@ -7,7 +7,7 @@ import { cn } from '@/lib/classnames';
 const TABS: string[] = ['datasets', 'geostories'];
 
 const TabsNav: FC<{ monitorId: string; tabId: string }> = ({ monitorId, tabId }) => (
-  <nav>
+  <nav className="border-b border-t border-brand-50">
     {TABS.map((tab) => (
       <Link
         key={tab}

@@ -13,7 +13,7 @@ const DatasetsPage = () => {
   const { data, isLoading, isFetched, isError } = useMonitorLayers({ monitor_id: monitorId });
 
   return (
-    <>
+    <div className="m-auto w-full">
       {isLoading && <Loading visible={isLoading} />}
       {isFetched && !isError && (
         <ul className="text-secondary-500" data-testid="datasets-list">
@@ -30,7 +30,7 @@ const DatasetsPage = () => {
           ))}
         </ul>
       )}
-    </>
+    </div>
   );
 };
 
