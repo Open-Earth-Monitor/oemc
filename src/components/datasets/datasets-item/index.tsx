@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { cn } from '@/lib/classnames';
 
-import ItemHeader from '@/components/datasets-list/datasets-item-header';
+import ItemHeader from '@/components/datasets/datasets-item-header';
 import TimeSeries from '@/components/time-series';
 import { Button } from '@/components/ui/button';
 import { useURLayerParams } from '@/hooks';

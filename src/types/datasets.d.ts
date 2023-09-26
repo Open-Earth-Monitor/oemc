@@ -54,7 +54,7 @@ export type LayerParsedRangeTypes = Readonly<{
   use_case: string;
 }>;
 
-export type GeoStoryTypes = Readonly<{
+export type GeostoryTypes = Readonly<{
   author: string;
   date_created: string;
   description: string;
@@ -69,7 +69,7 @@ export type MonitorTypes = Readonly<{
   coverage: string;
   date_created: string;
   description: string;
-  geostories: GeoStoryTypes[];
+  geostories: GeostoryTypes[];
   id: string;
   title: string;
 }>;
@@ -79,7 +79,7 @@ export type MonitorColorTypes = Readonly<{
   coverage: string;
   date_created: string;
   description: string;
-  geostories: GeoStoryTypes[];
+  geostories: GeostoryTypes[];
   id: string;
   title: string;
   color: string;

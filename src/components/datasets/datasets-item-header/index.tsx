@@ -5,7 +5,7 @@ import { FC } from 'react';
 import { HiOutlineShare } from 'react-icons/hi';
 import { HiArrowDownTray } from 'react-icons/hi2';
 
-import Info from '@/components/datasets-list/datasets-item-info';
+import Info from '@/components/datasets/datasets-item-info';
 
 type DatasetsItemHeaderTypes = {
   author: string;

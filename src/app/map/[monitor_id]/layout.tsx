@@ -24,9 +24,11 @@ const MonitorLayout: FC<{ children: ReactNode }> = ({ children }) => {
   );
 
   return (
-    <aside className="md:[30vw] absolute bottom-3 left-3 top-3 z-40 w-[526px] space-y-6 overflow-y-auto bg-brand-500 p-7.5">
-      <MonitorCard data={data} isFetched={isFetched} isError={isError} />
-      <TabsNav monitorId={monitorId} tabId={tabId} />
+    <aside className="md:[30vw] absolute bottom-3 left-3 top-3 z-40 w-[526px] overflow-y-auto bg-brand-500 p-7.5">
+      <div className="space-y-6">
+        <MonitorCard data={data} isFetched={isFetched} isError={isError} />
+        <TabsNav monitorId={monitorId} tabId={tabId} />
+      </div>
       {children}
     </aside>
   );

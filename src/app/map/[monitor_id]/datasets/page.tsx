@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 
 import { useMonitorLayers } from '@/hooks/monitors';
 
-import DatasetsItem from '@/components/datasets-list/datasets-item';
+import DatasetsItem from '@/components/datasets/datasets-item';
 import Loading from '@/components/loading';
 
 const DatasetsPage = () => {
