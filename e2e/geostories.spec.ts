@@ -62,6 +62,10 @@ test.describe('geostories tab', () => {
     await geostoriesTabLink.click();
 
     await page.waitForURL(`**/map/${monitorsIds[0]}/geostories`, { waitUntil: 'load' });
+    await page.waitForResponse(
+      `https://api.earthmonitor.org/monitors/${monitorsIds[0]}/geostories`,
+      { timeout: 30000 }
+    );
 
     // check monitor info is visible
     const monitorCard = page.getByTestId('monitor-card');
