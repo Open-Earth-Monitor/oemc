@@ -28,7 +28,7 @@ test.describe('geostories tab', () => {
     // check geostories list is visible
     const geostoriesResponse = await page.waitForResponse(
       `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/geostories`,
-      { timeout: 10000 }
+      { timeout: 30000 }
     );
     const geostoriesData = (await geostoriesResponse.json()) as GeostoryTypes[];
     await expect(page.getByTestId('geostories-list')).toBeVisible();
@@ -82,7 +82,7 @@ test.describe('geostories tab', () => {
 
     const geostoriesFetchResponse = page.waitForResponse(
       `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/geostories`,
-      { timeout: 10000 }
+      { timeout: 30000 }
     );
     const geostoriesResponse = await geostoriesFetchResponse;
     await expect(page.getByTestId('geostories-list')).toBeVisible();
@@ -109,7 +109,7 @@ test.describe('geostories tab', () => {
 
     const layersResponse = await page.waitForResponse(
       `https://api.earthmonitor.org/geostories/${geostoriesData[0].id}/layers`,
-      { timeout: 10000 }
+      { timeout: 30000 }
     );
     const layersData = (await layersResponse.json()) as LayerTypes[];
     const datasetsList = page.getByTestId('datasets-list').locator('li');
