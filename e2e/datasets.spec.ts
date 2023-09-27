@@ -26,7 +26,7 @@ test('datasets list', async ({ page }) => {
 
   const layersResponse = await page.waitForResponse(
     `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/layers`,
-    { timeout: 10000 }
+    { timeout: 30000 }
   );
   const layersData = (await layersResponse.json()) as LayerTypes[];
   const datasetsList = page.getByTestId('datasets-list').locator('li');
@@ -42,7 +42,7 @@ test('datasets item', async ({ page }) => {
 
   const layersResponse = await page.waitForResponse(
     `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/layers`,
-    { timeout: 10000 }
+    { timeout: 30000 }
   );
   const layersData = (await layersResponse.json()) as LayerTypes[];
   const firstDataset = page.getByTestId(`dataset-item-${layersData[0].layer_id}`);
