@@ -72,5 +72,7 @@ test('datasets item', async ({ page }) => {
   await firstDataset.getByTestId('dataset-layer-toggle-button').click();
   await expect(page).toHaveURL(new RegExp(layersData[0].layer_id), { timeout: 10000 });
   await firstDataset.getByTestId('dataset-layer-toggle-button').click();
-  await page.waitForURL('**/map/**/datasets', { timeout: 10000 });
+  await expect(page).toHaveURL(new RegExp(`/map/${monitorsData[0].id}/datasets`, 'g'), {
+    timeout: 10000,
+  });
 });

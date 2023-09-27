@@ -10,7 +10,7 @@ import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
 import LayerVisibility from './visibility';
 export const Legend = () => {
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(true);
   const { layerId } = useURLayerParams();
   const { data } = useLayerSource({ layer_id: layerId }, { enabled: !!layerId });
   const id = useId();
@@ -19,6 +19,7 @@ export const Legend = () => {
     setActive(!active);
   }, [active]);
   const { title } = data ?? {};
+
   return (
     <div
       className="font-inter absolute bottom-3 right-3 z-50 flex grow flex-col text-xs text-secondary-500"
