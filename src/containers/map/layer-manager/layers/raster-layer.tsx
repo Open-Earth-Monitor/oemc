@@ -38,9 +38,8 @@ export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
       'raster-fade-duration': 1000,
     },
   };
-  const SOURCE: RasterSource & GeoJSONSourceOptions & { key: string } = {
+  const SOURCE: RasterSource & GeoJSONSourceOptions = {
     id: 'layer-source',
-    key: `${selectedRange?.label}-${layerId}-${layerYear}`,
     type: 'raster',
     tiles,
     minzoom: 0,
@@ -49,7 +48,7 @@ export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
 
   return (
     SOURCE && (
-      <Source key={layerId} {...SOURCE}>
+      <Source key={`${selectedRange?.label}-${layerId}-${layerYear}`} {...SOURCE}>
         {isFetched && (
           <Layer
             key={range ? `${layerId}-${selectedRange?.label}` : layerId}

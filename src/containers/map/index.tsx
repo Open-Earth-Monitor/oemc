@@ -3,7 +3,6 @@
 import { useCallback, useState } from 'react';
 
 import { ViewState, MapProvider } from 'react-map-gl';
-import { Layer } from 'react-map-gl';
 
 import { usePathname } from 'next/navigation';
 
@@ -19,7 +18,7 @@ import ZoomControl from '@/components/map/controls/zoom';
 import Legend from '@/components/map/legend';
 import { Bbox } from '@/components/map/types';
 
-// Map
+import { MAP_STYLE } from './constants';
 import LayerManager from './layer-manager';
 
 const DEFAULT_BBOX: Bbox = [-173.488154, -60.809359, 164.011846, 67.836775];
@@ -59,36 +58,23 @@ const MapImplementation = () => {
           bounds={DEFAULT_BOUNDS}
           initialViewState={INITIAL_VIEW_STATE}
           viewState={debouncedViewStateValue}
-          // mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
           onMapViewStateChange={handleViewState}
-          mapStyle={'https://demotiles.maplibre.org/style.json'}
+          mapStyle={MAP_STYLE}
         >
-          {() => {
-            return (
-              <>
-                {/* This custom-layers layer serves as a separator to order
-              all the layers on the layer manager above the default map layers */}
-                <Layer
-                  id="custom-layers"
-                  type="background"
-                  paint={{
-                    'background-color': '#000',
-                    'background-opacity': 0,
-                  }}
-                />
-                <LayerManager layers={['raster']} />
-                {!!monitorId && (
-                  <Controls>
-                    <ZoomControl />
-                    <FitBoundsControl bounds={DEFAULT_BOUNDS} />
-                    <BookmarkControl />
-                    <ShareControl />
-                  </Controls>
-                )}
-                <Legend />
-              </>
-            );
-          }}
+          {() => (
+            <>
+              <LayerManager layers={['raster']} />
+              {!!monitorId && (
+                <Controls>
+                  <ZoomControl />
+                  <FitBoundsControl bounds={DEFAULT_BOUNDS} />
+                  <BookmarkControl />
+                  <ShareControl />
+                </Controls>
+              )}
+              <Legend />
+            </>
+          )}
         </Map>
       </div>
     </MapProvider>

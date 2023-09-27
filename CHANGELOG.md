@@ -21,8 +21,7 @@ Unreleased
 - Legend settings (change opacity in layer, layer toggle visibility, remove layer) [OEMC-59](https://vizzuality.atlassian.net/browse/OEMC-59?atlOrigin=eyJpIjoiNDI0NzBkYmExODFmNGVjODllZDk3NTAyNjY4M2YwYzAiLCJwIjoiaiJ9)
 - Monitor geostories and datasets for selected geostory displayed on sidebar [OEMC-60](https://vizzuality.atlassian.net/browse/OEMC-60?atlOrigin=eyJpIjoiZjc4YjlhMTUzNTZkNGVmMWFhN2Y0OWI3ZDUyNWM2NDUiLCJwIjoiaiJ9)
 - Save bookmarks in map section [OEMC-72](https://vizzuality.atlassian.net/browse/OEMC-72?atlOrigin=eyJpIjoiYzg4MTQ2ZmJjZDQzNDBhMmI5NDg3M2YyZjM0Mzc4ZmUiLCJwIjoiaiJ9)
-
-
+- Stadiamaps basemap [OEMC-78](https://vizzuality.atlassian.net/browse/OEMC-78?atlOrigin=eyJpIjoiYzUzZmZjMDllNWI2NGY5Y2E1NmUwMmFjYmNhYmU2NjMiLCJwIjoiaiJ9)
 
 ### Changed
 
