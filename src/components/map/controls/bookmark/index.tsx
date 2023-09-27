@@ -81,7 +81,7 @@ export const BookmarkControl: FC = () => {
         <SheetHeader>
           <SheetTitle className="text-2xl font-bold text-secondary-500">Bookmarks</SheetTitle>
           <SheetDescription className="scroll-y-auto">
-            {!bookmarksList.length && <p>No bookmarks yet.</p>}
+            {!bookmarksList.length && !isInputVisible && <p>No bookmarks yet.</p>}
 
             {isInputVisible && (
               <div>
