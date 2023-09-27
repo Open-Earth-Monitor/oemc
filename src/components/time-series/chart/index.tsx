@@ -109,7 +109,7 @@ const Chart: FC<{
               <div className="font-inter relative flex rounded-3xl border-none bg-brand-50 px-2 py-1 text-xs text-secondary-500">
                 {selectedYear}
                 {!isEdge && (
-                  <div className="-transform absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 transform border-x-8 border-t-[10px] border-x-transparent border-y-brand-50 border-b-brand-50" />
+                  <div className="absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 transform border-x-8 border-t-[10px] border-x-transparent border-y-brand-50 border-b-brand-50" />
                 )}
               </div>
             </HtmlLabel>
