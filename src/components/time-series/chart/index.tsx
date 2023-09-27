@@ -90,7 +90,7 @@ const Chart: FC<{
                   'text-white': isEdge,
                 })}
                 onClick={() => {
-                  const yearIndex = filteredData.findIndex((d) => d.year === dt.year);
+                  const yearIndex = filteredData?.findIndex((d) => d.year === dt.year);
                   setYearIndex(yearIndex);
                 }}
               />

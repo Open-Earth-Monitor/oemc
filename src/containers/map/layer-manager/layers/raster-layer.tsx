@@ -20,6 +20,7 @@ export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
       enabled: !!layerId,
     }
   );
+  console.log(layerYear, 'layerYear');
   const { gs_base_wms, gs_name, range } = data ?? { range: [{ label: '', value: '' }] };
   const selectedRange = (range?.find((r) => r?.label === layerYear) || range?.[0]) as {
     label: string;

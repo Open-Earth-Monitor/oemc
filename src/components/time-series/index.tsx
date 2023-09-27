@@ -19,11 +19,24 @@ export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTy
   useEffect(() => {
     let interval: number | ReturnType<typeof setTimeout>;
 
+    if (!isPlaying) {
+      const yearValue = range?.[yearIndex]?.value;
+      const encodedLayers = encodeURIComponent(
+        JSON.stringify({
+          id: layerId,
+          opacity: 1,
+          year: yearValue,
+        })
+      );
+
+      const url = `${pathname}/?layers=[${encodedLayers}]`;
+      router.replace(url);
+    }
+
     if (isPlaying) {
       interval = setInterval(() => {
         setYearIndex((prevIndex) => (prevIndex + 1) % range.length);
         const nextYearValue = range?.[yearIndex + 1]?.value;
-
         const encodedLayers = encodeURIComponent(
           JSON.stringify({
             id: layerId,
@@ -42,7 +55,7 @@ export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTy
     return () => {
       clearInterval(interval);
     };
-  }, [isPlaying, yearIndex, range, layerId, pathname, router]);
+  }, [isPlaying, yearIndex, range, layerId, pathname, router, setYearIndex]);
 
   const handlePlay = () => {
     setPlaying(!isPlaying);
