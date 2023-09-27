@@ -8,10 +8,10 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('geostories tab', () => {
   test('from /map/{monitor_id}/datasets', async ({ page }) => {
-    const monitorsFetchResponse = page.waitForResponse('https://api.earthmonitor.org/monitors');
-    const response = await monitorsFetchResponse;
-    const json = (await response.json()) as MonitorTypes[];
-    const monitorsIds = json.map((data) => data.id);
+    const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
+    const monitorsData = (await monitorsResponse.json()) as MonitorTypes[];
+    await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
+    const monitorsIds = monitorsData.map((data) => data.id);
 
     // click on the first monitor
     await page.getByTestId(`monitor-item-${monitorsIds[0]}`).click();
@@ -27,7 +27,7 @@ test.describe('geostories tab', () => {
 
     // check geostories list is visible
     const geostoriesResponse = await page.waitForResponse(
-      `https://api.earthmonitor.org/monitors/${json[0].id}/geostories`,
+      `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/geostories`,
       { timeout: 10000 }
     );
     const geostoriesData = (await geostoriesResponse.json()) as GeostoryTypes[];
@@ -74,15 +74,14 @@ test.describe('geostories tab', () => {
   });
 
   test('display datasets from a geostory', async ({ page }) => {
-    const monitorsFetchResponse = page.waitForResponse('https://api.earthmonitor.org/monitors');
-    const response = await monitorsFetchResponse;
-    const json = (await response.json()) as MonitorTypes[];
-    const monitorsIds = json.map((data) => data.id);
+    const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
+    const monitorsData = (await monitorsResponse.json()) as MonitorTypes[];
+    const monitorsIds = monitorsData.map((data) => data.id);
 
     await page.goto(`/map/${monitorsIds[0]}/geostories`, { waitUntil: 'load' });
 
     const geostoriesFetchResponse = page.waitForResponse(
-      `https://api.earthmonitor.org/monitors/${json[0].id}/geostories`,
+      `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/geostories`,
       { timeout: 10000 }
     );
     const geostoriesResponse = await geostoriesFetchResponse;
