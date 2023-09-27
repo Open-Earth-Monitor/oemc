@@ -20,6 +20,7 @@ Unreleased
 - Implement monitors directory [OEMC-65](https://vizzuality.atlassian.net/browse/OEMC-65?atlOrigin=eyJpIjoiZGZmYjJiNTg1NmY3NDhiM2I5NTNmMWZmMTIwZjA2NDMiLCJwIjoiaiJ9)
 - Legend settings (change opacity in layer, layer toggle visibility, remove layer) [OEMC-59](https://vizzuality.atlassian.net/browse/OEMC-59?atlOrigin=eyJpIjoiNDI0NzBkYmExODFmNGVjODllZDk3NTAyNjY4M2YwYzAiLCJwIjoiaiJ9)
 - Monitor geostories and datasets for selected geostory displayed on sidebar [OEMC-60](https://vizzuality.atlassian.net/browse/OEMC-60?atlOrigin=eyJpIjoiZjc4YjlhMTUzNTZkNGVmMWFhN2Y0OWI3ZDUyNWM2NDUiLCJwIjoiaiJ9)
+- Save bookmarks in map section [OEMC-72](https://vizzuality.atlassian.net/browse/OEMC-72?atlOrigin=eyJpIjoiYzg4MTQ2ZmJjZDQzNDBhMmI5NDg3M2YyZjM0Mzc4ZmUiLCJwIjoiaiJ9)
 
 
 
