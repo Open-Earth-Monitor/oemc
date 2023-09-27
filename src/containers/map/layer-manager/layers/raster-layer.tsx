@@ -21,13 +21,13 @@ export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
     }
   );
   const { gs_base_wms, gs_name, range } = data ?? { range: [{ label: '', value: '' }] };
-  const selectedRange = (range.find((r) => r?.label === layerYear) || range?.[0]) as {
+  const selectedRange = (range?.find((r) => r?.label === layerYear) || range?.[0]) as {
     label: string;
     value: string;
   };
 
   const tiles = [
-    `${gs_base_wms}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=true&LAYERS=${gs_name}&DIM_DATE=${selectedRange.label}&WIDTH=256&HEIGHT=256&CRS=EPSG:3857&STYLES=&BBOX={bbox-epsg-3857}`,
+    `${gs_base_wms}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=true&LAYERS=${gs_name}&DIM_DATE=${selectedRange?.label}&WIDTH=256&HEIGHT=256&CRS=EPSG:3857&STYLES=&BBOX={bbox-epsg-3857}`,
   ];
 
   const LAYER: RasterLayer = {
@@ -52,7 +52,7 @@ export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
       <Source key={layerId} {...SOURCE}>
         {isFetched && (
           <Layer
-            key={range ? `${layerId}-${selectedRange.label}` : layerId}
+            key={range ? `${layerId}-${selectedRange?.label}` : layerId}
             {...LAYER}
             beforeId={beforeId}
           />
