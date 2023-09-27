@@ -1,10 +1,12 @@
-import { FC } from 'react';
+import { FC, Dispatch, SetStateAction } from 'react';
 
 import { HtmlLabel } from '@visx/annotation';
 import { Group } from '@visx/group';
 import { scaleLinear, scaleBand } from '@visx/scale';
 import { Bar } from '@visx/shape';
 import { Text } from '@visx/text';
+
+import { cn } from '@/lib/classnames';
 
 import { LayerParsedRangeTypes } from '@/types/datasets';
 
@@ -19,7 +21,8 @@ const Chart: FC<{
   height: number;
   selectedYear: string;
   isPlaying: boolean;
-}> = ({ id, range, width, height, selectedYear }) => {
+  setYearIndex: Dispatch<SetStateAction<number>>;
+}> = ({ id, range, width, height, selectedYear, setYearIndex }) => {
   const data: ChartData[] = range?.map((r) => ({
     year: parseInt(r.value.substring(0, 4), 10),
     fixedHeight: 100,
@@ -80,8 +83,16 @@ const Chart: FC<{
                 y={yCenter}
                 height={22}
                 width={isEdge && !isSelectedYear ? 2 : 1}
-                fill={isEdge ? 'white' : 'hsl(210, 9%, 22%, 1)'}
-                className="cursor-pointer"
+                className={cn({
+                  'w-[1px] cursor-pointer fill-current text-brand-50 hover:bg-white hover:fill-white hover:text-white':
+                    true,
+                  'w-[2px]': isEdge && !isSelectedYear,
+                  'text-white': isEdge,
+                })}
+                onClick={() => {
+                  const yearIndex = filteredData.findIndex((d) => d.year === dt.year);
+                  setYearIndex(yearIndex);
+                }}
               />
               {isEdge && (
                 <Text

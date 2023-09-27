@@ -70,6 +70,7 @@ export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTy
             range={range}
             selectedYear={range[yearIndex]?.label}
             isPlaying={isPlaying}
+            setYearIndex={setYearIndex}
           />
         )}
       </ParentSize>
