@@ -20,6 +20,7 @@ export default defineConfig({
     command: process.env.CI ? 'yarn build && yarn start' : 'yarn dev',
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
+    timeout: 5 * 60 * 1000,
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
