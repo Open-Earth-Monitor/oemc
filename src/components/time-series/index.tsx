@@ -20,17 +20,6 @@ export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTy
     let interval: number | ReturnType<typeof setTimeout>;
 
     if (!isPlaying) {
-      const yearValue = range?.[yearIndex]?.value;
-      const encodedLayers = encodeURIComponent(
-        JSON.stringify({
-          id: layerId,
-          opacity: 1,
-          year: yearValue,
-        })
-      );
-
-      const url = `${pathname}/?layers=[${encodedLayers}]`;
-      router.replace(url);
     }
 
     if (isPlaying) {
@@ -61,6 +50,21 @@ export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTy
     setPlaying(!isPlaying);
   };
 
+  const handleBarsInteractivity = (year: number) => {
+    setYearIndex(year);
+    const yearValue = range?.[yearIndex]?.value;
+    const encodedLayers = encodeURIComponent(
+      JSON.stringify({
+        id: layerId,
+        opacity: 1,
+        year: yearValue,
+      })
+    );
+
+    const url = `${pathname}/?layers=[${encodedLayers}]`;
+    router.replace(url);
+  };
+
   return (
     <div className="flex items-center justify-between space-x-4">
       <button
@@ -83,7 +87,7 @@ export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTy
             range={range}
             selectedYear={range[yearIndex]?.label}
             isPlaying={isPlaying}
-            setYearIndex={setYearIndex}
+            handleBarsInteractivity={handleBarsInteractivity}
           />
         )}
       </ParentSize>
