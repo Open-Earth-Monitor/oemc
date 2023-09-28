@@ -74,7 +74,7 @@ export const BookmarkControl: FC = () => {
 
   return (
     <Sheet>
-      <SheetTrigger className="rounded-sm bg-brand-400 p-1 hover:bg-opacity-80 active:bg-opacity-80 disabled:cursor-default disabled:opacity-5">
+      <SheetTrigger className="rounded-sm bg-brand-500 p-1 hover:bg-opacity-80 active:bg-opacity-80 disabled:cursor-default disabled:opacity-5">
         <AiFillStar className={CONTROL_BUTTON_STYLES.default} />
       </SheetTrigger>
       <SheetContent className="relative flex h-full flex-col bg-brand-500 bg-opacity-[0.9] pl-10">

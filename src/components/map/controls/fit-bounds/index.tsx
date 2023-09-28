@@ -38,7 +38,7 @@ export const FitBoundsControl: FC<FitBoundsControlProps> = ({
       className={cx({
         'rounded-sm bg-brand-400 p-1 text-secondary-500 disabled:cursor-default disabled:opacity-50':
           true,
-        'hover:bg-gray-700 active:bg-gray-600': !!bounds,
+        'hover:bg-brand-200 active:bg-gray-600': !!bounds,
         [className]: !!className,
       })}
       type="button"

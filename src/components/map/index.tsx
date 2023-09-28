@@ -142,12 +142,12 @@ const CustomMap: FC<CustomMapProps> = ({
    */
   const handleUpdateUrl = useCallback(() => {
     const nextParams = new URLSearchParams({
-      longitude: viewState.longitude?.toString() ?? DEFAULT_VIEWPORT.longitude.toString(),
-      latitude: viewState.latitude?.toString() ?? DEFAULT_VIEWPORT.latitude.toString(),
-      zoom: viewState.zoom?.toString() ?? DEFAULT_VIEWPORT.zoom.toString(),
+      longitude: localViewState.longitude?.toString() ?? DEFAULT_VIEWPORT.longitude.toString(),
+      latitude: localViewState.latitude?.toString() ?? DEFAULT_VIEWPORT.latitude.toString(),
+      zoom: localViewState.zoom?.toString() ?? DEFAULT_VIEWPORT.zoom.toString(),
     });
     router.replace(`${pathname}?${nextParams.toString()}`);
-  }, [pathname, router, viewState.latitude, viewState.longitude, viewState.zoom]);
+  }, [pathname, router, localViewState.latitude, localViewState.longitude, localViewState.zoom]);
 
   /**
    * Update the viewport state when the URL pathname changes
