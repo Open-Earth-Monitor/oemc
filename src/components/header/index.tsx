@@ -23,25 +23,28 @@ const Header: FC = () => {
   const pathname = usePathname();
 
   return (
-    <header className="z-50 w-full border-b border-b-secondary-1000 bg-brand-500">
-      <div className="m-auto flex max-w-7xl items-center justify-between px-6">
-        <Image
-          alt="Open-earth-monitor"
-          src="/images/OEM-logo.svg"
-          width={130}
-          height={35}
-          className="inline-flex"
-        />
+    <header className="z-10 w-full border-b border-b-secondary-900 bg-brand-500/80">
+      <div className="m-auto flex max-w-[1200px] items-center justify-between">
+        <div className="mx-2">
+          <Image
+            alt="Open-earth-monitor"
+            src="/images/OEM-logo.svg"
+            width={147}
+            height={40}
+            className="inline-block"
+          />
+        </div>
         <nav className="flex justify-between" data-testid="main-navigation">
           {navLinks.map((link) => {
             const isActive = `/${pathname.split('/')[1]}` === link.href;
             return (
               <Link
-                className={cn({
-                  'min-w-[130px] border border-secondary-1000 py-4 text-center text-secondary-500':
-                    true,
-                  'bg-secondary-500 text-brand-500': isActive,
-                })}
+                className={cn(
+                  'block min-w-[180px] border-l border-r border-secondary-900 py-4 text-center font-satoshi font-bold text-secondary-500 transition-colors hover:bg-secondary-900',
+                  {
+                    'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
+                  }
+                )}
                 href={link.href}
                 key={link.name}
                 data-testid={link['data-testid']}

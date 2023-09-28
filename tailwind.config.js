@@ -9,8 +9,7 @@ module.exports = {
   content: [
     './src/app/**/*.{ts,tsx}',
     './src/components/**/*.{ts,tsx}',
-    // Remove this line if the documentation is not used
-    './src/doc-containers/**/*.@(tsx|ts)',
+    './src/containers/**/*.@(tsx|ts)',
   ],
   theme: {
     container: {
@@ -21,6 +20,10 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        inter: ['var(--font-inter)'],
+        satoshi: ['var(--font-satoshi)'],
+      },
       colors: {
         brand: {
           50: 'hsl(210, 9%, 22%, 1)', // no ui kit
@@ -34,9 +37,6 @@ module.exports = {
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
-        },
-        fontFamily: {
-          inter: ['var(--font-inter)'],
         },
         secondary: {
           500: 'hsl(60, 100%, 95%)',
