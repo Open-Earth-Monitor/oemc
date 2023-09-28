@@ -22,7 +22,7 @@ export const Legend = () => {
 
   return (
     <div
-      className="font-inter absolute bottom-3 right-3 z-50 flex grow flex-col text-xs text-secondary-500"
+      className="absolute bottom-3 right-3 z-50 flex grow flex-col font-inter text-xs text-secondary-500"
       data-testid="map-legend"
     >
       {layerId && (
