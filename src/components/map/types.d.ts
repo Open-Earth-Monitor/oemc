@@ -27,3 +27,5 @@ export interface CustomMapProps extends MapProps {
   /** A function that exposes the viewport */
   onMapViewStateChange?: (viewstate: Partial<ViewState>) => void;
 }
+
+export type ExplicitViewState = Pick<ViewState, 'longitude' | 'latitude' | 'zoom'>;

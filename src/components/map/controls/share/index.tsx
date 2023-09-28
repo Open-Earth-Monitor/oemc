@@ -55,7 +55,7 @@ export const ShareControl: FC<BookmarkControlProps> = ({
         <HiOutlineShare
           className={cn({
             [CONTROL_BUTTON_STYLES.default]: true,
-            'h-8 w-8 p-1': true,
+            'h-8 w-8 bg-brand-400 p-1': true,
             'hover:bg-gray-700 active:bg-gray-600': !!bounds,
             [className]: !!className,
           })}
