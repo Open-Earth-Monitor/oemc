@@ -3,6 +3,8 @@ import { FC, ReactNode } from 'react';
 
 import { useParams, usePathname } from 'next/navigation';
 
+import Loading from '@/app/loading';
+
 import { useMonitor } from '@/hooks/monitors';
 
 import MonitorCard from '@/components/monitors/card';
@@ -14,7 +16,7 @@ const MonitorLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const monitorId = params?.monitor_id as string;
   const tabId = pathname.split(`${monitorId}/`)[1];
 
-  const { data, isFetched, isError } = useMonitor(
+  const { data, isLoading, isFetched, isError } = useMonitor(
     {
       monitor_id: monitorId,
     },
@@ -25,11 +27,16 @@ const MonitorLayout: FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <aside className="md:[30vw] absolute bottom-3 left-3 top-3 z-40 w-[526px] overflow-y-auto bg-brand-500 p-7.5">
-      <div className="space-y-6">
-        <MonitorCard data={data} isFetched={isFetched} isError={isError} />
-        <TabsNav monitorId={monitorId} tabId={tabId} />
-      </div>
-      {children}
+      {isLoading && !isFetched && <Loading />}
+      {!isLoading && isFetched && (
+        <>
+          <div className="space-y-6">
+            <MonitorCard data={data} isFetched={isFetched} isError={isError} />
+            <TabsNav monitorId={monitorId} tabId={tabId} />
+          </div>
+          {children}
+        </>
+      )}
     </aside>
   );
 };

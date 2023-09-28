@@ -7,9 +7,8 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import type { LoadingProps } from './types';
 
 const Loading: FC<LoadingProps> = ({
-  visible = false,
-  className = 'absolute',
-  iconClassName = 'w-5 h-5',
+  className = 'relative flex justify-center items-center w-full h-[200px]',
+  iconClassName = 'w-5 h-5 animate-spin text-secondary-500',
   transition = {},
 }: LoadingProps) => {
   const variants = {
@@ -20,18 +19,16 @@ const Loading: FC<LoadingProps> = ({
 
   return (
     <AnimatePresence>
-      {visible && (
-        <motion.div
-          key="loading"
-          {...variants}
-          transition={transition}
-          className={cx({
-            [className]: !!className,
-          })}
-        >
-          <AiOutlineLoading3Quarters className={iconClassName} />
-        </motion.div>
-      )}
+      <motion.div
+        key="loading"
+        {...variants}
+        transition={transition}
+        className={cx({
+          [className]: !!className,
+        })}
+      >
+        <AiOutlineLoading3Quarters className={iconClassName} />
+      </motion.div>
     </AnimatePresence>
   );
 };

@@ -20,7 +20,7 @@ const GeostoryPage = () => {
 
   return (
     <div className="m-auto w-full space-y-4 divide-y divide-brand-200">
-      {isLoading && <Loading visible={isLoading} />}
+      {isLoading && <Loading />}
 
       <GeostoryHead data={GeostoryData} isFetched={GeostoryIsFetched} isError={GeostoryIsError} />
 
