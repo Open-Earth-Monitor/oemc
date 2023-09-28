@@ -1,7 +1,7 @@
-import type { ViewState } from 'react-map-gl';
+import { ExplicitViewState } from './types';
 
-export const DEFAULT_VIEW_STATE: Partial<ViewState> = {
-  zoom: 2,
-  latitude: 0,
-  longitude: 0,
+export const DEFAULT_VIEWPORT: ExplicitViewState = {
+  longitude: -3,
+  latitude: 40,
+  zoom: 5,
 };

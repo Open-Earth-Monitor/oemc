@@ -2,8 +2,7 @@
 
 import { FC } from 'react';
 
-import { HiOutlineShare } from 'react-icons/hi';
-import { HiArrowDownTray } from 'react-icons/hi2';
+import { HiOutlineExternalLink } from 'react-icons/hi';
 
 import Info from '@/components/datasets/datasets-item-info';
 
@@ -31,10 +30,9 @@ export const DatasetsItemHeader: FC<DatasetsItemHeaderTypes> = ({
           rel="noopener noreferrer"
           data-testid="dataset-download-button"
         >
-          <HiArrowDownTray className="h-6 w-6 text-gray-300" />
+          <HiOutlineExternalLink className="h-6 w-6 text-gray-300" />
         </a>
       )}
-      {<HiOutlineShare className="h-6 w-6 text-gray-300" />}
     </div>
   </div>
 );
