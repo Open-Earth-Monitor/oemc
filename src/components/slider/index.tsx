@@ -18,7 +18,7 @@ const Slider = forwardRef<
     <div className="flex w-full flex-col space-y-2">
       <div
         data-testid="slider-current-value"
-        className="font-inter m-auto rounded-xl border border-secondary-900 p-3 text-xs font-medium text-white"
+        className="m-auto rounded-xl border border-secondary-900 p-3 font-inter text-xs font-medium text-white"
       >
         {props.value}%
       </div>
