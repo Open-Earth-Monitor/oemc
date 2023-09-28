@@ -42,14 +42,15 @@ export const ZoomControl: FC<ZoomControlProps> = ({
   return (
     <div
       className={cn({
-        'inline-flex flex-col rounded-sm bg-brand-400 p-1 text-secondary-500': true,
+        'inline-flex flex-col rounded-sm': true,
         [className]: !!className,
       })}
     >
       <button
         className={cn({
-          ' bg-brand-400 disabled:cursor-default disabled:opacity-50': true,
-          'hover:bg-gray-700 active:bg-gray-600': zoom < maxZoom,
+          'cursor-pointer rounded-t-sm bg-brand-400 p-1 active:bg-white active:text-brand-500 disabled:cursor-default disabled:opacity-50':
+            true,
+          'hover:bg-brand-200 active:bg-gray-600': zoom < maxZoom,
         })}
         aria-label="Zoom in"
         type="button"
@@ -60,8 +61,9 @@ export const ZoomControl: FC<ZoomControlProps> = ({
       </button>
       <button
         className={cn({
-          'bg-brand-400 disabled:cursor-default disabled:opacity-50': true,
-          'hover:bg-gray-700 active:bg-gray-600': zoom > minZoom,
+          'rounded-b-sm bg-brand-400 p-1 active:bg-white  active:text-brand-500 disabled:cursor-default disabled:opacity-50':
+            true,
+          'hover:bg-brand-200 active:bg-gray-600': zoom > minZoom,
         })}
         aria-label="Zoom out"
         type="button"

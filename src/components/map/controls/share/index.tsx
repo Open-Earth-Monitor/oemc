@@ -55,8 +55,8 @@ export const ShareControl: FC<BookmarkControlProps> = ({
         <HiOutlineShare
           className={cn({
             [CONTROL_BUTTON_STYLES.default]: true,
-            'h-8 w-8 bg-brand-400 p-1': true,
-            'hover:bg-gray-700 active:bg-gray-600': !!bounds,
+            'h-8 w-8 bg-brand-400 p-1 hover:bg-brand-200': true,
+            'active:bg-band-200': !!bounds,
             [className]: !!className,
           })}
         />
@@ -79,7 +79,7 @@ export const ShareControl: FC<BookmarkControlProps> = ({
               className={cn({
                 'flex items-center space-x-2 text-secondary-500 disabled:cursor-default disabled:opacity-50':
                   true,
-                'hover:bg-gray-700 active:bg-gray-600': !!bounds,
+                'hover:bg-brand-200 active:bg-gray-600': !!bounds,
                 [className]: !!className,
               })}
               onClick={() => void handleCopy()}
@@ -97,7 +97,7 @@ export const ShareControl: FC<BookmarkControlProps> = ({
                 <RiTwitterXLine
                   className={cn({
                     'h-4 w-4 text-secondary-500 disabled:cursor-default disabled:opacity-50': true,
-                    'hover:bg-gray-700 active:bg-gray-600': !!bounds,
+                    'hover:bg-brand-200 active:bg-gray-600': !!bounds,
                     [className]: !!className,
                   })}
                 />
@@ -112,8 +112,9 @@ export const ShareControl: FC<BookmarkControlProps> = ({
               >
                 <RiLinkedinFill
                   className={cn({
-                    'h-5 w-6 text-secondary-500 disabled:cursor-default disabled:opacity-50': true,
-                    'hover:bg-gray-700 active:bg-gray-600': !!bounds,
+                    'h-5 w-6 text-secondary-500 active:bg-white active:text-brand-500 disabled:cursor-default disabled:opacity-50':
+                      true,
+                    'hover:bg-brand-200 active:bg-gray-600': !!bounds,
                     [className]: !!className,
                   })}
                 />
