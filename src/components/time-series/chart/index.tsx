@@ -1,4 +1,4 @@
-import { FC, Dispatch, SetStateAction } from 'react';
+import { FC } from 'react';
 
 import { HtmlLabel } from '@visx/annotation';
 import { Group } from '@visx/group';
@@ -21,8 +21,8 @@ const Chart: FC<{
   height: number;
   selectedYear: string;
   isPlaying: boolean;
-  setYearIndex: Dispatch<SetStateAction<number>>;
-}> = ({ id, range, width, height, selectedYear, setYearIndex }) => {
+  handleBarsInteractivity: (year: number) => void;
+}> = ({ id, range, width, height, selectedYear, handleBarsInteractivity }) => {
   const data: ChartData[] = range?.map((r) => ({
     year: parseInt(r.value.substring(0, 4), 10),
     fixedHeight: 100,
@@ -91,7 +91,7 @@ const Chart: FC<{
                 })}
                 onClick={() => {
                   const yearIndex = filteredData?.findIndex((d) => d.year === dt.year);
-                  setYearIndex(yearIndex);
+                  handleBarsInteractivity(yearIndex);
                 }}
               />
               {isEdge && (
