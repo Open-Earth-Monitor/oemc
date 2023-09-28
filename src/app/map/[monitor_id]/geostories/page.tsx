@@ -17,7 +17,7 @@ const GeostoriesPage = () => {
   const { color } = monitor ?? {};
   return (
     <>
-      {isLoading && <Loading visible={isLoading} />}
+      {isLoading && <Loading />}
       {isFetched && !isError && (
         <div className="text-brand-500" data-testid="geostories-list">
           {data.map(({ id, title }) => (

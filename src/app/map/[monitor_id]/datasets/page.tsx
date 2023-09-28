@@ -14,7 +14,7 @@ const DatasetsPage = () => {
 
   return (
     <div className="m-auto w-full">
-      {isLoading && <Loading visible={isLoading} />}
+      {isLoading && <Loading />}
       {isFetched && !isError && (
         <ul className="text-secondary-500" data-testid="datasets-list">
           {data.map(({ layer_id, title, download_url, description, author, range }) => (

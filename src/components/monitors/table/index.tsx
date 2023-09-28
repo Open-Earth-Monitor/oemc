@@ -9,9 +9,10 @@ import MonitorsItem from './item';
 
 const MonitorsDirectory = () => {
   const { data, isLoading, isFetched, isError } = useMonitors();
+
   return (
     <>
-      <Loading visible={isLoading && !isFetched} className="m-auto flex justify-center py-4" />
+      {isLoading && !isFetched && <Loading />}
       {isFetched && !isError && (
         <Table>
           <TableHeader>
