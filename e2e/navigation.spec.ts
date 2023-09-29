@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 
-import { navLinks } from 'components/header';
+import { navLinks } from 'components/main-menu/constants';
 
 test('pages navigation', async ({ page }) => {
   await page.goto('/');
