@@ -6,11 +6,7 @@ const typography = require('@tailwindcss/typography');
 
 module.exports = {
   darkMode: ['class'],
-  content: [
-    './src/app/**/*.{ts,tsx}',
-    './src/components/**/*.{ts,tsx}',
-    './src/containers/**/*.@(tsx|ts)',
-  ],
+  content: ['./src/app/**/*.{ts,tsx}', './src/components/**/*.{ts,tsx}'],
   theme: {
     container: {
       center: true,

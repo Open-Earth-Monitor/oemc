@@ -7,8 +7,7 @@ import Loading from '@/app/loading';
 
 import { useMonitor } from '@/hooks/monitors';
 
-import Map from '@/containers/map';
-
+import Map from '@/components/map';
 import MonitorCard from '@/components/monitors/card';
 import TabsNav from '@/components/tabs-nav';
 

@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 
-import Map from '@/containers/map';
+import Map from '@/components/map';
 
 const GeostoriesLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (
