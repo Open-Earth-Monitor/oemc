@@ -2,13 +2,15 @@
 
 import { useParams } from 'next/navigation';
 
+import type { NextPage } from 'next';
+
 import { useGeostory, useGeostoryLayers } from '@/hooks/geostories';
 
 import DatasetItem from '@/components/datasets/datasets-item';
 import GeostoryHead from '@/components/geostories/header';
 import Loading from '@/components/loading';
 
-const GeostoryPage = () => {
+const GeostoryPage: NextPage = () => {
   const urlParams = useParams();
   const geostoryId = urlParams?.geostory_id as string;
   const {

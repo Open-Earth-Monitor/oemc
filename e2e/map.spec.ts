@@ -2,7 +2,10 @@ import { test, expect } from '@playwright/test';
 
 test('legend', async ({ page }) => {
   // assuming layer_id l1 is a valid layer already added to the map
-  await page.goto('/map/m1/datasets?layers=[{"id":"l1","opacity":1}]', { waitUntil: 'load' });
+  await page.goto('/map/m1/datasets?layers=[{"id":"l1","opacity":1,"year":"20000101_20001231"}]', {
+    waitUntil: 'load',
+  });
+  await page.waitForResponse('https://api.earthmonitor.org/layers/l1', { timeout: 30000 });
   await expect(page.getByTestId('map-legend')).toBeVisible();
 
   // should be 1 layer in the legend

@@ -9,8 +9,6 @@ import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import cx from 'clsx';
 import MapLibreGL from 'maplibre-gl';
 
-// import { useDebounce } from 'usehooks-ts';
-
 import { DEFAULT_VIEWPORT } from './constants';
 import type { CustomMapProps, ExplicitViewState } from './types';
 
@@ -59,15 +57,9 @@ const CustomMap: FC<CustomMapProps> = ({
           zoom: searchParams.get('zoom') ? Number(searchParams.get('zoom')) : DEFAULT_VIEWPORT.zoom,
         }
   );
+  const [newSearchParams, setNewSearchParams] = useState<string>(searchParams.toString());
   const [isFlying, setFlying] = useState(false);
   const [loaded, setLoaded] = useState(false);
-
-  /**
-   * CALLBACKS
-   */
-  // const debouncedViewStateChange = useDebounce((_viewState: ViewState) => {
-  //   if (onMapViewStateChange) onMapViewStateChange(_viewState);
-  // }, 250);
 
   const handleFitBounds = useCallback(() => {
     const { bbox, options } = bounds;
@@ -141,21 +133,25 @@ const CustomMap: FC<CustomMapProps> = ({
    * Update the URL when the user stops moving the map
    */
   const handleUpdateUrl = useCallback(() => {
-    const nextParams = new URLSearchParams({
+    const initialSearchParams = new URLSearchParams(searchParams.toString());
+    const nextSearchParams = new URLSearchParams({
       longitude: localViewState.longitude?.toString() ?? DEFAULT_VIEWPORT.longitude.toString(),
       latitude: localViewState.latitude?.toString() ?? DEFAULT_VIEWPORT.latitude.toString(),
       zoom: localViewState.zoom?.toString() ?? DEFAULT_VIEWPORT.zoom.toString(),
     });
-    router.replace(`${pathname}?${nextParams.toString()}`);
-  }, [pathname, router, localViewState.latitude, localViewState.longitude, localViewState.zoom]);
+    // replacing the search params with the new ones
+    nextSearchParams.forEach((value, key) => {
+      initialSearchParams.set(key, value);
+    });
+    setNewSearchParams(initialSearchParams.toString());
+  }, [searchParams, localViewState.latitude, localViewState.longitude, localViewState.zoom]);
 
   /**
-   * Update the viewport state when the URL pathname changes
+   * Update the viewport state when the URL pathname, and search params changes
    */
   useEffect(() => {
-    handleUpdateUrl();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+    router.replace(`${pathname}?${newSearchParams.toString()}`);
+  }, [newSearchParams, pathname, router]);
 
   return (
     <div

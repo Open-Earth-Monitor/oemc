@@ -11,10 +11,12 @@ export const MAP_STYLE = {
   sources: {
     basemap: {
       type: 'raster',
-      tiles: ['https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png'],
+      tiles: [
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      ],
       tileSize: 256,
       attribution:
-        '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
     },
   },
   layers: [
@@ -22,6 +24,10 @@ export const MAP_STYLE = {
       id: 'basemap',
       source: 'basemap',
       type: 'raster',
+      paint: {
+        'raster-contrast': 0.2,
+        'raster-saturation': -0.2,
+      },
     },
     {
       id: 'custom-layers',
