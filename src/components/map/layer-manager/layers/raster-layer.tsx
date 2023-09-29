@@ -10,7 +10,7 @@ import { useLayerSource } from 'hooks/map';
 import type { LayerComponentProps } from '../types';
 
 export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
-  const { layerId, layerOpacity, layerYear } = useURLayerParams();
+  const { layerId, layerOpacity, date } = useURLayerParams();
 
   const { data, isFetched } = useLayerSource(
     {
@@ -22,7 +22,7 @@ export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
   );
 
   const { gs_base_wms, gs_name, range } = data ?? { range: [{ label: '', value: '' }] };
-  const selectedRange = (range?.find((r) => r?.label === layerYear) || range?.[0]) as {
+  const selectedRange = (range?.find((r) => r?.label === date) || range?.[0]) as {
     label: string;
     value: string;
   };
@@ -49,7 +49,7 @@ export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
 
   return (
     SOURCE && (
-      <Source key={`${selectedRange?.label}-${layerId}-${layerYear}`} {...SOURCE}>
+      <Source key={`${selectedRange?.label}-${layerId}-${date}`} {...SOURCE}>
         {isFetched && (
           <Layer
             key={range ? `${layerId}-${selectedRange?.label}` : layerId}

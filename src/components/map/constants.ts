@@ -1,6 +1,8 @@
-import { MapboxStyle } from 'react-map-gl';
+import type { MapboxStyle } from 'react-map-gl';
 
-import { ExplicitViewState } from './types';
+import type { Bbox } from '@/components/map/types';
+
+import type { ExplicitViewState } from './types';
 
 export const MAP_STYLE = {
   version: 8,
@@ -46,4 +48,14 @@ export const DEFAULT_VIEWPORT: ExplicitViewState = {
   longitude: 10,
   latitude: 48,
   zoom: 4,
+};
+
+export const DEFAULT_BBOX: Bbox = [-173.488154, -60.809359, 164.011846, 67.836775];
+
+export const DEFAULT_BOUNDS = {
+  bbox: DEFAULT_BBOX,
+  options: {
+    padding: 100,
+    duration: 1000,
+  },
 };

@@ -2,10 +2,10 @@ import { test, expect } from '@playwright/test';
 
 test('legend', async ({ page }) => {
   // assuming layer_id l1 is a valid layer already added to the map
-  await page.goto('/map/m1/datasets?layers=[{"id":"l1","opacity":1,"year":"20000101_20001231"}]', {
+  await page.goto('/map/m1/datasets?layers=[{"id":"l1","opacity":1,"date":"20000101_20001231"}]', {
     waitUntil: 'load',
   });
-  await page.waitForResponse('https://api.earthmonitor.org/layers/l1', { timeout: 30000 });
+  await page.waitForResponse('https://api.earthmonitor.org/layers?layer_id=l1', { timeout: 30000 });
   await expect(page.getByTestId('map-legend')).toBeVisible();
 
   // should be 1 layer in the legend
@@ -25,12 +25,22 @@ test('legend', async ({ page }) => {
   await expect(
     page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
   ).toHaveAttribute('data-active', 'false');
-  await expect(page).toHaveURL(new RegExp(/layers=\[{%22id%22:%22l1%22,%22opacity%22:0}\]/, 'g'));
+  await expect(page).toHaveURL(
+    new RegExp(
+      /layers=\[{%22id%22:%22l1%22,%22opacity%22:0,%22date%22:%2220000101_20001231%22}\]/,
+      'g'
+    )
+  );
   await page.getByTestId('map-legend-item').getByTestId('layer-visibility').first().click();
   await expect(
     page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
   ).toHaveAttribute('data-active', 'true');
-  await expect(page).toHaveURL(new RegExp(/layers=\[{%22id%22:%22l1%22,%22opacity%22:1}\]/, 'g'));
+  await expect(page).toHaveURL(
+    new RegExp(
+      /layers=\[{%22id%22:%22l1%22,%22opacity%22:1,%22date%22:%2220000101_20001231%22}\]/,
+      'g'
+    )
+  );
   // opacity
   await expect(
     page.getByTestId('map-legend-item').getByTestId('layer-opacity-button')
@@ -39,7 +49,9 @@ test('legend', async ({ page }) => {
 
 test('opacity 1 from url', async ({ page }) => {
   // assuming layer_id l1 is a valid layer already added to the map
-  await page.goto('/map/m1/datasets?layers=[{"id":"l1","opacity":1}]', { waitUntil: 'load' });
+  await page.goto('/map/m1/datasets?layers=[{"id":"l1","opacity":1,"date":"20000101_20001231"}]', {
+    waitUntil: 'load',
+  });
   await expect(page.getByTestId('map-legend')).toBeVisible();
 
   await expect(
@@ -55,7 +67,9 @@ test('opacity 1 from url', async ({ page }) => {
 
 test('opacity 0 from url', async ({ page }) => {
   // assuming layer_id l1 is a valid layer already added to the map
-  await page.goto('/map/m1/datasets?layers=[{"id":"l1","opacity":0}]', { waitUntil: 'load' });
+  await page.goto('/map/m1/datasets?layers=[{"id":"l1","opacity":0,"date":"20000101_20001231"}]', {
+    waitUntil: 'load',
+  });
   await expect(page.getByTestId('map-legend')).toBeVisible();
 
   await expect(
@@ -71,7 +85,10 @@ test('opacity 0 from url', async ({ page }) => {
 
 test('opacity 0.5 from url', async ({ page }) => {
   // assuming layer_id l1 is a valid layer already added to the map
-  await page.goto('/map/m1/datasets?layers=[{"id":"l1","opacity":0.5}]', { waitUntil: 'load' });
+  await page.goto(
+    '/map/m1/datasets?layers=[{"id":"l1","opacity":0.5,"date":"20000101_20001231"}]',
+    { waitUntil: 'load' }
+  );
   await expect(page.getByTestId('map-legend')).toBeVisible();
 
   await expect(

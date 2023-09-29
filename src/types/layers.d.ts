@@ -1,5 +1,5 @@
 export type LayerSettingTypes = {
   id: string;
   opacity: number;
-  year?: number | string;
+  date?: number | string;
 };

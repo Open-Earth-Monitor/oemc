@@ -20,14 +20,14 @@ export function useURLayerParams() {
     [layersParamsParsed]
   );
 
-  const layerYear = useMemo<LayerSettingTypes['year']>(
-    () => layersParamsParsed?.[0]?.year,
+  const date = useMemo<LayerSettingTypes['date']>(
+    () => layersParamsParsed?.[0]?.date,
     [layersParamsParsed]
   );
 
   return {
     layerId,
     layerOpacity,
-    layerYear,
+    date,
   };
 }

@@ -17,7 +17,7 @@ export const OpacitySetting: FC = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { layerId, layerOpacity } = useURLayerParams();
+  const { layerId, layerOpacity, date } = useURLayerParams();
 
   const handleChange = useCallback(
     (e: number[]) => {
@@ -27,6 +27,7 @@ export const OpacitySetting: FC = () => {
         JSON.stringify({
           id: layerId,
           opacity: opacityValue,
+          ...(date && { date }),
         })
       );
 
@@ -34,7 +35,7 @@ export const OpacitySetting: FC = () => {
       const url = `${pathname}/?layers=[${encodedLayers}]`;
       return router.replace(url);
     },
-    [pathname, router, layerId]
+    [layerId, date, pathname, router]
   );
 
   useEffect(() => {
