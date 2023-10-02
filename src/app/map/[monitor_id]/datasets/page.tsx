@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 
 import { useMonitorLayers } from '@/hooks/monitors';
 
-import DatasetsItem from '@/components/datasets/datasets-item';
+import DatasetCard from '@/components/datasets/card';
 import Loading from '@/components/loading';
 
 const DatasetsPage = () => {
@@ -16,17 +16,18 @@ const DatasetsPage = () => {
     <div className="m-auto w-full">
       {isLoading && <Loading />}
       {isFetched && !isError && (
-        <ul className="text-secondary-500" data-testid="datasets-list">
+        <ul className="space-y-6 text-secondary-500" data-testid="datasets-list">
           {data.map(({ layer_id, title, download_url, description, author, range }) => (
-            <DatasetsItem
-              key={layer_id}
-              id={layer_id}
-              title={title}
-              download_url={download_url}
-              description={description}
-              author={author}
-              range={range}
-            />
+            <li key={layer_id}>
+              <DatasetCard
+                id={layer_id}
+                title={title}
+                download_url={download_url}
+                description={description}
+                author={author}
+                range={range}
+              />
+            </li>
           ))}
         </ul>
       )}

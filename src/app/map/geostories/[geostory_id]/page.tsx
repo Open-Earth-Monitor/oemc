@@ -6,7 +6,7 @@ import type { NextPage } from 'next';
 
 import { useGeostory, useGeostoryLayers } from '@/hooks/geostories';
 
-import DatasetItem from '@/components/datasets/datasets-item';
+import DatasetItem from '@/components/datasets/card';
 import GeostoryHead from '@/components/geostories/header';
 import Loading from '@/components/loading';
 
