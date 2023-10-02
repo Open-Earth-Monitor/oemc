@@ -1,35 +1,45 @@
 'use client';
+
 import { FC } from 'react';
 
-import type { MonitorColorTypes } from '@/types/datasets';
+import { useParams } from 'next/navigation';
+
+import Loading from '@/app/loading';
+
+import { useMonitor } from '@/hooks/monitors';
 
 import MonitorsDirectoryDialog from '@/components/monitors/dialog';
-import { Skeleton } from '@/components/ui/skeleton';
-const MonitorCard: FC<{ data: MonitorColorTypes; isFetched: boolean; isError: boolean }> = ({
-  data,
-  isFetched,
-  isError,
-}) => {
+
+const MonitorCard: FC = () => {
+  const params = useParams();
+  const monitorId = params?.monitor_id as string;
+
+  const { data, isLoading, isFetched, isError } = useMonitor(
+    {
+      monitor_id: monitorId,
+    },
+    {
+      enabled: !!monitorId,
+    }
+  );
+
   return (
-    <div className="space-y-2 px-6 py-5" style={{ backgroundColor: data?.color }}>
-      <MonitorsDirectoryDialog />
-      <div className="space-y-2 text-brand-500" data-testid="monitor-card">
-        <span data-testid="monitor-tag" className="font-inter text-xs">
-          MONITOR
-        </span>
-        {isFetched && !isError ? (
-          <h1 data-testid="monitor-title" className="text-5xl">
-            {data.title}
-          </h1>
-        ) : (
-          <Skeleton className="h-[10px] w-[100px] rounded-sm" />
-        )}
-        {isFetched && !isError ? (
-          <p data-testid="monitor-description">{data.description}</p>
-        ) : (
-          <Skeleton className="h-[5px] w-full rounded-sm py-2" />
-        )}
-      </div>
+    <div className="space-y-6 px-6 py-5" style={{ backgroundColor: data?.color }}>
+      {isLoading && !isFetched && <Loading />}
+      {!isLoading && isFetched && !isError && (
+        <>
+          <MonitorsDirectoryDialog />
+          <div className="space-y-6 text-brand-500" data-testid="monitor-card">
+            <div data-testid="monitor-tag" className="text-xs">
+              MONITOR
+            </div>
+            <h1 data-testid="monitor-title" className="font-satoshi text-5xl font-bold">
+              {data.title}
+            </h1>
+            {data.description && <p data-testid="monitor-description">{data.description}</p>}
+          </div>
+        </>
+      )}
     </div>
   );
 };
