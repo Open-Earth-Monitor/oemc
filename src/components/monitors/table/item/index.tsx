@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 
 import Link from 'next/link';
 
@@ -10,7 +10,6 @@ import { cn } from '@/lib/classnames';
 
 import { MonitorColorTypes } from '@/types/datasets';
 
-import { Separator } from '@/components/ui/separator';
 import { TableCell } from '@/components/ui/table';
 
 const MonitorsItem = ({ data }: { data: MonitorColorTypes }) => {
@@ -18,11 +17,6 @@ const MonitorsItem = ({ data }: { data: MonitorColorTypes }) => {
   const controls = useAnimationControls();
   const { id, title, geostories, color, colorOpacity } = data ?? {};
   const geostoriesLength = geostories.length;
-  const geostoriesSentence = useMemo(
-    () =>
-      geostoriesLength > 1 ? `${geostoriesLength} Geostories` : `${geostoriesLength} Geostory`,
-    [geostoriesLength]
-  );
 
   const handleVisibility = async () => {
     setIsExpanded(!isExpanded);
@@ -37,75 +31,83 @@ const MonitorsItem = ({ data }: { data: MonitorColorTypes }) => {
   return (
     <>
       <TableCell>
-        <div className="flex min-h-[62px] w-full items-center space-x-6">
-          <Separator
-            orientation="vertical"
-            className="h-full min-h-[62px] w-0.5"
-            style={{ backgroundColor: color }}
-          />
-          <Link
-            data-testid={`monitor-item-${id}`}
-            key={id}
-            href={`/map/${id}/datasets`}
-            className=" flex items-center font-bold"
-          >
-            <AnimatePresence>
-              <div className="flex w-full flex-col">
-                <motion.h4 whileHover="hover">{title}.</motion.h4>
-                <motion.div
-                  className="h-1 w-full bg-secondary-500"
-                  style={{
-                    width: 0,
-                  }}
-                  whileHover={{ width: '100%' }}
-                />
-              </div>
-            </AnimatePresence>
-          </Link>
-        </div>
+        <Link
+          data-testid={`monitor-item-${id}`}
+          key={id}
+          href={`/map/${id}/datasets`}
+          className={`flex items-center border-l-4 px-4 font-bold`}
+          style={{ borderLeftColor: color }}
+        >
+          <motion.h2 initial="initial" whileHover="hover" className="text-2xl font-bold">
+            <span className="block">{title}.</span>
+            <motion.div
+              className="h-0.5 w-0 bg-secondary-500"
+              variants={{
+                initial: { width: 0 },
+                hover: { width: '100%' },
+              }}
+            />
+          </motion.h2>
+        </Link>
       </TableCell>
-      <TableCell className="space-x-6">
+      <TableCell>
         <button
           data-testid="geostories-button"
           type="button"
-          className="flex items-center space-x-3 pt-2.5"
+          className="flex items-center space-x-4"
           onClick={() => void handleVisibility()}
         >
           <HiOutlineChevronUp
             className={cn({
-              'inline-block h-3 w-3 rotate-90': true,
+              'inline-block h-4 w-4 rotate-90': true,
               'rotate-180': isExpanded,
             })}
           />
-          <p className="space-x-4">
-            <span>Show </span>
-            <span
-              data-testid="geostories-container"
-              style={{
-                backgroundColor: isExpanded ? color : colorOpacity,
-                color: isExpanded ? 'hsl(210, 53%, 7%)' : color,
-                opacity: 0.5,
-              }}
-              className={cn({
-                'rounded-3xl px-2 py-0.5 text-brand-500 text-opacity-5': true,
-                'text-brand-500 opacity-100': isExpanded,
-              })}
-            >
-              {geostoriesSentence}
-            </span>
-          </p>
+          <div>Show </div>
+          <div
+            data-testid="geostories-container"
+            className="rounded-3xl px-2"
+            style={{
+              backgroundColor: isExpanded ? color : colorOpacity,
+              color: isExpanded ? 'hsl(210, 53%, 7%)' : color,
+            }}
+          >
+            {geostoriesLength > 1
+              ? `${geostoriesLength} Geostories`
+              : `${geostoriesLength} Geostory`}
+          </div>
         </button>
         <AnimatePresence>
-          <motion.ol
-            className="list-decimal space-y-2 pb-7 pt-2 font-bold"
+          <motion.ul
+            className="mt-2 space-y-2 font-bold"
             style={{ overflow: 'hidden' }}
             initial={{ height: 0, opacity: 0 }}
             animate={controls}
             transition={{ duration: 0 }}
             exit={{ height: 0, opacity: 0 }}
           >
-            {geostoriesLength > 0 && geostories.map(({ title }) => <li key={title}>{title}</li>)}
-          </motion.ol>
+            {geostoriesLength > 0 &&
+              geostories.map(({ id: geostoryId, title }) => (
+                <motion.li
+                  key={`monitor-geostory-${geostoryId}`}
+                  initial="initial"
+                  whileHover="hover"
+                >
+                  <Link href={`/map/geostories/${geostoryId}`} className="block">
+                    <div>
+                      <span>{title}</span>
+                      <motion.div
+                        className="h-0.5 w-0 bg-secondary-500"
+                        variants={{
+                          initial: { width: 0 },
+                          hover: { width: '100%' },
+                        }}
+                      />
+                    </div>
+                  </Link>
+                </motion.li>
+              ))}
+          </motion.ul>
         </AnimatePresence>
       </TableCell>
     </>

@@ -17,8 +17,8 @@ const MonitorsDirectory = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Monitors</TableHead>
-              <TableHead>Geostories</TableHead>
+              <TableHead className="w-1/2">Monitors</TableHead>
+              <TableHead className="w-1/2">Geostories</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody data-testid="monitors-list">
