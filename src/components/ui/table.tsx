@@ -5,7 +5,7 @@ import { cn } from '@/lib/classnames';
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
     <div className="w-full overflow-auto">
-      <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
+      <table ref={ref} className={cn('w-full caption-bottom', className)} {...props} />
     </div>
   )
 );
@@ -18,7 +18,7 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      'border-b border-dashed border-b-secondary-500 border-opacity-[0.2] text-xs uppercase',
+      'border-b border-dashed border-b-secondary-500 border-opacity-[0.2] uppercase',
       className
     )}
     {...props}
@@ -51,7 +51,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
     <tr
       ref={ref}
       className={cn(
-        'border-b border-t border-dashed border-b-secondary-500 border-t-secondary-500 border-opacity-[0.2] first:border-t-0 last:border-b-0 hover:bg-brand-50 data-[state=selected]:bg-muted',
+        'border-b border-t border-dashed border-b-secondary-500 border-t-secondary-500 border-opacity-[0.2] first:border-t-0 last:border-b-0 data-[state=selected]:bg-muted',
         className
       )}
       {...props}
@@ -67,7 +67,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-12 py-4 text-left align-middle text-secondary-500 [&:has([role=checkbox])]:pr-0',
+      'py-5 text-left align-middle text-xs font-normal text-secondary-500 [&:has([role=checkbox])]:pr-0',
       className
     )}
     {...props}
@@ -81,7 +81,7 @@ const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn('py-2 align-top [&:has([role=checkbox])]:pr-0', className)}
+    className={cn('py-2.5 align-top [&:has([role=checkbox])]:pr-0', className)}
     {...props}
   />
 ));
