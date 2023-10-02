@@ -9,20 +9,11 @@ import type { LoadingProps } from './types';
 const Loading: FC<LoadingProps> = ({
   className = 'relative flex justify-center items-center w-full h-[200px]',
   iconClassName = 'w-5 h-5 animate-spin text-secondary-500',
-  transition = {},
 }: LoadingProps) => {
-  const variants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-  };
-
   return (
     <AnimatePresence>
       <motion.div
         key="loading"
-        {...variants}
-        transition={transition}
         className={cx({
           [className]: !!className,
         })}
