@@ -1,106 +1,95 @@
-import { FC, useMemo, useState, useCallback, MouseEvent, useEffect } from 'react';
+import { useState, useCallback } from 'react';
+import type { FC, FormEvent, MouseEvent } from 'react';
 
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { flatten, compact, trimEnd } from 'lodash-es';
 import { AiFillStar } from 'react-icons/ai';
 
 import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
 import { Button } from '@/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+
+const PREFIX = 'OEMC-';
 
 export const BookmarkControl: FC = () => {
   const [bookmarkName, setBookmarkName] = useState('');
-  const [localStorageEntries, setLocalStorageEntries] = useState(Object.entries(localStorage));
-  const [bookmarksUpdate, setBookmarksUpdate] = useState(false);
+  const [bookmarks, setBookmarks] = useState<{ name: string; value: string }[]>([]);
   const [isInputVisible, setInputVisibility] = useState(false);
   const pathname = usePathname();
-  const path = trimEnd(pathname, '/');
-  const params = useSearchParams();
-  const url = !!params.get('layers')
-    ? `${process.env.NEXT_PUBLIC_BASE_URL}${path}?layers=${params.get('layers')}`
-    : `${process.env.NEXT_PUBLIC_BASE_URL}${path}`;
+  const searchParams = useSearchParams();
+
+  const url = `${pathname}?${searchParams.toString()}`;
+
+  const updateBookmarks = useCallback(() => {
+    // Filtering the localStorage keys to get only the ones that start with the prefix
+    const keys = Object.keys(localStorage).filter((key) => key.includes(PREFIX));
+
+    const nextBookmarks = keys.map((key) => ({
+      name: key.slice(PREFIX.length, key.length), // Removing the prefix from the key
+      value: localStorage.getItem(key),
+    }));
+
+    setBookmarks(nextBookmarks);
+  }, []);
+
   const handleSaveBookmark = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      localStorage.setItem(`BookmarkStorage-${bookmarkName}`, url);
-      setBookmarksUpdate(true);
+      e.stopPropagation();
+      localStorage.setItem(`${PREFIX}${bookmarkName}`, url);
+      // setBookmarksUpdate(true);
       setInputVisibility(false);
-      setBookmarkName('');
+      setBookmarkName(''); // reset input
+      updateBookmarks();
     },
-    [bookmarkName, url]
+    [bookmarkName, updateBookmarks, url]
   );
-  useEffect(() => {
-    if (bookmarksUpdate) {
-      setLocalStorageEntries(Object.entries(localStorage));
-      setTimeout(() => setBookmarksUpdate(false), 1000);
-    }
-  }, [bookmarksUpdate]);
 
-  const handleRemoveBookmark = ({ key }: { key: string }) => {
-    localStorage.removeItem(`${key}`);
-    setBookmarksUpdate(true);
-  };
-
-  const bookmarksList = useMemo<{ name: string; value: string }[]>(
-    () =>
-      flatten(
-        localStorageEntries.map((entry: string[]) =>
-          compact(
-            flatten(
-              entry.map((item: string) => {
-                if (item.includes('BookmarkStorage')) {
-                  return {
-                    name: entry[0],
-                    value: entry[1],
-                  };
-                } else return null;
-              })
-            )
-          )
-        )
-      ),
-    [localStorageEntries]
+  const handleRemoveBookmark = useCallback(
+    (name: string) => {
+      localStorage.removeItem(`${PREFIX}${name}`);
+      updateBookmarks();
+    },
+    [updateBookmarks]
   );
+
+  const handleInputChange = useCallback((e: FormEvent<HTMLInputElement>) => {
+    setBookmarkName(e.currentTarget?.value);
+  }, []);
 
   return (
     <Sheet>
       <SheetTrigger className={CONTROL_BUTTON_STYLES.default}>
         <AiFillStar className={CONTROL_ICON_STYLES.default} />
       </SheetTrigger>
-      <SheetContent className="relative flex h-full flex-col bg-brand-500 bg-opacity-[0.9] pl-10">
+      <SheetContent className="relative flex h-full flex-col space-y-6 bg-brand-500 bg-opacity-[0.9]">
         <SheetHeader>
           <SheetTitle className="text-2xl font-bold text-secondary-500">Bookmarks</SheetTitle>
-          <SheetDescription className="scroll-y-auto">
-            {!bookmarksList.length && !isInputVisible && <p>No bookmarks yet.</p>}
+          <div className="scroll-y-auto text-secondary-500">
+            {!bookmarks.length && !isInputVisible && <div>No bookmarks yet.</div>}
 
             {isInputVisible && (
-              <div>
+              <div className="space-y-6">
                 <div className="flex items-center">
                   <AiFillStar className="h-5 w-5 text-secondary-500" />
                   <input
                     type="text"
-                    value={bookmarkName}
+                    defaultValue=""
                     placeholder="Insert bookmark name..."
                     className="w-full border-none bg-transparent py-2.5 outline-none placeholder:bg-transparent"
-                    onChange={(e) => setBookmarkName(e.target.value)}
+                    onChange={handleInputChange}
                     autoFocus={true}
                   />
                 </div>
-                <p className="py-4 pl-7">{url}</p>
-                <div className="flex space-x-4 py-6">
+                <div className="overflow-hidden break-words text-sm text-muted-foreground">
+                  {url}
+                </div>
+                <div className="flex space-x-4">
                   <Button
                     type="submit"
-                    onClick={(e) => handleSaveBookmark(e)}
+                    onClick={handleSaveBookmark}
                     className="flex w-full items-center"
                     disabled={!bookmarkName}
                   >
@@ -116,34 +105,35 @@ export const BookmarkControl: FC = () => {
                 </div>
               </div>
             )}
-          </SheetDescription>
+          </div>
         </SheetHeader>
 
         {!isInputVisible && (
-          <Button className="my-7 w-full" onClick={() => setInputVisibility(!isInputVisible)}>
+          <Button className="w-full" onClick={() => setInputVisibility(true)}>
             Bookmark current URL
           </Button>
         )}
-        <div className="relative h-full overflow-y-auto">
-          <ul className="after:content relative h-full flex-1 overflow-y-auto text-secondary-600">
-            {!!bookmarksList.length &&
-              bookmarksList.map(({ name, value }) => (
+
+        {bookmarks.length > 0 && (
+          <div className="relative h-full">
+            <ul className="after:content relative h-full flex-1 overflow-y-auto text-secondary-600">
+              {bookmarks.map(({ name, value }) => (
                 <li
                   key={name}
                   className="border-t-0.5 flex items-center justify-between border-b border-t-[0.5px] border-dashed border-brand-50 py-2.5"
                 >
-                  <span className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2">
                     <AiFillStar className="h-5 w-5 text-secondary-500" />
-
                     <Link href={value}>{name}</Link>
-                  </span>
-                  <button type="button" onClick={() => handleRemoveBookmark({ key: name })}>
+                  </div>
+                  <button type="button" onClick={() => handleRemoveBookmark(name)}>
                     <Cross2Icon className="h-3 w-3 text-secondary-500" />
                   </button>
                 </li>
               ))}
-          </ul>
-        </div>
+            </ul>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
