@@ -5,6 +5,14 @@ import API from 'services/api';
 
 import type { UseParamsOptions, LayerTypes, LayerParsedRangeTypes } from '../types/datasets';
 
+const DEFAULT_QUERY_OPTIONS = {
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  refetchOnReconnect: false,
+  retry: false,
+  staleTime: Infinity,
+};
+
 export function useLayers(
   queryOptions?: UseQueryOptions<LayerTypes[], Error, LayerParsedRangeTypes[]>
 ) {
@@ -15,6 +23,7 @@ export function useLayers(
       ...queryOptions,
     }).then((response: AxiosResponse<LayerTypes[]>) => response.data);
   return useQuery(['layer'], fetchLayer, {
+    ...DEFAULT_QUERY_OPTIONS,
     select: (data) =>
       data.map((d) => ({
         ...d,
@@ -40,6 +49,7 @@ export function useLayerSource(
     }).then((response: AxiosResponse<LayerTypes[]>) => response.data[0]);
 
   return useQuery(['layer', params], fetchLayer, {
+    ...DEFAULT_QUERY_OPTIONS,
     select: (data) => ({
       ...data,
       range: data?.range?.map((r) => ({

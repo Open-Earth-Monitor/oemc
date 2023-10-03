@@ -9,6 +9,14 @@ type UseParams = {
   geostory_id?: string;
 };
 
+const DEFAULT_QUERY_OPTIONS = {
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  refetchOnReconnect: false,
+  retry: false,
+  staleTime: Infinity,
+};
+
 export function useGeostory(
   params: UseParams,
   queryOptions?: UseQueryOptions<GeostoryTypes, Error>
@@ -21,6 +29,7 @@ export function useGeostory(
       ...queryOptions,
     }).then((response: AxiosResponse<GeostoryTypes[]>) => response.data[0]);
   return useQuery(['geostories', params], fetchGeostory, {
+    ...DEFAULT_QUERY_OPTIONS,
     select: (data) => data,
     ...queryOptions,
   });
@@ -38,6 +47,7 @@ export function useGeostoryLayers(
       ...queryOptions,
     }).then((response: AxiosResponse<LayerTypes[]>) => response.data);
   return useQuery(['geostory-datasets', params], fetchGeostoryLayers, {
+    ...DEFAULT_QUERY_OPTIONS,
     select: (data) =>
       data.map((d) => ({
         ...d,

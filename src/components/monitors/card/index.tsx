@@ -4,10 +4,9 @@ import { FC } from 'react';
 
 import { useParams } from 'next/navigation';
 
-import Loading from '@/app/loading';
-
 import { useMonitor } from '@/hooks/monitors';
 
+import Loading from '@/components/loading';
 import MonitorsDirectoryDialog from '@/components/monitors/dialog';
 
 const MonitorCard: FC = () => {

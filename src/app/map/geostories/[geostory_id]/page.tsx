@@ -1,46 +1,35 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-
 import type { NextPage } from 'next';
 
-import { useGeostory, useGeostoryLayers } from '@/hooks/geostories';
+import { useGeostoryLayers } from '@/hooks/geostories';
 
-import DatasetItem from '@/components/datasets/card';
+import DatasetCard from '@/components/datasets/card';
 import GeostoryHead from '@/components/geostories/header';
 import Loading from '@/components/loading';
 
-const GeostoryPage: NextPage = () => {
-  const urlParams = useParams();
-  const geostoryId = urlParams?.geostory_id as string;
-  const {
-    data: GeostoryData,
-    isFetched: GeostoryIsFetched,
-    isError: GeostoryIsError,
-  } = useGeostory({ geostory_id: geostoryId });
-  const { data, isLoading, isFetched, isError } = useGeostoryLayers({ geostory_id: geostoryId });
+const GeostoryPage: NextPage<{ params: { geostory_id: string } }> = ({
+  params: { geostory_id },
+}) => {
+  const { data, isLoading, isFetched, isError } = useGeostoryLayers({ geostory_id });
 
   return (
-    <div className="m-auto w-full space-y-4 divide-y divide-brand-200">
-      {isLoading && <Loading />}
+    <div className="space-y-6">
+      <GeostoryHead geostoryId={geostory_id} />
 
-      <GeostoryHead data={GeostoryData} isFetched={GeostoryIsFetched} isError={GeostoryIsError} />
+      <div>
+        {isLoading && <Loading />}
 
-      {isFetched && !isError && (
-        <ul className="text-secondary-500" data-testid="datasets-list">
-          {data.map(({ layer_id, title, download_url, description, author, range }) => (
-            <DatasetItem
-              key={layer_id}
-              id={layer_id}
-              title={title}
-              download_url={download_url}
-              description={description}
-              author={author}
-              range={range}
-            />
-          ))}
-        </ul>
-      )}
+        {isFetched && !isError && (
+          <ul className="space-y-6 text-secondary-500" data-testid="datasets-list">
+            {data.map((dataset) => (
+              <li key={dataset.layer_id}>
+                <DatasetCard {...dataset} id={dataset.layer_id} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };

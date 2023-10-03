@@ -35,6 +35,14 @@ const COLORS_OPACITY = {
   m8: 'hsla(60, 90%, 84%, 0.2)',
 } satisfies { [key: string]: string };
 
+const DEFAULT_QUERY_OPTIONS = {
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  refetchOnReconnect: false,
+  retry: false,
+  staleTime: Infinity,
+};
+
 export function useMonitor(
   params: UseParams,
   queryOptions?: UseQueryOptions<MonitorTypes, Error, MonitorColorTypes>
@@ -47,6 +55,7 @@ export function useMonitor(
       ...queryOptions,
     }).then((response: AxiosResponse<MonitorTypes[]>) => response.data[0]);
   return useQuery(['monitor', params], fetchMonitor, {
+    ...DEFAULT_QUERY_OPTIONS,
     select: (data) => ({
       ...data,
       color: COLORS[data.id] as string,
@@ -66,6 +75,7 @@ export function useMonitors(
       ...queryOptions,
     }).then((response: AxiosResponse<MonitorTypes[]>) => response.data);
   return useQuery(['monitors'], fetchMonitors, {
+    ...DEFAULT_QUERY_OPTIONS,
     select: (data) => {
       return data.map((monitor) => ({
         ...monitor,
@@ -89,6 +99,7 @@ export function useMonitorLayers(
       ...queryOptions,
     }).then((response: AxiosResponse<LayerTypes[]>) => response.data);
   return useQuery(['monitor-datasets', params], fetchMonitorLayers, {
+    ...DEFAULT_QUERY_OPTIONS,
     select: (data) =>
       data.map((d) => ({
         ...d,
@@ -113,6 +124,7 @@ export function useMonitorGeostories(
       ...queryOptions,
     }).then((response: AxiosResponse<GeostoryTypes[]>) => response.data);
   return useQuery(['monitors-geostories', params], fetchMonitorGeostories, {
+    ...DEFAULT_QUERY_OPTIONS,
     select: (data) => data,
     ...queryOptions,
   });
