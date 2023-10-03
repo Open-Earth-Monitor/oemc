@@ -47,7 +47,7 @@ const DatasetsItem: FC<{
         <div className="mt-1.5 flex items-baseline space-x-2">
           <Popover>
             <PopoverTrigger data-testid="dataset-info-button">
-              <FiInfo className="h-6 w-6 text-secondary-500" title="info" />
+              <FiInfo className="h-6 w-6 text-secondary-500" title="Show info" />
             </PopoverTrigger>
             <PopoverContent align="center" sideOffset={5} data-testid="dataset-info-content">
               <div className="flex flex-col">
@@ -63,6 +63,7 @@ const DatasetsItem: FC<{
               target="_blank"
               rel="noopener noreferrer"
               data-testid="dataset-download-button"
+              title="Go to download dataset site"
             >
               <HiOutlineExternalLink className="h-6 w-6 text-gray-300" />
             </a>
