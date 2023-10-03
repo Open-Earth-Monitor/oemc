@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import { FiInfo } from 'react-icons/fi';
 import { HiOutlineExternalLink } from 'react-icons/hi';
@@ -14,12 +14,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 const DatasetCard: FC<
   LayerParsedRangeTypes & {
     id: string;
+    autoPlay?: boolean;
   }
-> = ({ id, title, download_url, description, author, range }) => {
+> = ({ id, title, download_url, description, author, range, autoPlay }) => {
   const { updateSearchParam, removeSearchParam } = useURLParams();
   const { layerId } = useURLayerParams();
-
-  const isActive = layerId === id;
+  const [isActive, setIsActive] = useState<boolean>(layerId === id);
 
   const handleClick = useCallback(() => {
     if (!isActive) {
@@ -30,6 +30,16 @@ const DatasetCard: FC<
       removeSearchParam('layers');
     }
   }, [isActive, updateSearchParam, id, range, removeSearchParam]);
+
+  useEffect(() => {
+    if (autoPlay) {
+      setIsActive(true);
+      updateSearchParam({
+        layers: [{ id, opacity: 1, date: range?.[0]?.value }],
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoPlay]);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
@@ -66,7 +76,7 @@ const DatasetCard: FC<
 
       <p data-testid="dataset-description">{description}</p>
 
-      {range && <TimeSeries range={range} layerId={id} />}
+      {range && <TimeSeries range={range} layerId={id} autoPlay={autoPlay} />}
 
       <button
         data-testid="dataset-layer-toggle-button"
