@@ -12,8 +12,8 @@ const MainMenu = () => {
 
   return (
     <nav className="flex h-full justify-between" data-testid="main-navigation">
-      {navLinks.map((link) => {
-        const isActive = `/${pathname.split('/')[1]}` === link.href;
+      {navLinks.map(({ name, ...props }) => {
+        const isActive = `/${pathname.split('/')[1]}` === props.href;
         return (
           <Link
             className={cn(
@@ -22,11 +22,10 @@ const MainMenu = () => {
                 'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
               }
             )}
-            href={link.href}
-            key={link.name}
-            data-testid={link['data-testid']}
+            key={props.href}
+            {...props}
           >
-            {link.name}
+            {name}
           </Link>
         );
       })}

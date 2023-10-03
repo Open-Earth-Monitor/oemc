@@ -9,4 +9,14 @@ export const navLinks = [
     href: '/map',
     'data-testid': 'map-link',
   },
+  {
+    name: 'Data Catalogue',
+    href: 'https://zenodo.org/communities/oemc-project/',
+    target: '_blank',
+  },
+  {
+    name: 'Project site',
+    href: 'https://earthmonitor.org/',
+    target: '_blank',
+  },
 ];
