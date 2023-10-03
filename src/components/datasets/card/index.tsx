@@ -18,33 +18,34 @@ const DatasetCard: FC<
   }
 > = ({ id, title, download_url, description, author, range, autoPlay = false }) => {
   const { updateSearchParam, removeSearchParam } = useURLParams();
-  const { layerId, layerOpacity, date } = useURLayerParams();
-  const [isAutoPlay, setAutoPlay] = useState<boolean>(autoPlay);
-  const [isActive, setIsActive] = useState<boolean>(layerId === id || autoPlay);
+  const { layerOpacity, date } = useURLayerParams();
+
+  const [isActive, setIsActive] = useState<boolean>(false);
 
   const handleClick = useCallback(() => {
-    const nextIsActive = !isActive;
-    setIsActive(nextIsActive);
-    if (nextIsActive) {
-      updateSearchParam({
-        layers: [{ id, opacity: 1, date: range?.[0]?.value }],
-      });
-    } else {
-      setAutoPlay(false); // Stop autoplay when the layer is hidden
-      removeSearchParam('layers');
-    }
-  }, [id, isActive, range, removeSearchParam, updateSearchParam]);
+    setIsActive(!isActive);
+  }, [isActive]);
 
   /**
-   * Set the layer as active when the component is mounted
+   * Update URL when isActive changes
    */
   useEffect(() => {
     if (isActive) {
       updateSearchParam({
         layers: [{ id, opacity: layerOpacity || 1, date: date || range?.[0]?.value }],
       });
+    } else if (!isActive) {
+      removeSearchParam('layers');
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive]);
+
+  /**
+   * Setting isActive if autoPlay is true
+   */
+  useEffect(() => {
+    setIsActive(autoPlay);
+  }, [autoPlay]);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
@@ -81,7 +82,7 @@ const DatasetCard: FC<
 
       <p data-testid="dataset-description">{description}</p>
 
-      {range && <TimeSeries range={range} layerId={id} autoPlay={isAutoPlay} />}
+      {range && <TimeSeries range={range} layerId={id} autoPlay={autoPlay} isActive={isActive} />}
 
       <button
         data-testid="dataset-layer-toggle-button"

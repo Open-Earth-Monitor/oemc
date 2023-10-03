@@ -61,7 +61,7 @@ export function useURLParams() {
       );
     }
 
-    router.replace(`${pathname}?${nextSearchParams.toString()}`);
+    router.replace(`${pathname}?${nextSearchParams.toString()}`, { scroll: false });
   };
 
   const removeSearchParam = (key: string) => {
@@ -75,7 +75,7 @@ export function useURLParams() {
 
     nextSearchParams.delete(key);
 
-    router.replace(`${pathname}?${nextSearchParams.toString()}`);
+    router.replace(`${pathname}?${nextSearchParams.toString()}`, { scroll: false });
   };
 
   return { updateSearchParam, removeSearchParam };

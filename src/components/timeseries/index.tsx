@@ -7,7 +7,6 @@ import { useInterval } from 'usehooks-ts';
 import cn from '@/lib/classnames';
 
 import type { LayerParsedRangeTypes } from '@/types/datasets';
-import type { LayerDateRange } from '@/types/layers';
 
 import { useURLayerParams, useURLParams } from '@/hooks/url-params';
 
@@ -19,26 +18,19 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-const TIMEOUT_STEP_DURATION = 3000;
+const TIMEOUT_STEP_DURATION = 3500;
 
 const TimeSeries: FC<{
   layerId: LayerParsedRangeTypes['layer_id'];
   range: LayerParsedRangeTypes['range'];
   autoPlay?: boolean;
-}> = ({ range, autoPlay = false }) => {
-  const [currentRange, setCurrentRange] = useState<{ value: string; label: string }>(range[0]);
-  const [isPlaying, setPlaying] = useState<boolean>(autoPlay);
+  isActive?: boolean;
+}> = ({ range, autoPlay = false, isActive = false }) => {
   const { updateSearchParam } = useURLParams();
   const { layerId, layerOpacity, date } = useURLayerParams();
 
-  const onChange = useCallback(
-    (currentRange: LayerDateRange) => {
-      updateSearchParam({
-        layers: [{ id: layerId, opacity: layerOpacity || 1, date: currentRange?.value }],
-      });
-    },
-    [layerId, layerOpacity, updateSearchParam]
-  );
+  const [currentRange, setCurrentRange] = useState<{ value: string; label: string }>(range[0]);
+  const [isPlaying, setPlaying] = useState<boolean>(autoPlay);
 
   const handlePlay = useCallback(() => {
     setPlaying(!isPlaying);
@@ -48,37 +40,54 @@ const TimeSeries: FC<{
     (value: string) => {
       const nextRange = range.find((r) => r.value === value) ?? range[0];
       setCurrentRange(nextRange);
-      onChange(nextRange);
     },
-    [onChange, range]
+    [range]
   );
 
   useInterval(
     () => {
       const nextRange = range[(range.indexOf(currentRange) + 1) % range.length];
       setCurrentRange(nextRange);
-      onChange(nextRange);
     },
-    isPlaying ? TIMEOUT_STEP_DURATION : null
+    isPlaying && isActive ? TIMEOUT_STEP_DURATION : null
   );
 
+  /**
+   * Updating layers params when range changes
+   */
   useEffect(() => {
-    if (!autoPlay) setPlaying(false);
-  }, [autoPlay]);
+    if (currentRange) {
+      updateSearchParam({
+        layers: [{ id: layerId, opacity: layerOpacity || 1, date: currentRange?.value }],
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRange]);
+
+  /**
+   * At mounting set initial current range based on the url params
+   */
+  useEffect(() => {
+    if (date) {
+      const nextRange = range.find((r) => r.value === date);
+      if (nextRange) setCurrentRange(nextRange);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Reset to first position when the layer is hidden
   useEffect(() => {
-    if (!isPlaying && !date) {
+    if (!isPlaying && !isActive && !date) {
       setCurrentRange(range[0]);
     }
-  }, [date, isPlaying, range]);
+  }, [date, isActive, isPlaying, range]);
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between">
         <div className="flex items-center space-x-2">
           <span>DATE:</span>
-          <Select value={currentRange.value} onValueChange={handleSelect} disabled={!layerId}>
+          <Select value={currentRange.value} onValueChange={handleSelect} disabled={!isActive}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -95,9 +104,9 @@ const TimeSeries: FC<{
           type="button"
           className="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-brand-50"
           onClick={handlePlay}
-          disabled={!layerId}
+          disabled={!isActive}
         >
-          {isPlaying ? (
+          {isPlaying && isActive ? (
             <HiPause className="h-4 w-4 text-secondary-500" />
           ) : (
             <HiPlay className="h-4 w-4 text-secondary-500" />
