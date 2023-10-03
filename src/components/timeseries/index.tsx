@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { FC } from 'react';
 
 import { HiPlay, HiPause } from 'react-icons/hi2';
@@ -24,7 +24,8 @@ const TIMEOUT_STEP_DURATION = 3000;
 const TimeSeries: FC<{
   layerId: LayerParsedRangeTypes['layer_id'];
   range: LayerParsedRangeTypes['range'];
-}> = ({ layerId, range }) => {
+  autoPlay?: boolean;
+}> = ({ layerId, range, autoPlay = false }) => {
   const [currentRange, setCurrentRange] = useState<{ value: string; label: string }>(range[0]);
   const [isPlaying, setPlaying] = useState<boolean>(false);
   const { updateSearchParam } = useURLParams();
@@ -58,6 +59,10 @@ const TimeSeries: FC<{
     },
     isPlaying ? TIMEOUT_STEP_DURATION : null
   );
+
+  useEffect(() => {
+    if (autoPlay) setPlaying(true);
+  }, [autoPlay]);
 
   return (
     <div className="space-y-4">
