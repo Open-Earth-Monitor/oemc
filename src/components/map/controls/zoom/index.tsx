@@ -2,14 +2,14 @@ import { FC, useCallback, MouseEvent } from 'react';
 
 import { useMap } from 'react-map-gl';
 
-import { AiOutlinePlus } from 'react-icons/ai';
-import { AiOutlineMinus } from 'react-icons/ai';
+import { LuPlus, LuMinus } from 'react-icons/lu';
 
 import { cn } from '@/lib/classnames';
 
-import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
+import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
 
 import type { ZoomControlProps } from './types';
+
 export const ZoomControl: FC<ZoomControlProps> = ({
   mapId = 'current',
   className,
@@ -47,30 +47,22 @@ export const ZoomControl: FC<ZoomControlProps> = ({
       })}
     >
       <button
-        className={cn({
-          'cursor-pointer rounded-t-sm bg-brand-400 p-1 active:bg-white active:text-brand-500 disabled:cursor-default disabled:opacity-50':
-            true,
-          'hover:bg-brand-200 active:bg-gray-600': zoom < maxZoom,
-        })}
+        className={cn(CONTROL_BUTTON_STYLES.default, 'rounded-b-none')}
         aria-label="Zoom in"
         type="button"
         disabled={zoom >= maxZoom}
         onClick={increaseZoom}
       >
-        <AiOutlinePlus className={CONTROL_BUTTON_STYLES.default} />
+        <LuPlus className={CONTROL_ICON_STYLES.default} />
       </button>
       <button
-        className={cn({
-          'rounded-b-sm bg-brand-400 p-1 active:bg-white  active:text-brand-500 disabled:cursor-default disabled:opacity-50':
-            true,
-          'hover:bg-brand-200 active:bg-gray-600': zoom > minZoom,
-        })}
+        className={cn(CONTROL_BUTTON_STYLES.default, 'rounded-t-none')}
         aria-label="Zoom out"
         type="button"
         disabled={zoom <= minZoom}
         onClick={decreaseZoom}
       >
-        <AiOutlineMinus className={CONTROL_BUTTON_STYLES.default} />
+        <LuMinus className={CONTROL_ICON_STYLES.default} />
       </button>
     </div>
   );
