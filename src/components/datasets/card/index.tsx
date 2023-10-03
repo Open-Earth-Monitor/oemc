@@ -16,30 +16,35 @@ const DatasetCard: FC<
     id: string;
     autoPlay?: boolean;
   }
-> = ({ id, title, download_url, description, author, range, autoPlay }) => {
+> = ({ id, title, download_url, description, author, range, autoPlay = false }) => {
   const { updateSearchParam, removeSearchParam } = useURLParams();
-  const { layerId } = useURLayerParams();
-  const [isActive, setIsActive] = useState<boolean>(layerId === id);
+  const { layerId, layerOpacity, date } = useURLayerParams();
+  const [isAutoPlay, setAutoPlay] = useState<boolean>(autoPlay);
+  const [isActive, setIsActive] = useState<boolean>(layerId === id || autoPlay);
 
   const handleClick = useCallback(() => {
-    if (!isActive) {
+    const nextIsActive = !isActive;
+    setIsActive(nextIsActive);
+    if (nextIsActive) {
       updateSearchParam({
         layers: [{ id, opacity: 1, date: range?.[0]?.value }],
       });
     } else {
+      setAutoPlay(false); // Stop autoplay when the layer is hidden
       removeSearchParam('layers');
     }
-  }, [isActive, updateSearchParam, id, range, removeSearchParam]);
+  }, [id, isActive, range, removeSearchParam, updateSearchParam]);
 
+  /**
+   * Set the layer as active when the component is mounted
+   */
   useEffect(() => {
-    if (autoPlay) {
-      setIsActive(true);
+    if (isActive) {
       updateSearchParam({
-        layers: [{ id, opacity: 1, date: range?.[0]?.value }],
+        layers: [{ id, opacity: layerOpacity || 1, date: date || range?.[0]?.value }],
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoPlay]);
+  }, []);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
@@ -76,7 +81,7 @@ const DatasetCard: FC<
 
       <p data-testid="dataset-description">{description}</p>
 
-      {range && <TimeSeries range={range} layerId={id} autoPlay={autoPlay} />}
+      {range && <TimeSeries range={range} layerId={id} autoPlay={isAutoPlay} />}
 
       <button
         data-testid="dataset-layer-toggle-button"

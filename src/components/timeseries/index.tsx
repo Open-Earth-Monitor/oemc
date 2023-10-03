@@ -25,11 +25,11 @@ const TimeSeries: FC<{
   layerId: LayerParsedRangeTypes['layer_id'];
   range: LayerParsedRangeTypes['range'];
   autoPlay?: boolean;
-}> = ({ layerId, range, autoPlay = false }) => {
+}> = ({ range, autoPlay = false }) => {
   const [currentRange, setCurrentRange] = useState<{ value: string; label: string }>(range[0]);
-  const [isPlaying, setPlaying] = useState<boolean>(false);
+  const [isPlaying, setPlaying] = useState<boolean>(autoPlay);
   const { updateSearchParam } = useURLParams();
-  const { layerId: paramLayerId, layerOpacity } = useURLayerParams();
+  const { layerId, layerOpacity, date } = useURLayerParams();
 
   const onChange = useCallback(
     (currentRange: LayerDateRange) => {
@@ -40,7 +40,9 @@ const TimeSeries: FC<{
     [layerId, layerOpacity, updateSearchParam]
   );
 
-  const handlePlay = useCallback(() => setPlaying(!isPlaying), [isPlaying]);
+  const handlePlay = useCallback(() => {
+    setPlaying(!isPlaying);
+  }, [isPlaying]);
 
   const handleSelect = useCallback(
     (value: string) => {
@@ -61,15 +63,22 @@ const TimeSeries: FC<{
   );
 
   useEffect(() => {
-    if (autoPlay) setPlaying(true);
+    if (!autoPlay) setPlaying(false);
   }, [autoPlay]);
+
+  // Reset to first position when the layer is hidden
+  useEffect(() => {
+    if (!isPlaying && !date) {
+      setCurrentRange(range[0]);
+    }
+  }, [date, isPlaying, range]);
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between">
         <div className="flex items-center space-x-2">
           <span>DATE:</span>
-          <Select value={currentRange.value} onValueChange={handleSelect} disabled={!paramLayerId}>
+          <Select value={currentRange.value} onValueChange={handleSelect} disabled={!layerId}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -86,7 +95,7 @@ const TimeSeries: FC<{
           type="button"
           className="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-brand-50"
           onClick={handlePlay}
-          disabled={!paramLayerId}
+          disabled={!layerId}
         >
           {isPlaying ? (
             <HiPause className="h-4 w-4 text-secondary-500" />
