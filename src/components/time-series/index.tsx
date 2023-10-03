@@ -30,7 +30,7 @@ export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTy
           JSON.stringify({
             id: layerId,
             opacity: 1,
-            year: nextYearValue,
+            date: nextYearValue,
           })
         );
 
@@ -57,7 +57,7 @@ export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTy
       JSON.stringify({
         id: layerId,
         opacity: 1,
-        year: yearValue,
+        date: yearValue,
       })
     );
 

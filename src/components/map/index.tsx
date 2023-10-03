@@ -39,30 +39,57 @@ const CustomMap: FC<CustomMapProps> = ({
       : initialViewState.latitude,
     zoom: searchParams.get('zoom') ? Number(searchParams.get('zoom')) : initialViewState.zoom,
   });
-  const [nextSearchParams, setNewSearchParams] = useState<string>(searchParams.toString());
+  const [nextSearchParams, setNextSearchParams] = useState<string>(searchParams.toString());
+  const [currentPathname, setCurrentPathname] = useState<string>(pathname);
 
   const handleMapMove = useCallback<(e: ViewStateChangeEvent) => void>(({ viewState }) => {
     setLocalViewState(viewState);
   }, []);
 
   /**
+   * Remove all params from the URL but not the viewport params
+   */
+  const cleanUpLayers = useCallback(() => {
+    const nextSearchParams = new URLSearchParams({
+      longitude: localViewState.longitude?.toString(),
+      latitude: localViewState.latitude?.toString(),
+      zoom: localViewState.zoom?.toString(),
+    });
+    setNextSearchParams(nextSearchParams.toString());
+  }, [localViewState.latitude, localViewState.longitude, localViewState.zoom]);
+
+  /**
    * Update the URL when the user stops moving the map
    */
   const handleUpdateUrl = useCallback(() => {
+    const originalSearchParams = new URLSearchParams(searchParams);
     const nextSearchParams = new URLSearchParams({
-      longitude: localViewState.longitude?.toString() ?? DEFAULT_VIEWPORT.longitude.toString(),
-      latitude: localViewState.latitude?.toString() ?? DEFAULT_VIEWPORT.latitude.toString(),
-      zoom: localViewState.zoom?.toString() ?? DEFAULT_VIEWPORT.zoom.toString(),
+      longitude: localViewState.longitude?.toString(),
+      latitude: localViewState.latitude?.toString(),
+      zoom: localViewState.zoom?.toString(),
     });
-    setNewSearchParams(nextSearchParams.toString());
-  }, [localViewState.longitude, localViewState.latitude, localViewState.zoom]);
+    originalSearchParams.forEach((value, key) => {
+      if (!nextSearchParams.has(key)) {
+        nextSearchParams.set(key, value);
+      }
+    });
+    setNextSearchParams(nextSearchParams.toString());
+  }, [searchParams, localViewState.longitude, localViewState.latitude, localViewState.zoom]);
 
   /**
    * Update the viewport state when the URL pathname, and search params changes
    */
   useEffect(() => {
-    router.replace(`${pathname}?${nextSearchParams.toString()}`);
-  }, [pathname, nextSearchParams, router]);
+    if (currentPathname !== pathname) {
+      setCurrentPathname(pathname);
+      cleanUpLayers();
+    } else if (!nextSearchParams || nextSearchParams === '') {
+      cleanUpLayers();
+    } else {
+      router.replace(`${pathname}?${nextSearchParams.toString()}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, nextSearchParams, router, currentPathname]);
 
   return (
     <div className="relative z-0 h-full w-full">

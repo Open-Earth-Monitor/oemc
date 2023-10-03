@@ -25,7 +25,7 @@ const GeostoryCard: FC<GeostoryTypes & { color: string }> = ({ id, color, title 
           <div data-testid="geostory-tag" className="font-inter text-xs">
             GEOSTORY
           </div>
-          <h2 className="font-satoshi text-2xl font-bold" data-testId={`geostory-title-${id}`}>
+          <h2 className="font-satoshi text-2xl font-bold" data-testid={`geostory-title-${id}`}>
             {title}
           </h2>
         </motion.div>

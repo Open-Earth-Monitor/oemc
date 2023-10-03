@@ -12,23 +12,13 @@ const Slider = forwardRef<
 >(({ className, ...props }, ref) => (
   <SliderPrimitive.Root
     ref={ref}
-    className={cn('relative flex w-full touch-none select-none items-center px-3 py-2', className)}
+    className={cn('relative flex w-full touch-none select-none items-center', className)}
     {...props}
   >
-    <div className="flex w-full flex-col space-y-2">
-      <div
-        data-testid="slider-current-value"
-        className="m-auto rounded-xl border border-secondary-900 p-3 font-inter text-xs font-medium text-white"
-      >
-        {props.value}%
-      </div>
-      <div className="relative py-1.5">
-        <SliderPrimitive.Track className=" h-3 w-full grow overflow-hidden rounded-full">
-          <SliderPrimitive.Range className="absolute h-2.5 rounded-full bg-gradient-to-r from-secondary-500 to-secondary-800" />
-        </SliderPrimitive.Track>
-        <SliderPrimitive.Thumb className="-mt-0.5 block h-3.5 w-3.5 rounded-full border-2 border-white bg-primary shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" />
-      </div>
-    </div>
+    <SliderPrimitive.Track className="relative h-3 w-full grow overflow-hidden rounded-full">
+      <SliderPrimitive.Range className="absolute h-full bg-gradient-to-l from-secondary-500 to-secondary-800" />
+    </SliderPrimitive.Track>
+    <SliderPrimitive.Thumb className="block h-3.5 w-3.5 rounded-full border-2 border-white bg-primary shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" />
   </SliderPrimitive.Root>
 ));
 Slider.displayName = SliderPrimitive.Root.displayName;
