@@ -8,10 +8,9 @@ import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 
 import MapLibreGL from 'maplibre-gl';
 
-import { DEFAULT_VIEWPORT, DEFAULT_BOUNDS, MAP_STYLE } from './constants';
+import { DEFAULT_VIEWPORT, MAP_STYLE } from './constants';
 import Controls from './controls';
 import BookmarkControl from './controls/bookmark';
-import FitBoundsControl from './controls/fit-bounds';
 import ShareControl from './controls/share';
 import ZoomControl from './controls/zoom';
 import LayerManager from './layer-manager';
@@ -80,7 +79,6 @@ const CustomMap: FC<CustomMapProps> = ({
           <LayerManager layers={['raster']} />
           <Controls>
             <ZoomControl />
-            <FitBoundsControl bounds={DEFAULT_BOUNDS} />
             <BookmarkControl />
             <ShareControl />
           </Controls>
