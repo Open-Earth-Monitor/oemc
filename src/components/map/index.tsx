@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, FC } from 'react';
 
-import ReactMapGL, { ViewState, ViewStateChangeEvent, MapProvider } from 'react-map-gl';
+import ReactMapGL, { MapProvider, ViewState, ViewStateChangeEvent } from 'react-map-gl';
 
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 
@@ -75,6 +75,7 @@ const CustomMap: FC<CustomMapProps> = ({
           onMove={handleMapMove}
           onMoveEnd={handleUpdateUrl}
           mapStyle={MAP_STYLE}
+          attributionControl={false}
         >
           <LayerManager layers={['raster']} />
           <Controls>

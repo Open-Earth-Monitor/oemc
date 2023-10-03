@@ -7,7 +7,7 @@ import { Cross2Icon } from '@radix-ui/react-icons';
 import { flatten, compact, trimEnd } from 'lodash-es';
 import { AiFillStar } from 'react-icons/ai';
 
-import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
+import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -74,8 +74,8 @@ export const BookmarkControl: FC = () => {
 
   return (
     <Sheet>
-      <SheetTrigger className="rounded-sm bg-brand-500 p-1 hover:bg-opacity-80 active:bg-opacity-80 disabled:cursor-default disabled:opacity-5">
-        <AiFillStar className={CONTROL_BUTTON_STYLES.default} />
+      <SheetTrigger className={CONTROL_BUTTON_STYLES.default}>
+        <AiFillStar className={CONTROL_ICON_STYLES.default} />
       </SheetTrigger>
       <SheetContent className="relative flex h-full flex-col bg-brand-500 bg-opacity-[0.9] pl-10">
         <SheetHeader>

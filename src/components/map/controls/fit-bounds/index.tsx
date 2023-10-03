@@ -2,16 +2,14 @@ import { FC, useCallback, MouseEvent } from 'react';
 
 import { useMap } from 'react-map-gl';
 
-import cx from 'clsx';
 import { HiOutlineMapPin } from 'react-icons/hi2';
 
-import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
+import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
 
 import type { FitBoundsControlProps } from './types';
 export const FitBoundsControl: FC<FitBoundsControlProps> = ({
   mapId = 'current',
   bounds,
-  className,
 }: FitBoundsControlProps) => {
   const { [mapId]: mapRef } = useMap();
 
@@ -35,17 +33,12 @@ export const FitBoundsControl: FC<FitBoundsControlProps> = ({
   return (
     <button
       aria-label="Fit to bounds"
-      className={cx({
-        'rounded-sm bg-brand-400 p-1 text-secondary-500 disabled:cursor-default disabled:opacity-50':
-          true,
-        'hover:bg-brand-200 active:bg-gray-600': !!bounds,
-        [className]: !!className,
-      })}
+      className={CONTROL_BUTTON_STYLES.default}
       type="button"
       disabled={!bounds}
       onClick={handleFitBoundsChange}
     >
-      <HiOutlineMapPin className={CONTROL_BUTTON_STYLES.default} />
+      <HiOutlineMapPin className={CONTROL_ICON_STYLES.default} />
     </button>
   );
 };
