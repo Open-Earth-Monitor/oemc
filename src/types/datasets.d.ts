@@ -19,7 +19,7 @@ export type LayerTypes = Readonly<{
   metadata_url: string;
   monitor: string;
   polygon_query_url: string;
-  range_labels: string;
+  range_labels: string[] | null;
   regex: string;
   srv_path: string;
   theme: string;
@@ -33,6 +33,7 @@ export type LayerParsedRangeTypes = Readonly<{
   gs_name: string;
   gs_dimension: string;
   range: { label: string; value: string }[] | null;
+  range_labels: string[] | null;
   author: string | null;
   coverage: string;
   description: string;

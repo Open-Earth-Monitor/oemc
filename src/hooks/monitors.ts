@@ -103,9 +103,9 @@ export function useMonitorLayers(
     select: (data) =>
       data.map((d) => ({
         ...d,
-        range: d?.range?.map((r) => ({
-          label: r.substring(0, 4),
+        range: d?.range?.map((r, index) => ({
           value: r,
+          label: d?.range_labels[index],
         })),
       })),
     ...queryOptions,

@@ -1,54 +1,42 @@
 import { FC, useEffect, useState, useCallback } from 'react';
 
-import { usePathname, useRouter } from 'next/navigation';
-
 import { MdOutlineOpacity } from 'react-icons/md';
+import { useDebounce } from 'usehooks-ts';
 
 import { cn } from '@/lib/classnames';
 
+import { useURLayerParams, useURLParams } from '@/hooks/url-params';
+
 import { Slider } from '@/components/slider';
 import { Popover, PopoverArrow, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useURLayerParams } from '@/hooks';
 
 export const OpacitySetting: FC = () => {
-  const [isOpenOpacitySliderVisibility, setOpacitySliderVisibility] = useState<boolean>(false);
-  const [opacity, setOpacity] = useState<number>(1);
-  const handleOpacityVisibility = () => setOpacitySliderVisibility(!isOpenOpacitySliderVisibility);
-  const router = useRouter();
-  const pathname = usePathname();
-
+  const { updateSearchParam } = useURLParams();
   const { layerId, layerOpacity, date } = useURLayerParams();
 
-  const handleChange = useCallback(
-    (e: number[]) => {
-      // Encode the layers object as a JSON string
-      const opacityValue = e[0] / 100;
-      const encodedLayers = decodeURIComponent(
-        JSON.stringify({
-          id: layerId,
-          opacity: opacityValue,
-          ...(date && { date }),
-        })
-      );
+  const [isOpacityPopoverOpen, setOpacityPopoverOpen] = useState<boolean>(false);
+  const [opacity, setOpacity] = useState<number>(layerOpacity || 1);
+  const debouncedOpacity = useDebounce<number>(opacity, 300);
 
-      // Construct the URL
-      const url = `${pathname}/?layers=[${encodedLayers}]`;
-      return router.replace(url);
-    },
-    [layerId, date, pathname, router]
+  const handleOpacityVisibility = useCallback(
+    () => setOpacityPopoverOpen(!isOpacityPopoverOpen),
+    [isOpacityPopoverOpen]
   );
 
+  const handleChange = useCallback((e: number[]) => setOpacity(e[0]), []);
+
   useEffect(() => {
-    setOpacity(layerOpacity);
-  }, [layerOpacity]);
+    updateSearchParam({ layers: [{ id: layerId, opacity, date }] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedOpacity]);
 
   return (
     <Popover onOpenChange={handleOpacityVisibility}>
       <PopoverTrigger data-testid="layer-opacity-button">
         <MdOutlineOpacity
           className={cn({
-            'h-6 w-6 text-secondary-900 hover:text-secondary-500': true,
-            'text-secondary-500': isOpenOpacitySliderVisibility,
+            'h-4 w-4 text-secondary-700 hover:text-secondary-500': true,
+            'text-secondary-500': isOpacityPopoverOpen,
           })}
         />
       </PopoverTrigger>
@@ -56,17 +44,26 @@ export const OpacitySetting: FC = () => {
         sideOffset={0}
         alignOffset={0}
         align="center"
-        className="w-44 rounded-3xl border border-secondary-900 p-3"
+        className="w-[189px] rounded-3xl border border-secondary-900 p-3"
       >
-        <Slider
-          onValueChange={handleChange}
-          defaultValue={[100]}
-          value={[opacity * 100]}
-          min={0}
-          max={100}
-          step={1}
-          data-testid="layer-opacity-slider"
-        />
+        <div className="flex w-full flex-col space-y-2">
+          <div
+            data-testid="slider-current-value"
+            className="m-auto w-[55px] rounded-xl border border-secondary-900 p-3 font-inter text-xs font-medium text-white"
+          >
+            {Math.round(opacity * 100)}%
+          </div>
+          <div className="relative py-1.5">
+            <Slider
+              onValueChange={handleChange}
+              value={[opacity]}
+              min={0}
+              max={1}
+              step={0.01}
+              data-testid="layer-opacity-slider"
+            />
+          </div>
+        </div>
         <PopoverArrow className="text-brand-50" />
       </PopoverContent>
     </Popover>

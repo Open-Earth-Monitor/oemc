@@ -2,9 +2,8 @@ import { useCallback, useState, useId } from 'react';
 
 import { cn } from '@/lib/classnames';
 
-import { useLayerSource } from '@/hooks/map';
-
-import { useURLayerParams } from '@/hooks';
+import { useLayerSource } from '@/hooks/layers';
+import { useURLayerParams } from '@/hooks/url-params';
 
 import OpacitySetting from './opacity';
 import RemoveLayer from './remove';

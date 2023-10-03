@@ -1,9 +1,9 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
-import API from 'services/api';
+import type { UseParamsOptions, LayerTypes, LayerParsedRangeTypes } from '@/types/datasets';
 
-import type { UseParamsOptions, LayerTypes, LayerParsedRangeTypes } from '../types/datasets';
+import API from 'services/api';
 
 const DEFAULT_QUERY_OPTIONS = {
   refetchOnWindowFocus: false,
@@ -22,14 +22,14 @@ export function useLayers(
       url: '/layers',
       ...queryOptions,
     }).then((response: AxiosResponse<LayerTypes[]>) => response.data);
-  return useQuery(['layer'], fetchLayer, {
+  return useQuery(['layers'], fetchLayer, {
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) =>
       data.map((d) => ({
         ...d,
-        range: d?.range?.map((r) => ({
-          value: r.substring(0, 4),
-          label: r,
+        range: d?.range?.map((r, index) => ({
+          value: r,
+          label: d?.range_labels[index],
         })),
       })),
     ...queryOptions,
@@ -52,9 +52,9 @@ export function useLayerSource(
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) => ({
       ...data,
-      range: data?.range?.map((r) => ({
-        value: r.substring(0, 4),
-        label: r,
+      range: data?.range?.map((r, index) => ({
+        value: r,
+        label: data?.range_labels[index],
       })),
     }),
     ...queryOptions,

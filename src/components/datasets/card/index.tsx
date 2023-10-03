@@ -1,42 +1,35 @@
-'use client';
 import { FC, useCallback } from 'react';
-
-import { usePathname, useRouter } from 'next/navigation';
 
 import { FiInfo } from 'react-icons/fi';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { LuLayers } from 'react-icons/lu';
 
-import TimeSeries from '@/components/time-series';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useURLayerParams } from '@/hooks';
+import type { LayerParsedRangeTypes } from '@/types/datasets';
 
-const DatasetsItem: FC<{
-  id: string;
-  title: string;
-  download_url: string;
-  description: string;
-  author: string;
-  range: { label: string; value: string }[] | null;
-}> = ({ id, title, download_url, description, author, range }) => {
-  const router = useRouter();
-  const pathname = usePathname();
+import { useURLayerParams, useURLParams } from '@/hooks/url-params';
+
+import TimeSeries from '@/components/timeseries';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+
+const DatasetCard: FC<
+  LayerParsedRangeTypes & {
+    id: string;
+  }
+> = ({ id, title, download_url, description, author, range }) => {
+  const { updateSearchParam, removeSearchParam } = useURLParams();
   const { layerId } = useURLayerParams();
 
   const isActive = layerId === id;
 
-  // Create the layers object
-  const layersObject = { id, opacity: 1, year: range?.[0]?.value };
-
-  // Encode the layers object as a JSON string
-  const encodedLayers = decodeURIComponent(JSON.stringify(layersObject));
-
-  // Construct the URL
-  const url = `${pathname}/?layers=[${encodedLayers}]`;
-
   const handleClick = useCallback(() => {
-    isActive ? router.replace(`${pathname}`) : router.replace(url);
-  }, [pathname, router, isActive, url]);
+    if (!isActive) {
+      updateSearchParam({
+        layers: [{ id, opacity: 1, date: range?.[0]?.value }],
+      });
+    } else {
+      removeSearchParam('layers');
+    }
+  }, [isActive, updateSearchParam, id, range, removeSearchParam]);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
@@ -88,4 +81,4 @@ const DatasetsItem: FC<{
   );
 };
 
-export default DatasetsItem;
+export default DatasetCard;

@@ -1,36 +1,28 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useRouter, usePathname } from 'next/navigation';
-
 import { IoMdEyeOff } from 'react-icons/io';
 import { IoMdEye } from 'react-icons/io';
+import { useDebounce } from 'usehooks-ts';
 
 import { cn } from '@/lib/classnames';
 
-import { useURLayerParams } from '@/hooks';
+import { useURLayerParams, useURLParams } from '@/hooks/url-params';
 
 export const LayerVisibility = () => {
-  const [isLayerVisible, setLayerVisibility] = useState(true);
-  const pathname = usePathname();
-  const router = useRouter();
-
+  const { updateSearchParam } = useURLParams();
   const { layerId, layerOpacity, date } = useURLayerParams();
 
+  const [isLayerVisible, setLayerVisibility] = useState<boolean>(layerOpacity > 0);
+  const debouncedVisibility = useDebounce<boolean>(isLayerVisible, 250);
+
   const onToggleLayerVisibility = useCallback(() => {
-    const encodedLayers = decodeURIComponent(
-      JSON.stringify({
-        id: layerId,
-        opacity: isLayerVisible ? 0 : layerOpacity > 0 ? layerOpacity : 1,
-        ...(date && { date }),
-      })
-    );
-    const url = `${pathname}/?layers=[${encodedLayers}]`;
-    return router.replace(url);
-  }, [isLayerVisible, layerId, pathname, router, layerOpacity, date]);
+    setLayerVisibility(!isLayerVisible);
+  }, [isLayerVisible]);
 
   useEffect(() => {
-    setLayerVisibility(layerOpacity > 0);
-  }, [layerOpacity]);
+    updateSearchParam({ layers: [{ id: layerId, opacity: isLayerVisible ? 1 : 0, date }] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedVisibility]);
 
   return (
     <button
@@ -45,14 +37,14 @@ export const LayerVisibility = () => {
         <IoMdEye
           className={cn({
             'h-4 w-4 text-secondary-500': true,
-            'text-secondary-900': !isLayerVisible,
+            'text-secondary-700': !isLayerVisible,
           })}
         />
       ) : (
         <IoMdEyeOff
           className={cn({
             'h-4 w-4 text-secondary-500': true,
-            'text-secondary-900': !isLayerVisible,
+            'text-secondary-700': !isLayerVisible,
           })}
         />
       )}

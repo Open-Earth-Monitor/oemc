@@ -1,18 +1,17 @@
 import { FC, useCallback } from 'react';
 
-import { useRouter, usePathname } from 'next/navigation';
-
 import { RxCross2 } from 'react-icons/rx';
 
 import { cn } from '@/lib/classnames';
 
+import { useURLParams } from '@/hooks/url-params';
+
 export const RemoveLayer: FC<{ className?: string }> = ({ className }) => {
-  const pathname = usePathname();
-  const router = useRouter();
+  const { removeSearchParam } = useURLParams();
 
   const onRemoveLayer = useCallback(() => {
-    return router.replace(pathname);
-  }, [pathname, router]);
+    removeSearchParam('layers');
+  }, [removeSearchParam]);
 
   return (
     <button
@@ -25,7 +24,7 @@ export const RemoveLayer: FC<{ className?: string }> = ({ className }) => {
       onClick={onRemoveLayer}
       aria-label="Toggle layer visibility"
     >
-      <RxCross2 className="h-6 w-6 text-brand-50 hover:text-secondary-500" />
+      <RxCross2 className="h-4 w-4 text-secondary-700 hover:text-secondary-500" />
     </button>
   );
 };
