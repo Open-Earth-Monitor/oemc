@@ -49,14 +49,14 @@ const TimeSeries: FC<{
       const nextRange = range[(range.indexOf(currentRange) + 1) % range.length];
       setCurrentRange(nextRange);
     },
-    isPlaying && isActive ? TIMEOUT_STEP_DURATION : null
+    isPlaying ? TIMEOUT_STEP_DURATION : null
   );
 
   /**
    * Updating layers params when range changes
    */
   useEffect(() => {
-    if (currentRange) {
+    if (currentRange && isActive) {
       updateSearchParam({
         layers: [{ id: layerId, opacity: layerOpacity || 1, date: currentRange?.value }],
       });
@@ -77,10 +77,12 @@ const TimeSeries: FC<{
 
   // Reset to first position when the layer is hidden
   useEffect(() => {
-    if (!isPlaying && !isActive && !date) {
+    if (!isActive) {
+      setPlaying(false);
       setCurrentRange(range[0]);
     }
-  }, [date, isActive, isPlaying, range]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive]);
 
   return (
     <div className="space-y-4">

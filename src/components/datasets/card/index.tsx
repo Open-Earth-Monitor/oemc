@@ -18,9 +18,9 @@ const DatasetCard: FC<
   }
 > = ({ id, title, download_url, description, author, range, autoPlay = false }) => {
   const { updateSearchParam, removeSearchParam } = useURLParams();
-  const { layerOpacity, date } = useURLayerParams();
+  const { layerId, layerOpacity, date } = useURLayerParams();
 
-  const [isActive, setIsActive] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState<boolean>(id === layerId);
 
   const handleClick = useCallback(() => {
     setIsActive(!isActive);
@@ -34,7 +34,7 @@ const DatasetCard: FC<
       updateSearchParam({
         layers: [{ id, opacity: layerOpacity || 1, date: date || range?.[0]?.value }],
       });
-    } else if (!isActive) {
+    } else if (!isActive && id === layerId) {
       removeSearchParam('layers');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -44,7 +44,7 @@ const DatasetCard: FC<
    * Setting isActive if autoPlay is true
    */
   useEffect(() => {
-    setIsActive(autoPlay);
+    if (autoPlay) setIsActive(autoPlay);
   }, [autoPlay]);
 
   return (

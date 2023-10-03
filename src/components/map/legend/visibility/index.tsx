@@ -20,7 +20,10 @@ export const LayerVisibility = () => {
   }, [isLayerVisible]);
 
   useEffect(() => {
-    updateSearchParam({ layers: [{ id: layerId, opacity: isLayerVisible ? 1 : 0, date }] });
+    const nextOpacity = isLayerVisible ? layerOpacity || 1 : 0;
+    updateSearchParam({
+      layers: [{ id: layerId, opacity: isLayerVisible ? nextOpacity : 0, date }],
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedVisibility]);
 
