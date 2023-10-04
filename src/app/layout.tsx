@@ -12,7 +12,7 @@ const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   fallback: ['system-ui', 'Helvetica Neue', 'Helvetica', 'Arial'],
-  weight: ['400'],
+  weight: ['400', '500'],
   style: ['normal'],
   display: 'block',
 });
@@ -25,11 +25,17 @@ const satoshi = localFont({
       style: 'normal',
     },
     {
-      path: '../fonts/Satoshi-Black.woff2',
+      path: '../fonts/Satoshi-Bold.woff2',
       weight: '700',
       style: 'normal',
     },
+    {
+      path: '../fonts/Satoshi-Black.woff2',
+      weight: '900',
+      style: 'normal',
+    },
   ],
+  fallback: ['system-ui', 'Helvetica Neue', 'Helvetica', 'Arial'],
 });
 
 // Styles

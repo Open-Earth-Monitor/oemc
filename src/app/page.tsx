@@ -7,8 +7,8 @@ export const metadata: Metadata = {
 
 const Hub: NextPage = () => {
   return (
-    <div>
-      <h1 className="max-w-[50%] text-7xl text-white">
+    <div className="m-auto max-w-[1200px] py-36">
+      <h1 className="max-w-[900px] font-satoshi text-7xl font-black text-secondary-500">
         Discover and Empower with Monitoring Solutions.
       </h1>
     </div>
