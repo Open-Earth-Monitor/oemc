@@ -27,6 +27,7 @@ export function useLayers(
     select: (data) =>
       data.map((d) => ({
         ...d,
+        gs_style: JSON.parse(d?.gs_style || null) as LayerParsedRangeTypes['gs_style'],
         range: d?.range?.map((r, index) => ({
           value: r,
           label: d?.range_labels[index],
@@ -52,6 +53,7 @@ export function useLayerSource(
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) => ({
       ...data,
+      gs_style: JSON.parse(data?.gs_style || null) as LayerParsedRangeTypes['gs_style'],
       range: data?.range?.map((r, index) => ({
         value: r,
         label: data?.range_labels[index],

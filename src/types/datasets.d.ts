@@ -29,11 +29,13 @@ export type LayerTypes = Readonly<{
   use_case: string;
 }>;
 
+type LegendStyle = { color: string; label: string };
+
 export type LayerParsedRangeTypes = Readonly<{
   gs_base_wms: string;
   gs_name: string;
   gs_dimension: string;
-  gs_style: string;
+  gs_style: LegendStyle[] | null;
   range: { label: string; value: string }[] | null;
   range_labels: string[] | null;
   author: string | null;

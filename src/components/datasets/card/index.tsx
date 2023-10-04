@@ -13,8 +13,6 @@ import { useURLayerParams, useURLParams } from '@/hooks/url-params';
 import TimeSeries from '@/components/timeseries';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-type LegendStyle = { color: string; label: string };
-
 const DatasetCard: FC<
   LayerParsedRangeTypes & {
     id: string;
@@ -27,21 +25,20 @@ const DatasetCard: FC<
   download_url,
   description,
   author,
-  gs_style,
+  gs_style: legendStyles,
   range,
   active = false,
   autoPlay = false,
 }) => {
   const { updateSearchParam, removeSearchParam } = useURLParams();
   const { layerId, layerOpacity, date } = useURLayerParams();
+  const [isActive, setIsActive] = useState<boolean>(active);
 
-  const [isActive, setIsActive] = useState<boolean>(active || id === layerId);
-
-  const legendStyles = gs_style ? (JSON.parse(gs_style) as LegendStyle[]) : null;
-
+  /**
+   * Handle click on the toggle button
+   */
   const handleClick = useCallback(() => {
     const nextIsActive = !isActive;
-
     setIsActive(nextIsActive);
 
     if (nextIsActive) {
@@ -53,9 +50,11 @@ const DatasetCard: FC<
     }
   }, [date, id, isActive, layerOpacity, range, removeSearchParam, updateSearchParam]);
 
-  // At mounting set active if prop active is true
+  /**
+   * At mount, if layerId is in the URL, update the URL with the layerId
+   */
   useEffect(() => {
-    if (isActive && layerId !== id) {
+    if (active && isActive && layerId !== id) {
       updateSearchParam({
         layers: [{ id, opacity: layerOpacity || 1, date: date || range?.[0]?.value }],
       });
@@ -67,7 +66,7 @@ const DatasetCard: FC<
    * Update isActive state when layerId is not in the URL anymore
    */
   useEffect(() => {
-    if (!layerId) setIsActive(layerId === id);
+    setIsActive(layerId === id);
   }, [layerId, id]);
 
   return (
