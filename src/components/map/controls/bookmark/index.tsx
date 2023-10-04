@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { FC, FormEvent, MouseEvent } from 'react';
 
 import Link from 'next/link';
@@ -57,6 +57,11 @@ export const BookmarkControl: FC = () => {
 
   const handleInputChange = useCallback((e: FormEvent<HTMLInputElement>) => {
     setBookmarkName(e.currentTarget?.value);
+  }, []);
+
+  useEffect(() => {
+    updateBookmarks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

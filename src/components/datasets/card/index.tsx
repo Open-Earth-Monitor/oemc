@@ -54,11 +54,15 @@ const DatasetCard: FC<
   }, [autoPlay]);
 
   // TO-DO: Set active false if layerId is not present
-  // useEffect(() => {
-  //   if (!layerId) {
-  //     setIsActive(false);
-  //   }
-  // }, [layerId]);
+  useEffect(() => {
+    if (!layerId) {
+      setIsActive(false);
+    }
+  }, [layerId]);
+
+  useEffect(() => {
+    setIsActive(layerId === id);
+  }, [layerId, id]);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
@@ -95,7 +99,27 @@ const DatasetCard: FC<
 
       <p data-testid="dataset-description">{description}</p>
 
-      {isActive && legendStyles && (
+      {isActive && legendStyles && legendStyles.length > 8 && (
+        <div className="grid grid-cols-2 gap-2">
+          {legendStyles.map(({ color, label }) => (
+            <div
+              key={label}
+              className="flex items-center space-x-2"
+              data-testid="dataset-legend-item"
+            >
+              <div
+                className="h-2 w-2"
+                style={{
+                  backgroundColor: color,
+                }}
+              />
+              <div className="text-left text-xs opacity-50">{label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {isActive && legendStyles && legendStyles.length <= 8 && (
         <div className="flex">
           {legendStyles.map(({ color, label }) => (
             <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">

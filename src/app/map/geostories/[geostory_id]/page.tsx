@@ -22,9 +22,9 @@ const GeostoryPage: NextPage<{ params: { geostory_id: string } }> = ({
 
         {isFetched && !isError && (
           <ul className="space-y-6 text-secondary-500" data-testid="datasets-list">
-            {data.map((dataset, index) => (
+            {data.map((dataset) => (
               <li key={dataset.layer_id}>
-                <DatasetCard {...dataset} id={dataset.layer_id} autoPlay={index === 0} />
+                <DatasetCard {...dataset} id={dataset.layer_id} />
               </li>
             ))}
           </ul>

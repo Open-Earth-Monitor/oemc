@@ -104,7 +104,7 @@ const CustomMap: FC<CustomMapProps> = ({
           attributionControl={false}
         >
           <LayerManager layers={['raster']} />
-          <Controls>
+          <Controls className="absolute bottom-3 left-[554px]">
             <ZoomControl />
             <BookmarkControl />
             <ShareControl />
