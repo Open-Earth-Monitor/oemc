@@ -6,6 +6,7 @@ export type LayerTypes = Readonly<{
   gs_base_wms: string;
   gs_name: string;
   gs_dimension: string;
+  gs_style: string;
   range: string[] | null;
   author: string | null;
   coverage: string;
@@ -32,6 +33,7 @@ export type LayerParsedRangeTypes = Readonly<{
   gs_base_wms: string;
   gs_name: string;
   gs_dimension: string;
+  gs_style: string;
   range: { label: string; value: string }[] | null;
   range_labels: string[] | null;
   author: string | null;

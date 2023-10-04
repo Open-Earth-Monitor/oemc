@@ -40,14 +40,14 @@ export const LayerVisibility = () => {
         <IoMdEye
           className={cn({
             'h-4 w-4 text-secondary-500': true,
-            'text-secondary-700': !isLayerVisible,
+            'text-gray-600': !isLayerVisible,
           })}
         />
       ) : (
         <IoMdEyeOff
           className={cn({
             'h-4 w-4 text-secondary-500': true,
-            'text-secondary-700': !isLayerVisible,
+            'text-gray-600': !isLayerVisible,
           })}
         />
       )}
