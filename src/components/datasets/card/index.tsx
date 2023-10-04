@@ -53,12 +53,12 @@ const DatasetCard: FC<
     if (autoPlay) setIsActive(autoPlay);
   }, [autoPlay]);
 
-  // Set active false if layerId is not present
-  useEffect(() => {
-    if (!layerId) {
-      setIsActive(false);
-    }
-  }, [layerId]);
+  // TO-DO: Set active false if layerId is not present
+  // useEffect(() => {
+  //   if (!layerId) {
+  //     setIsActive(false);
+  //   }
+  // }, [layerId]);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>

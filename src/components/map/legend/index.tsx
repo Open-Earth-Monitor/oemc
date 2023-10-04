@@ -27,7 +27,7 @@ export const Legend = () => {
             className={cn(LEGEND_BUTTON_STYLES, 'bg-secondary-500 text-brand-500')}
             data-testid="map-legend-toggle-button"
           >
-            Legend
+            Layer
           </button>
           <button className={LEGEND_BUTTON_STYLES} disabled>
             Compare
