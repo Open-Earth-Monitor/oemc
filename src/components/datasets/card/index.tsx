@@ -18,50 +18,56 @@ type LegendStyle = { color: string; label: string };
 const DatasetCard: FC<
   LayerParsedRangeTypes & {
     id: string;
+    active?: boolean;
     autoPlay?: boolean;
   }
-> = ({ id, title, download_url, description, author, gs_style, range, autoPlay = false }) => {
+> = ({
+  id,
+  title,
+  download_url,
+  description,
+  author,
+  gs_style,
+  range,
+  active = false,
+  autoPlay = false,
+}) => {
   const { updateSearchParam, removeSearchParam } = useURLParams();
   const { layerId, layerOpacity, date } = useURLayerParams();
 
-  const [isActive, setIsActive] = useState<boolean>(id === layerId);
+  const [isActive, setIsActive] = useState<boolean>(active || id === layerId);
 
   const legendStyles = gs_style ? (JSON.parse(gs_style) as LegendStyle[]) : null;
 
   const handleClick = useCallback(() => {
-    setIsActive(!isActive);
-  }, [isActive]);
+    const nextIsActive = !isActive;
 
-  /**
-   * Update URL when isActive changes
-   */
-  useEffect(() => {
-    if (isActive) {
+    setIsActive(nextIsActive);
+
+    if (nextIsActive) {
       updateSearchParam({
         layers: [{ id, opacity: layerOpacity || 1, date: date || range?.[0]?.value }],
       });
-    } else if (!isActive && id === layerId) {
+    } else {
       removeSearchParam('layers');
     }
+  }, [date, id, isActive, layerOpacity, range, removeSearchParam, updateSearchParam]);
+
+  // At mounting set active if prop active is true
+  useEffect(() => {
+    if (isActive && layerId !== id) {
+      updateSearchParam({
+        layers: [{ id, opacity: layerOpacity || 1, date: date || range?.[0]?.value }],
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActive]);
+  }, []);
 
   /**
-   * Setting isActive if autoPlay is true
+   * Update isActive state when layerId is not in the URL anymore
    */
   useEffect(() => {
-    if (autoPlay) setIsActive(autoPlay);
-  }, [autoPlay]);
-
-  // TO-DO: Set active false if layerId is not present
-  useEffect(() => {
-    if (!layerId) {
-      setIsActive(false);
-    }
-  }, [layerId]);
-
-  useEffect(() => {
-    setIsActive(layerId === id);
+    if (!layerId) setIsActive(layerId === id);
   }, [layerId, id]);
 
   return (
