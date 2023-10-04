@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import type { FC, FormEvent, MouseEvent } from 'react';
 
 import Link from 'next/link';
@@ -6,62 +6,48 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { AiFillStar } from 'react-icons/ai';
+import { useLocalStorage } from 'usehooks-ts';
 
 import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
-const PREFIX = 'OEMC-';
+const PREFIX = 'OEMC';
 
 export const BookmarkControl: FC = () => {
   const [bookmarkName, setBookmarkName] = useState('');
-  const [bookmarks, setBookmarks] = useState<{ name: string; value: string }[]>([]);
+  const [bookmarks, setBookmarks] = useLocalStorage<{ name: string; value: string }[]>(
+    `${PREFIX}-bookmarks`,
+    []
+  );
   const [isInputVisible, setInputVisibility] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const url = `${pathname}?${searchParams.toString()}`;
 
-  const updateBookmarks = useCallback(() => {
-    // Filtering the localStorage keys to get only the ones that start with the prefix
-    const keys = Object.keys(localStorage).filter((key) => key.includes(PREFIX));
-
-    const nextBookmarks = keys.map((key) => ({
-      name: key.slice(PREFIX.length, key.length), // Removing the prefix from the key
-      value: localStorage.getItem(key),
-    }));
-
-    setBookmarks(nextBookmarks);
-  }, []);
-
   const handleSaveBookmark = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       e.stopPropagation();
-      localStorage.setItem(`${PREFIX}${bookmarkName}`, url);
-      // setBookmarksUpdate(true);
+      const nextBookmarks = [...bookmarks, { name: bookmarkName, value: url }];
+      setBookmarks(nextBookmarks);
       setInputVisibility(false);
       setBookmarkName(''); // reset input
-      updateBookmarks();
     },
-    [bookmarkName, updateBookmarks, url]
+    [bookmarkName, bookmarks, setBookmarks, url]
   );
 
   const handleRemoveBookmark = useCallback(
-    (name: string) => {
-      localStorage.removeItem(`${PREFIX}${name}`);
-      updateBookmarks();
+    (keyName: string) => {
+      const nextBookmarks = bookmarks.filter(({ name }) => name !== keyName);
+      setBookmarks(nextBookmarks);
     },
-    [updateBookmarks]
+    [bookmarks, setBookmarks]
   );
 
   const handleInputChange = useCallback((e: FormEvent<HTMLInputElement>) => {
     setBookmarkName(e.currentTarget?.value);
-  }, []);
-
-  useEffect(() => {
-    updateBookmarks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
