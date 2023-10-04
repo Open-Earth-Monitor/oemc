@@ -51,6 +51,7 @@ export function useGeostoryLayers(
     select: (data) =>
       data.map((d) => ({
         ...d,
+        gs_style: JSON.parse(d?.gs_style || null) as LayerParsedRangeTypes['gs_style'],
         range: d?.range?.map((r, index) => ({
           value: r,
           label: d?.range_labels[index],
