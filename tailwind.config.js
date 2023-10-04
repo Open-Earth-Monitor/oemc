@@ -21,6 +21,9 @@ module.exports = {
         satoshi: ['var(--font-satoshi)'],
       },
       colors: {
+        gray: {
+          600: 'hsl(220, 7%, 40%)',
+        },
         brand: {
           50: 'hsl(210, 9%, 22%, 1)', // no ui kit
           100: 'hsl(211, 52%, 15%)',

@@ -4,6 +4,8 @@ import { FiInfo } from 'react-icons/fi';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { LuLayers } from 'react-icons/lu';
 
+import cn from '@/lib/classnames';
+
 import type { LayerParsedRangeTypes } from '@/types/datasets';
 
 import { useURLayerParams, useURLParams } from '@/hooks/url-params';
@@ -11,16 +13,20 @@ import { useURLayerParams, useURLParams } from '@/hooks/url-params';
 import TimeSeries from '@/components/timeseries';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
+type LegendStyle = { color: string; label: string };
+
 const DatasetCard: FC<
   LayerParsedRangeTypes & {
     id: string;
     autoPlay?: boolean;
   }
-> = ({ id, title, download_url, description, author, range, autoPlay = false }) => {
+> = ({ id, title, download_url, description, author, gs_style, range, autoPlay = false }) => {
   const { updateSearchParam, removeSearchParam } = useURLParams();
   const { layerId, layerOpacity, date } = useURLayerParams();
 
   const [isActive, setIsActive] = useState<boolean>(id === layerId);
+
+  const legendStyles = gs_style ? (JSON.parse(gs_style) as LegendStyle[]) : null;
 
   const handleClick = useCallback(() => {
     setIsActive(!isActive);
@@ -46,6 +52,13 @@ const DatasetCard: FC<
   useEffect(() => {
     if (autoPlay) setIsActive(autoPlay);
   }, [autoPlay]);
+
+  // Set active false if layerId is not present
+  useEffect(() => {
+    if (!layerId) {
+      setIsActive(false);
+    }
+  }, [layerId]);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
@@ -74,7 +87,7 @@ const DatasetCard: FC<
               data-testid="dataset-download-button"
               title="Go to download dataset site"
             >
-              <HiOutlineExternalLink className="h-6 w-6 text-gray-300" />
+              <HiOutlineExternalLink className="h-6 w-6 text-secondary-500" />
             </a>
           )}
         </div>
@@ -82,12 +95,33 @@ const DatasetCard: FC<
 
       <p data-testid="dataset-description">{description}</p>
 
+      {isActive && legendStyles && (
+        <div className="flex">
+          {legendStyles.map(({ color, label }) => (
+            <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
+              <div
+                className="h-2 w-full"
+                style={{
+                  backgroundColor: color,
+                }}
+              />
+              <div className="text-center text-xs opacity-50">{label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {range && <TimeSeries range={range} layerId={id} autoPlay={autoPlay} isActive={isActive} />}
 
       <button
         data-testid="dataset-layer-toggle-button"
         type="button"
-        className="flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-secondary-500 px-6 py-2 text-xs font-bold text-secondary-500 transition-colors hover:bg-secondary-500 hover:text-brand-500"
+        className={cn(
+          'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-secondary-500 px-6 py-2 text-xs font-bold text-secondary-500 transition-colors hover:bg-secondary-500/20',
+          {
+            'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
+          }
+        )}
         onClick={handleClick}
       >
         <span>{isActive ? 'Hide' : 'Show'} layer on the map</span>

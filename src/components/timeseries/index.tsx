@@ -104,12 +104,21 @@ const TimeSeries: FC<{
         </div>
         <button
           type="button"
-          className="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-brand-50"
+          className={cn(
+            'flex h-[52px] w-[52px] items-center justify-center rounded-full border border-brand-50 hover:border-secondary-500',
+            {
+              'bg-secondary-500': isPlaying,
+            }
+          )}
           onClick={handlePlay}
           disabled={!isActive}
         >
           {isPlaying && isActive ? (
-            <HiPause className="h-4 w-4 text-secondary-500" />
+            <HiPause
+              className={cn('h-4 w-4 text-secondary-500', {
+                'text-brand-50': isPlaying,
+              })}
+            />
           ) : (
             <HiPlay className="h-4 w-4 text-secondary-500" />
           )}

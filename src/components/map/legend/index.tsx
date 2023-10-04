@@ -1,5 +1,3 @@
-import { useCallback, useState, useId } from 'react';
-
 import { cn } from '@/lib/classnames';
 
 import { useLayerSource } from '@/hooks/layers';
@@ -8,47 +6,42 @@ import { useURLayerParams } from '@/hooks/url-params';
 import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
 import LayerVisibility from './visibility';
+
+const LEGEND_BUTTON_STYLES =
+  'text-center text-xs uppercase rounded font-medium grow px-2 h-[34px] py-1 tracking-wide text-white hover:bg-secondary-500 hover:text-brand-500 disabled:opacity-50 disabled:cursor-not-allowed';
+
 export const Legend = () => {
-  const [active, setActive] = useState(true);
   const { layerId } = useURLayerParams();
   const { data } = useLayerSource({ layer_id: layerId }, { enabled: !!layerId });
-  const id = useId();
-
-  const onToggleActive = useCallback(() => {
-    setActive(!active);
-  }, [active]);
   const { title } = data ?? {};
 
   return (
     <div
-      className="absolute bottom-3 right-3 z-50 flex grow flex-col font-inter text-xs text-secondary-500"
+      className="absolute bottom-3 right-3 z-10 space-y-1 font-inter text-xs text-secondary-500"
       data-testid="map-legend"
     >
       {layerId && (
-        <div
-          className={cn({
-            'rounded-sm border border-secondary-500 bg-brand-500 px-5 py-2': true,
-            'border border-secondary-500': active,
-          })}
-        >
+        <div className="flex rounded-md border border-secondary-500 bg-brand-500">
           <button
             type="button"
-            aria-expanded={active}
-            aria-controls={id}
-            className="relative flex w-full items-center space-x-2 text-xs uppercase text-white hover:bg-brand-400"
-            onClick={onToggleActive}
+            className={cn(LEGEND_BUTTON_STYLES, 'bg-secondary-500 text-brand-500')}
             data-testid="map-legend-toggle-button"
           >
-            <span>Legend</span>
+            Legend
+          </button>
+          <button className={LEGEND_BUTTON_STYLES} disabled>
+            Compare
           </button>
         </div>
       )}
-      {active && layerId && (
+      {data && layerId && (
         <div
-          className="relative flex items-center justify-between space-x-4 rounded-sm bg-brand-500 px-4 py-3 text-xs text-secondary-500"
+          className="relative flex min-h-[34px] items-center justify-between space-x-4 rounded-sm border border-gray-600 bg-brand-500 px-4 py-3 text-secondary-500"
           data-testid="map-legend-item"
         >
-          <p data-testid="map-legend-item-title">{title}</p>
+          <div data-testid="map-legend-item-title" className="text-xs font-bold">
+            {title}
+          </div>
           <div
             className="flex space-x-2 divide-x divide-secondary-900"
             data-testid="map-legend-item-toolbar"
