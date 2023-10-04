@@ -105,11 +105,11 @@ const DatasetCard: FC<
       <p data-testid="dataset-description">{description}</p>
 
       {isActive && legendStyles && legendStyles.length > 8 && (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="columns-2 gap-2 space-y-1">
           {legendStyles.map(({ color, label }) => (
             <div
               key={label}
-              className="flex items-center space-x-2"
+              className="flex items-baseline space-x-2"
               data-testid="dataset-legend-item"
             >
               <div
