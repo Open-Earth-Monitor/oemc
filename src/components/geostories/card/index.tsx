@@ -4,9 +4,9 @@ import Link from 'next/link';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { GeostoryTypes } from '@/types/datasets';
+import { GeoStory } from '@/types/geostories';
 
-const GeostoryCard: FC<GeostoryTypes & { color: string }> = ({ id, color, title }) => {
+const GeostoryCard: FC<GeoStory & { color: string }> = ({ id, color, title }) => {
   return (
     <Link href={`/map/geostories/${id}`} data-testid={`geostory-link-${id}`}>
       <AnimatePresence>

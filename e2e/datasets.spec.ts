@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-import type { LayerTypes, MonitorTypes } from 'types/datasets';
+import type { Layer } from '@/types/layers';
+import type { Monitor } from '@/types/monitors';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/map', { waitUntil: 'load' });
@@ -8,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 
 test('datasets tab', async ({ page }) => {
   const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
-  const monitorsData = (await monitorsResponse.json()) as MonitorTypes[];
+  const monitorsData = (await monitorsResponse.json()) as Monitor[];
   await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
 
@@ -20,7 +21,7 @@ test('datasets tab', async ({ page }) => {
 
 test('datasets list', async ({ page }) => {
   const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
-  const monitorsData = (await monitorsResponse.json()) as MonitorTypes[];
+  const monitorsData = (await monitorsResponse.json()) as Monitor[];
   await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
 
@@ -28,7 +29,7 @@ test('datasets list', async ({ page }) => {
     `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/layers`,
     { timeout: 30000 }
   );
-  const layersData = (await layersResponse.json()) as LayerTypes[];
+  const layersData = (await layersResponse.json()) as Layer[];
   const datasetsList = page.getByTestId('datasets-list').locator('li');
   const datasetsListCount = await datasetsList.count();
   expect(datasetsListCount).toBe(layersData.length);
@@ -36,7 +37,7 @@ test('datasets list', async ({ page }) => {
 
 test('datasets item', async ({ page }) => {
   const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
-  const monitorsData = (await monitorsResponse.json()) as MonitorTypes[];
+  const monitorsData = (await monitorsResponse.json()) as Monitor[];
   await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
 
@@ -44,7 +45,7 @@ test('datasets item', async ({ page }) => {
     `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/layers`,
     { timeout: 30000 }
   );
-  const layersData = (await layersResponse.json()) as LayerTypes[];
+  const layersData = (await layersResponse.json()) as Layer[];
   const firstDataset = page.getByTestId(`dataset-item-${layersData[0].layer_id}`);
 
   await expect(firstDataset).toBeVisible();

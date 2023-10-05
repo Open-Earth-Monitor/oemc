@@ -1,6 +1,6 @@
-import { LayerParsedRangeTypes } from '@/types/datasets';
+import { LayerParsed } from '@/types/layers';
 
 export interface TimeSeriesTypes {
-  range: LayerParsedRangeTypes['range'];
-  layerId: string;
+  range: LayerParsed['range'];
+  layerId: LayerParsed['layer_id'];
 }

@@ -7,11 +7,11 @@ import { HiOutlineChevronUp } from 'react-icons/hi';
 
 import { cn } from '@/lib/classnames';
 
-import { MonitorColorTypes } from '@/types/datasets';
+import { MonitorParsed } from '@/types/monitors';
 
 import { TableCell } from '@/components/ui/table';
 
-const MonitorsItem = ({ data }: { data: MonitorColorTypes }) => {
+const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const controls = useAnimationControls();
   const { id, title, geostories, color, colorOpacity } = data ?? {};
