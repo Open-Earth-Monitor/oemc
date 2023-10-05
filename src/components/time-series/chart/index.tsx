@@ -8,7 +8,7 @@ import { Text } from '@visx/text';
 
 import { cn } from '@/lib/classnames';
 
-import { LayerParsedRangeTypes } from '@/types/datasets';
+import { LayerParsed } from '@/types/layers';
 
 const margin = { top: 20, bottom: 0, left: 0, right: 0 };
 
@@ -16,7 +16,7 @@ type ChartData = Readonly<{ year: number; fixedHeight: number }>;
 
 const Chart: FC<{
   id: string;
-  range: LayerParsedRangeTypes['range'];
+  range: LayerParsed['range'];
   width: number;
   height: number;
   selectedYear: string;

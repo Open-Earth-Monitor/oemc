@@ -1,6 +1,6 @@
 import { cn } from '@/lib/classnames';
 
-import { useLayerSource } from '@/hooks/layers';
+import { useLayerParsedSource } from '@/hooks/layers';
 import { useURLayerParams } from '@/hooks/url-params';
 
 import OpacitySetting from './opacity';
@@ -12,7 +12,7 @@ const LEGEND_BUTTON_STYLES =
 
 export const Legend = () => {
   const { layerId } = useURLayerParams();
-  const { data } = useLayerSource({ layer_id: layerId }, { enabled: !!layerId });
+  const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layerId });
   const { title } = data ?? {};
 
   return (

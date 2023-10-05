@@ -4,14 +4,14 @@ import { Source, Layer } from 'react-map-gl';
 
 import { GeoJSONSourceOptions, RasterLayer, RasterSource } from 'mapbox-gl';
 
-import { useLayerSource } from '@/hooks/layers';
+import { useLayerParsedSource } from '@/hooks/layers';
 import { useURLayerParams } from '@/hooks/url-params';
 
 import type { LayerComponentProps } from '../types';
 
 export const RasterLayerComponent = ({ beforeId }: LayerComponentProps) => {
   const { layerId, layerOpacity, date } = useURLayerParams();
-  const { data, isFetched } = useLayerSource(
+  const { data, isFetched } = useLayerParsedSource(
     {
       layer_id: layerId,
     },

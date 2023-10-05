@@ -1,14 +1,12 @@
-export type LayersSearchParam = {
+export type LayerSearchParams = {
   id: string;
   opacity: number;
   date?: number | string;
 };
 
-export type SearchParamsTypes = {
+export type MapSearchParams = {
   latitude: number;
   longitude: number;
   zoom: number;
-  layers?: LayersSearchParam[];
+  layers?: LayerSearchParams[];
 };
-
-export default SearchParamsTypes;

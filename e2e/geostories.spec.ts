@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-import type { MonitorTypes, LayerTypes, GeostoryTypes } from 'types/datasets';
+import type { GeoStory } from '@/types/geostories';
+import type { Layer } from '@/types/layers';
+import type { Monitor } from '@/types/monitors';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/map', { waitUntil: 'load' });
@@ -9,7 +11,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('geostories tab', () => {
   test('from /map/{monitor_id}/datasets', async ({ page }) => {
     const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
-    const monitorsData = (await monitorsResponse.json()) as MonitorTypes[];
+    const monitorsData = (await monitorsResponse.json()) as Monitor[];
     await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
     const monitorsIds = monitorsData.map((data) => data.id);
 
@@ -30,7 +32,7 @@ test.describe('geostories tab', () => {
       `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/geostories`,
       { timeout: 30000 }
     );
-    const geostoriesData = (await geostoriesResponse.json()) as GeostoryTypes[];
+    const geostoriesData = (await geostoriesResponse.json()) as GeoStory[];
     await expect(page.getByTestId('geostories-list')).toBeVisible();
 
     // check first geostory is visible has title, and a link to the geostory page (geostory datasets)
@@ -52,7 +54,7 @@ test.describe('geostories tab', () => {
   test('display monitor info in geostories tab', async ({ page }) => {
     const monitorsFetchResponse = page.waitForResponse('https://api.earthmonitor.org/monitors');
     const response = await monitorsFetchResponse;
-    const json = (await response.json()) as MonitorTypes[];
+    const json = (await response.json()) as Monitor[];
     const monitorsIds = json.map((data) => data.id);
 
     // go to geostories tab
@@ -79,7 +81,7 @@ test.describe('geostories tab', () => {
 
   test('display datasets from a geostory', async ({ page }) => {
     const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
-    const monitorsData = (await monitorsResponse.json()) as MonitorTypes[];
+    const monitorsData = (await monitorsResponse.json()) as Monitor[];
     const monitorsIds = monitorsData.map((data) => data.id);
 
     await page.goto(`/map/${monitorsIds[0]}/geostories`, { waitUntil: 'load' });
@@ -91,7 +93,7 @@ test.describe('geostories tab', () => {
     const geostoriesResponse = await geostoriesFetchResponse;
     await expect(page.getByTestId('geostories-list')).toBeVisible();
 
-    const geostoriesData = (await geostoriesResponse.json()) as GeostoryTypes[];
+    const geostoriesData = (await geostoriesResponse.json()) as GeoStory[];
     const firstGeostoryId = geostoriesData[0].id;
     const firstDataset = page.getByTestId(`geostory-item-${firstGeostoryId}`);
     await expect(firstDataset).toBeVisible();
@@ -115,7 +117,7 @@ test.describe('geostories tab', () => {
       `https://api.earthmonitor.org/geostories/${geostoriesData[0].id}/layers`,
       { timeout: 30000 }
     );
-    const layersData = (await layersResponse.json()) as LayerTypes[];
+    const layersData = (await layersResponse.json()) as Layer[];
     const datasetsList = page.getByTestId('datasets-list').locator('li');
     const datasetsListCount = await datasetsList.count();
     expect(datasetsListCount).toBe(layersData.length);

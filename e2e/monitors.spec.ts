@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-import type { MonitorTypes } from 'types/datasets';
+import type { Monitor } from '@/types/monitors';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/map', { waitUntil: 'load' });
@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('monitors navigation', () => {
   test('from modal in /map', async ({ page }) => {
     const response = await page.waitForResponse('https://api.earthmonitor.org/monitors');
-    const json = (await response.json()) as MonitorTypes[];
+    const json = (await response.json()) as Monitor[];
     const monitorsIds = json.map((data) => data.id);
     const monitorsList = page.getByTestId('monitors-list');
 
@@ -29,7 +29,7 @@ test.describe('monitors navigation', () => {
   test('from modal in /map/{monitor_id}/datasets', async ({ page }) => {
     const monitorsFetchResponse = page.waitForResponse('https://api.earthmonitor.org/monitors');
     const response = await monitorsFetchResponse;
-    const json = (await response.json()) as MonitorTypes[];
+    const json = (await response.json()) as Monitor[];
     const monitorsIds = json.map((data) => data.id);
 
     await page.getByTestId(`monitor-item-${monitorsIds[0]}`).click();

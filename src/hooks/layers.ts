@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
-import type { UseParamsOptions, LayerTypes, LayerParsedRangeTypes } from '@/types/datasets';
+import type { Layer, LayerParsed } from '@/types/layers';
 
 import API from 'services/api';
 
@@ -13,21 +13,23 @@ const DEFAULT_QUERY_OPTIONS = {
   staleTime: Infinity,
 };
 
-export function useLayers(
-  queryOptions?: UseQueryOptions<LayerTypes[], Error, LayerParsedRangeTypes[]>
-) {
+type UseParamsOptions = Readonly<{
+  layer_id: string;
+}>;
+
+export function useLayers(queryOptions?: UseQueryOptions<Layer[], Error, LayerParsed[]>) {
   const fetchLayer = () =>
     API.request({
       method: 'GET',
       url: '/layers',
       ...queryOptions,
-    }).then((response: AxiosResponse<LayerTypes[]>) => response.data);
+    }).then((response: AxiosResponse<Layer[]>) => response.data);
   return useQuery(['layers'], fetchLayer, {
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) =>
       data.map((d) => ({
         ...d,
-        gs_style: JSON.parse(d?.gs_style || null) as LayerParsedRangeTypes['gs_style'],
+        gs_style: JSON.parse(d?.gs_style || null) as LayerParsed['gs_style'],
         range: d?.range?.map((r, index) => ({
           value: r,
           label: d?.range_labels[index],
@@ -37,9 +39,9 @@ export function useLayers(
   });
 }
 
-export function useLayerSource(
+export function useLayerParsedSource(
   params?: UseParamsOptions,
-  queryOptions?: UseQueryOptions<LayerTypes, Error, LayerParsedRangeTypes>
+  queryOptions?: UseQueryOptions<Layer, Error, LayerParsed>
 ) {
   const fetchLayer = () =>
     API.request({
@@ -47,13 +49,13 @@ export function useLayerSource(
       url: `/layers`,
       params,
       ...queryOptions,
-    }).then((response: AxiosResponse<LayerTypes[]>) => response.data[0]);
+    }).then((response: AxiosResponse<Layer[]>) => response.data[0]);
 
   return useQuery(['layer', params], fetchLayer, {
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) => ({
       ...data,
-      gs_style: JSON.parse(data?.gs_style || null) as LayerParsedRangeTypes['gs_style'],
+      gs_style: JSON.parse(data?.gs_style || null) as LayerParsed['gs_style'],
       range: data?.range?.map((r, index) => ({
         value: r,
         label: data?.range_labels[index],

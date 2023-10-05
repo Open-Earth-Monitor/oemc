@@ -6,7 +6,7 @@ import { useInterval } from 'usehooks-ts';
 
 import cn from '@/lib/classnames';
 
-import type { LayerParsedRangeTypes } from '@/types/datasets';
+import type { LayerDateRange, LayerParsed } from '@/types/layers';
 
 import { useURLayerParams, useURLParams } from '@/hooks/url-params';
 
@@ -21,8 +21,8 @@ import {
 const TIMEOUT_STEP_DURATION = 3500;
 
 const TimeSeries: FC<{
-  layerId: LayerParsedRangeTypes['layer_id'];
-  range: LayerParsedRangeTypes['range'];
+  layerId: LayerParsed['layer_id'];
+  range: LayerParsed['range'];
   autoPlay?: boolean;
   isActive?: boolean;
 }> = ({ range, autoPlay = false, isActive = false }) => {
@@ -94,7 +94,7 @@ const TimeSeries: FC<{
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="max-h-[50vh]">
-              {range.map((r) => (
+              {range.map((r: LayerDateRange) => (
                 <SelectItem key={r.value} value={r.value}>
                   {r.label}
                 </SelectItem>

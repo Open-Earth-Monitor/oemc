@@ -6,20 +6,20 @@ import { LuLayers } from 'react-icons/lu';
 
 import cn from '@/lib/classnames';
 
-import type { LayerParsedRangeTypes } from '@/types/datasets';
+import type { LayerParsed } from '@/types/layers';
 
 import { useURLayerParams, useURLParams } from '@/hooks/url-params';
 
 import TimeSeries from '@/components/timeseries';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-const DatasetCard: FC<
-  LayerParsedRangeTypes & {
-    id: string;
-    active?: boolean;
-    autoPlay?: boolean;
-  }
-> = ({
+type DatasetCardProps = LayerParsed & {
+  id: string;
+  active?: boolean;
+  autoPlay?: boolean;
+};
+
+const DatasetCard: FC<DatasetCardProps> = ({
   id,
   title,
   download_url,
