@@ -13,10 +13,12 @@ export const navLinks = [
     name: 'Data Catalogue',
     href: 'https://zenodo.org/communities/oemc-project/',
     target: '_blank',
+    'data-testid': 'data-catalogue-link',
   },
   {
     name: 'Project site',
     href: 'https://earthmonitor.org/',
     target: '_blank',
+    'data-testid': 'project-site-link',
   },
 ];

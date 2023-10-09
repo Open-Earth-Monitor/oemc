@@ -62,7 +62,7 @@ const CustomMap: FC<CustomMapProps> = ({
    * Update the URL when the user stops moving the map
    */
   const handleUpdateUrl = useCallback(() => {
-    const originalSearchParams = new URLSearchParams(searchParams);
+    const originalSearchParams = new URLSearchParams(searchParams.toString());
     const nextSearchParams = new URLSearchParams({
       longitude: localViewState.longitude?.toString(),
       latitude: localViewState.latitude?.toString(),

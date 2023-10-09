@@ -15,7 +15,9 @@ export const OpacitySetting: FC = () => {
   const { layerId, layerOpacity, date } = useURLayerParams();
 
   const [isOpacityPopoverOpen, setOpacityPopoverOpen] = useState<boolean>(false);
-  const [opacity, setOpacity] = useState<number>(layerOpacity || 1);
+  const [opacity, setOpacity] = useState<number>(
+    !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity
+  );
   const debouncedOpacity = useDebounce<number>(opacity, 300);
 
   const handleOpacityVisibility = useCallback(

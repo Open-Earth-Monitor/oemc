@@ -25,12 +25,11 @@ test.describe('geostories tab', () => {
     // check geostory tab is active and url updated
     await page.waitForURL(`**/map/${monitorsIds[0]}/geostories`, { waitUntil: 'load' });
     await expect(geostoriesTabLink).toHaveAttribute('href', `/map/${monitorsIds[0]}/geostories`);
-    await expect(geostoriesTabLink).toHaveClass(/border-t-2/); // active tab
+    await expect(geostoriesTabLink).toHaveClass(/border-t-secondary-500/); // active tab
 
     // check geostories list is visible
     const geostoriesResponse = await page.waitForResponse(
-      `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/geostories`,
-      { timeout: 30000 }
+      `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/geostories`
     );
     const geostoriesData = (await geostoriesResponse.json()) as GeoStory[];
     await expect(page.getByTestId('geostories-list')).toBeVisible();
@@ -65,8 +64,7 @@ test.describe('geostories tab', () => {
 
     await page.waitForURL(`**/map/${monitorsIds[0]}/geostories`, { waitUntil: 'load' });
     await page.waitForResponse(
-      `https://api.earthmonitor.org/monitors/${monitorsIds[0]}/geostories`,
-      { timeout: 30000 }
+      `https://api.earthmonitor.org/monitors/${monitorsIds[0]}/geostories`
     );
 
     // check monitor info is visible
@@ -87,8 +85,7 @@ test.describe('geostories tab', () => {
     await page.goto(`/map/${monitorsIds[0]}/geostories`, { waitUntil: 'load' });
 
     const geostoriesFetchResponse = page.waitForResponse(
-      `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/geostories`,
-      { timeout: 30000 }
+      `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/geostories`
     );
     const geostoriesResponse = await geostoriesFetchResponse;
     await expect(page.getByTestId('geostories-list')).toBeVisible();
@@ -114,8 +111,7 @@ test.describe('geostories tab', () => {
     await page.waitForURL(`**/map/geostories/${firstGeostoryId}`, { waitUntil: 'load' });
 
     const layersResponse = await page.waitForResponse(
-      `https://api.earthmonitor.org/geostories/${geostoriesData[0].id}/layers`,
-      { timeout: 30000 }
+      `https://api.earthmonitor.org/geostories/${geostoriesData[0].id}/layers`
     );
     const layersData = (await layersResponse.json()) as Layer[];
     const datasetsList = page.getByTestId('datasets-list').locator('li');

@@ -58,7 +58,13 @@ const TimeSeries: FC<{
   useEffect(() => {
     if (currentRange && isActive) {
       updateSearchParam({
-        layers: [{ id: layerId, opacity: layerOpacity || 1, date: currentRange?.value }],
+        layers: [
+          {
+            id: layerId,
+            opacity: !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity,
+            date: currentRange?.value,
+          },
+        ],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
