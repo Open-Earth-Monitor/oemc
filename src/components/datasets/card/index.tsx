@@ -43,7 +43,13 @@ const DatasetCard: FC<DatasetCardProps> = ({
 
     if (nextIsActive) {
       updateSearchParam({
-        layers: [{ id, opacity: layerOpacity || 1, date: date || range?.[0]?.value }],
+        layers: [
+          {
+            id,
+            opacity: !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity,
+            date: date || range?.[0]?.value,
+          },
+        ],
       });
     } else {
       removeSearchParam('layers');
@@ -56,7 +62,13 @@ const DatasetCard: FC<DatasetCardProps> = ({
   useEffect(() => {
     if (active && isActive && layerId !== id) {
       updateSearchParam({
-        layers: [{ id, opacity: layerOpacity || 1, date: date || range?.[0]?.value }],
+        layers: [
+          {
+            id,
+            opacity: !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity,
+            date: date || range?.[0]?.value,
+          },
+        ],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

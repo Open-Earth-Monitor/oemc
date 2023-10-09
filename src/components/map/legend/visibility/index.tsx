@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { IoMdEyeOff } from 'react-icons/io';
 import { IoMdEye } from 'react-icons/io';
-import { useDebounce } from 'usehooks-ts';
 
 import { cn } from '@/lib/classnames';
 
@@ -12,20 +11,13 @@ export const LayerVisibility = () => {
   const { updateSearchParam } = useURLParams();
   const { layerId, layerOpacity, date } = useURLayerParams();
 
-  const [isLayerVisible, setLayerVisibility] = useState<boolean>(layerOpacity > 0);
-  const debouncedVisibility = useDebounce<boolean>(isLayerVisible, 250);
+  const isLayerVisible = useMemo(() => !!layerOpacity && layerOpacity > 0, [layerOpacity]);
 
   const onToggleLayerVisibility = useCallback(() => {
-    setLayerVisibility(!isLayerVisible);
-  }, [isLayerVisible]);
-
-  useEffect(() => {
-    const nextOpacity = isLayerVisible ? layerOpacity || 1 : 0;
     updateSearchParam({
-      layers: [{ id: layerId, opacity: isLayerVisible ? nextOpacity : 0, date }],
+      layers: [{ id: layerId, opacity: isLayerVisible ? 0 : 1, date }],
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedVisibility]);
+  }, [date, isLayerVisible, layerId, updateSearchParam]);
 
   return (
     <button

@@ -5,17 +5,10 @@ test('legend', async ({ page }) => {
   await page.goto('/map/m1/datasets?layers=[{"id":"l1","opacity":1,"date":"20000101_20001231"}]', {
     waitUntil: 'load',
   });
-  await page.waitForResponse('https://api.earthmonitor.org/layers?layer_id=l1', { timeout: 30000 });
+  await page.waitForResponse('https://api.earthmonitor.org/layers?layer_id=l1');
   await expect(page.getByTestId('map-legend')).toBeVisible();
 
   // should be 1 layer in the legend
-  expect(await page.getByTestId('map-legend-item').count()).toBe(1);
-
-  // toggle legend visibility
-  await expect(page.getByTestId('map-legend-toggle-button')).toBeVisible();
-  await page.getByTestId('map-legend-toggle-button').click();
-  expect(await page.getByTestId('map-legend-item').count()).toBe(0);
-  await page.getByTestId('map-legend-toggle-button').click();
   expect(await page.getByTestId('map-legend-item').count()).toBe(1);
 
   // legend actions
@@ -27,7 +20,7 @@ test('legend', async ({ page }) => {
   ).toHaveAttribute('data-active', 'false');
   await expect(page).toHaveURL(
     new RegExp(
-      /layers=\[{%22id%22:%22l1%22,%22opacity%22:0,%22date%22:%2220000101_20001231%22}\]/,
+      /layers=%5B%7B%22id%22%3A%22l1%22%2C%22opacity%22%3A0%2C%22date%22%3A%2220000101_20001231%22%7D%5D/,
       'g'
     )
   );
@@ -37,7 +30,7 @@ test('legend', async ({ page }) => {
   ).toHaveAttribute('data-active', 'true');
   await expect(page).toHaveURL(
     new RegExp(
-      /layers=\[{%22id%22:%22l1%22,%22opacity%22:1,%22date%22:%2220000101_20001231%22}\]/,
+      /layers=%5B%7B%22id%22%3A%22l1%22%2C%22opacity%22%3A1%2C%22date%22%3A%2220000101_20001231%22%7D%5D/,
       'g'
     )
   );

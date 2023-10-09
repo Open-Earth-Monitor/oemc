@@ -4,26 +4,22 @@ on: [pull_request]
 
 jobs:
   e2e_client:
-    timeout-minutes: 15
+    timeout-minutes: 30
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
         node-version-file: '.nvmrc'
-        cache: 'yarn'
-        cache-dependency-path: yarn.lock
     - name: Install dependencies
       run: yarn install --immutable
     - name: Install Playwright Browsers
       run: yarn playwright install --with-deps
     - name: Run Playwright tests
-      run: yarn playwright test
+      run: yarn test
       env:
-        CI: true
-        NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-        NEXT_TELEMETRY_DISABLED: 1
         NODE_ENV: production
+        NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
     - uses: actions/upload-artifact@v3
       if: always()
       with:

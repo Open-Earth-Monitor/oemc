@@ -16,7 +16,7 @@ test('datasets tab', async ({ page }) => {
   const datasetsTabLink = page.getByTestId('tab-datasets');
   await expect(datasetsTabLink).toHaveText('datasets');
   await expect(datasetsTabLink).toHaveAttribute('href', `/map/${monitorsData[0].id}/datasets`);
-  await expect(datasetsTabLink).toHaveClass(/border-t-2/); // active tab
+  await expect(datasetsTabLink).toHaveClass(/border-t-secondary-500/); // active tab
 });
 
 test('datasets list', async ({ page }) => {
@@ -26,8 +26,7 @@ test('datasets list', async ({ page }) => {
   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
 
   const layersResponse = await page.waitForResponse(
-    `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/layers`,
-    { timeout: 30000 }
+    `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/layers`
   );
   const layersData = (await layersResponse.json()) as Layer[];
   const datasetsList = page.getByTestId('datasets-list').locator('li');
@@ -42,8 +41,7 @@ test('datasets item', async ({ page }) => {
   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
 
   const layersResponse = await page.waitForResponse(
-    `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/layers`,
-    { timeout: 30000 }
+    `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/layers`
   );
   const layersData = (await layersResponse.json()) as Layer[];
   const firstDataset = page.getByTestId(`dataset-item-${layersData[0].layer_id}`);
@@ -70,10 +68,8 @@ test('datasets item', async ({ page }) => {
 
   // Toggle layer: adding layer_id to the url
   await expect(firstDataset.getByTestId('dataset-layer-toggle-button')).toBeVisible();
-  await firstDataset.getByTestId('dataset-layer-toggle-button').click();
-  await expect(page).toHaveURL(new RegExp(layersData[0].layer_id), { timeout: 10000 });
-  await firstDataset.getByTestId('dataset-layer-toggle-button').click();
-  await expect(page).toHaveURL(new RegExp(`/map/${monitorsData[0].id}/datasets`, 'g'), {
-    timeout: 10000,
-  });
+  await firstDataset.getByTestId('dataset-layer-toggle-button').click(); // off
+  await expect(page).toHaveURL(new RegExp(`/map/${monitorsData[0].id}/datasets`, 'g'));
+  await firstDataset.getByTestId('dataset-layer-toggle-button').click(); // on
+  await expect(page).toHaveURL(new RegExp(layersData[0].layer_id));
 });

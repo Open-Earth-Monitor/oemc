@@ -9,6 +9,6 @@ test('pages navigation', async ({ page }) => {
 
   for (const link of navLinks) {
     await navigationBar.getByTestId(link['data-testid']).click();
-    await page.waitForURL('**' + link.href);
+    if (link.target !== '_blank') await page.waitForURL('**' + link.href);
   }
 });
