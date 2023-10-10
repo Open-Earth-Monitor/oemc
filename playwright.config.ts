@@ -27,7 +27,7 @@ export default defineConfig({
     timeout: 300000,
   },
   /* Run tests in files in parallel */
-  fullyParallel: false,
+  fullyParallel: !process.env.CI,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -53,9 +53,13 @@ export default defineConfig({
       name: 'Google Chrome',
       use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     },
-    {
-      name: 'Mozilla Firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    ...(process.env.CI
+      ? []
+      : [
+          {
+            name: 'Mozilla Firefox',
+            use: { ...devices['Desktop Firefox'] },
+          },
+        ]),
   ],
 });
