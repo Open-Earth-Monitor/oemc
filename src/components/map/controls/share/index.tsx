@@ -37,7 +37,7 @@ export const ShareControl: FC = () => {
       // Reset the "copied" state after 1 second
       setTimeout(() => {
         setURLCopyState(false);
-      }, 3000);
+      }, 2000);
     } catch (error) {
       // Handle clipboard copy error
       console.error('Error copying to clipboard:', error);

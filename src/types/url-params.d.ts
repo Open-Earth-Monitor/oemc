@@ -1,3 +1,5 @@
+import { Coordinate } from "mapbox-gl";
+
 export type LayerSearchParams = {
   id: string;
   opacity: number;
@@ -5,8 +7,7 @@ export type LayerSearchParams = {
 };
 
 export type MapSearchParams = {
-  latitude: number;
-  longitude: number;
+  center: Coordinate;
   zoom: number;
   layers?: LayerSearchParams[];
 };

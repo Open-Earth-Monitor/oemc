@@ -1,6 +1,9 @@
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 @layer base {
   :root {
@@ -149,4 +152,38 @@
   position: absolute;
   white-space: nowrap;
   width: 1px;
+}
+
+/* zoom control ropenlayers */
+.ol-zoom {
+  display: flex;
+  flex-direction: column !important;
+  position: absolute !important;
+  left: 553px !important;
+  width: 34px !important;
+  height: 68px !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--radius) - 4px) !important;
+  background-color: hsl(210, 54%, 9%) !important;
+  top: unset !important;
+  bottom: 90px !important;
+} 
+
+.ol-zoom-in, .ol-zoom-out {
+  color: hsl(60, 100%, 95%) !important;
+  background-color: hsl(210, 54%, 9%) !important;
+  font-size: 24px !important;
+  outline-offset: 0px !important;
+} 
+
+.ol-zoom-in:hover, .ol-zoom-out:hover {
+  background-color: hsl(60, 100%, 95%) !important;
+  color: hsl(210, 54%, 9%) !important;
+}
+
+.ol-zoom-out {
+  font-size: 22px !important;
+  padding-top: 4px !important;
+  padding-bottom: 8px !important;
 }

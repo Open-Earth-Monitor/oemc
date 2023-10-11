@@ -39,8 +39,8 @@ const satoshi = localFont({
 });
 
 // Styles
-import 'maplibre-gl/dist/maplibre-gl.css';
 import '@/styles/globals.css';
+import 'ol/ol.css';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -52,7 +52,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Providers>
           <div className="flex h-full flex-col">
             <div className="relative z-10 h-[70px] w-full border-b border-b-secondary-900 bg-brand-500/80">
-              <div className="m-auto flex flex h-full max-w-[1200px] items-center justify-between">
+              <div className="m-auto flex h-full max-w-[1200px] items-center justify-between">
                 <div className="mx-2">
                   <Link href="/">
                     <Image
