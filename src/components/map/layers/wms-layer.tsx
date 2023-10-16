@@ -5,7 +5,7 @@ import { useURLayerParams } from '@/hooks/url-params';
 
 export const RLayerWMSComponent = () => {
   const { layerId, layerOpacity, date } = useURLayerParams();
-  const { data, isFetched } = useLayerParsedSource(
+  const { data } = useLayerParsedSource(
     {
       layer_id: layerId,
     },

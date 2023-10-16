@@ -1,4 +1,4 @@
-import { Coordinate } from "mapbox-gl";
+import type { Coordinate } from 'ol/coordinate';
 
 export type LayerSearchParams = {
   id: string;

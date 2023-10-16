@@ -1,9 +1,12 @@
-import { FC, ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
-import Map from '@/components/map';
+import dynamic from 'next/dynamic';
+
 import MonitorCard from '@/components/monitors/card';
 import TabsNav from '@/components/tabs-nav';
 import { ScrollArea } from '@/components/ui/scroll-area';
+
+const Map = dynamic(() => import('@/components/map'), { ssr: false });
 
 const MonitorLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (

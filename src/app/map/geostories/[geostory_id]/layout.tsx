@@ -1,7 +1,10 @@
-import { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 
-import Map from '@/components/map';
+import dynamic from 'next/dynamic';
+
 import { ScrollArea } from '@/components/ui/scroll-area';
+
+const Map = dynamic(() => import('@/components/map'), { ssr: false });
 
 const GeostoriesLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
