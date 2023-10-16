@@ -1,5 +1,5 @@
 import type { RMapProps } from 'rlayers/RMap';
-import { RView } from 'rlayers/RMap';
+import type { RView } from 'rlayers/RMap';
 export type Bbox = [number, number, number, number];
 
 export interface CustomMapProps extends Omit<RMapProps, 'initial'> {

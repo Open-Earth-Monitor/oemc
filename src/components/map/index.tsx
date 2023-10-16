@@ -18,6 +18,7 @@ import BookmarkControl from './controls/bookmark';
 import ShareControl from './controls/share';
 import Legend from './legend';
 import type { CustomMapProps } from './types';
+
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
