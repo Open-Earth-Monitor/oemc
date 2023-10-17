@@ -51,6 +51,7 @@
     "class-variance-authority": "^0.6.1",
     "clsx": "^2.0.0",
     "framer-motion": "10.12.16",
+    "fuse.js": "^6.6.2",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.257.0",
     "next": "13.5.4",
