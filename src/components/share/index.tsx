@@ -1,17 +1,16 @@
 import { FC, useMemo, useState } from 'react';
 
-import { LinkedinShareButton, TwitterShareButton } from 'react-share';
-
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { HiOutlineShare } from 'react-icons/hi';
 import { PiLinkSimpleBold } from 'react-icons/pi';
-import { RiTwitterXLine, RiLinkedinFill } from 'react-icons/ri';
 
 import { cn } from '@/lib/classnames';
 
 import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+
+import SocialMedia from './social-media';
 
 export const ShareControl: FC = () => {
   const pathname = usePathname();
@@ -62,30 +61,7 @@ export const ShareControl: FC = () => {
               <PiLinkSimpleBold className={CONTROL_ICON_STYLES.default} />
               <span className="text-xs">Copy URL link</span>
             </button>
-            <div className="flex items-center space-x-2">
-              <TwitterShareButton
-                url={urlCopy}
-                // TODO: update title
-                title="Open Earth Monitor Cyberinfrastructure"
-                aria-label="share twitter"
-              >
-                <div className={cn(CONTROL_BUTTON_STYLES.default, 'h-[28px] w-[28px]')}>
-                  <RiTwitterXLine className={CONTROL_ICON_STYLES.default} />
-                </div>
-              </TwitterShareButton>
-
-              <LinkedinShareButton
-                url={urlCopy}
-                // TODO: update title
-                title="Open Earth Monitor Cyberinfrastructure"
-                className="align-baseline"
-                aria-label="share in linkedin"
-              >
-                <div className={cn(CONTROL_BUTTON_STYLES.default, 'h-[28px] w-[28px]')}>
-                  <RiLinkedinFill className={CONTROL_ICON_STYLES.default} />
-                </div>
-              </LinkedinShareButton>
-            </div>
+            <SocialMedia url={urlCopy} />
           </>
         )}
       </PopoverContent>

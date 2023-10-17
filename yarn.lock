@@ -4767,6 +4767,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fuse.js@npm:^6.6.2":
+  version: 6.6.2
+  resolution: "fuse.js@npm:6.6.2"
+  checksum: 17ae758ce205276ebd88bd9c9f088a100be0b4896abac9f6b09847151269d1690f41d7f98ff5813d4a58973162dbd99d0072ce807020fee6f9de60170f6b08eb
+  languageName: node
+  linkType: hard
+
 "gauge@npm:^4.0.3":
   version: 4.0.4
   resolution: "gauge@npm:4.0.4"
@@ -6587,6 +6594,7 @@ __metadata:
     eslint-plugin-import: 2.27.5
     eslint-plugin-prettier: ^4.2.1
     framer-motion: 10.12.16
+    fuse.js: ^6.6.2
     husky: 8.0.3
     lodash-es: ^4.17.21
     lucide-react: ^0.257.0
