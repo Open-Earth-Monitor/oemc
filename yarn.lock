@@ -2168,15 +2168,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mapbox-gl@npm:^2.6.0":
-  version: 2.7.15
-  resolution: "@types/mapbox-gl@npm:2.7.15"
-  dependencies:
-    "@types/geojson": "*"
-  checksum: 39d5ef3341d2cbc6bf254c08e14ac2a09c7e6192cf18c838a0b7ce7ca6db195376f5c0357edd1b7f2afe132a0ba5bd262842b8274c4cd091a413057221e4322b
-  languageName: node
-  linkType: hard
-
 "@types/mapbox__point-geometry@npm:*, @types/mapbox__point-geometry@npm:^0.1.2":
   version: 0.1.2
   resolution: "@types/mapbox__point-geometry@npm:0.1.2"
@@ -6723,7 +6714,6 @@ __metadata:
     react-copy-to-clipboard: 5.1.0
     react-dom: 18.2.0
     react-icons: 4.11.0
-    react-map-gl: 7.0.25
     react-share: 4.4.1
     rlayers: 2.1.0
     shadcn-ui: latest
@@ -7256,18 +7246,6 @@ __metadata:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
-  languageName: node
-  linkType: hard
-
-"react-map-gl@npm:7.0.25":
-  version: 7.0.25
-  resolution: "react-map-gl@npm:7.0.25"
-  dependencies:
-    "@types/mapbox-gl": ^2.6.0
-  peerDependencies:
-    mapbox-gl: "*"
-    react: ">=16.3.0"
-  checksum: c52624629f781e2c16e8f3bf340e26aa842287475f873cf66acc1c8bd72024063c5e0939212a8a0316e3bd9fe523158ff39bc7c968b936efc6f1d35faf18f484
   languageName: node
   linkType: hard
 
