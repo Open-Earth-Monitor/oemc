@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-import type { GeoStory } from '@/types/geostories';
+import type { Geostory } from '@/types/geostories';
 import type { Layer } from '@/types/layers';
 import type { Monitor } from '@/types/monitors';
 
@@ -31,7 +31,7 @@ test.describe('geostories tab', () => {
     const geostoriesResponse = await page.waitForResponse(
       `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/geostories`
     );
-    const geostoriesData = (await geostoriesResponse.json()) as GeoStory[];
+    const geostoriesData = (await geostoriesResponse.json()) as Geostory[];
     await expect(page.getByTestId('geostories-list')).toBeVisible();
 
     // check first geostory is visible has title, and a link to the geostory page (geostory datasets)
@@ -90,7 +90,7 @@ test.describe('geostories tab', () => {
     const geostoriesResponse = await geostoriesFetchResponse;
     await expect(page.getByTestId('geostories-list')).toBeVisible();
 
-    const geostoriesData = (await geostoriesResponse.json()) as GeoStory[];
+    const geostoriesData = (await geostoriesResponse.json()) as Geostory[];
     const firstGeostoryId = geostoriesData[0].id;
     const firstDataset = page.getByTestId(`geostory-item-${firstGeostoryId}`);
     await expect(firstDataset).toBeVisible();

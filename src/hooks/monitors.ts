@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
-import type { GeoStory } from '@/types/geostories';
+import type { Geostory } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
 import type { Monitor, MonitorParsed } from '@/types/monitors';
 
@@ -110,7 +110,7 @@ export function useMonitorLayers(
 
 export function useMonitorGeostories(
   params: UseParams,
-  queryOptions?: UseQueryOptions<GeoStory[], Error>
+  queryOptions?: UseQueryOptions<Geostory[], Error>
 ) {
   const { monitor_id } = params;
   const fetchMonitorGeostories = () =>
@@ -118,7 +118,7 @@ export function useMonitorGeostories(
       method: 'GET',
       url: `/monitors/${monitor_id}/geostories`,
       ...queryOptions,
-    }).then((response: AxiosResponse<GeoStory[]>) => response.data);
+    }).then((response: AxiosResponse<Geostory[]>) => response.data);
   return useQuery(['monitors-geostories', params], fetchMonitorGeostories, {
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) => data,
