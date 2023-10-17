@@ -26,8 +26,12 @@ Unreleased
 
 ### Changed
 
+- Migration from react-map-gl to [openlayers](https://openlayers.org/) [OEMC-85](https://vizzuality.atlassian.net/browse/OEMC-85?atlOrigin=eyJpIjoiNGU0ZTdlMDY0ZTk0NGQzYTljNjIyMGMwMjNmZDZjOTgiLCJwIjoiaiJ9)
+
 
 ### Fixed
 
+- Layer animation should keep visibility [OEMC-90](https://vizzuality.atlassian.net/browse/OEMC-90?atlOrigin=eyJpIjoiNTM0OWVlYmJmOWE4NDBiM2FjYjY4NGZlZjNiNzM4NjciLCJwIjoiaiJ9)
+- Visibility toggle should keep previous opacity value in the layer [OEMC-89](https://vizzuality.atlassian.net/browse/OEMC-89?atlOrigin=eyJpIjoiZDA0ZDIxYzdmNDU0NGExN2EwNzk2MDVkZGQ3NDlhOTciLCJwIjoiaiJ9)
 
 ### Removed

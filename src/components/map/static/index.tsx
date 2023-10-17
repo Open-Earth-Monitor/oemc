@@ -3,7 +3,8 @@
 import { FC } from 'react';
 
 import { RMap, RControl, RLayerTile } from 'rlayers';
-
+import { Controls } from '@/components/map/controls';
+import { BookmarkControl } from '@/components/map/controls/bookmark';
 import { DEFAULT_VIEWPORT } from '../constants';
 
 const StaticMap: FC = () => (
@@ -21,6 +22,9 @@ const StaticMap: FC = () => (
         url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
         attributions="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
       />
+      <Controls className="absolute bottom-3 left-[554px] z-50">
+        <BookmarkControl />
+      </Controls>
     </RMap>
   </div>
 );
