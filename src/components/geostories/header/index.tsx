@@ -1,12 +1,12 @@
 import { FC } from 'react';
 
-import type { GeoStory } from '@/types/geostories';
+import type { Geostory } from '@/types/geostories';
 
 import { useGeostory } from '@/hooks/geostories';
 
 import Loading from '@/components/loading';
 
-const GeostoryHead: FC<{ geostoryId: GeoStory['id'] }> = ({ geostoryId }) => {
+const GeostoryHead: FC<{ geostoryId: Geostory['id'] }> = ({ geostoryId }) => {
   const { data, isLoading, isFetched, isError } = useGeostory({ geostory_id: geostoryId });
 
   return (

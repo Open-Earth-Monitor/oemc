@@ -20,7 +20,8 @@ const Search: FC<SearchProps> = ({
   const { placeholder } = rest;
   const ref = useRef<HTMLInputElement>();
   const onInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    console.log(e.currentTarget.value);
+    setValue(e?.target?.value);
   };
 
   return (
@@ -52,7 +53,7 @@ const Search: FC<SearchProps> = ({
         onInput={onInput}
         value={value}
         className={cx(
-          'w-full truncate bg-transparent px-10 font-sans leading-4 placeholder-gray-300 placeholder-opacity-50',
+          'w-full truncate bg-transparent px-10 font-sans leading-4 placeholder-secondary-700',
           {
             [THEME[theme]]: true,
             [SIZES[size]]: true,

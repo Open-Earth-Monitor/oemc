@@ -1,11 +1,11 @@
-import type { GeoStory } from './geostories';
+import type { Geostory } from './geostories';
 
 export type Monitor = {
   author: string;
   coverage: string;
   date_created: string;
   description: string;
-  geostories: GeoStory[];
+  geostories: Geostory[];
   id: string;
   title: string;
 };

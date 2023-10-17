@@ -1,6 +1,6 @@
 import type { Layer } from './layers';
 
-export type GeoStory = {
+export type Geostory = {
   author: string;
   date_created: string;
   description: string;
