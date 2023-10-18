@@ -8,6 +8,7 @@ import cn from '@/lib/classnames';
 
 import { Monitor } from '@/types/monitors';
 
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogOverlay,
@@ -42,14 +43,9 @@ const Card: FC<Partial<Monitor> & { color?: string }> = ({ id, description, titl
       <Dialog>
         <DialogOverlay className="bg-brand-500 bg-opacity-50" />
         <DialogTrigger className="w-full" asChild>
-          <button
-            type="button"
-            className={cn(
-              'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
-            )}
-          >
+          <Button variant="light" data-testid="monitors-directory-trigger">
             Explore monitor
-          </button>
+          </Button>
         </DialogTrigger>
         <DialogContent className="w-[665px] bg-white p-10 py-6 text-brand-500 ">
           <DialogHeader className="space-y-4">
