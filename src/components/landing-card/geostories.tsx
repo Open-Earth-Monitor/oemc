@@ -7,9 +7,20 @@ import { HiOutlineArrowTopRightOnSquare } from 'react-icons/hi2';
 import cn from '@/lib/classnames';
 
 import { Geostory } from '@/types/geostories';
-const Card: FC<Geostory> = ({ title, id, layers }) => (
-  <div className="min-h-[388px] w-[384px] bg-blue-300" data-testid={`dataset-item-${id}`}>
-    <div className="space-y-6 bg-green-500 p-6 text-secondary-500">
+
+const Card: FC<Partial<Geostory> & { color?: string; headColor?: string }> = ({
+  title,
+  id,
+  layers,
+  color,
+  headColor,
+}) => (
+  <div
+    className="min-h-[388px] w-[384px]"
+    style={{ backgroundColor: color }}
+    data-testid={`dataset-item-${id}`}
+  >
+    <div className="space-y-6 p-6 text-secondary-500" style={{ backgroundColor: headColor }}>
       <div>
         <span className="text-xs uppercase">geostories</span>
         <h2 data-testid="dataset-title" className="font-satoshi text-2xl font-bold">

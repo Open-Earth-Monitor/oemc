@@ -20,7 +20,6 @@ const Search: FC<SearchProps> = ({
   const { placeholder } = rest;
   const ref = useRef<HTMLInputElement>();
   const onInput = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.currentTarget.value);
     setValue(e?.target?.value);
   };
 
