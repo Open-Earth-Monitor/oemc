@@ -5,7 +5,6 @@ import { useCallback, useState } from 'react';
 import { FiInfo } from 'react-icons/fi';
 
 import { useMonitorsAndGeostories } from '@/hooks/datasets';
-import { useSearch } from '@/hooks/search';
 
 import Card from '@/components/landing-card';
 import Loading from '@/components/loading';
@@ -45,7 +44,6 @@ const LandingDatasets = () => {
     [setActive]
   );
 
-  console.log(searchValue, 'searchValue');
   return (
     <div className="m-auto max-w-[1200px]">
       <div>
