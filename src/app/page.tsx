@@ -4,9 +4,9 @@ import { AnimatePresence, motion, useAnimation } from 'framer-motion';
 import type { Metadata, NextPage } from 'next';
 import { HiOutlineArrowCircleRight } from 'react-icons/hi';
 
+import LandingDatasets from '@/components/datasets-grid';
 import Footer from '@/components/footer';
 import Hero from '@/components/hero';
-import LandingDatasets from '@/components/landing-datasets';
 import Prefooter from '@/components/project-details';
 
 // export const metadata: Metadata = {
