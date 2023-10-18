@@ -3,7 +3,6 @@
 import { forwardRef, ElementRef, ComponentPropsWithoutRef } from 'react';
 
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
-import { CheckIcon } from '@radix-ui/react-icons';
 import { Circle } from 'lucide-react';
 
 import { cn } from 'lib/classnames';
