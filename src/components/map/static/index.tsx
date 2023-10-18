@@ -3,8 +3,10 @@
 import { FC } from 'react';
 
 import { RMap, RControl, RLayerTile } from 'rlayers';
+
 import { Controls } from '@/components/map/controls';
 import { BookmarkControl } from '@/components/map/controls/bookmark';
+
 import { DEFAULT_VIEWPORT } from '../constants';
 
 const StaticMap: FC = () => (
