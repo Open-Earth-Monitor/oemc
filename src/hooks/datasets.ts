@@ -2,8 +2,7 @@ import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
 import type { Geostory } from '@/types/geostories';
-import type { Layer, LayerParsed } from '@/types/layers';
-import type { Monitor, MonitorParsed } from '@/types/monitors';
+import type { Monitor } from '@/types/monitors';
 
 import API from 'services/api';
 
