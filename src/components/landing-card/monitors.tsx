@@ -6,9 +6,10 @@ import cn from '@/lib/classnames';
 
 import { Monitor } from '@/types/monitors';
 
-const Card: FC<Monitor> = ({ title, id, description }) => (
+const Card: FC<Partial<Monitor> & { color?: string }> = ({ id, description, title, color }) => (
   <div
-    className="h-[388px] w-[384px] space-y-6 bg-green-300 p-6"
+    className="h-[388px] w-[384px] space-y-6 p-6"
+    style={{ backgroundColor: color }}
     data-testid={`dataset-item-${id}`}
   >
     <div>
