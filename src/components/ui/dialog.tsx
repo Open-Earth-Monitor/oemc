@@ -129,6 +129,7 @@ const DialogClose = forwardRef<
 DialogClose.displayName = DialogPrimitive.Close.displayName;
 export {
   Dialog,
+  DialogOverlay,
   DialogTrigger,
   DialogContent,
   DialogHeader,
