@@ -41,8 +41,7 @@ const LandingDatasets = () => {
 
   const handleCategoriesFilter = useCallback(
     (e: React.MouseEvent<Omit<HTMLButtonElement, 'id' & { id: 'monitors' | 'geostories' }>>) => {
-      const newValue = e.currentTarget.id as 'monitors' | 'geostories';
-      setActive((prev) => addOrRemoveFromArray(prev, newValue));
+      setActive([e.currentTarget.id]);
     },
     [setActive]
   );
