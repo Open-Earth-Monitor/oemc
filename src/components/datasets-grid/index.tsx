@@ -2,6 +2,8 @@
 
 import { useCallback, useState } from 'react';
 
+import { Circle } from 'lucide-react';
+import { BiCheck } from 'react-icons/bi';
 import { FiInfo } from 'react-icons/fi';
 
 import { useMonitorsAndGeostories } from '@/hooks/datasets';
@@ -12,15 +14,18 @@ import Search from '@/components/search';
 import { DropdownMenu } from '@/components/ui/dropdown';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const LandingDatasets = () => {
+  const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const [searchValue, setSearchValue] = useState<string>('');
-  const [active, setActive] = useState<'monitors' | 'geostories' | 'all'>('all');
-  const { data, isFetched, isError, isFetching } = useMonitorsAndGeostories({
-    ...(active !== 'all' && { type: active }),
-    ...(searchValue !== '' && { title: searchValue }),
-  });
+  const [active, setActive] = useState<'monitors' | 'geostories' | 'all'>('monitors');
+  const { data, isFetched, isError, isFetching } = useMonitorsAndGeostories(
+    {
+      ...(active.length === 1 && { type: active }),
+      ...(searchValue !== '' && { title: searchValue }),
+    },
+    { enabled: active.length > 0 }
+  );
 
   const handleCategoriesFilter = useCallback(
     (id: 'monitors' | 'geostories' | 'all') => {
@@ -28,6 +33,18 @@ const LandingDatasets = () => {
     },
     [setActive]
   );
+
+  // const handleThemes = useCallback(
+  //   (e: React.MouseEvent<Omit<HTMLButtonElement, 'id' & { id: 'monitors' | 'geostories' }>>) => {
+  //     const id = e.currentTarget.id as Theme;
+  //     const themesUpdate = activeThemes.includes(id)
+  //       ? activeThemes.filter((e) => e !== id)
+  //       : [id, ...activeThemes];
+
+  //     setActiveThemes(themesUpdate);
+  //   },
+  //   [setActiveThemes, activeThemes]
+  // );
 
   return (
     <div className="w-full">

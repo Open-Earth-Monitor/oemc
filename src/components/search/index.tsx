@@ -1,8 +1,9 @@
 import { FC, useRef, ChangeEvent, useCallback } from 'react';
 
-import cx from 'clsx';
 import { HiOutlineChevronUp } from 'react-icons/hi';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
+
+import { cn } from '@/lib/classnames';
 
 import { Button } from '@/components/ui/button';
 
@@ -14,6 +15,7 @@ const Search: FC<SearchProps> = ({
   value,
   setValue,
   label = 'Search',
+  children = false,
   ...rest
 }: SearchProps) => {
   const { placeholder } = rest;
@@ -27,7 +29,7 @@ const Search: FC<SearchProps> = ({
 
   return (
     <form
-      className={cx('relative flex w-full border-b border-gray-400', {
+      className={cn('relative flex h-14 w-full border-b border-secondary-700', {
         [THEME[theme]]: true,
       })}
       role="search"
@@ -36,7 +38,7 @@ const Search: FC<SearchProps> = ({
       onSubmit={(e) => e.preventDefault()}
     >
       <HiMagnifyingGlass
-        className={cx({
+        className={cn({
           'absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform': true,
           [THEME[theme]]: true,
         })}
@@ -52,13 +54,15 @@ const Search: FC<SearchProps> = ({
         aria-label={label}
         onInput={onInput}
         value={value}
-        className={cx(
-          'w-full truncate bg-transparent px-10 font-sans leading-4 placeholder-secondary-700',
+        data-testid="search-input"
+        className={cn(
+          'flex-1 truncate bg-transparent px-10 font-inter leading-4 text-secondary-700 placeholder-secondary-700',
           {
             [THEME[theme]]: true,
           }
         )}
       />
+      {!!children && <div className="h-full items-center">{children}</div>}
       {value !== '' && (
         <Button
           tabIndex={0}

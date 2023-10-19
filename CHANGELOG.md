@@ -24,6 +24,7 @@ Unreleased
 - Stadiamaps basemap [OEMC-78](https://vizzuality.atlassian.net/browse/OEMC-78?atlOrigin=eyJpIjoiYzUzZmZjMDllNWI2NGY5Y2E1NmUwMmFjYmNhYmU2NjMiLCJwIjoiaiJ9)
 - Map view added to URL [OEMC-75](https://vizzuality.atlassian.net/browse/OEMC-75?atlOrigin=eyJpIjoiM2IyNDYxOTJkYzQ0NGY4NTgzOTgyODdkOThiYTJhMjAiLCJwIjoiaiJ9)
 - Display of monitors and geostories in landing page [OEMC-25](https://vizzuality.atlassian.net/browse/OEMC-25?atlOrigin=eyJpIjoiNDZiOTM0YjkzN2NlNDJhNmE2OWJiODYxZTlmYzcwNjkiLCJwIjoiaiJ9)
+- Search monitors and geostories by title [OEMC-94](https://vizzuality.atlassian.net/browse/OEMC-94?atlOrigin=eyJpIjoiMGVlYmJhNmM5ODU4NDRiNWEzNTIyNWRjODdjNDg4MWUiLCJwIjoiaiJ9)
 
 ### Changed
 
