@@ -20,7 +20,7 @@ const Card: FC<Partial<Geostory> & { color?: string; headColor?: string }> = ({
     <motion.div
       className="min-h-[388px] w-[384px]"
       style={{ backgroundColor: color }}
-      data-testid={`dataset-item-${id}`}
+      data-testid={`card-${id}`}
       whileHover={{
         translateY: '-10px',
       }}
@@ -28,14 +28,16 @@ const Card: FC<Partial<Geostory> & { color?: string; headColor?: string }> = ({
     >
       <div className="space-y-6 p-6 text-secondary-500" style={{ backgroundColor: headColor }}>
         <div>
-          <span className="text-xs uppercase">geostories</span>
-          <h2 data-testid="dataset-title" className="font-satoshi text-2xl font-bold">
+          <span data-testid={`card-type-${id}`} className="text-xs uppercase">
+            geostory
+          </span>
+          <h2 data-testid={`card-title-${id}`} className="font-satoshi text-2xl font-bold">
             {title}
           </h2>
         </div>
         <Link
           href={`/map/geostories/${id}`}
-          data-testid="dataset-layer-toggle-button"
+          data-testid={`card-link-${id}`}
           className={cn(
             'flex items-center space-x-4 py-2 text-xs font-bold text-secondary-500 transition-colors hover:underline'
           )}

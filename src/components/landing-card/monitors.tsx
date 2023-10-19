@@ -25,41 +25,51 @@ const Card: FC<Partial<Monitor> & { color?: string }> = ({ id, description, titl
     <motion.div
       className="h-[388px] w-[384px] space-y-6 p-6"
       style={{ backgroundColor: color }}
-      data-testid={`dataset-item-${id}`}
+      data-testid={`card-${id}`}
       whileHover={{
         translateY: '-10px',
       }}
       transition={{ duration: 0.1 }}
     >
       <div>
-        <span className="text-xs uppercase">monitor</span>
-        <h2 data-testid="dataset-title" className="font-satoshi text-2xl font-bold">
+        <span data-testid={`card-type-${id}`} className="text-xs uppercase">
+          monitor
+        </span>
+        <h2 data-testid={`card-title-${id}`} className="font-satoshi text-2xl font-bold">
           {title}
         </h2>
       </div>
 
-      <p data-testid="dataset-description">{description}</p>
+      <p data-testid={`card-description-${id}`}>{description}</p>
 
       <Dialog>
         <DialogOverlay className="bg-brand-500 bg-opacity-50" />
         <DialogTrigger className="w-full" asChild>
-          <Button variant="light" data-testid="monitors-directory-trigger">
+          <Button variant="light" data-testid={`card-button-${id}`}>
             Explore monitor
           </Button>
         </DialogTrigger>
-        <DialogContent className="w-[665px] bg-white p-10 py-6 text-brand-500 ">
+        <DialogContent
+          data-testid={`monitor-card-${id}`}
+          className="w-[665px] bg-white p-10 py-6 text-brand-500"
+        >
           <DialogHeader className="space-y-4">
             <DialogTitle asChild>
               <header className="divide-x-secondary-500 divide-x">
-                <h2 className="inline-block pr-6 font-satoshi text-5xl font-bold">{title}</h2>
-                <div>{description}</div>
+                <h2
+                  data-testid="monitor-title"
+                  className="inline-block pr-6 font-satoshi text-5xl font-bold"
+                >
+                  {title}
+                </h2>
+                <div data-testid="monitor-description">{description}</div>
               </header>
             </DialogTitle>
             <DialogDescription asChild>
-              <div className="">
+              <div>
                 <Link
                   href={`/map/${id}/datasets`}
-                  data-testid="dataset-layer-toggle-button"
+                  data-testid="monitor-button"
                   className={cn(
                     'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
                   )}

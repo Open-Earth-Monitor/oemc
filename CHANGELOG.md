@@ -23,6 +23,7 @@ Unreleased
 - Save bookmarks in map section [OEMC-72](https://vizzuality.atlassian.net/browse/OEMC-72?atlOrigin=eyJpIjoiYzg4MTQ2ZmJjZDQzNDBhMmI5NDg3M2YyZjM0Mzc4ZmUiLCJwIjoiaiJ9)
 - Stadiamaps basemap [OEMC-78](https://vizzuality.atlassian.net/browse/OEMC-78?atlOrigin=eyJpIjoiYzUzZmZjMDllNWI2NGY5Y2E1NmUwMmFjYmNhYmU2NjMiLCJwIjoiaiJ9)
 - Map view added to URL [OEMC-75](https://vizzuality.atlassian.net/browse/OEMC-75?atlOrigin=eyJpIjoiM2IyNDYxOTJkYzQ0NGY4NTgzOTgyODdkOThiYTJhMjAiLCJwIjoiaiJ9)
+- Display of monitors and geostories in landing page [OEMC-25](https://vizzuality.atlassian.net/browse/OEMC-25?atlOrigin=eyJpIjoiNDZiOTM0YjkzN2NlNDJhNmE2OWJiODYxZTlmYzcwNjkiLCJwIjoiaiJ9)
 
 ### Changed
 
