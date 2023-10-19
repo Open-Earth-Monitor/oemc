@@ -17,10 +17,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 const LandingDatasets = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [active, setActive] = useState<('monitors' | 'geostories')[]>(['monitors']);
-  const { data, isFetched, isError, isLoading } = useMonitorsAndGeostories({
-    ...(active.length === 1 && { type: active[0] }),
-    ...(searchValue !== '' && { title: searchValue }),
-  });
+  const { data, isFetched, isError, isFetching } = useMonitorsAndGeostories(
+    {
+      ...(active.length === 1 && { type: active[0] }),
+      ...(searchValue !== '' && { title: searchValue }),
+    },
+    { enabled: active.length > 0 }
+  );
 
   const addOrRemoveFromArray = (
     arr: ('monitors' | 'geostories')[],
@@ -60,6 +63,7 @@ const LandingDatasets = () => {
           <div className="flex items-center space-x-2">
             <Checkbox
               id="monitors"
+              data-testid="monitors-checkbox"
               checked={active.includes('monitors')}
               defaultChecked
               // disabled={active.length === 1  && active[0] === 'monitors'}
@@ -78,6 +82,7 @@ const LandingDatasets = () => {
           <div className="flex items-center space-x-2">
             <Checkbox
               id="geostories"
+              data-testid="geostories-checkbox"
               checked={active.includes('geostories')}
               onClick={handleCategoriesFilter}
               // disabled={active.length === 1  && active[0] === 'geostories'}
@@ -92,17 +97,24 @@ const LandingDatasets = () => {
               </PopoverContent>
             </Popover>
           </div>
-
-          {/* //Sort */}
         </div>
-        <div className="py-5 font-inter text-secondary-700">{data?.length} results</div>
-        <ul id="explore-section" className="grid max-w-7xl grid-cols-3 gap-6 ">
-          {isLoading && <Loading />}
+        <div data-testid="datasets-result" className="py-5 font-inter text-secondary-700">
+          <span data-testid="result-number">{!!active.length && data?.length}</span>{' '}
+          {!!active?.length && data?.length === 1 && 'result'}
+          {!!active?.length && data?.length > 1 && 'results'}
+          {!active.length && '0 results'}
+        </div>
+        <ul
+          id="explore-section"
+          className="grid max-w-7xl grid-cols-3 gap-6"
+          data-testid="datasets-list"
+        >
+          {isFetching && <Loading />}
           {isFetched &&
             !isError &&
+            !!data.length &&
             data.map(({ id, ...d }) => (
-              <li key={id} className="mb-6">
-                {/* {monitor.title} */}
+              <li key={id} className="mb-6" data-testid="datasets-card">
                 <Card id={id} {...d} />
               </li>
             ))}
