@@ -1,4 +1,4 @@
-import { FC, useRef, ChangeEvent } from 'react';
+import { FC, useRef, ChangeEvent, useCallback } from 'react';
 
 import cx from 'clsx';
 import { HiOutlineChevronUp } from 'react-icons/hi';
@@ -19,9 +19,12 @@ const Search: FC<SearchProps> = ({
 }: SearchProps) => {
   const { placeholder } = rest;
   const ref = useRef<HTMLInputElement>();
-  const onInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e?.target?.value);
-  };
+  const onInput = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(e?.target?.value);
+    },
+    [setValue]
+  );
 
   return (
     <form
