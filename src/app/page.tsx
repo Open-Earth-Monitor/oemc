@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const Hub: NextPage = () => (
-  <div className=" text-secondary-500">
+  <div className="text-secondary-500">
     <Hero />
     <LandingDatasets />
     <Prefooter />
