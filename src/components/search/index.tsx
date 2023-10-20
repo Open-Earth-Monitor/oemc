@@ -1,21 +1,17 @@
 import { FC, useRef, ChangeEvent, useCallback } from 'react';
 
-import { HiOutlineChevronUp } from 'react-icons/hi';
+import { Cross2Icon } from '@radix-ui/react-icons';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 
 import { cn } from '@/lib/classnames';
 
-import { Button } from '@/components/ui/button';
-
-import { THEME } from './constants';
 import type { SearchProps } from './types';
 
 const Search: FC<SearchProps> = ({
-  theme = 'dark',
   value,
   setValue,
   label = 'Search',
-  children = false,
+  className,
   ...rest
 }: SearchProps) => {
   const { placeholder } = rest;
@@ -28,21 +24,19 @@ const Search: FC<SearchProps> = ({
   );
 
   return (
-    <form
-      className={cn('relative flex h-14 w-full border-b border-secondary-700', {
-        [THEME[theme]]: true,
+    <div
+      className={cn('relative flex h-14 w-full', {
+        [className]: !!className,
       })}
-      role="search"
-      action=""
-      method="get"
-      onSubmit={(e) => e.preventDefault()}
+      aria-label="search"
+      role="searchbox"
     >
       <HiMagnifyingGlass
         className={cn({
           'absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform': true,
-          [THEME[theme]]: true,
         })}
       />
+
       <label htmlFor="search">
         <span className="visually-hidden">{label}</span>
       </label>
@@ -55,20 +49,13 @@ const Search: FC<SearchProps> = ({
         onInput={onInput}
         value={value}
         data-testid="search-input"
-        className={cn(
-          'flex-1 truncate bg-transparent px-10 font-inter leading-4 text-secondary-700 placeholder-secondary-700',
-          {
-            [THEME[theme]]: true,
-          }
-        )}
+        className="flex-1 truncate border-none bg-transparent px-10 font-inter leading-4 text-secondary-700 placeholder-secondary-700"
       />
-      {!!children && <div className="h-full items-center">{children}</div>}
       {value !== '' && (
-        <Button
+        <button
           tabIndex={0}
-          className="absolute right-3 z-10 flex h-5 w-5 items-center justify-center self-center p-0"
+          className="absolute right-3 z-10 flex items-center justify-center self-center p-0 text-secondary-700 hover:text-secondary-500"
           type="button"
-          variant="ghost"
           onClick={() => {
             setValue('');
             if (ref.current) {
@@ -77,10 +64,10 @@ const Search: FC<SearchProps> = ({
           }}
           aria-label="Empty search"
         >
-          <HiOutlineChevronUp />
-        </Button>
+          <Cross2Icon className="h-4 w-4 bg-transparent fill-current" />
+        </button>
       )}
-    </form>
+    </div>
   );
 };
 
