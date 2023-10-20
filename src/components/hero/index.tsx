@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import { HiOutlineArrowCircleRight } from 'react-icons/hi';
 
 import { cn } from '@/lib/classnames';
