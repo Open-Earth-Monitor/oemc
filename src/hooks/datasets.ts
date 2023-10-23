@@ -7,7 +7,7 @@ import type { Monitor } from '@/types/monitors';
 import API from 'services/api';
 
 type UseParams = {
-  type?: 'monitors' | 'geostories';
+  type?: 'monitors' | 'geostories' | 'all';
   monitor_id?: string;
 };
 
