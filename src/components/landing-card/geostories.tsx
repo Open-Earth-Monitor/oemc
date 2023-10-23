@@ -48,42 +48,39 @@ const Card: FC<Partial<Geostory> & { color?: string; headColor?: string }> = ({
       </div>
       <div className="p-6">
         <span className="text-xs font-medium uppercase">monitor</span>
-        <ul>
-          {layers.map(({ title }) => (
-            <motion.li key={id} className="flex items-center" initial="initial" whileHover="hover">
-              <Link
-                href={`/map/${id}/datasets`}
-                className="relative w-full items-center font-bold underline"
+        {/* TO DO - change it for monitor when the API is ready */}
+        <motion.div className="flex items-center" initial="initial" whileHover="hover">
+          <Link
+            href={`/map/${layers[0].layer_id}/datasets`}
+            className="relative w-full items-center font-bold underline"
+          >
+            <motion.span
+              className="absolute left-0 top-2 inline-flex h-full w-full hover:opacity-100"
+              variants={{
+                hover: { opacity: 1 },
+              }}
+              transition={{ duration: 0.15 }}
+            >
+              <HiArrowRight className="inline-block h-5 w-5" />
+              <motion.span
+                className="inline-flex whitespace-normal pb-11"
+                variants={{
+                  initial: {
+                    x: 0,
+                    position: 'absolute',
+                    left: 0,
+                    width: '100%',
+                    backgroundColor: color,
+                  },
+                  hover: { x: 20, position: 'relative' },
+                }}
+                transition={{ duration: 0.15 }}
               >
-                <motion.span
-                  className="absolute left-0 top-2 inline-flex h-full w-full hover:opacity-100"
-                  variants={{
-                    hover: { opacity: 1 },
-                  }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <HiArrowRight className="inline-block h-5 w-5" />
-                  <motion.span
-                    className="inline-flex"
-                    variants={{
-                      initial: {
-                        x: 0,
-                        position: 'absolute',
-                        left: 0,
-                        width: '100%',
-                        backgroundColor: color,
-                      },
-                      hover: { x: 20, position: 'relative' },
-                    }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    {title}
-                  </motion.span>
-                </motion.span>
-              </Link>
-            </motion.li>
-          ))}
-        </ul>
+                {layers[0].title}
+              </motion.span>
+            </motion.span>
+          </Link>
+        </motion.div>
       </div>
     </motion.div>
   </AnimatePresence>
