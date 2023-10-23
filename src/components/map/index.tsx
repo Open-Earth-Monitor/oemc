@@ -16,6 +16,7 @@ import ShareControl from '../share';
 
 import { DEFAULT_VIEWPORT } from './constants';
 // map controls
+import Controls from './controls';
 import BookmarkControl from './controls/bookmark';
 import SwipeControl from './controls/swipe';
 import Legend from './legend';

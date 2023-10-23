@@ -3,6 +3,7 @@ import { FC } from 'react';
 import Link from 'next/link';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import { HiOutlineNewspaper, HiOutlineGlobeAlt } from 'react-icons/hi';
 
 import cn from '@/lib/classnames';
 
@@ -20,7 +21,13 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 
-const Card: FC<Partial<Monitor> & { color?: string }> = ({ id, description, title, color }) => (
+const Card: FC<Partial<Monitor> & { color?: string }> = ({
+  id,
+  description,
+  title,
+  color,
+  author,
+}) => (
   <AnimatePresence>
     <motion.div
       className="h-[388px] w-[384px] space-y-6 p-6"
@@ -51,32 +58,71 @@ const Card: FC<Partial<Monitor> & { color?: string }> = ({ id, description, titl
         </DialogTrigger>
         <DialogContent
           data-testid={`monitor-card-${id}`}
-          className="w-[665px] bg-white p-10 py-6 text-brand-500"
+          className="w-[665px] bg-white p-10 text-brand-500"
         >
-          <DialogHeader className="space-y-4">
+          <DialogHeader className="space-y-6">
             <DialogTitle asChild>
-              <header className="divide-x-secondary-500 divide-x">
+              <header className="space-y-4">
                 <h2
                   data-testid="monitor-title"
-                  className="inline-block pr-6 font-satoshi text-5xl font-bold"
+                  className="inline-block max-w-[50%] pr-6 font-satoshi text-5xl font-bold"
                 >
                   {title}
                 </h2>
-                <div data-testid="monitor-description">{description}</div>
+                <div data-testid="monitor-description">
+                  {description ||
+                    'Long description lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.'}
+                </div>
               </header>
             </DialogTitle>
             <DialogDescription asChild>
               <div>
+                <div className="space-y-2 border-y border-brand-500 py-3">
+                  <p>
+                    <span className="pr-2.5 font-bold">Developed by:</span>
+                    {author || 'Lorem Ipsum'}
+                  </p>
+                  <p>
+                    <span className="pr-2.5 font-bold">Monitor tool website:</span>www.toolname.com
+                  </p>
+                  <p>
+                    <span className="pr-2.5 font-bold">Output format:</span>GeoTiff, gpkg
+                  </p>
+                  <p>
+                    <span className="pr-2.5 font-bold">Spatial resolution:</span>Lorem Ipsum
+                  </p>
+                  <p>
+                    <span className="pr-2.5 font-bold">Temporal resolution:</span>Lorem Ipsum
+                  </p>
+                </div>
+                <div>
+                  <Link
+                    href=""
+                    className="flex items-center space-x-2 border-b border-brand-500 py-2 text-2xl font-bold"
+                  >
+                    <HiOutlineNewspaper />
+                    <span>Publications</span>
+                  </Link>
+                  <Link
+                    href=""
+                    className="flex items-center space-x-2 border-b border-brand-500 py-2 text-2xl font-bold"
+                  >
+                    <HiOutlineGlobeAlt />
+                    <span>Use cases</span>
+                  </Link>
+                </div>
                 <Link
                   href={`/map/${id}/datasets`}
                   data-testid="monitor-button"
                   className={cn(
-                    'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
+                    'mt-4 flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
                   )}
                 >
                   Launch monitor
                 </Link>
-                <DialogClose>close</DialogClose>
+                <DialogClose className="flex items-center space-x-3 text-sm font-medium uppercase">
+                  Close
+                </DialogClose>
               </div>
             </DialogDescription>
           </DialogHeader>
