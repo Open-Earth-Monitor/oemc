@@ -1,6 +1,7 @@
-import Link from 'next/link';
+import Image from 'next/image';
 
-import { RiTwitterXLine, RiLinkedinFill } from 'react-icons/ri';
+import { BiLogoMedium } from 'react-icons/bi';
+import { RiTwitterXLine } from 'react-icons/ri';
 
 import { cn } from '@/lib/classnames';
 
@@ -11,7 +12,9 @@ export const Footer: React.FC = () => {
     <footer className="relative flex w-full bg-brand-400 py-10 text-secondary-500 outline-none">
       <div className="m-auto flex w-full max-w-[1200px] space-x-14">
         <div className="flex items-center space-x-2">
-          <Link
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
             href="https://twitter.com/EarthMonitorOrg"
             title="Open-Earth-Monitor project"
             aria-label="Open-Earth-Monitor project twitter"
@@ -19,29 +22,34 @@ export const Footer: React.FC = () => {
             <div className={cn(CONTROL_BUTTON_STYLES.default, 'h-[28px] w-[28px]')}>
               <RiTwitterXLine className={CONTROL_ICON_STYLES.default} />
             </div>
-          </Link>
+          </a>
 
-          <Link
-            href="/"
-            // TODO: update url
-            title="Open-Earth-Monitor project"
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://opengeohub.medium.com/"
+            title="OpenGeoHub project"
             className="align-baseline"
-            aria-label="Open-Earth-Monitor project in linkedin"
+            aria-label="OpenGeoHub in Medium"
           >
             <div className={cn(CONTROL_BUTTON_STYLES.default, 'h-[28px] w-[28px]')}>
-              <RiLinkedinFill className={CONTROL_ICON_STYLES.default} />
+              <BiLogoMedium className={CONTROL_ICON_STYLES.default} />
             </div>
-          </Link>
+          </a>
         </div>
         <div className="flex flex-1 justify-start space-x-14">
-          <div>
-            {/* logo EU */}
+          <div className="flex items-center space-x-2">
+            <Image src="/images/landing/EU.svg" width={52} height={35} alt="eu" />
 
             <span className="block max-w-[376px] flex-wrap pr-2 text-[10px] leading-3">
               This project has received funding from the European Union&apos;s Horizon Europe
               research and innovation programme under{' '}
-              <a href="" target="_blank" rel="noopener noreferrer">
-                {' '}
+              <a
+                href="https://cordis.europa.eu/project/id/101059548"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
                 grant agreement No. 101059548.
               </a>
             </span>
