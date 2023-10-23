@@ -6,12 +6,11 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 
 import { Button } from '@/components/ui/button';
 
-import { SIZES, THEME } from './constants';
+import { THEME } from './constants';
 import type { SearchProps } from './types';
 
 const Search: FC<SearchProps> = ({
   theme = 'dark',
-  size = 'base',
   value,
   setValue,
   label = 'Search',
@@ -30,7 +29,6 @@ const Search: FC<SearchProps> = ({
     <form
       className={cx('relative flex w-full border-b border-gray-400', {
         [THEME[theme]]: true,
-        [SIZES[size]]: true,
       })}
       role="search"
       action=""
@@ -58,7 +56,6 @@ const Search: FC<SearchProps> = ({
           'w-full truncate bg-transparent px-10 font-sans leading-4 placeholder-secondary-700',
           {
             [THEME[theme]]: true,
-            [SIZES[size]]: true,
           }
         )}
       />

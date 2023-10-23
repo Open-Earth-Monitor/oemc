@@ -16,32 +16,21 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 const LandingDatasets = () => {
   const [searchValue, setSearchValue] = useState<string>('');
-  const [active, setActive] = useState<('monitors' | 'geostories')[]>(['monitors']);
+  const [active, setActive] = useState<'monitors' | 'geostories' | 'all'>('monitors');
   const { data, isFetched, isError, isFetching } = useMonitorsAndGeostories(
     {
-      ...(active.length === 1 && { type: active[0] }),
+      ...(active.length === 1 && { type: active }),
       ...(searchValue !== '' && { title: searchValue }),
     },
     { enabled: active.length > 0 }
   );
 
-  const addOrRemoveFromArray = (
-    arr: ('monitors' | 'geostories')[],
-    value: 'monitors' | 'geostories'
-  ) => {
-    if (value === 'monitors' || value === 'geostories') {
-      if (arr.includes(value)) {
-        return arr.filter((item) => item !== value);
-      } else {
-        return [...arr, value];
-      }
-    }
-    return arr;
-  };
-
   const handleCategoriesFilter = useCallback(
-    (e: React.MouseEvent<Omit<HTMLButtonElement, 'id' & { id: 'monitors' | 'geostories' }>>) => {
-      setActive([e.currentTarget.id]);
+    (
+      e: React.MouseEvent<Omit<HTMLButtonElement, 'id' & { id: 'monitors' | 'geostories' | 'all' }>>
+    ) => {
+      const id = e.currentTarget.id as 'monitors' | 'geostories' | 'all';
+      setActive(id);
     },
     [setActive]
   );
@@ -65,7 +54,6 @@ const LandingDatasets = () => {
               data-testid="monitors-checkbox"
               checked={active.includes('monitors')}
               defaultChecked
-              // disabled={active.length === 1  && active[0] === 'monitors'}
               onClick={handleCategoriesFilter}
             />
             <Label htmlFor="monitors">monitors</Label>
