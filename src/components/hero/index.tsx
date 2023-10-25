@@ -27,22 +27,26 @@ const Hero = () => {
           Discover and empower with monitoring solutions.
         </h1>
       </div>
-      <div className="absolute -right-6 bottom-1/4 flex -translate-y-1/2 rotate-90 items-center space-x-2 uppercase">
+      <motion.div
+        initial="initial"
+        whileHover="hover"
+        onHoverStart={() => void startBounce()}
+        onHoverEnd={stopBounce}
+        className="absolute -right-6 bottom-1/4 flex -translate-y-1/2 rotate-90 cursor-pointer items-center space-x-2 uppercase"
+      >
         <span className="font-inter text-xs font-medium">scroll to explore</span>
-        <AnimatePresence>
-          <motion.a
-            href="#explore-section"
-            initial={{ x: 0 }}
-            whileHover={{ scale: 1.1 }}
-            animate={controls}
-            onHoverStart={() => void startBounce()}
-            onHoverEnd={stopBounce}
-            className="cursor-pointer"
-          >
-            <HiOutlineArrowCircleRight className="h-6 w-6 text-secondary-500" />
-          </motion.a>
-        </AnimatePresence>
-      </div>
+        <motion.a
+          href="#explore-section"
+          initial={{ x: 0 }}
+          whileHover={{ scale: 1.1 }}
+          animate={controls}
+          onHoverStart={() => void startBounce()}
+          onHoverEnd={stopBounce}
+          className="cursor-pointer"
+        >
+          <HiOutlineArrowCircleRight className="h-6 w-6 text-secondary-500" />
+        </motion.a>
+      </motion.div>
     </div>
   );
 };

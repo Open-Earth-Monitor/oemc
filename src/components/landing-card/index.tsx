@@ -11,7 +11,7 @@ const Card: FC<{
   const isGeostory = id.startsWith('g');
 
   return (
-    <div className="font-inter text-brand-500">
+    <div className="overflow-hidden font-inter text-brand-500">
       {isMonitor && <CardMonitor id={id} title={title} {...data} />}
       {isGeostory && <CardGeostory id={id} title={title} {...data} />}
     </div>
