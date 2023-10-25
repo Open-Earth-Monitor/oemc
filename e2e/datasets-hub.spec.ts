@@ -9,6 +9,9 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('monitors and geostories display', () => {
   test('monitors display', async ({ page }) => {
+    const monitorsCheckbox = page.getByTestId('monitors-button');
+    await monitorsCheckbox.click();
+
     const monitorsResponse = await page.waitForResponse(
       'https://api.earthmonitor.org/monitors-and-geostories?type=monitors'
     );
@@ -53,10 +56,7 @@ test.describe('monitors and geostories display', () => {
   });
 
   test('geostories display', async ({ page }) => {
-    const monitorsCheckbox = page.getByTestId('monitors-checkbox');
-    await monitorsCheckbox.click();
-
-    const geostoriesCheckbox = page.getByTestId('geostories-checkbox');
+    const geostoriesCheckbox = page.getByTestId('geostories-button');
     await geostoriesCheckbox.click();
 
     const geostoriesResponse = await page.waitForResponse(
@@ -88,7 +88,7 @@ test.describe('monitors and geostories display', () => {
   });
 
   test('geostories and monitors display', async ({ page }) => {
-    const geostoriesCheckbox = page.getByTestId('geostories-checkbox');
+    const geostoriesCheckbox = page.getByTestId('all-button');
     await geostoriesCheckbox.click();
 
     const datasetsResponse = await page.waitForResponse(
@@ -97,18 +97,18 @@ test.describe('monitors and geostories display', () => {
 
     const datasetsData = (await datasetsResponse.json()) as (Monitor | Geostory)[];
 
-    const datasetCard = page.getByTestId('datasets-card').locator('li');
+    const datasetCard = page.getByTestId('datasets-list').locator('li');
 
     const datasetCardCount = await datasetCard.count();
     expect(datasetCardCount).toBe(datasetsData.length);
   });
 
   test('geostories and monitors number of results display', async ({ page }) => {
-    const geostoriesCheckbox = page.getByTestId('geostories-checkbox');
+    const geostoriesCheckbox = page.getByTestId('geostories-button');
     await geostoriesCheckbox.click();
 
     const datasetsResponse = await page.waitForResponse(
-      'https://api.earthmonitor.org/monitors-and-geostories'
+      'https://api.earthmonitor.org/monitors-and-geostories?type=geostories'
     );
 
     const datasetsData = (await datasetsResponse.json()) as (Monitor | Geostory)[];
@@ -116,13 +116,5 @@ test.describe('monitors and geostories display', () => {
     const resultNumber = page.getByTestId('result-number');
     const result = datasetsData.length.toString();
     await expect(resultNumber).toHaveText(result);
-  });
-
-  test('0 results for geostories and monitors', async ({ page }) => {
-    const geostoriesCheckbox = page.getByTestId('monitors-checkbox');
-    await geostoriesCheckbox.click();
-
-    const datasetsResult = page.getByTestId('datasets-result');
-    await expect(datasetsResult).toHaveText('0 results');
   });
 });
