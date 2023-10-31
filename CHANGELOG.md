@@ -25,6 +25,7 @@ Unreleased
 - Map view added to URL [OEMC-75](https://vizzuality.atlassian.net/browse/OEMC-75?atlOrigin=eyJpIjoiM2IyNDYxOTJkYzQ0NGY4NTgzOTgyODdkOThiYTJhMjAiLCJwIjoiaiJ9)
 - Display of monitors and geostories in landing page [OEMC-25](https://vizzuality.atlassian.net/browse/OEMC-25?atlOrigin=eyJpIjoiNDZiOTM0YjkzN2NlNDJhNmE2OWJiODYxZTlmYzcwNjkiLCJwIjoiaiJ9)
 - Search monitors and geostories by title [OEMC-94](https://vizzuality.atlassian.net/browse/OEMC-94?atlOrigin=eyJpIjoiMGVlYmJhNmM5ODU4NDRiNWEzNTIyNWRjODdjNDg4MWUiLCJwIjoiaiJ9)
+- 404 - error management [OEMC-81](https://vizzuality.atlassian.net/browse/OEMC-81?atlOrigin=eyJpIjoiNWZkNTYwMjVkZGVjNDAwZGE2YWI3ZDgwMzgzOTRjMjEiLCJwIjoiaiJ9)
 
 ### Changed
 
