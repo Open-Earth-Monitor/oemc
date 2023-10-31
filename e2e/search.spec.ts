@@ -4,7 +4,7 @@ import type { Geostory } from '@/types/geostories';
 import type { Monitor } from '@/types/monitors';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/', { waitUntil: 'load' });
+  await page.goto('/');
 });
 
 test.describe('search of monitors and geostories', () => {
@@ -13,15 +13,14 @@ test.describe('search of monitors and geostories', () => {
       'https://api.earthmonitor.org/monitors-and-geostories'
     );
     const datasetsData = (await response.json()) as (Monitor | Geostory)[];
-    const datasetsTitles = datasetsData.map((data) => data.title);
     const searchInput = page.getByTestId('search-input');
 
-    await searchInput.fill(datasetsTitles[0]);
-
-    const inputValue = await searchInput.inputValue();
-    const filteredResponse = await page.waitForResponse(
-      `https://api.earthmonitor.org/monitors-and-geostories?title=${inputValue}`
+    const searchPromise = page.waitForResponse(
+      'https://api.earthmonitor.org/monitors-and-geostories?title=*'
     );
+    await searchInput.fill(datasetsData[0].title);
+    const filteredResponse = await searchPromise;
+    const inputValue = await searchInput.inputValue();
     const filteredJson = (await filteredResponse.json()) as (Monitor | Geostory)[];
 
     // compare filtered response with manually filtered response
@@ -29,12 +28,14 @@ test.describe('search of monitors and geostories', () => {
     expect(filteredJson).toEqual(manuallyFilteredResponse);
 
     // check that the number of results is displayed accurately
-    const displayResultsSentence = page.getByTestId('result-number');
-    await expect(displayResultsSentence).toBeVisible();
+    // const displayResultsSentence = page.getByTestId('result-number');
+    await expect(page.getByTestId('datasets-result')).toBeVisible();
     if (filteredJson.length === 1) {
-      await expect(displayResultsSentence).toHaveText('1 results');
+      await expect(page.getByTestId('datasets-result')).toHaveText('1 result');
     } else if (filteredJson.length > 1) {
-      await expect(displayResultsSentence).toHaveText(`${filteredJson.length} results`);
+      await expect(page.getByTestId('datasets-result')).toHaveText(
+        `${filteredJson.length} results`
+      );
     }
 
     // check that the no results disclaimer is displayed
