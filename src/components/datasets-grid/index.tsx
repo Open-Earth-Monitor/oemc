@@ -23,6 +23,9 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 import { THEMES } from './constants';
 import type { Theme } from './constants';
+
+import { TAG_STYLE } from '@/styles/constants';
+
 const LandingDatasets = () => {
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const [searchValue, setSearchValue] = useState<string>('');
@@ -60,7 +63,7 @@ const LandingDatasets = () => {
   return (
     <div className="w-full">
       <div className="m-auto max-w-[1200px]  py-10">
-        <div className="flex h-14">
+        <div className="mb-10 flex h-14">
           <Search
             placeholder="Search by name, type of dataset..."
             value={searchValue}
@@ -72,7 +75,7 @@ const LandingDatasets = () => {
               className="flex h-full min-w-[258px] items-center border-[0.5px] border-l-0 border-secondary-900 font-inter"
               onClick={() => setDropdownVisibility(!dropdownVisibility)}
             >
-              <p>
+              <p className="w-full">
                 {THEMES.length === activeThemes.length && 'All categories selected'}
                 {!THEMES.length && 'No categories selected'}
                 {activeThemes.length === 1 && activeThemes[0]}
@@ -113,39 +116,45 @@ const LandingDatasets = () => {
           </DropdownMenu>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center">
           <RadioGroup
             defaultValue="all"
-            className="flex items-center space-x-4 py-3 font-inter text-xs font-medium uppercase text-secondary-500"
+            className="flex items-center space-x-2.5 py-3 font-inter font-medium"
             onValueChange={handleCategoriesFilter}
           >
-            <div className="flex items-center space-x-2" data-testid="monitors-button">
+            <div className="flex items-center space-x-2.5" data-testid="monitors-button">
               <RadioGroupItem value="monitors" id="monitors" />
-              <Label htmlFor="monitors">monitors</Label>
-              <Popover>
+              <Label htmlFor="monitors" className={TAG_STYLE}>
+                monitors
+              </Label>
+              {/* <Popover>
                 <PopoverTrigger data-testid="dataset-info-button">
                   <FiInfo className="h-6 w-6 text-secondary-500" title="Show info" />
                 </PopoverTrigger>
                 <PopoverContent align="center" sideOffset={-80} data-testid="dataset-info-content">
-                  <div className="flex flex-col">{/* info */}</div>
+                  <div className="flex flex-col">{info}</div>
                 </PopoverContent>
-              </Popover>
+              </Popover> */}
             </div>
             <div className="flex items-center space-x-2" data-testid="geostories-button">
               <RadioGroupItem value="geostories" id="geostories" />
-              <Label htmlFor="geostories">Geostories</Label>
-              <Popover>
+              <Label htmlFor="geostories" className={TAG_STYLE}>
+                Geostories
+              </Label>
+              {/* <Popover>
                 <PopoverTrigger data-testid="dataset-info-button">
                   <FiInfo className="h-6 w-6 text-secondary-500" title="Show info" />
                 </PopoverTrigger>
                 <PopoverContent align="center" sideOffset={-80} data-testid="dataset-info-content">
-                  <div className="flex flex-col">{/* info */}</div>
+                  <div className="flex flex-col">{info}</div>
                 </PopoverContent>
-              </Popover>
+              </Popover> */}
             </div>
             <div className="flex items-center space-x-2" data-testid="all-button">
               <RadioGroupItem value="all" id="all" />
-              <Label htmlFor="all">All</Label>
+              <Label htmlFor="all" className={TAG_STYLE}>
+                All
+              </Label>
             </div>
           </RadioGroup>
         </div>
@@ -155,32 +164,34 @@ const LandingDatasets = () => {
             {data?.length === 1 ? 'result' : 'results'}
           </div>
         )}
-        {isFetching && <Loading />}
-        {isFetched && !isError && !!data.length && (
-          <ul
-            id="explore-section"
-            className="grid max-w-7xl grid-cols-3 gap-6"
-            data-testid="datasets-list"
-          >
-            {data.map(({ id, ...d }) => (
-              <li key={id} className="mb-6" data-testid="datasets-card">
-                <Card id={id} {...d} />
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      {isFetched && !isError && !data.length && (
-        <div className="flex w-full flex-col justify-center space-y-7 bg-gradient-to-b from-[#08121c] to-[#0a182a] py-52 text-center">
-          <div data-testid="no-results-found" className="m-auto w-full max-w-xl">
-            <p className="text-5xl font-bold">No results found.</p>
-            <p className="inter font-inter text-secondary-700">
-              Sorry, we have searched in our entire database but we couldn’t find any results
-              fitting your search criteria.
-            </p>
-          </div>
+        <div className="min-h-[380px]">
+          {isFetching && <Loading />}
+          {isFetched && !isError && (
+            <ul
+              id="explore-section"
+              className="grid max-w-7xl grid-cols-3 gap-6"
+              data-testid="datasets-list"
+            >
+              {data.map(({ id, ...d }) => (
+                <li key={id} data-testid="datasets-card">
+                  <Card id={id} {...d} />
+                </li>
+              ))}
+            </ul>
+          )}
+          {isFetched && !isError && !data.length && (
+            <div className="flex w-full flex-col justify-center space-y-7 bg-gradient-to-b from-[#08121c] to-[#0a182a] py-56 text-center">
+              <div className="m-auto w-full max-w-xl">
+                <p className="text-5xl font-bold">No results found.</p>
+                <p className="inter font-inter text-secondary-700">
+                  Sorry, we have searched in our entire database but we couldn’t find any results
+                  fitting your search criteria.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

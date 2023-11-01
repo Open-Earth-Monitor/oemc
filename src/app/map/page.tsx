@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const MapLayout: NextPage = () => (
   <>
     <div className="left-50 absolute left-1/2 top-0 z-10 w-full max-w-3xl -translate-x-1/2 bg-brand-400 p-12">
-      <section className="space-y-6 text-secondary-500">
+      <section className="space-y-6">
         <header className="divide-x-secondary-500 divide-x">
           <h1 className="inline-block pr-6 font-satoshi text-4xl font-bold">Monitors directory</h1>
           <span className="inline-block pl-6">Select one to discover</span>

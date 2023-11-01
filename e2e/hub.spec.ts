@@ -13,3 +13,9 @@ test('gets level 1 Heading', async ({ page }) => {
     'Discover and empower with monitoring solutions.'
   );
 });
+
+test.describe('Interface and external links in landing', () => {
+  test('about link', async ({ page }) => {
+    await expect(page.getByRole('link')).toHaveAttribute('href', 'https://earthmonitor.org/');
+  });
+});

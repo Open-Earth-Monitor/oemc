@@ -76,7 +76,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background antialiased text-base;
+    @apply bg-background antialiased text-base text-secondary-500;
   }
 }
 

@@ -72,11 +72,7 @@ export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTy
         onClick={handlePlay}
         className="flex rounded-full border border-brand-50 border-opacity-50 p-4"
       >
-        {isPlaying ? (
-          <HiPause className="h-5 w-5 text-secondary-500" />
-        ) : (
-          <HiPlay className="h-5 w-5 text-secondary-500" />
-        )}
+        {isPlaying ? <HiPause className="h-5 w-5" /> : <HiPlay className="h-5 w-5" />}
       </button>
       <ParentSize className="flex h-full w-full">
         {({ width, height }) => (
