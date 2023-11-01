@@ -121,12 +121,12 @@ const TimeSeries: FC<{
         >
           {isPlaying && isActive ? (
             <HiPause
-              className={cn('h-4 w-4 text-secondary-500', {
+              className={cn('h-4 w-4', {
                 'text-brand-50': isPlaying,
               })}
             />
           ) : (
-            <HiPlay className="h-4 w-4 text-secondary-500" />
+            <HiPlay className="h-4 w-4" />
           )}
         </button>
       </div>

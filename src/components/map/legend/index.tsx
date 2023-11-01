@@ -17,7 +17,7 @@ export const Legend = () => {
 
   return (
     <div
-      className="absolute bottom-3 right-3 z-10 space-y-1 font-inter text-xs text-secondary-500"
+      className="absolute bottom-3 right-3 z-10 space-y-1 font-inter text-xs"
       data-testid="map-legend"
     >
       {layerId && (
@@ -36,7 +36,7 @@ export const Legend = () => {
       )}
       {data && layerId && (
         <div
-          className="relative flex min-h-[34px] items-center justify-between space-x-4 rounded-sm border border-gray-600 bg-brand-500 px-4 py-3 text-secondary-500"
+          className="relative flex min-h-[34px] items-center justify-between space-x-4 rounded-sm border border-gray-600 bg-brand-500 px-4 py-3"
           data-testid="map-legend-item"
         >
           <div data-testid="map-legend-item-title" className="text-xs font-bold">

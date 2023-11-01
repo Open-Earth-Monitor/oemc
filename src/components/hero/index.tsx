@@ -23,7 +23,8 @@ const Hero = () => {
       })}
     >
       <div className="m-auto max-w-[1200px]">
-        <h1 className="whitespace-wrap max-w-[800px] py-36 font-satoshi text-8xl font-black">
+        <h1 className="whitespace-wrap max-w-[800px] pb-20 pt-36 font-satoshi text-8xl font-black">
+          {' '}
           Discover and empower with monitoring solutions.
         </h1>
       </div>
@@ -44,7 +45,7 @@ const Hero = () => {
           onHoverEnd={stopBounce}
           className="cursor-pointer"
         >
-          <HiOutlineArrowCircleRight className="h-6 w-6 text-secondary-500" />
+          <HiOutlineArrowCircleRight className="h-6 w-6" />
         </motion.a>
       </motion.div>
     </div>

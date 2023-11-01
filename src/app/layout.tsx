@@ -50,8 +50,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <body className="mx-auto h-full min-h-screen bg-brand-500 font-inter">
         <Providers>
-          <div className="flex h-full flex-col">
-            <div className="relative z-10 h-[70px] w-full border-b border-b-secondary-900 bg-brand-500/80">
+          <div className="flex flex-col">
+            <div className="h-[70px] w-full items-center border-b border-b-secondary-900 bg-brand-500/80">
               <div className="m-auto flex h-full max-w-[1200px] items-center justify-between">
                 <div className="mx-2">
                   <Link href="/">

@@ -57,14 +57,14 @@ export const BookmarkControl: FC = () => {
       </SheetTrigger>
       <SheetContent className="relative flex h-full flex-col space-y-6 bg-brand-500 bg-opacity-[0.9]">
         <SheetHeader>
-          <SheetTitle className="text-2xl font-bold text-secondary-500">Bookmarks</SheetTitle>
-          <div className="scroll-y-auto text-secondary-500">
+          <SheetTitle className="text-2xl font-bold">Bookmarks</SheetTitle>
+          <div className="scroll-y-auto">
             {!bookmarks.length && !isInputVisible && <div>No bookmarks yet.</div>}
 
             {isInputVisible && (
               <div className="space-y-6">
                 <div className="flex items-center">
-                  <AiFillStar className="h-5 w-5 text-secondary-500" />
+                  <AiFillStar className="h-5 w-5" />
                   <input
                     type="text"
                     defaultValue=""
@@ -114,11 +114,11 @@ export const BookmarkControl: FC = () => {
                   className="border-t-0.5 flex items-center justify-between border-b border-t-[0.5px] border-dashed border-brand-50 py-2.5"
                 >
                   <div className="flex items-center space-x-2">
-                    <AiFillStar className="h-5 w-5 text-secondary-500" />
+                    <AiFillStar className="h-5 w-5" />
                     <Link href={value}>{name}</Link>
                   </div>
                   <button type="button" onClick={() => handleRemoveBookmark(name)}>
-                    <Cross2Icon className="h-3 w-3 text-secondary-500" />
+                    <Cross2Icon className="h-3 w-3" />
                   </button>
                 </li>
               ))}
