@@ -11,12 +11,12 @@ export const metadata: Metadata = {
 };
 
 const Hub: NextPage = () => (
-  <div className="text-secondary-500">
+  <>
     <Hero />
     <LandingDatasets />
     <Prefooter />
     <Footer />
-  </div>
+  </>
 );
 
 export default Hub;

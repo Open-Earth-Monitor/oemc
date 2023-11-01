@@ -10,7 +10,7 @@ import type { LoadingProps } from './types';
 
 const Loading: FC<LoadingProps> = ({
   className = 'relative flex justify-center items-center w-full h-[200px]',
-  iconClassName = 'w-5 h-5 animate-spin text-secondary-500',
+  iconClassName = 'w-5 h-5 animate-spin',
 }: LoadingProps) => {
   return (
     <AnimatePresence>

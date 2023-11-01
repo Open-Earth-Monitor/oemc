@@ -31,14 +31,14 @@ export const LayerVisibility = () => {
       {isLayerVisible ? (
         <IoMdEye
           className={cn({
-            'h-4 w-4 text-secondary-500': true,
+            'h-4 w-4': true,
             'text-gray-600': !isLayerVisible,
           })}
         />
       ) : (
         <IoMdEyeOff
           className={cn({
-            'h-4 w-4 text-secondary-500': true,
+            'h-4 w-4': true,
             'text-gray-600': !isLayerVisible,
           })}
         />

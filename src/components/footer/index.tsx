@@ -10,9 +10,9 @@ import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/con
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="relative flex w-full bg-brand-400 py-10 text-secondary-500 outline-none">
-      <div className="m-auto flex w-full max-w-[1200px] space-x-14">
-        <div className="flex items-center space-x-2">
+    <footer className="relative flex w-full bg-brand-400 py-10 outline-none">
+      <div className="m-auto flex w-full max-w-[1200px] items-center space-x-14">
+        <div className="flex items-center">
           <a
             target="_blank"
             rel="noopener noreferrer"
@@ -25,7 +25,7 @@ export const Footer: React.FC = () => {
             </div>
           </a>
 
-          <a
+          {/* <a
             target="_blank"
             rel="noopener noreferrer"
             href="https://opengeohub.medium.com/"
@@ -36,7 +36,7 @@ export const Footer: React.FC = () => {
             <div className={cn(CONTROL_BUTTON_STYLES.default, 'h-[28px] w-[28px]')}>
               <BiLogoMedium className={CONTROL_ICON_STYLES.default} />
             </div>
-          </a>
+          </a> */}
         </div>
         <div className="flex flex-1 justify-start space-x-14">
           <div className="flex items-center space-x-2">
@@ -55,12 +55,12 @@ export const Footer: React.FC = () => {
               </a>
             </span>
           </div>
-          <div className="flex  space-x-4 text-xs font-medium">
+          {/* <div className="flex  space-x-4 text-xs font-medium">
             <div>Attributions</div>
             <div>Disclaimer</div>
             <div>Terms of Use</div>
             <div>Privacy Policy</div>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>

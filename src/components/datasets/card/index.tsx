@@ -90,7 +90,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
         <div className="mt-1.5 flex items-baseline space-x-2">
           <Popover>
             <PopoverTrigger data-testid="dataset-info-button">
-              <FiInfo className="h-6 w-6 text-secondary-500" title="Show info" />
+              <FiInfo className="h-6 w-6" title="Show info" />
             </PopoverTrigger>
             <PopoverContent align="center" sideOffset={5} data-testid="dataset-info-content">
               <div className="flex flex-col">
@@ -108,7 +108,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
               data-testid="dataset-download-button"
               title="Go to download dataset site"
             >
-              <HiOutlineExternalLink className="h-6 w-6 text-secondary-500" />
+              <HiOutlineExternalLink className="h-6 w-6" />
             </a>
           )}
         </div>
@@ -158,7 +158,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
         data-testid="dataset-layer-toggle-button"
         type="button"
         className={cn(
-          'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-secondary-500 px-6 py-2 text-xs font-bold text-secondary-500 transition-colors hover:bg-secondary-500/20',
+          'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-secondary-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20',
           {
             'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
           }

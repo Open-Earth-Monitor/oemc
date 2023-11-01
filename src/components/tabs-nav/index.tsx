@@ -22,7 +22,7 @@ const TabsNav: FC = () => {
           key={tab}
           href={`/map/${monitorId}/${tab}`}
           className={cn({
-            'flex basis-full items-center justify-center whitespace-nowrap border-t-4 border-t-transparent px-7.5 py-5 text-xs font-medium uppercase tracking-wide text-secondary-500 ring-offset-background transition-all first-letter:uppercase hover:bg-brand-50 hover:bg-secondary-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50':
+            'flex basis-full items-center justify-center whitespace-nowrap border-t-4 border-t-transparent px-7.5 py-5 text-xs font-medium uppercase tracking-wide ring-offset-background transition-all first-letter:uppercase hover:bg-brand-50 hover:bg-secondary-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50':
               true,
             'border-t-secondary-500': tab === tabId,
           })}
