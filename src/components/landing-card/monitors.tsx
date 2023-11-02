@@ -19,7 +19,6 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-
 import { TAG_STYLE } from '@/styles/constants';
 
 const Card: FC<Partial<Monitor> & { color?: string }> = ({
