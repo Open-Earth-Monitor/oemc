@@ -50,7 +50,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <body className="mx-auto h-full min-h-screen bg-brand-500 font-inter">
         <Providers>
-          <div className="flex flex-col">
+          <div className="flex h-full flex-col">
             <div className="h-[70px] w-full items-center border-b border-b-secondary-900 bg-brand-500/80">
               <div className="m-auto flex h-full max-w-[1200px] items-center justify-between">
                 <div className="mx-2">
@@ -67,7 +67,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <MainMenu />
               </div>
             </div>
-            <main className="relative flex-1">{children}</main>
+            <main className="relative h-[calc(100%-4.375rem)] flex-1">{children}</main>
           </div>
         </Providers>
       </body>

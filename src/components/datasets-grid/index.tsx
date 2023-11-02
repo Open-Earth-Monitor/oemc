@@ -20,11 +20,10 @@ import {
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { TAG_STYLE } from '@/styles/constants';
 
 import { THEMES } from './constants';
 import type { Theme } from './constants';
-
-import { TAG_STYLE } from '@/styles/constants';
 
 const LandingDatasets = () => {
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
