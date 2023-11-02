@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 
-import { BiLogoMedium } from 'react-icons/bi';
+// import { BiLogoMedium } from 'react-icons/bi';
 import { RiTwitterXLine } from 'react-icons/ri';
 
 import { cn } from '@/lib/classnames';
