@@ -15,7 +15,7 @@ const Prefooter = () => {
                 Interested in more project details?
               </p>
               <div className="flex items-end space-x-7 text-2xl font-bold">
-                <a href="https://earthmonitor.org/" rel="noopener noreferrer">
+                <a data-testid="linkOEM" href="https://earthmonitor.org/" rel="noopener noreferrer">
                   Know more about the project
                 </a>
                 <HiOutlineArrowUp className="h-6 w-6 rotate-45" />
