@@ -25,7 +25,10 @@ const Checkbox = forwardRef<
 
 const CheckboxIndicator = forwardRef<
   ElementRef<typeof CheckboxPrimitive.Indicator>,
-  ComponentPropsWithoutRef<typeof CheckboxPrimitive.Indicator>
+  ComponentPropsWithoutRef<typeof CheckboxPrimitive.Indicator> & {
+    children: React.ReactNode;
+    className?: string;
+  }
 >(({ className, children, ...props }, ref) => (
   <CheckboxPrimitive.Indicator
     ref={ref}

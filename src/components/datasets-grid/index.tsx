@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 
 import { BiCheck } from 'react-icons/bi';
 // import { FiInfo } from 'react-icons/fi';
+// import { HiChevronDown } from 'react-icons/hi2';
 
 import { useMonitorsAndGeostories } from '@/hooks/datasets';
 
@@ -22,18 +23,19 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { TAG_STYLE } from '@/styles/constants';
 
-import { THEMES } from './constants';
-import type { Theme } from './constants';
+import { THEMES, SORTING } from './constants';
+import type { Theme, SortingCriteria, Dataset } from './types';
 
 const LandingDatasets = () => {
-  const [dropdownVisibility, setDropdownVisibility] = useState(false);
+  const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
   const [searchValue, setSearchValue] = useState<string>('');
-  const [active, setActive] = useState<'monitors' | 'geostories' | 'all'>('all');
+  const [active, setActive] = useState<Dataset>('all');
   const [activeThemes, setActiveThemes] = useState<Theme[]>(THEMES);
   const { data, isFetched, isError, isFetching } = useMonitorsAndGeostories(
     {
       ...(active !== 'all' && { type: active }),
       ...(searchValue !== '' && { title: searchValue }),
+      sort_by: sortingCriteria,
     },
     {
       enabled: activeThemes.length > 0,
@@ -41,7 +43,7 @@ const LandingDatasets = () => {
   );
 
   const handleCategoriesFilter = useCallback(
-    (id: 'monitors' | 'geostories' | 'all') => {
+    (id: Dataset) => {
       setActive(id);
     },
     [setActive]
@@ -49,6 +51,8 @@ const LandingDatasets = () => {
 
   const handleThemes = useCallback(
     (e: React.MouseEvent<Omit<HTMLButtonElement, 'id' & { id: Theme }>>) => {
+      e.stopPropagation(); // avoid to close the dropdown interacting with the checkbox
+
       const id = e.currentTarget.id as Theme;
       const themesUpdate = activeThemes.includes(id)
         ? activeThemes.filter((e) => e !== id)
@@ -57,6 +61,11 @@ const LandingDatasets = () => {
       setActiveThemes(themesUpdate);
     },
     [setActiveThemes, activeThemes]
+  );
+
+  const handleSortingCriteria = useCallback(
+    (value: SortingCriteria) => setSortingCriteria(value),
+    [setSortingCriteria]
   );
 
   return (
@@ -69,25 +78,20 @@ const LandingDatasets = () => {
             setValue={setSearchValue}
             className="flex h-full flex-1 border-[0.5px] border-secondary-900"
           />
-          <DropdownMenu open={dropdownVisibility}>
-            <DropdownMenuTrigger
-              className="flex h-full min-w-[258px] items-center border-[0.5px] border-l-0 border-secondary-900 font-inter"
-              onClick={() => setDropdownVisibility(!dropdownVisibility)}
-            >
-              <p className="w-full">
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger className="flex h-full min-w-[258px] items-center border-[0.5px] border-l-0 font-inter">
+              <div className="w-full">
                 {THEMES.length === activeThemes.length && 'All categories selected'}
-                {!THEMES.length && 'No categories selected'}
+                {activeThemes.length === 0 && 'No categories selected'}
                 {activeThemes.length === 1 && activeThemes[0]}
                 {activeThemes.length > 1 &&
-                  THEMES.length !== activeThemes.length &&
+                  THEMES.length > activeThemes.length &&
                   `${activeThemes[0]} +${activeThemes.length - 1}`}
-              </p>
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               className="align-left flex w-full flex-1 flex-col bg-brand-500 font-inter"
-              sideOffset={0}
-              onInteractOutside={() => setDropdownVisibility(false)}
-              onFocusOutside={() => setDropdownVisibility(false)}
+              sideOffset={-1}
             >
               {THEMES.map((theme) => (
                 <DropdownMenuItem
@@ -106,7 +110,11 @@ const LandingDatasets = () => {
                       <BiCheck className="h-4 w-4 fill-current" />
                     </CheckboxIndicator>
                   </Checkbox>
-                  <Label htmlFor={theme} className="flex w-full flex-1">
+                  <Label
+                    htmlFor={theme}
+                    className="flex w-full flex-1"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {theme}
                   </Label>
                 </DropdownMenuItem>
@@ -115,18 +123,19 @@ const LandingDatasets = () => {
           </DropdownMenu>
         </div>
 
-        <div className="flex items-center">
-          <RadioGroup
-            defaultValue="all"
-            className="flex items-center space-x-2.5 py-3 font-inter font-medium"
-            onValueChange={handleCategoriesFilter}
-          >
-            <div className="flex items-center space-x-2.5" data-testid="monitors-button">
-              <RadioGroupItem value="monitors" id="monitors" />
-              <Label htmlFor="monitors" className={TAG_STYLE}>
-                monitors
-              </Label>
-              {/* <Popover>
+        <div className="flex items-center justify-between">
+          <div>
+            <RadioGroup
+              defaultValue="all"
+              className="flex items-center space-x-10 py-3 font-inter font-medium"
+              onValueChange={handleCategoriesFilter}
+            >
+              <div className="flex items-center space-x-2.5" data-testid="monitors-button-checkbox">
+                <RadioGroupItem value="monitors" id="monitors" />
+                <Label htmlFor="monitors" className={TAG_STYLE}>
+                  monitors
+                </Label>
+                {/* <Popover>
                 <PopoverTrigger data-testid="dataset-info-button">
                   <FiInfo className="h-6 w-6 text-secondary-500" title="Show info" />
                 </PopoverTrigger>
@@ -134,13 +143,16 @@ const LandingDatasets = () => {
                   <div className="flex flex-col">{info}</div>
                 </PopoverContent>
               </Popover> */}
-            </div>
-            <div className="flex items-center space-x-2" data-testid="geostories-button">
-              <RadioGroupItem value="geostories" id="geostories" />
-              <Label htmlFor="geostories" className={TAG_STYLE}>
-                Geostories
-              </Label>
-              {/* <Popover>
+              </div>
+              <div
+                className="flex items-center space-x-2.5"
+                data-testid="geostories-button-checkbox"
+              >
+                <RadioGroupItem value="geostories" id="geostories" />
+                <Label htmlFor="geostories" className={TAG_STYLE}>
+                  Geostories
+                </Label>
+                {/* <Popover>
                 <PopoverTrigger data-testid="dataset-info-button">
                   <FiInfo className="h-6 w-6 text-secondary-500" title="Show info" />
                 </PopoverTrigger>
@@ -148,14 +160,48 @@ const LandingDatasets = () => {
                   <div className="flex flex-col">{info}</div>
                 </PopoverContent>
               </Popover> */}
-            </div>
-            <div className="flex items-center space-x-2" data-testid="all-button">
-              <RadioGroupItem value="all" id="all" />
-              <Label htmlFor="all" className={TAG_STYLE}>
-                All
-              </Label>
-            </div>
-          </RadioGroup>
+              </div>
+              <div className="flex items-center space-x-2.5" data-testid="all-button">
+                <RadioGroupItem value="all" id="all" />
+                <Label htmlFor="all" className={TAG_STYLE}>
+                  All
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+          <div>
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger className="flex h-full items-center border-[0.5px] border-secondary-900 px-3 py-2.5 font-inter">
+                <div>
+                  <span className="w-full">Sort by:</span>{' '}
+                  <span className="font-bold capitalize">{sortingCriteria}</span>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="p-4" sideOffset={-1} alignOffset={0} align="start">
+                <RadioGroup
+                  defaultValue="title"
+                  value={sortingCriteria}
+                  className="flex w-full flex-1 font-inter font-medium"
+                  onValueChange={handleSortingCriteria}
+                >
+                  <div className="align-left flex flex-col justify-start space-y-2">
+                    {SORTING.map((sort) => (
+                      <div
+                        key={sort}
+                        className="flex items-center space-x-3"
+                        data-testid={`${sort}-button`}
+                      >
+                        <RadioGroupItem value={sort} id={sort} />
+                        <Label htmlFor={sort} className="capitalize">
+                          {sort}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </RadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
         {!!data?.length && (
           <div data-testid="datasets-result" className="py-5 font-inter text-secondary-700">
