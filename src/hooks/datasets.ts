@@ -9,6 +9,7 @@ import API from 'services/api';
 type UseParams = {
   type?: 'monitors' | 'geostories' | 'all';
   monitor_id?: string;
+  sort_by?: 'title' | 'date';
 };
 
 const COLORS = (<{ [key: string]: string }>{

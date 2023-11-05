@@ -11,7 +11,6 @@ const Card: FC<{
 }> = ({ title, id, ...data }) => {
   const isMonitor = id.startsWith('m');
   const isGeostory = id.startsWith('g');
-
   return (
     <motion.div
       className="overflow-hidden font-inter"
