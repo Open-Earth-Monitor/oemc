@@ -2120,12 +2120,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash-es@npm:4.17.9":
-  version: 4.17.9
-  resolution: "@types/lodash-es@npm:4.17.9"
+"@types/lodash-es@npm:4.17.10":
+  version: 4.17.10
+  resolution: "@types/lodash-es@npm:4.17.10"
   dependencies:
     "@types/lodash": "*"
-  checksum: a2c7ab8da13892f89ab86b61dd9a0125c767b9db7b9bdaac7fd8508c9fa884bbb19a9760dbdc1e7e698e3322b7a8ba03daa80832371da32a8bd42da0920be838
+  checksum: 129e9dde830815a72f9bd17c3a7b7ffb10a9cf76d65c7bb4f14df13b38411ed3ebe9ebbc2f9059c4e61198e784d499e48d0a281e27a4defbbba748dd8a4cfd9d
   languageName: node
   linkType: hard
 
@@ -6147,6 +6147,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mitt@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "mitt@npm:3.0.1"
+  checksum: b55a489ac9c2949ab166b7f060601d3b6d893a852515ae9eca4e11df01c013876df777ea109317622b5c1c60e8aae252558e33c8c94e14124db38f64a39614b1
+  languageName: node
+  linkType: hard
+
 "mkdirp@npm:^1.0.3":
   version: 1.0.4
   resolution: "mkdirp@npm:1.0.4"
@@ -6231,6 +6238,17 @@ __metadata:
   version: 2.6.2
   resolution: "neo-async@npm:2.6.2"
   checksum: deac9f8d00eda7b2e5cd1b2549e26e10a0faa70adaa6fdadca701cc55f49ee9018e427f424bac0c790b7c7e2d3068db97f3093f1093975f2acb8f8818b936ed9
+  languageName: node
+  linkType: hard
+
+"next-usequerystate@npm:1.9.2":
+  version: 1.9.2
+  resolution: "next-usequerystate@npm:1.9.2"
+  dependencies:
+    mitt: ^3.0.1
+  peerDependencies:
+    next: ^13.4 || ^14
+  checksum: ffc858c49d9c814526c446330e0f2db085175fcf4ead032ce2401757a96ea2e206bda2b7252711af83548c4d6c7400b3a966a2ffc856cd8abb42d5eb5789f893
   languageName: node
   linkType: hard
 
@@ -6564,7 +6582,7 @@ __metadata:
     "@tailwindcss/typography": 0.5.9
     "@tanstack/react-query": ^4.33.0
     "@types/google.analytics": 0.0.42
-    "@types/lodash-es": 4.17.9
+    "@types/lodash-es": 4.17.10
     "@types/node": 20.5.7
     "@types/ol-ext": "npm:@siedlerchr/types-ol-ext@3.2.4"
     "@types/react": 18.2.31
@@ -6591,6 +6609,7 @@ __metadata:
     lodash-es: ^4.17.21
     lucide-react: ^0.257.0
     next: 13.5.4
+    next-usequerystate: 1.9.2
     ol: 8.1.0
     ol-ext: ^4.0.11
     postcss: 8.4.21

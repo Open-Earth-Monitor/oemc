@@ -10,13 +10,13 @@ test.beforeEach(async ({ page }) => {
 test.describe('search of monitors and geostories', () => {
   test('search by title', async ({ page }) => {
     const response = await page.waitForResponse(
-      'https://api.earthmonitor.org/monitors-and-geostories'
+      'https://api.earthmonitor.org/monitors-and-geostories?sort_by=title'
     );
     const datasetsData = (await response.json()) as (Monitor | Geostory)[];
     const searchInput = page.getByTestId('search-input');
 
     const searchPromise = page.waitForResponse(
-      'https://api.earthmonitor.org/monitors-and-geostories?title=*'
+      'https://api.earthmonitor.org/monitors-and-geostories?title=*&sort_by=title'
     );
     await searchInput.fill(datasetsData[0].title);
     const filteredResponse = await searchPromise;
