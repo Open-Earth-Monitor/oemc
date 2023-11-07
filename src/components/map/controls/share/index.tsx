@@ -1,46 +1,41 @@
-import { FC, useMemo, useState } from 'react';
+'use client';
+
+import { FC, useCallback, useState } from 'react';
 
 import { LinkedinShareButton, TwitterShareButton } from 'react-share';
-
-import { usePathname, useSearchParams } from 'next/navigation';
 
 import { HiOutlineShare } from 'react-icons/hi';
 import { PiLinkSimpleBold } from 'react-icons/pi';
 import { RiTwitterXLine, RiLinkedinFill } from 'react-icons/ri';
+import { useCopyToClipboard } from 'usehooks-ts';
 
 import { cn } from '@/lib/classnames';
 
 import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-const timeResetCopyState = 1000;
+const TIMEOUT_RESET_COPY_STATE = 3000;
 
-export const ShareControl: FC = () => {
-  const pathname = usePathname();
-  const params = useSearchParams();
-  const urlCopy = useMemo(
-    () =>
-      !!params.get('layers')
-        ? `${process.env.NEXT_PUBLIC_BASE_URL}${pathname}?layers=${params.get('layers')}`
-        : `${process.env.NEXT_PUBLIC_BASE_URL}${pathname}`,
-    [params, pathname]
-  );
-  const [urlCopyState, setURLCopyState] = useState(false);
-  const handleCopy = async () => {
+const ShareControl: FC = () => {
+  const [hasCopiedText, setHasCopiedText] = useState(false);
+  const [, copyToClipboard] = useCopyToClipboard();
+  const urlCopy = window.location.href;
+
+  const handleCopy = useCallback(async () => {
     try {
       // Copy text to the clipboard
-      await window.navigator.clipboard.writeText(urlCopy.toString());
-      // Set the "copied" state to true
-      setURLCopyState(true);
-      // Reset the "copied" state after 1 second
+      await copyToClipboard(urlCopy);
+      setHasCopiedText(true);
       setTimeout(() => {
-        setURLCopyState(false);
-      }, timeResetCopyState);
+        setHasCopiedText(false);
+      }, TIMEOUT_RESET_COPY_STATE);
     } catch (error) {
+      setHasCopiedText(false);
       // Handle clipboard copy error
       console.error('Error copying to clipboard:', error);
     }
-  };
+  }, [copyToClipboard, urlCopy]);
+
   return (
     <Popover>
       <PopoverTrigger className={CONTROL_BUTTON_STYLES.default} data-testid="share-tool-trigger">
@@ -52,19 +47,19 @@ export const ShareControl: FC = () => {
         align="start"
         className="ml-1.5 flex h-[34px] w-fit items-center border border-brand-50 p-0.5"
       >
-        {urlCopyState && (
-          <p data-testid="copy-link-success" className="px-2 py-1.5 text-xs">
+        {hasCopiedText && (
+          <p data-testid="copy-link-success" className="px-2 py-1.5 text-xs text-secondary-500">
             Link copied to clipboard
           </p>
         )}
-        {!urlCopyState && (
+        {!hasCopiedText && (
           <>
             <button
               type="button"
               data-testid="copy-url-link"
               aria-label="copy url link"
               className={cn(CONTROL_BUTTON_STYLES.default, 'flex h-[28px] w-auto space-x-2 px-2')}
-              onClick={() => void handleCopy()}
+              onClick={handleCopy}
             >
               <PiLinkSimpleBold className={CONTROL_ICON_STYLES.default} />
               <span data-testid="copy-message" className="text-xs">
@@ -101,4 +96,5 @@ export const ShareControl: FC = () => {
     </Popover>
   );
 };
+
 export default ShareControl;
