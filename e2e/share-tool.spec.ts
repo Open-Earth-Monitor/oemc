@@ -15,16 +15,14 @@ test.describe('user should be able to copy and share current url', () => {
     await expect(page.getByTestId('share-tool-trigger')).toBeVisible();
     await page.getByTestId('share-tool-trigger').click();
 
-    const copyButton = page.getByTestId('copy-url-link');
-
+    await expect(page.getByTestId('copy-url-link')).toBeVisible();
     await expect(page.getByTestId('copy-message')).toBeVisible();
-
-    await expect(copyButton).toBeVisible();
-    await copyButton.click();
-
+    await page.getByTestId('copy-url-link').click();
+    await page.waitForTimeout(1000);
     await expect(page.getByTestId('copy-link-success')).toBeVisible();
+    await page.waitForTimeout(3000);
 
-    await expect(page.getByTestId('copy-link-success')).toBeHidden({ timeout: 10000 });
+    await expect(page.getByTestId('copy-link-success')).toBeHidden();
   });
   test('share in Twitter', async ({ page }) => {
     await expect(page.getByTestId('share-tool-trigger')).toBeVisible();
