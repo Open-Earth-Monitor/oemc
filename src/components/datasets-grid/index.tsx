@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react';
 
 import { BiCheck } from 'react-icons/bi';
-import { FiInfo } from 'react-icons/fi';
+// import { FiInfo } from 'react-icons/fi';
 
 import { useMonitorsAndGeostories } from '@/hooks/datasets';
 
@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown';
 import { Label } from '@/components/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+// import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { TAG_STYLE } from '@/styles/constants';
 
