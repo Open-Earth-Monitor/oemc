@@ -1,4 +1,5 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import { MouseEvent } from 'react';
 
 import { cn } from '@/lib/classnames';
 
@@ -31,14 +32,16 @@ export const Legend = () => {
 
   const layerId = layers?.[0]?.id;
   const opacity = layers?.[0]?.opacity;
-  const date = layers?.[0]?.date;
 
+  const compareId = compareLayers?.[0]?.id;
   const compareDate = compareLayers?.[0]?.date;
 
   const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layers?.length });
   const { title, range } = data ?? {};
 
-  const defaultCompareDate = compareDate || date;
+  const defaultId = layerId ?? data?.id;
+  const defaultBaseDate = layers?.[0]?.date || range?.[0]?.value;
+  const defaultCompareDate = compareDate ?? layers?.[0]?.date;
 
   const [activeTab, setActiveTab] = useState<'layer-settings' | 'compare-layers'>(
     !!compareDate ? 'compare-layers' : 'layer-settings'
@@ -48,24 +51,50 @@ export const Legend = () => {
     setActiveTab(value);
   };
 
-  const [baseDate, setBaseDate] = useState<string>(date);
+  const [selectedBaseDate, setSelectedBaseDate] = useState<string>(defaultBaseDate);
   const [selectedCompareDate, setSelectedCompareDate] = useState<string>(defaultCompareDate);
-
   useEffect(() => {
-    if (activeTab === 'compare-layers') {
-      setCompareLayers([{ id: layerId, opacity, date: selectedCompareDate }]);
+    if (activeTab === 'compare-layers' && !compareLayers?.[0]?.id) {
+      setCompareLayers([{ id: defaultId, opacity, date: layers?.[0]?.date || range?.[0]?.value }]);
     }
     if (activeTab === 'layer-settings') {
       setCompareLayers(null);
     }
-    setLayers([{ id: layerId, opacity, date: baseDate }]);
-  }, [baseDate, selectedCompareDate, layerId, activeTab, setLayers, setCompareLayers, opacity]);
+    // setLayers([{ id: defaultId, opacity, date: layers?.[0]?.date || range?.[0]?.value }]);
+  }, [defaultId, activeTab, setLayers, setCompareLayers, compareLayers, opacity, layers, range]);
 
-  const baseDateLabel = useMemo(() => findLabel(baseDate, range), [baseDate, range]);
-  const CompareDateLabel = useMemo(
-    () => findLabel(selectedCompareDate, range),
-    [selectedCompareDate, range]
-  );
+  useEffect(() => {
+    if (activeTab === 'compare-layers' && compareLayers?.[0]?.id) {
+      setLayers([{ id: defaultId, opacity, date: selectedBaseDate }]);
+      setCompareLayers([{ id: defaultId, opacity, date: selectedCompareDate }]);
+    }
+    // setLayers([{ id: defaultId, opacity, date: layers?.[0]?.date || range?.[0]?.value }]);
+  }, [selectedBaseDate, selectedCompareDate]);
+
+  useEffect(() => {
+    if (activeTab === 'layer-settings' && layers?.[0]?.id) {
+      setLayers([{ id: defaultId, opacity, date: selectedBaseDate }]);
+    }
+    // setLayers([{ id: defaultId, opacity, date: layers?.[0]?.date || range?.[0]?.value }]);
+  }, [selectedBaseDate]);
+
+  useEffect(() => {
+    if (!compareId) {
+      setActiveTab('layer-settings');
+    }
+  }, [compareId]);
+
+  // useEffect(() => {
+  //   if (activeTab === 'compare-layers') {
+  //     setCompareLayers([{ id: defaultId, opacity, date: selectedCompareDate }]);
+  //   }
+  //   if (activeTab === 'layer-settings') {
+  //     setCompareLayers(null);
+  //   }
+  //   setLayers([{ id: defaultId, opacity, date: date || range?.[0]?.value }]);
+  // }, [defaultId]);
+  const baseDateLabel = findLabel(layers?.[0]?.date, range);
+  const CompareDateLabel = findLabel(compareLayers?.[0]?.date, range);
 
   return (
     <div
@@ -131,7 +160,7 @@ export const Legend = () => {
                 <DropdownMenuContent className="bg-brand-500">
                   {range?.map((d) => (
                     <DropdownMenuItem key={d.value}>
-                      <button type="button" onClick={() => setBaseDate(d.value)}>
+                      <button type="button" onClick={() => setSelectedBaseDate(d.value)}>
                         {d.label}
                       </button>
                     </DropdownMenuItem>
