@@ -39,7 +39,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   // activates map at first render
   useEffect(() => {
     if (!!layerId)
-      void setLayers([
+      setLayers([
         {
           opacity: layerOpacity ?? 1,
           date: date || range?.[0]?.value,
@@ -48,7 +48,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       ]);
 
     if (!!compareLayerId)
-      void setCompareLayers([
+      setCompareLayers([
         {
           opacity: layerOpacity ?? 1,
           date: compareDate || range?.[0]?.value,
