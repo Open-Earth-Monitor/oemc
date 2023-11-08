@@ -38,9 +38,9 @@ const TimeSeries: FC<{
 
   useEffect(
     () => {
-      void setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
+      setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
       if (!!isCompareActive) {
-        void setCompareLayers([{ id: layerId, opacity, date: compareDate }]);
+        setCompareLayers([{ id: layerId, opacity, date: compareDate }]);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,7 +98,7 @@ const TimeSeries: FC<{
 
   useEffect(() => {
     if (isPlaying) {
-      void setCompareLayers(null);
+      setCompareLayers(null);
     }
   }, [isPlaying]);
 

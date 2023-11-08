@@ -68,7 +68,7 @@ const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
           data-testid="geostories-button"
           type="button"
           className="flex items-center space-x-4"
-          onClick={() => void handleVisibility()}
+          onClick={() => handleVisibility()}
         >
           <HiOutlineChevronUp
             className={cn({
