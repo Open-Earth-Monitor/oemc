@@ -24,7 +24,7 @@ const Hero = () => {
       <motion.div
         initial="initial"
         whileHover="hover"
-        onHoverStart={() => void startBounce()}
+        onHoverStart={() => startBounce()}
         onHoverEnd={stopBounce}
         className="absolute -right-6 bottom-1/4 flex -translate-y-1/2 rotate-90 cursor-pointer items-center space-x-2 uppercase"
       >
@@ -34,7 +34,7 @@ const Hero = () => {
           initial={{ x: 0 }}
           whileHover={{ scale: 1.1 }}
           animate={controls}
-          onHoverStart={() => void startBounce()}
+          onHoverStart={() => startBounce()}
           onHoverEnd={stopBounce}
           className="cursor-pointer"
         >

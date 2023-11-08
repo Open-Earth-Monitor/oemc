@@ -21,7 +21,7 @@ export const RemoveLayer: FC<{ className?: string }> = ({ className }) => {
         'flex cursor-pointer items-center justify-center': true,
         [className]: !!className,
       })}
-      onClick={() => void onRemoveLayer()}
+      onClick={() => onRemoveLayer()}
       aria-label="Toggle layer visibility"
     >
       <RxCross2 className="h-4 w-4 text-gray-600 hover:text-secondary-500" />

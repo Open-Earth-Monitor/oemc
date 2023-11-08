@@ -22,7 +22,7 @@ export const OpacitySetting: FC = () => {
   );
 
   const handleChange = useCallback(
-    (e: number[]) => void setLayers((prevState) => [{ ...prevState?.[0], opacity: e[0] }]),
+    (e: number[]) => setLayers((prevState) => [{ ...prevState?.[0], opacity: e[0] }]),
     [setLayers]
   );
 
