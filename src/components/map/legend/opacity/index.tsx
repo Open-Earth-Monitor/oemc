@@ -51,7 +51,7 @@ export const OpacitySetting: FC = () => {
           </div>
           <div className="relative py-1.5">
             <Slider
-              onValueChange={() => void handleChange()}
+              onValueChange={handleChange}
               value={[opacity]}
               min={0}
               max={1}
