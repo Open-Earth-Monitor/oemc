@@ -9,6 +9,7 @@ import Loading from '@/components/loading';
 
 const DatasetsPage: NextPage<{ params: { monitor_id: string } }> = ({ params: { monitor_id } }) => {
   const { data, isLoading, isFetched, isError } = useMonitorLayers({ monitor_id });
+
   return (
     <div>
       {isLoading && <Loading />}
@@ -17,7 +18,7 @@ const DatasetsPage: NextPage<{ params: { monitor_id: string } }> = ({ params: { 
           {data.map((dataset, index) => {
             return (
               <li key={dataset.layer_id}>
-                <DatasetCard {...dataset} id={dataset.layer_id} active={index === 0} />
+                <DatasetCard {...dataset} id={dataset.layer_id} defaultActive={index === 0} />
               </li>
             );
           })}

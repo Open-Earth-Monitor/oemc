@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import type { FC } from 'react';
 
 import { HiPlay, HiPause } from 'react-icons/hi2';
@@ -16,9 +16,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import { useSyncLayersSettings } from '../../hooks/sync-query';
+import { useSyncLayersSettings, useSyncCompareLayersSettings } from '../../hooks/sync-query';
 
 const TIMEOUT_STEP_DURATION = 2500;
+
+const findLabel = (value: string, range: { label: string; value: string | number }[]) =>
+  range?.find((d: { label: string; value: string }) => d.value === value)?.label satisfies
+    | string
+    | number;
 
 const TimeSeries: FC<{
   layerId: LayerParsed['layer_id'];
@@ -27,31 +32,50 @@ const TimeSeries: FC<{
   isActive?: boolean;
 }> = ({ range, autoPlay = false, isActive = false, layerId }) => {
   const [layers, setLayers] = useSyncLayersSettings();
-  const [compareLayers, setCompareLayers] = useSyncLayersSettings();
+  const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
+  const defaultLayer = useMemo(() => layers?.[0]?.id, [layers]);
   const isCompareActive = compareLayers?.[0]?.id;
   const compareDate = compareLayers?.[0]?.date;
   const layerOpacity = layers?.[0]?.opacity;
   const date = layers?.[0]?.date;
   const opacity = !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity;
   const debouncedOpacity = useDebounce<number>(opacity, 300);
-  const [currentRange, setCurrentRange] = useState<{ value: string; label: string }>(range[0]);
+  const defaultDateLabel = findLabel(date, range);
+  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
+  const defaultDate = { label: defaultDateLabel, value: date } ?? range?.[0];
+  const [currentRange, setCurrentRange] = useState<{ value: string; label: string }>(defaultDate);
+  const [isPlaying, setPlaying] = useState<boolean>(autoPlay);
 
   useEffect(
     () => {
-      setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
-      if (!!isCompareActive) {
-        setCompareLayers([{ id: layerId, opacity, date: compareDate }]);
+      if (isActive && isFirstRender) {
+        setCurrentRange({ label: defaultDateLabel, value: date } ?? range?.[0]);
+      }
+      setIsFirstRender(false);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  useEffect(() => {
+    if (isPlaying) setCompareLayers(null);
+  }, [isPlaying]);
+
+  useEffect(
+    () => {
+      if (isActive === layerId && !isFirstRender) {
+        setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
+        if (!!isCompareActive) {
+          setCompareLayers([{ id: layerId, opacity, date: compareDate }]);
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [debouncedOpacity, opacity, currentRange?.value]
   );
-
-  const [isPlaying, setPlaying] = useState<boolean>(autoPlay);
-
   const handlePlay = useCallback(() => {
     setPlaying(!isPlaying);
-  }, [isPlaying]);
+  }, [isPlaying, setPlaying]);
 
   const handleSelect = useCallback(
     (value: string) => {
@@ -72,35 +96,61 @@ const TimeSeries: FC<{
   /**
    * At mounting set initial current range based on the url params
    */
-  useEffect(() => {
-    if (date) {
-      const nextRange = range.find((r) => r.value === date);
-      if (nextRange) setCurrentRange(nextRange);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   if (date && !isFirstRender) {
+  //     const nextRange = range.find((r) => r.value === date);
+  //     if (nextRange) setCurrentRange(nextRange);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   // Reset to first position when the layer is hidden
+
   useEffect(() => {
-    if (!isActive) {
+    if (layers?.[0]?.id !== layerId && !isFirstRender) {
       setPlaying(false);
       setCurrentRange(range[0]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActive]);
+  }, [isActive, defaultLayer, isPlaying]);
 
   // Stop time series when compare is active
-  // useEffect(() => {
-  //   if (isCompareActive) {
-  //     setPlaying(false);
-  //   }
-  // }, [isCompareActive]);
+  useEffect(() => {
+    if (!!isCompareActive) {
+      setPlaying(false);
+    }
+  }, [isCompareActive, setPlaying]);
 
   useEffect(() => {
     if (isPlaying) {
-      setCompareLayers(null);
+      void setCompareLayers(null);
     }
-  }, [isPlaying]);
+  }, [isPlaying, setCompareLayers]);
+
+  useEffect(() => {
+    if (!isPlaying && isActive) {
+      void setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
+    }
+  }, [isPlaying, layerId, opacity, currentRange?.value, isActive, setLayers]);
+
+  useEffect(() => {
+    if (isPlaying && isActive) {
+      void setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
+    }
+  }, [isPlaying, layerId, opacity, currentRange?.value, isActive, setLayers]);
+
+  useEffect(() => {
+    if (!isPlaying && isActive) {
+      void setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
+    }
+  }, [isPlaying, layerId, opacity, currentRange?.value, isActive, setLayers]);
+
+  useEffect(() => {
+    if (!!date) {
+      const labelDate = findLabel(date, range);
+      setCurrentRange({ value: date, label: labelDate });
+    }
+  }, [date]);
 
   return (
     <div className="space-y-4">

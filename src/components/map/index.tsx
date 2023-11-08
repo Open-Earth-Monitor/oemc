@@ -10,7 +10,13 @@ import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
 import { useLayerParsedSource } from '@/hooks/layers';
-import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
+import {
+  useSyncLayersSettings,
+  useSyncCompareLayersSettings,
+  useSyncViewportSettings,
+  useSyncCenterSettings,
+  useSyncZoomSettings,
+} from '@/hooks/sync-query';
 
 import { DEFAULT_VIEWPORT } from './constants';
 // map controls
@@ -25,46 +31,44 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [layers, setLayers] = useSyncLayersSettings();
+  const [layers] = useSyncLayersSettings();
+  const [center, setCenter] = useSyncCenterSettings();
+  const [zoom, setZoom] = useSyncZoomSettings();
   const layerId = layers?.[0]?.id;
   const layerOpacity = layers?.[0]?.opacity;
   const date = layers?.[0]?.date;
   const [nextSearchParams, setNextSearchParams] = useState<string>(searchParams.toString());
   const [currentPathname, setCurrentPathname] = useState<string>(pathname);
-
-  const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
+  const [viewportSettings, setViewportSettings] = useSyncViewportSettings();
+  const [compareLayers] = useSyncCompareLayersSettings();
   const compareLayerId = compareLayers?.[0]?.id;
   const compareDate = compareLayers?.[0]?.date;
 
-  // activates map at first render
-  useEffect(() => {
-    if (!!layerId)
-      setLayers([
-        {
-          opacity: layerOpacity ?? 1,
-          date: date || range?.[0]?.value,
-          id: layerId,
-        },
-      ]);
+  const [isCompareActive, setIsCompareActive] = useState<boolean>(false);
 
-    if (!!compareLayerId)
-      setCompareLayers([
-        {
-          opacity: layerOpacity ?? 1,
-          date: compareDate || range?.[0]?.value,
-          id: compareLayerId,
-        },
-      ]);
-  }, []);
+  useEffect(() => {
+    if (!!compareLayerId) {
+      setIsCompareActive(true);
+    } else {
+      setIsCompareActive(false);
+    }
+  }, [compareLayers]); // // activates map at first render
+
+  // useEffect(() => {
+  //   if (!!center) {
+  //     setCenter(center);
+  //   }
+  //   if (!!zoom) {
+  //     setZoom(zoom);
+  //   }
+  // }, []);
 
   /**
    * Local viewport state
    */
   const [localViewState, setLocalViewState] = useState<RView>({
-    center: searchParams.get('center')
-      ? (JSON.parse(searchParams.get('center')) as Coordinate)
-      : initialViewState.center,
-    zoom: searchParams.get('zoom') ? Number(searchParams.get('zoom')) : initialViewState.zoom,
+    center: center ? center : initialViewState.center,
+    zoom: zoom ? Number(zoom) : initialViewState.zoom,
   });
 
   /**
@@ -114,9 +118,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         nextSearchParams.set(key, value);
       }
     });
+    // setZoom(zoom.toString());
+    // setCenter(center.toString());
     setNextSearchParams(nextSearchParams.toString());
   }, [searchParams, localViewState]);
-
   /**
    * Update the viewport state when the URL pathname, and search params changes
    */
@@ -127,10 +132,18 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     } else if (!nextSearchParams || nextSearchParams === '') {
       cleanUpLayers();
     } else {
-      // router.replace(`${pathname}?${nextSearchParams.toString()}`);
+      // setViewportSettings({ viewportSettings ?? nextSearchParams ?? localViewState });
+      router.replace(`${pathname}?${nextSearchParams.toString()}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, nextSearchParams, router, currentPathname]);
+  }, [viewportSettings, pathname, nextSearchParams, router, currentPathname, compareLayerId]);
+
+  const sharedViewportSettings = {
+    ...(center && { center }),
+    ...(zoom && { zoom }),
+  };
+
+  const initialViewport = sharedViewportSettings ?? DEFAULT_VIEWPORT;
 
   return (
     <>
@@ -138,7 +151,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         width="100%"
         height="100%"
         className="relative"
-        initial={DEFAULT_VIEWPORT}
+        initial={initialViewport as RView}
         onChange={handleUpdateUrl}
         onMoveEnd={handleMapMove}
         view={[localViewState, handleUpdateUrl]}
@@ -170,7 +183,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           />
         )}
 
-        {!!compareLayerId && (
+        {!!compareLayers?.[0]?.id && (
           <RLayerWMS
             properties={{ label: gs_name, opacity: layerOpacity, date, range }}
             url={gs_base_wms}
@@ -194,9 +207,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           <RControl.RZoom />
           <BookmarkControl />
           <ShareControl />
-          {compareLayerId && <SwipeControl />}
+          {!!compareLayers?.[0]?.id && <SwipeControl />}
         </Controls>
-        <Legend />
+        {!!layerId && <Legend />}
       </RMap>
     </>
   );
