@@ -53,12 +53,12 @@ export const Legend = () => {
 
   useEffect(() => {
     if (activeTab === 'compare-layers') {
-      void setCompareLayers([{ id: layerId, opacity, date: selectedCompareDate }]);
+      setCompareLayers([{ id: layerId, opacity, date: selectedCompareDate }]);
     }
     if (activeTab === 'layer-settings') {
-      void setCompareLayers(null);
+      setCompareLayers(null);
     }
-    void setLayers([{ id: layerId, opacity, date: baseDate }]);
+    setLayers([{ id: layerId, opacity, date: baseDate }]);
   }, [baseDate, selectedCompareDate, layerId, activeTab, setLayers, setCompareLayers, opacity]);
 
   const baseDateLabel = useMemo(() => findLabel(baseDate, range), [baseDate, range]);
