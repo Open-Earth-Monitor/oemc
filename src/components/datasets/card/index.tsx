@@ -66,12 +66,12 @@ const DatasetCard: FC<DatasetCardProps> = ({
   }, []);
 
   useEffect(() => {
-    if (isActive === id)
+    if (isActive)
       void setLayers([
         {
           opacity: layerOpacity ?? 1,
           date: layerDate || range?.[0]?.value,
-          id: active,
+          id,
         },
       ]);
   }, []);
@@ -80,7 +80,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
    * Handle click on the toggle button
    */
   const handleClick = useCallback(() => {
-    setIsActive(isActive === id);
+    setIsActive(isActive);
   }, [id, setIsActive]);
 
   return (
@@ -154,9 +154,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
         </div>
       )}
 
-      {range && (
-        <TimeSeries range={range} layerId={id} autoPlay={autoPlay} isActive={id === isActive} />
-      )}
+      {range && <TimeSeries range={range} layerId={id} autoPlay={autoPlay} isActive={isActive} />}
 
       <button
         data-testid="dataset-layer-toggle-button"
@@ -164,7 +162,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
         className={cn(
           'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-secondary-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20',
           {
-            'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive === id,
+            'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
           }
         )}
         onClick={() => void handleClick()}
