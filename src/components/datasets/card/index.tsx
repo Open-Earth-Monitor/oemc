@@ -40,7 +40,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
   // activates first layer at first render
   useEffect(() => {
     if (active && isFirstRender)
-      void setLayers([
+      setLayers([
         {
           opacity: layerOpacity ?? 1,
           date: layerDate || range?.[0]?.value,
@@ -54,7 +54,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
    */
   useEffect(() => {
     if (active && isActive && layerId !== id) {
-      void setLayers([
+      setLayers([
         {
           id,
           opacity: !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity,
@@ -67,7 +67,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
 
   useEffect(() => {
     if (isActive)
-      void setLayers([
+      setLayers([
         {
           opacity: layerOpacity ?? 1,
           date: layerDate || range?.[0]?.value,
@@ -165,7 +165,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
             'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
           }
         )}
-        onClick={() => void handleClick()}
+        onClick={() => handleClick()}
       >
         <span>{isActive ? 'Hide' : 'Show'} layer on the map</span>
         <LuLayers className="h-3 w-3 text-inherit" title="layer" />
