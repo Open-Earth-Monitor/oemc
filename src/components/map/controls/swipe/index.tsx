@@ -12,6 +12,7 @@ let swipeControl: Control | null = null; // control instance
 const SwipeControl = () => {
   const { map } = useOL();
   const layers = map.getAllLayers();
+  const layersKeys = map.getKeys();
 
   const [layersUrl] = useSyncLayersSettings();
   const [layersUrlCompare] = useSyncCompareLayersSettings();
@@ -28,7 +29,7 @@ const SwipeControl = () => {
         swipeControl = null;
       }
     };
-  }, [layers, map, layersUrl, layersUrlCompare]);
+  }, [layers, map, layersUrl, layersUrlCompare, layersKeys]);
 
   return null;
 };

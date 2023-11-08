@@ -20,6 +20,7 @@ test.describe('geostories tab', () => {
 
     // move to geostories tab
     const geostoriesTabLink = page.getByTestId('tab-geostories');
+
     await geostoriesTabLink.click();
 
     // check geostory tab is active and url updated
