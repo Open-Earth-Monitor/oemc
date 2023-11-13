@@ -6,14 +6,16 @@ import { useGeostory } from '@/hooks/geostories';
 
 import Loading from '@/components/loading';
 
-const GeostoryHead: FC<{ geostoryId: Geostory['id'] }> = ({ geostoryId }) => {
+const GeostoryHead: FC<{ geostoryId: Geostory['id']; color: string }> = ({ geostoryId, color }) => {
   const { data, isLoading, isFetched, isError } = useGeostory({ geostory_id: geostoryId });
 
   return (
     <div className="space-y-6 px-6 py-5">
       {isLoading && !isFetched && <Loading />}
       {/* TODO - get color from API when we get categories */}
-      <div className="text-xs">GEOSTORY</div>
+      <div className="text-xs" style={{ color }}>
+        GEOSTORY
+      </div>
       {isFetched && !isError && (
         <>
           <h1 className="font-satoshi text-4xl font-bold">{data.title}</h1>
