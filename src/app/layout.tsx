@@ -44,16 +44,13 @@ import 'ol/ol.css';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${inter.className} ${satoshi.className} h-full min-h-screen w-screen`}
-    >
+    <html lang="en" className={`${inter.className} ${satoshi.className} h-full min-h-screen`}>
       <body className="mx-auto h-full min-h-screen bg-brand-500 font-inter">
         <Providers>
           <div className="flex h-full flex-col">
             <div className="h-[70px] w-full items-center border-b border-b-secondary-900 bg-brand-500/80">
               <div className="m-auto flex h-full max-w-[1200px] items-center justify-between">
-                <div className="mx-2">
+                <div className="mx-2 items-center space-x-4">
                   <Link href="/">
                     <Image
                       alt="Open-earth-monitor"

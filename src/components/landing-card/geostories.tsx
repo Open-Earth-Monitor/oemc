@@ -45,36 +45,38 @@ const Card: FC<Partial<Geostory> & { color?: string; headColor?: string }> = ({
     </div>
     <div className="px-10 py-4 text-brand-500">
       <span className="text-xs font-medium uppercase">monitor</span>
-      {/* TO DO - change it for monitor when the API is ready */}
-      <motion.div className="flex items-center" initial="initial" whileHover="hover">
-        <Link
-          href={`/map/${layers[0].layer_id}/datasets`}
-          className="relative w-full items-center font-bold underline"
-        >
+      <motion.div
+        className="opacity-1 relative flex items-center"
+        initial="initial"
+        whileHover="hover"
+        transition={{ duration: 0.3 }}
+      >
+        <Link href={`/map/${layers[0].layer_id}/datasets`} className="w-full font-bold underline">
           <motion.span
-            className="absolute left-0 top-2 inline-flex h-full w-full hover:opacity-100"
             variants={{
-              hover: { opacity: 1 },
+              initial: {
+                opacity: 0,
+              },
+              hover: {
+                opacity: 1,
+              },
             }}
-            transition={{ duration: 0.17 }}
           >
-            <HiArrowRight className="inline-block h-5 w-5" />
-            <motion.span
-              className="inline-flex whitespace-normal pb-11 underline"
-              variants={{
-                initial: {
-                  x: 0,
-                  position: 'absolute',
-                  left: 0,
-                  width: '100%',
-                  backgroundColor: color,
-                },
-                hover: { x: 20, position: 'relative' },
-              }}
-              transition={{ duration: 0.15 }}
-            >
-              {layers[0].title}
-            </motion.span>
+            <HiArrowRight className="absolute left-0 top-2 inline-block h-5 w-5 fill-current" />
+          </motion.span>
+          <motion.span
+            className="absolute left-0 top-2 inline-flex whitespace-normal pb-11 underline"
+            variants={{
+              initial: {
+                x: 0,
+              },
+              hover: {
+                x: 30,
+              },
+            }}
+            transition={{ duration: 0.25 }}
+          >
+            {layers[0].title}
           </motion.span>
         </Link>
       </motion.div>

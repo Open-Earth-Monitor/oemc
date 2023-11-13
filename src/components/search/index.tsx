@@ -25,7 +25,7 @@ const Search: FC<SearchProps> = ({
 
   return (
     <div
-      className={cn('relative flex h-14 w-full', {
+      className={cn('relative flex h-14 w-full outline-none focus:border-red-400', {
         [className]: !!className,
       })}
       aria-label="search"
@@ -49,7 +49,7 @@ const Search: FC<SearchProps> = ({
         onInput={onInput}
         value={value}
         data-testid="search-input"
-        className="flex-1 truncate border-none bg-transparent px-10 font-inter leading-4 text-secondary-700 placeholder-secondary-700"
+        className="flex-1 truncate border-none bg-transparent px-10 font-inter leading-4 text-secondary-700 placeholder-secondary-700 outline-none focus:border-secondary-500"
       />
       {value !== '' && (
         <button

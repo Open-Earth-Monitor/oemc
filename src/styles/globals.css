@@ -89,6 +89,12 @@
   input[type='search']::-webkit-search-results-decoration {
     -webkit-appearance: none;
   }
+  input[type='search']:focus {
+    border-color: hsl(60, 100%, 95%) !important;
+    --tw-ring-color: hsl(60, 100%, 95%) !important;
+    --tw-ring-offset-width: 0.5px !important;
+    --tw-ring-offset-color: hsl(60, 100%, 95%) !important;
+  }
 }
 
 @layer utilities {
@@ -154,3 +160,4 @@
   padding-top: 4px !important;
   padding-bottom: 8px !important;
 }
+
