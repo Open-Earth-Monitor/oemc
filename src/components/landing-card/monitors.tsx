@@ -107,7 +107,7 @@ const Card: FC<Partial<Monitor> & { color?: string }> = ({
                 href={`/map/${id}/datasets`}
                 data-testid="monitor-button"
                 className={cn(
-                  'mt-12 flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
+                  'mt-3 flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
                 )}
               >
                 Launch monitor

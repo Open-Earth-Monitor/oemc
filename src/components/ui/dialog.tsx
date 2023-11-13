@@ -47,7 +47,7 @@ const DialogOverlay = forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'fixed inset-0 z-40 backdrop-blur-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      'fixed inset-0 z-40 bg-brand-500 opacity-40 backdrop-blur-3xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className
     )}
     {...props}
@@ -104,7 +104,7 @@ const DialogDescription = forwardRef<
   ElementRef<typeof DialogPrimitive.Description>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description ref={ref} className={cn('text-sm', className)} {...props} />
+  <DialogPrimitive.Description ref={ref} className={cn(className)} {...props} />
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
@@ -116,13 +116,13 @@ const DialogClose = forwardRef<
     ref={ref}
     {...props}
     className={cn({
-      'absolute right-4 top-6 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground':
+      'absolute right-4 top-6 items-center space-x-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground':
         true,
       [className]: !!className,
     })}
   >
     {children}
-    <Cross2Icon className={cn({ 'h-4 w-4': true, [iconClassName]: !!iconClassName })} />
+    <Cross2Icon className={cn({ 'h-6 w-6': true, [iconClassName]: !!iconClassName })} />
     <span className="sr-only">Close</span>
   </DialogPrimitive.Close>
 ));

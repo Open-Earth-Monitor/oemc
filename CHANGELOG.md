@@ -29,6 +29,8 @@ Unreleased
 - Sorting items in landing page [OEMC-24](https://vizzuality.atlassian.net/browse/OEMC-24?atlOrigin=eyJpIjoiZTlmNGE1Njk3MTRlNDNjMmExY2I3YmE1ZjUzMTBkYjIiLCJwIjoiaiJ9)
 - Alpha version tag added to site [OEMC-127](https://vizzuality.atlassian.net/browse/OEMC-127?atlOrigin=eyJpIjoiYzBiNGI0NDcwOGUzNGYzMzgzM2I1NWVhMWE0NjFkZjciLCJwIjoiaiJ9)
 - Functionality for returning from a geostory to its associated monitor [OEMC-121](https://vizzuality.atlassian.net/browse/OEMC-121?atlOrigin=eyJpIjoiNWY1OTkwZDNlMWNiNDA4M2JiOWM0NDNiODlkMDBlNmUiLCJwIjoiaiJ9)
+- Links to social media (twitter, github and linkedin), link to "contact us" and "privacy policy" [OEMC-108](https://vizzuality.atlassian.net/browse/OEMC-108?atlOrigin=eyJpIjoiMTFhMjI4MmE1NjYzNDNiNmJlNWFlOGJjYWI4MjdhYjQiLCJwIjoiaiJ9)
+
 
 ### Changed
 
