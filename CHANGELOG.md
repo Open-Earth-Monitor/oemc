@@ -27,6 +27,7 @@ Unreleased
 - Search monitors and geostories by title [OEMC-94](https://vizzuality.atlassian.net/browse/OEMC-94?atlOrigin=eyJpIjoiMGVlYmJhNmM5ODU4NDRiNWEzNTIyNWRjODdjNDg4MWUiLCJwIjoiaiJ9)
 - 404 - error management [OEMC-81](https://vizzuality.atlassian.net/browse/OEMC-81?atlOrigin=eyJpIjoiNWZkNTYwMjVkZGVjNDAwZGE2YWI3ZDgwMzgzOTRjMjEiLCJwIjoiaiJ9)
 - Sorting items in landing page [OEMC-24](https://vizzuality.atlassian.net/browse/OEMC-24?atlOrigin=eyJpIjoiZTlmNGE1Njk3MTRlNDNjMmExY2I3YmE1ZjUzMTBkYjIiLCJwIjoiaiJ9)
+- Alpha version tag added to site [OEMC-127](https://vizzuality.atlassian.net/browse/OEMC-127?atlOrigin=eyJpIjoiYzBiNGI0NDcwOGUzNGYzMzgzM2I1NWVhMWE0NjFkZjciLCJwIjoiaiJ9)
 
 ### Changed
 
