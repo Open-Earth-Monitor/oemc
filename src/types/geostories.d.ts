@@ -7,5 +7,5 @@ export type Geostory = {
   id: string;
   layers: Layer[];
   title: string;
-  use_case_link: string;
+  entity_type: 'geo_story';
 };

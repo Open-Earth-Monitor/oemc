@@ -76,9 +76,9 @@ test.describe('monitors and geostories display', () => {
     await expect(cardTitle).toBeVisible();
     await expect(cardTitle).toHaveText(geostoriesData[0].title);
 
-    // const cardDescription = page.getByTestId(`card-description-${geostoriesIds[0]}`);
-    // await expect(cardDescription).toBeVisible();
-    // await expect(cardDescription).toHaveText(monitorsData[0].description);
+    const cardDescription = page.getByTestId(`card-description-${geostoriesIds[0]}`);
+    await expect(cardDescription).toBeVisible();
+    await expect(cardDescription).toHaveText(monitorsData[0].description);
 
     const cardLink = page.getByTestId(`card-link-${geostoriesIds[0]}`);
     await expect(cardLink).toHaveAttribute('href', `/map/geostories/${geostoriesIds[0]}`);

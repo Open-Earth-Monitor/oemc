@@ -8,6 +8,7 @@ export type Monitor = {
   geostories: Geostory[];
   id: string;
   title: string;
+  entity_type: 'monitor';
 };
 
 export type MonitorParsed = Monitor & { color: string; colorOpacity: string };

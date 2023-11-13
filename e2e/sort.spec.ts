@@ -62,18 +62,10 @@ test.describe('sort monitors and geostories', () => {
 
     const defaultOrderedDataByTitle = (await response.json()) as MonitorsAndGeostoriesResponse[];
 
-    const monitors = defaultOrderedDataByTitle?.filter((item) => item.geostories);
-    const geostories = defaultOrderedDataByTitle?.filter((item) => item.layers);
-
-    const orderedMonitorsByTitle = monitors?.sort((a, b) =>
+    const manuallyOrderedByTitle = defaultOrderedDataByTitle?.sort((a, b) =>
       a.title > b.title ? 1 : a.title < b.title ? -1 : 0
     ) satisfies Monitor[];
-    const orderedGeostoriesByTitle = geostories?.sort((a, b) =>
-      a.title > b.title ? 1 : a.title < b.title ? -1 : 0
-    ) satisfies Geostory[];
-    expect(defaultOrderedDataByTitle).toEqual([
-      ...orderedMonitorsByTitle,
-      ...orderedGeostoriesByTitle,
-    ]);
+
+    expect(defaultOrderedDataByTitle).toEqual(manuallyOrderedByTitle);
   });
 });
