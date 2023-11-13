@@ -119,3 +119,47 @@ test.describe('geostories tab', () => {
     expect(datasetsListCount).toBe(layersData.length);
   });
 });
+
+test('From a selected geostory, user should be able to go back to the monitor it belongs', async ({
+  page,
+}) => {
+  const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
+  const monitorsData = (await monitorsResponse.json()) as Monitor[];
+  await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
+  const monitorsIds = monitorsData.map((data) => data.id);
+
+  // click on the first monitor
+  await page.getByTestId(`monitor-item-${monitorsIds[0]}`).click();
+
+  // move to geostories tab
+  const geostoriesTabLink = page.getByTestId('tab-geostories');
+  await geostoriesTabLink.click();
+
+  // check geostory tab is active and url updated
+  await page.waitForURL(`**/map/${monitorsIds[0]}/geostories`, { waitUntil: 'load' });
+
+  // check geostories list is visible
+  const geostoriesResponse = await page.waitForResponse(
+    `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/geostories`
+  );
+  const geostoriesData = (await geostoriesResponse.json()) as Geostory[];
+  await expect(page.getByTestId('geostories-list')).toBeVisible();
+
+  // check first geostory is visible has title, and a link to the geostory page (geostory datasets)
+  const firstGeostoryId = geostoriesData[0].id;
+
+  const firstDataset = page.getByTestId(`geostory-item-${firstGeostoryId}`);
+  await expect(firstDataset).toBeVisible();
+
+  const firstGeostoryLink = page.getByTestId(`geostory-link-${firstGeostoryId}`);
+  await expect(firstGeostoryLink).toBeVisible();
+  await firstGeostoryLink.click();
+
+  await page.waitForURL(`**/map/geostories/${firstGeostoryId}`, { waitUntil: 'load' });
+  await expect(page.getByTestId('monitor-title-back-btn')).toBeVisible();
+  await expect(page.getByTestId('back-to-monitor')).toBeVisible();
+  const text = `Back to ${monitorsData[0].title}.`;
+  await expect(page.getByTestId('back-to-monitor')).toHaveText(text);
+  await page.getByTestId('monitor-title-back-btn').click();
+  await page.waitForURL(`**/map/${monitorsIds[0]}/geostories`, { waitUntil: 'load' });
+});
