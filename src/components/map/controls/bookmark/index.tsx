@@ -55,29 +55,27 @@ export const BookmarkControl: FC = () => {
       <SheetTrigger className={CONTROL_BUTTON_STYLES.default}>
         <AiFillStar className={CONTROL_ICON_STYLES.default} />
       </SheetTrigger>
-      <SheetContent className="relative flex h-full flex-col space-y-6 bg-brand-500 bg-opacity-[0.9]">
-        <SheetHeader>
-          <SheetTitle className="text-2xl font-bold">Bookmarks</SheetTitle>
+      <SheetContent className="relative flex h-full flex-col space-y-6 bg-brand-500 bg-opacity-[0.9] pl-10">
+        <SheetHeader className="space-y-6">
+          <SheetTitle className="text-2xl font-bold text-secondary-500">Bookmarks</SheetTitle>
           <div className="scroll-y-auto">
             {!bookmarks.length && !isInputVisible && <div>No bookmarks yet.</div>}
 
             {isInputVisible && (
-              <div className="space-y-6">
+              <div>
                 <div className="flex items-center">
                   <AiFillStar className="h-5 w-5" />
                   <input
                     type="text"
                     defaultValue=""
                     placeholder="Insert bookmark name..."
-                    className="w-full border-none bg-transparent py-2.5 outline-none placeholder:bg-transparent"
+                    className="w-full border-none bg-transparent py-2.5 outline-none placeholder:bg-transparent placeholder:text-secondary-500"
                     onChange={handleInputChange}
                     autoFocus={true}
                   />
                 </div>
-                <div className="overflow-hidden break-words text-sm text-muted-foreground">
-                  {url}
-                </div>
-                <div className="flex space-x-4">
+                <div className="overflow-hidden break-words pl-8 text-sm text-[#848981]">{url}</div>
+                <div className="flex space-x-4 py-7">
                   <Button
                     type="submit"
                     onClick={handleSaveBookmark}
@@ -107,7 +105,7 @@ export const BookmarkControl: FC = () => {
 
         {bookmarks.length > 0 && (
           <div className="relative h-full">
-            <ul className="after:content relative h-full flex-1 overflow-y-auto text-secondary-600">
+            <ul className="after:content relative h-full flex-1 overflow-y-auto">
               {bookmarks.map(({ name, value }) => (
                 <li
                   key={name}

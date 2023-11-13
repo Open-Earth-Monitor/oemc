@@ -110,8 +110,8 @@ DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 const DialogClose = forwardRef<
   ElementRef<typeof DialogPrimitive.Close>,
-  ComponentPropsWithoutRef<typeof DialogPrimitive.Close>
->(({ className, children, ...props }, ref) => (
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Close> & { iconClassName?: string }
+>(({ className, children, iconClassName, ...props }, ref) => (
   <DialogPrimitive.Close
     ref={ref}
     {...props}
@@ -122,7 +122,7 @@ const DialogClose = forwardRef<
     })}
   >
     {children}
-    <Cross2Icon className="h-4 w-4" />
+    <Cross2Icon className={cn({ 'h-4 w-4': true, [iconClassName]: !!iconClassName })} />
     <span className="sr-only">Close</span>
   </DialogPrimitive.Close>
 ));

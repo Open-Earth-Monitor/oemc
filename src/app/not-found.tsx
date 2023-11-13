@@ -12,7 +12,7 @@ export default function Custom404() {
           <p>It looks like the link is broken or the page has been removed.</p>
           <Link
             href="/"
-            className="rounded-sm bg-secondary-500 px-4 py-2 font-inter text-xs font-medium uppercase tracking-widest text-brand-500"
+            className="items-center justify-center space-x-2  bg-secondary-500 px-6 py-2 text-xs font-bold text-brand-500 transition-colors hover:bg-secondary-500 hover:bg-secondary-500/20 hover:text-secondary-500"
           >
             Go to homepage
           </Link>
