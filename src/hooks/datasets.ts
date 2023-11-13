@@ -52,7 +52,7 @@ const DEFAULT_QUERY_OPTIONS = {
 };
 export function useMonitorsAndGeostories(
   params?: UseParams,
-  queryOptions?: UseQueryOptions<(Monitor & Geostory)[], Error>
+  queryOptions?: UseQueryOptions<(Monitor | Geostory)[], Error>
 ) {
   const fetchMonitorAndGeostories = () =>
     API.request({
@@ -60,7 +60,7 @@ export function useMonitorsAndGeostories(
       url: '/monitors-and-geostories',
       params,
       ...queryOptions,
-    }).then((response: AxiosResponse<(Monitor & Geostory)[]>) => response.data);
+    }).then((response: AxiosResponse<(Monitor | Geostory)[]>) => response.data);
   return useQuery(['monitor-and-geostories', params], fetchMonitorAndGeostories, {
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) =>
