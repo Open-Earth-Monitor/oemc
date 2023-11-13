@@ -3,8 +3,6 @@
 import { motion, useAnimation } from 'framer-motion';
 import { HiOutlineArrowCircleRight } from 'react-icons/hi';
 
-import { cn } from '@/lib/classnames';
-
 const Hero = () => {
   const controls = useAnimation();
   const startBounce = () =>
@@ -16,12 +14,7 @@ const Hero = () => {
     controls.stop(); // Stop the animation when hovering stops
   };
   return (
-    <div
-      className={cn({
-        "relative w-screen bg-[url('/images/landing/hero.png')] bg-cover bg-right-bottom xl:pt-36":
-          true,
-      })}
-    >
+    <div className="relative bg-[url('/images/landing/hero.png')] bg-cover bg-right-bottom xl:pt-36">
       <div className="m-auto max-w-[1200px]">
         <h1 className="whitespace-wrap max-w-[800px] pb-20 pt-36 font-satoshi text-8xl font-black">
           {' '}

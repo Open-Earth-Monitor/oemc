@@ -18,6 +18,7 @@ const TIMEOUT_RESET_COPY_STATE = 3000;
 
 const ShareControl: FC = () => {
   const [hasCopiedText, setHasCopiedText] = useState(false);
+  const [sharedVisibility, setShareVisibility] = useState(false);
   const [, copyToClipboard] = useCopyToClipboard();
   const urlCopy = window.location.href;
 
@@ -27,8 +28,12 @@ const ShareControl: FC = () => {
       await copyToClipboard(urlCopy);
       setHasCopiedText(true);
       setTimeout(() => {
-        setHasCopiedText(false);
+        setShareVisibility(false);
       }, TIMEOUT_RESET_COPY_STATE);
+      setTimeout(() => {
+        setShareVisibility(false);
+        setHasCopiedText(false);
+      }, TIMEOUT_RESET_COPY_STATE + 100);
     } catch (error) {
       setHasCopiedText(false);
       // Handle clipboard copy error
@@ -37,15 +42,23 @@ const ShareControl: FC = () => {
   }, [copyToClipboard, urlCopy]);
 
   return (
-    <Popover>
-      <PopoverTrigger className={CONTROL_BUTTON_STYLES.default} data-testid="share-tool-trigger">
-        <HiOutlineShare className={CONTROL_ICON_STYLES.default} />
+    <Popover open={sharedVisibility}>
+      <PopoverTrigger asChild data-testid="share-tool-trigger">
+        <button
+          type="button"
+          aria-label="share tool"
+          className={CONTROL_BUTTON_STYLES.default}
+          onClick={() => setShareVisibility(!sharedVisibility)}
+        >
+          <HiOutlineShare className={CONTROL_ICON_STYLES.default} />
+        </button>
       </PopoverTrigger>
       <PopoverContent
         sideOffset={-34}
         alignOffset={34}
         align="start"
         className="ml-1.5 flex h-[34px] w-fit items-center border border-brand-50 p-0.5"
+        onInteractOutside={() => setShareVisibility(false)}
       >
         {hasCopiedText && (
           <p data-testid="copy-link-success" className="px-2 py-1.5 text-xs text-secondary-500">

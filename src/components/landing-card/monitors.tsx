@@ -53,26 +53,23 @@ const Card: FC<Partial<Monitor> & { color?: string }> = ({
       </DialogTrigger>
       <DialogContent
         data-testid={`monitor-card-${id}`}
-        className="w-[665px] bg-white p-10 text-brand-500"
+        className="w-[665px] bg-secondary-500 p-10 text-brand-500"
       >
         <DialogHeader className="space-y-6">
           <DialogTitle asChild>
             <header className="space-y-4">
-              <h2
-                data-testid="monitor-title"
-                className="inline-block max-w-[50%] pr-6 font-satoshi text-5xl font-bold"
-              >
+              <h2 data-testid="monitor-title" className="inline-block pr-6 text-6xl font-bold">
                 {title}
               </h2>
-              <div data-testid="monitor-description">
+              <div data-testid="monitor-description" className="font-inter leading-[25px]">
                 {description ||
                   'Long description lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.'}
               </div>
             </header>
           </DialogTitle>
           <DialogDescription asChild>
-            <div>
-              <div className="space-y-2 border-y border-brand-500 py-3">
+            <div className="font-inter">
+              <div className="space-y-5 border-y border-brand-500 py-3">
                 <p>
                   <span className="pr-2.5 font-bold">Developed by:</span>
                   {author || 'Lorem Ipsum'}
@@ -93,14 +90,14 @@ const Card: FC<Partial<Monitor> & { color?: string }> = ({
               <div>
                 <Link
                   href=""
-                  className="flex items-center space-x-2 border-b border-brand-500 py-2 text-2xl font-bold"
+                  className="flex items-center space-x-2 border-b border-brand-500 py-5 text-2xl font-bold"
                 >
                   <HiOutlineNewspaper />
                   <span>Publications</span>
                 </Link>
                 <Link
                   href=""
-                  className="flex items-center space-x-2 border-b border-brand-500 py-2 text-2xl font-bold"
+                  className="flex items-center space-x-2 border-b border-brand-500 py-5 text-2xl font-bold"
                 >
                   <HiOutlineGlobeAlt />
                   <span>Use cases</span>
@@ -110,12 +107,12 @@ const Card: FC<Partial<Monitor> & { color?: string }> = ({
                 href={`/map/${id}/datasets`}
                 data-testid="monitor-button"
                 className={cn(
-                  'mt-4 flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
+                  'mt-12 flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
                 )}
               >
                 Launch monitor
               </Link>
-              <DialogClose className="flex items-center space-x-3 text-sm font-medium uppercase">
+              <DialogClose className="right-10 top-10 flex h-4 items-center space-x-2 text-xs font-medium uppercase tracking-[0.96px] text-brand-500">
                 Close
               </DialogClose>
             </div>
