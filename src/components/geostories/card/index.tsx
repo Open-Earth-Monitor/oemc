@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { Geostory } from '@/types/geostories';
 
+import { TAG_STYLE } from '@/styles/constants';
+
 const GeostoryCard: FC<Geostory & { color: string }> = ({ id, color, title }) => {
   return (
     <Link href={`/map/geostories/${id}`} data-testid={`geostory-link-${id}`}>
@@ -22,8 +24,8 @@ const GeostoryCard: FC<Geostory & { color: string }> = ({ id, color, title }) =>
           className="space-y-4 px-6 py-5"
           data-testid={`geostory-item-${id}`}
         >
-          <div data-testid="geostory-tag" className="font-inter text-xs">
-            GEOSTORY
+          <div data-testid="geostory-tag" className={TAG_STYLE}>
+            geostory
           </div>
           <h2 className="font-satoshi text-2xl font-bold" data-testid={`geostory-title-${id}`}>
             {title}

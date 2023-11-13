@@ -8,6 +8,7 @@ import { useMonitor } from '@/hooks/monitors';
 
 import Loading from '@/components/loading';
 import MonitorsDirectoryDialog from '@/components/monitors/dialog';
+import { TAG_STYLE } from '@/styles/constants';
 
 const MonitorCard: FC = () => {
   const params = useParams();
@@ -29,12 +30,14 @@ const MonitorCard: FC = () => {
         <>
           <MonitorsDirectoryDialog />
           <div className="space-y-6 text-brand-500" data-testid="monitor-card">
-            <div data-testid="monitor-tag" className="text-xs">
-              MONITOR
+            <div className="space-y-2">
+              <div data-testid="monitor-tag" className={TAG_STYLE}>
+                {data.entity_type || 'monitor'}
+              </div>
+              <h1 data-testid="monitor-title" className="font-satoshi text-5xl font-bold">
+                {data.title}
+              </h1>
             </div>
-            <h1 data-testid="monitor-title" className="font-satoshi text-5xl font-bold">
-              {data.title}
-            </h1>
             {data.description && <p data-testid="monitor-description">{data.description}</p>}
           </div>
         </>

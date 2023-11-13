@@ -28,7 +28,6 @@ test.describe('search of monitors and geostories', () => {
     expect(filteredJson).toEqual(manuallyFilteredResponse);
 
     // check that the number of results is displayed accurately
-    // const displayResultsSentence = page.getByTestId('result-number');
     await expect(page.getByTestId('datasets-result')).toBeVisible();
     if (filteredJson.length === 1) {
       await expect(page.getByTestId('datasets-result')).toHaveText('1 result');
