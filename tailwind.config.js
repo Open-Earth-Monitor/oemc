@@ -48,6 +48,7 @@ module.exports = {
 
           foreground: 'hsl(var(--secondary-foreground))',
         },
+        alert: 'hsl(167, 85%, 52%)',
         monitors: {
           blue: 'hsla(209, 94%, 87%, 1)',
           green: 'hsla(133, 97%, 85%, 1)',
