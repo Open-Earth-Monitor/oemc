@@ -14,7 +14,7 @@ export const LayerVisibility = () => {
   const isLayerVisible = useMemo(() => !!layerOpacity && layerOpacity > 0, [layerOpacity]);
 
   const onToggleLayerVisibility = useCallback(() => {
-    setLayers((prevState) => [{ ...prevState?.[0], opacity: isLayerVisible ? 0 : 1 }]);
+    void setLayers((prevState) => [{ ...prevState?.[0], opacity: isLayerVisible ? 0 : 1 }]);
   }, [isLayerVisible, setLayers]);
 
   return (
