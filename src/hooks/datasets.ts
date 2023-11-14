@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
 import type { Geostory } from '@/types/geostories';
-import type { Monitor } from '@/types/monitors';
+import type { Monitor, MonitorParsed } from '@/types/monitors';
 
 import API from 'services/api';
 
@@ -11,6 +11,8 @@ type UseParams = {
   monitor_id?: string;
   sort_by?: 'title' | 'date';
 };
+
+type MonitorAndGeostories = MonitorParsed & Geostory;
 
 const COLORS = (<{ [key: string]: string }>{
   m1: 'hsla(209, 94%, 87%, 1)',
