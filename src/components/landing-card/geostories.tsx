@@ -44,7 +44,7 @@ const Card: FC<Partial<Geostory> & { color?: string; headColor?: string }> = ({
       </Link>
     </div>
     <div className="px-10 py-4 text-brand-500">
-      <span className="text-xs font-medium uppercase">monitor</span>
+      <span className={TAG_STYLE}>monitor</span>
       <motion.div
         className="opacity-1 relative flex items-center"
         initial="initial"

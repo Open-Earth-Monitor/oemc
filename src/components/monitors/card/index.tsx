@@ -32,7 +32,7 @@ const MonitorCard: FC = () => {
           <div className="space-y-6 text-brand-500" data-testid="monitor-card">
             <div className="space-y-2">
               <div data-testid="monitor-tag" className={TAG_STYLE}>
-                {data.entity_type || 'monitor'}
+                monitor
               </div>
               <h1 data-testid="monitor-title" className="font-satoshi text-5xl font-bold">
                 {data.title}

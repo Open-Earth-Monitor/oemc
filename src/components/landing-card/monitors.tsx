@@ -103,6 +103,7 @@ const Card: FC<Partial<Monitor> & { color?: string }> = ({
                   <span>Use cases</span>
                 </Link>
               </div>
+
               <Link
                 href={`/map/${id}/datasets`}
                 data-testid="monitor-button"
