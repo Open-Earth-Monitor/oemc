@@ -54,15 +54,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     }
   }, [compareLayers]); // // activates map at first render
 
-  // useEffect(() => {
-  //   if (!!center) {
-  //     setCenter(center);
-  //   }
-  //   if (!!zoom) {
-  //     setZoom(zoom);
-  //   }
-  // }, []);
-
   /**
    * Local viewport state
    */
@@ -133,7 +124,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       cleanUpLayers();
     } else {
       // setViewportSettings({ viewportSettings ?? nextSearchParams ?? localViewState });
-      router.replace(`${pathname}?${nextSearchParams.toString()}`);
+      // router.replace(`${pathname}?${nextSearchParams.toString()}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewportSettings, pathname, nextSearchParams, router, currentPathname, compareLayerId]);

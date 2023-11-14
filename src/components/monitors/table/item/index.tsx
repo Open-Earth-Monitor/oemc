@@ -34,20 +34,7 @@ const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
         <Link
           data-testid={`monitor-item-${id}`}
           key={id}
-          href={{
-            pathname: `/map/${id}/datasets`,
-            // query: {
-            //   layers: JSON.stringify([
-            //     {
-            //       id: defaultLayer?.layer_id,
-            //       opacity: 1,
-            //       ...(defaultRange && {
-            //         date: defaultRange,
-            //       }),
-            //     },
-            //   ]),
-            // },
-          }}
+          href={`/map/${id}/datasets`}
           className={`flex items-center border-l-4 px-4 font-bold`}
           style={{ borderLeftColor: color }}
         >
@@ -106,23 +93,7 @@ const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
                   initial="initial"
                   whileHover="hover"
                 >
-                  <Link
-                    href={{
-                      pathname: `/map/geostories/${geostoryId}`,
-                      // query: {
-                      //   layers: JSON.stringify([
-                      //     {
-                      //       id: defaultLayer?.layer_id,
-                      //       opacity: 1,
-                      //       ...(defaultLayer?.range?.[0] && {
-                      //         date: defaultLayer?.range?.[0],
-                      //       }),
-                      //     },
-                      //   ]),
-                      // },
-                    }}
-                    className="block"
-                  >
+                  <Link href={`/map/geostories/${geostoryId}`} className="block">
                     <div>
                       <span>{title}</span>
                       <motion.div
