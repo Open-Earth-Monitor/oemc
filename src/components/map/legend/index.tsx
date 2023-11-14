@@ -33,15 +33,14 @@ export const Legend = () => {
   const layerId = layers?.[0]?.id;
   const opacity = layers?.[0]?.opacity;
 
-  const compareId = compareLayers?.[0]?.id;
   const compareDate = compareLayers?.[0]?.date;
 
   const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layers?.length });
   const { title, range } = data ?? {};
 
-  const defaultId = layerId ?? data?.id;
+  const defaultId = layerId ?? data?.layer_id;
   const defaultBaseDate = layers?.[0]?.date || range?.[0]?.value;
-  const defaultCompareDate = compareDate ?? layers?.[0]?.date;
+  const defaultCompareDate = compareDate ?? defaultBaseDate;
 
   const [activeTab, setActiveTab] = useState<'layer-settings' | 'compare-layers'>(
     !!compareDate ? 'compare-layers' : 'layer-settings'
@@ -53,46 +52,21 @@ export const Legend = () => {
 
   const [selectedBaseDate, setSelectedBaseDate] = useState<string>(defaultBaseDate);
   const [selectedCompareDate, setSelectedCompareDate] = useState<string>(defaultCompareDate);
-  useEffect(() => {
-    if (activeTab === 'compare-layers' && !compareLayers?.[0]?.id) {
-      setCompareLayers([{ id: defaultId, opacity, date: layers?.[0]?.date || range?.[0]?.value }]);
-    }
-    if (activeTab === 'layer-settings') {
-      setCompareLayers(null);
-    }
-    // setLayers([{ id: defaultId, opacity, date: layers?.[0]?.date || range?.[0]?.value }]);
-  }, [defaultId, activeTab, setLayers, setCompareLayers, compareLayers, opacity, layers, range]);
 
   useEffect(() => {
-    if (activeTab === 'compare-layers' && compareLayers?.[0]?.id) {
-      setLayers([{ id: defaultId, opacity, date: selectedBaseDate }]);
-      setCompareLayers([{ id: defaultId, opacity, date: selectedCompareDate }]);
+    if (activeTab === 'compare-layers') {
+      void setLayers([{ id: defaultId, opacity, date: selectedBaseDate }]);
+      void setCompareLayers([{ id: defaultId, opacity, date: selectedCompareDate }]);
     }
-    // setLayers([{ id: defaultId, opacity, date: layers?.[0]?.date || range?.[0]?.value }]);
-  }, [selectedBaseDate, selectedCompareDate]);
+  }, [selectedBaseDate, selectedCompareDate, activeTab]);
 
   useEffect(() => {
     if (activeTab === 'layer-settings' && layers?.[0]?.id) {
-      setLayers([{ id: defaultId, opacity, date: selectedBaseDate }]);
+      void setLayers([{ id: defaultId, opacity, date: selectedBaseDate }]);
+      void setCompareLayers(null);
     }
-    // setLayers([{ id: defaultId, opacity, date: layers?.[0]?.date || range?.[0]?.value }]);
-  }, [selectedBaseDate]);
+  }, [selectedBaseDate, activeTab]);
 
-  useEffect(() => {
-    if (!compareId) {
-      setActiveTab('layer-settings');
-    }
-  }, [compareId]);
-
-  // useEffect(() => {
-  //   if (activeTab === 'compare-layers') {
-  //     setCompareLayers([{ id: defaultId, opacity, date: selectedCompareDate }]);
-  //   }
-  //   if (activeTab === 'layer-settings') {
-  //     setCompareLayers(null);
-  //   }
-  //   setLayers([{ id: defaultId, opacity, date: date || range?.[0]?.value }]);
-  // }, [defaultId]);
   const baseDateLabel = findLabel(layers?.[0]?.date, range);
   const CompareDateLabel = findLabel(compareLayers?.[0]?.date, range);
 

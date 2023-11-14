@@ -41,49 +41,55 @@ const DatasetCard: FC<DatasetCardProps> = ({
   const opacity = layerOpacity ?? 1;
   const compareId = compareLayers?.[0]?.id;
 
-  // activates first layer at first render
+  // activates first layer at first render is there is nothing on the url
   useEffect(() => {
-    if (isActive && isFirstRender) {
-      setLayers([
+    if (isActive && !layerId && isFirstRender) {
+      void setLayers([
         {
           opacity,
-          date: layerDate ?? range?.[0]?.value,
-          id: layerId ?? id,
+          date: range?.[0]?.value,
+          id: id,
         },
       ]);
-      if (!!compareId)
-        setCompareLayers([{ id: layerId, opacity, date: layerDate ?? range?.[0]?.value }]);
     }
     setIsFirstRender(false);
   }, []);
 
+  // activates layer on url
+  useEffect(() => {
+    if (layerId) {
+      void setLayers([
+        {
+          opacity,
+          date: layerDate,
+          id: layerId,
+        },
+      ]);
+      if (!!compareId)
+        void setCompareLayers([{ id: layerId, opacity, date: layerDate ?? range?.[0]?.value }]);
+    }
+  }, []);
+
   useEffect(() => {
     if (isActive) {
-      setLayers([
+      void setLayers([
         {
           opacity,
           date: layerDate ?? range?.[0]?.value,
-          id: layerId ?? id,
+          id,
         },
       ]);
     }
-  }, [isActive]);
 
-  useEffect(() => {
-    if (!isActive && !isFirstRender) {
+    if (!isActive && layerId === id) {
       void setLayers(null);
       void setCompareLayers(null);
     }
-  }, [isActive, setLayers]);
-
-  /**
-   * At mount, if layerId is in the URL, update the URL with the layerId
-   */
+  }, [isActive]);
 
   /**
    * Handle click on the toggle button
    */
-
   const handleClick = useCallback(() => {
     setIsActive(!isActive);
   }, [isActive]);
