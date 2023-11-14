@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 import type { Geostory } from '@/types/geostories';
 import type { Monitor } from '@/types/monitors';
 
-type MonitorsAndGeostoriesResponse = Geostory & Monitor;
+type MonitorsAndGeostoriesResponse = Geostory | Monitor;
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/', { waitUntil: 'load' });
@@ -64,7 +64,7 @@ test.describe('sort monitors and geostories', () => {
 
     const manuallyOrderedByTitle = defaultOrderedDataByTitle?.sort((a, b) =>
       a.title > b.title ? 1 : a.title < b.title ? -1 : 0
-    ) satisfies Monitor[];
+    );
 
     expect(defaultOrderedDataByTitle).toEqual(manuallyOrderedByTitle);
   });
