@@ -109,10 +109,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         nextSearchParams.set(key, value);
       }
     });
-    // setZoom(zoom.toString());
-    // setCenter(center.toString());
     setNextSearchParams(nextSearchParams.toString());
-  }, [searchParams, localViewState]);
+    void setCenter(localViewState.center);
+    void setZoom(localViewState.zoom.toString());
+  }, [searchParams, localViewState, setCenter, setZoom]);
   /**
    * Update the viewport state when the URL pathname, and search params changes
    */
