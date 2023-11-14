@@ -58,15 +58,15 @@ const TimeSeries: FC<{
   );
 
   useEffect(() => {
-    if (isPlaying && !compareDate) setCompareLayers(null);
+    if (isPlaying && !compareDate) void setCompareLayers(null);
   }, [isPlaying]);
 
   useEffect(
     () => {
       if (isActive && layerId && !isFirstRender) {
-        setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
+        void setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
         if (!!isCompareActive) {
-          setCompareLayers([{ id: layerId, opacity, date: compareDate }]);
+          void setCompareLayers([{ id: layerId, opacity, date: compareDate }]);
         }
       }
     },
