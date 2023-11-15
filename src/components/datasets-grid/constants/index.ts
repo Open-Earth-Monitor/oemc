@@ -1,9 +1,6 @@
 import type { SortingCriteria, Theme } from '../types';
 
-export const SORTING = [
-  'title',
-  //  'date' TO - Do add sorting by date when API gets ready
-] satisfies SortingCriteria[];
+export const SORTING = ['title', 'date'] satisfies SortingCriteria[];
 export const THEMES = [
   'Water',
   'Agriculture',
