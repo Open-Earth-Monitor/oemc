@@ -8,10 +8,10 @@ import cn from '@/lib/classnames';
 
 import type { LayerParsed } from '@/types/layers';
 
-import { useURLayerParams, useURLParams } from '@/hooks/url-params';
-
 import TimeSeries from '@/components/timeseries';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+
+import { useSyncCompareLayersSettings, useSyncLayersSettings } from '../../../hooks/sync-query';
 
 type DatasetCardProps = LayerParsed & {
   id: string;
@@ -27,59 +27,61 @@ const DatasetCard: FC<DatasetCardProps> = ({
   author,
   gs_style: legendStyles,
   range,
-  active = false,
-  autoPlay = false,
+  autoPlay = true,
+  active,
 }) => {
-  const { updateSearchParam, removeSearchParam } = useURLParams();
-  const { layerId, layerOpacity, date } = useURLayerParams();
+  const [layers, setLayers] = useSyncLayersSettings();
+  const layerId = layers?.[0]?.id;
+  const layerOpacity = layers?.[0]?.opacity;
+  const layerDate = layers?.[0]?.date;
   const [isActive, setIsActive] = useState<boolean>(active);
+  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
 
-  /**
-   * Handle click on the toggle button
-   */
-  const handleClick = useCallback(() => {
-    const nextIsActive = !isActive;
-    setIsActive(nextIsActive);
-
-    if (nextIsActive) {
-      updateSearchParam({
-        layers: [
-          {
-            id,
-            opacity: !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity,
-            date: date || range?.[0]?.value,
-          },
-        ],
-      });
-    } else {
-      removeSearchParam('layers');
-    }
-  }, [date, id, isActive, layerOpacity, range, removeSearchParam, updateSearchParam]);
+  // activates first layer at first render
+  useEffect(() => {
+    if (active && isFirstRender)
+      void setLayers([
+        {
+          opacity: layerOpacity ?? 1,
+          date: layerDate || range?.[0]?.value,
+          id: layerId || id,
+        },
+      ]);
+  }, []);
 
   /**
    * At mount, if layerId is in the URL, update the URL with the layerId
    */
   useEffect(() => {
     if (active && isActive && layerId !== id) {
-      updateSearchParam({
-        layers: [
-          {
-            id,
-            opacity: !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity,
-            date: date || range?.[0]?.value,
-          },
-        ],
-      });
+      void setLayers([
+        {
+          id,
+          opacity: !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity,
+          date: layerDate || range?.[0]?.value,
+        },
+      ]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /**
-   * Update isActive state when layerId is not in the URL anymore
-   */
   useEffect(() => {
-    setIsActive(layerId === id);
-  }, [layerId, id]);
+    if (isActive === id)
+      void setLayers([
+        {
+          opacity: layerOpacity ?? 1,
+          date: layerDate || range?.[0]?.value,
+          id: active,
+        },
+      ]);
+  }, []);
+
+  /**
+   * Handle click on the toggle button
+   */
+  const handleClick = useCallback(() => {
+    setIsActive(isActive === id);
+  }, [id, setIsActive]);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
@@ -152,7 +154,9 @@ const DatasetCard: FC<DatasetCardProps> = ({
         </div>
       )}
 
-      {range && <TimeSeries range={range} layerId={id} autoPlay={autoPlay} isActive={isActive} />}
+      {range && (
+        <TimeSeries range={range} layerId={id} autoPlay={autoPlay} isActive={id === isActive} />
+      )}
 
       <button
         data-testid="dataset-layer-toggle-button"
@@ -160,10 +164,10 @@ const DatasetCard: FC<DatasetCardProps> = ({
         className={cn(
           'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-secondary-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20',
           {
-            'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
+            'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive === id,
           }
         )}
-        onClick={handleClick}
+        onClick={() => void handleClick()}
       >
         <span>{isActive ? 'Hide' : 'Show'} layer on the map</span>
         <LuLayers className="h-3 w-3 text-inherit" title="layer" />
