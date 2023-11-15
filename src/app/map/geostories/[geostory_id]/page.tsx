@@ -16,15 +16,17 @@ import DatasetCard from '@/components/datasets/card';
 import GeostoryHead from '@/components/geostories/header';
 import Loading from '@/components/loading';
 
+const findMonitorByGeoStoryId = (monitors: MonitorParsed[], geoStoryId: string) =>
+  monitors?.find((monitor) =>
+    monitor.geostories.some((geostory) => geostory.id === geoStoryId)
+  ) satisfies MonitorParsed;
+
 const GeostoryPage: NextPage<{ params: { geostory_id: string } }> = ({
   params: { geostory_id },
 }) => {
   const { data, isLoading, isFetched, isError } = useGeostoryLayers({ geostory_id });
   const { data: monitors } = useMonitors();
-  const monitor = useMemo<MonitorParsed>(
-    () => monitors?.find(({ geostories }) => geostories.map(({ id }) => id === geostory_id)),
-    [monitors, geostory_id]
-  );
+  const monitor = findMonitorByGeoStoryId(monitors, geostory_id);
 
   const { title: monitorTitle, id: monitorId, color } = monitor || {};
 
