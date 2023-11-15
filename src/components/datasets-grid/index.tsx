@@ -184,7 +184,7 @@ const LandingDatasets = () => {
                   className="flex w-full flex-1 font-inter font-medium"
                   onValueChange={handleSortingCriteria}
                 >
-                  <div className="align-left flex flex-col justify-start space-y-2">
+                  <div className="align-left flex flex-col justify-start space-y-4">
                     {SORTING.map((sort) => (
                       <div
                         key={sort}
