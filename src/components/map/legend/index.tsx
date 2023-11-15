@@ -1,59 +1,163 @@
+import { useMemo, useState, useEffect } from 'react';
+
 import { cn } from '@/lib/classnames';
 
 import { useLayerParsedSource } from '@/hooks/layers';
-import { useURLayerParams } from '@/hooks/url-params';
+import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
+
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
 import LayerVisibility from './visibility';
 
 const LEGEND_BUTTON_STYLES =
-  'text-center text-xs uppercase rounded font-medium grow px-2 h-[34px] py-1 tracking-wide text-white hover:bg-secondary-500 hover:text-brand-500 disabled:opacity-50 disabled:cursor-not-allowed';
+  'bg-brand-500 flex-1 text-center text-xs uppercase rounded font-medium grow px-2 h-[34px] py-1 tracking-wide text-white hover:bg-secondary-500 hover:text-brand-500 disabled:opacity-50 disabled:cursor-not-allowed';
+
+const findLabel = (value: string, range: { label: string; value: string | number }[]) =>
+  range?.find((d: { label: string; value: string }) => d.value === value)?.label satisfies
+    | string
+    | number;
 
 export const Legend = () => {
-  const { layerId } = useURLayerParams();
-  const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layerId });
-  const { title } = data ?? {};
+  const [layers, setLayers] = useSyncLayersSettings();
+  const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
+
+  const layerId = layers?.[0]?.id;
+  const opacity = layers?.[0]?.opacity;
+  const date = layers?.[0]?.date;
+
+  const compareDate = compareLayers?.[0]?.date;
+
+  const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layers?.length });
+  const { title, range } = data ?? {};
+
+  const defaultCompareDate = compareDate || date;
+
+  const [activeTab, setActiveTab] = useState<'layer-settings' | 'compare-layers'>(
+    !!compareDate ? 'compare-layers' : 'layer-settings'
+  );
+
+  const handleTabChange = (value: 'layer-settings' | 'compare-layers') => {
+    setActiveTab(value);
+  };
+
+  const [baseDate, setBaseDate] = useState<string>(date);
+  const [selectedCompareDate, setSelectedCompareDate] = useState<string>(defaultCompareDate);
+
+  useEffect(() => {
+    if (activeTab === 'compare-layers') {
+      void setCompareLayers([{ id: layerId, opacity, date: selectedCompareDate }]);
+    }
+    if (activeTab === 'layer-settings') {
+      void setCompareLayers(null);
+    }
+    void setLayers([{ id: layerId, opacity, date: baseDate }]);
+  }, [baseDate, selectedCompareDate, layerId, activeTab, setLayers, setCompareLayers, opacity]);
+
+  const baseDateLabel = useMemo(() => findLabel(baseDate, range), [baseDate, range]);
+  const CompareDateLabel = useMemo(
+    () => findLabel(selectedCompareDate, range),
+    [selectedCompareDate, range]
+  );
 
   return (
     <div
       className="absolute bottom-3 right-3 z-10 space-y-1 font-inter text-xs"
       data-testid="map-legend"
     >
-      {layerId && (
-        <div className="flex rounded-md border border-secondary-500 bg-brand-500">
-          <button
-            type="button"
-            className={cn(LEGEND_BUTTON_STYLES, 'bg-secondary-500 text-brand-500')}
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-[400px]">
+        <TabsList className="border-box rounded border border-secondary-500">
+          <TabsTrigger
             data-testid="map-legend-toggle-button"
+            value="layer-settings"
+            className={cn(LEGEND_BUTTON_STYLES)}
           >
             Layer
-          </button>
-          <button className={LEGEND_BUTTON_STYLES} disabled>
-            Compare
-          </button>
-        </div>
-      )}
-      {data && layerId && (
-        <div
-          className="relative flex min-h-[34px] items-center justify-between space-x-4 rounded-sm border border-gray-600 bg-brand-500 px-4 py-3"
-          data-testid="map-legend-item"
-        >
-          <div data-testid="map-legend-item-title" className="text-xs font-bold">
-            {title}
-          </div>
-          <div
-            className="flex space-x-2 divide-x divide-secondary-900"
-            data-testid="map-legend-item-toolbar"
+          </TabsTrigger>
+          <TabsTrigger
+            value="compare-layers"
+            className={cn(LEGEND_BUTTON_STYLES)}
+            data-testid="map-legend-compare-button"
+            disabled={!range || range.length === 0 || !layerId}
           >
-            <div className="flex space-x-2">
-              <OpacitySetting />
-              <LayerVisibility />
+            Compare
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="layer-settings">
+          <div
+            className="relative flex min-h-[34px] items-center justify-between space-x-4 rounded-sm border border-gray-600 bg-brand-500 px-4 py-3 text-secondary-500"
+            data-testid="map-legend-item"
+          >
+            <div data-testid="map-legend-item-title" className="text-xs font-bold">
+              {title}
             </div>
-            <RemoveLayer className="pl-2" />
+            <div
+              className="flex space-x-2 divide-x divide-secondary-900"
+              data-testid="map-legend-item-toolbar"
+            >
+              <div className="flex space-x-2">
+                <OpacitySetting />
+                <LayerVisibility />
+              </div>
+              <RemoveLayer className="pl-2" />
+            </div>
           </div>
-        </div>
-      )}
+        </TabsContent>
+        <TabsContent value="compare-layers">
+          <div
+            className={cn(
+              'relative flex min-h-[34px] flex-col items-center justify-between space-x-4 space-y-6 rounded-sm border border-gray-600 bg-brand-500 px-4 py-3 text-secondary-500'
+            )}
+            data-testid="map-legend-item"
+          >
+            <div data-testid="map-legend-item-title" className="text-xs font-bold">
+              {title}
+            </div>
+
+            <div className="flex w-full flex-col space-y-6">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <div className="flex w-full justify-between">
+                    <span>Selected year: {baseDateLabel}</span>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-brand-500">
+                  {range?.map((d) => (
+                    <DropdownMenuItem key={d.value}>
+                      <button type="button" onClick={() => setBaseDate(d.value)}>
+                        {d.label}
+                      </button>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <div className="flex w-full justify-between">
+                    <span>Selected year: {CompareDateLabel}</span>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-brand-500">
+                  {range?.map((d) => (
+                    <DropdownMenuItem key={d.value}>
+                      <button type="button" onClick={() => setSelectedCompareDate(d.value)}>
+                        {d.label}
+                      </button>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
