@@ -36,7 +36,7 @@ const DropdownMenuTrigger = forwardRef<
   <DropdownMenuPrimitive.Trigger
     ref={ref}
     className={cn({
-      'group h-full rounded-none border border-secondary-900 px-8 text-secondary-500 hover:bg-secondary-700':
+      'group h-full rounded-none border border-secondary-900 px-8 text-secondary-500 hover:bg-secondary-700 hover:text-secondary-500':
         true,
       'pl-8': inset,
       [className]: !!className,
@@ -60,10 +60,11 @@ const DropdownMenuContent = forwardRef<
     <DropdownMenuPrimitive.Content
       ref={ref}
       sideOffset={sideOffset}
-      className={cn(
-        'dropdown-menu-content z-50 w-full overflow-hidden border border-secondary-900 p-1 text-popover-foreground text-secondary-700 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-        className
-      )}
+      className={cn({
+        'dropdown-menu-content z-50 w-full overflow-hidden border border-secondary-900 p-1 text-popover-foreground text-secondary-700 shadow-md hover:text-secondary-500 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2':
+          true,
+        [className]: !!className,
+      })}
       {...props}
     />
   </DropdownMenuPrimitive.Portal>
@@ -104,7 +105,7 @@ const DropdownMenuCheckboxItem = forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-secondary-700 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:text-secondary-500 focus:bg-secondary-700 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
     checked={checked}
