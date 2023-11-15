@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-// import { orderBy } from 'lodash-es';
+import { orderBy } from 'lodash-es';
 
 import type { Geostory } from '@/types/geostories';
 import type { Monitor } from '@/types/monitors';
@@ -33,27 +33,27 @@ test.describe('sort monitors and geostories', () => {
   //   expect(sortedByIdResponse).toEqual([...orderedMonitorsById, ...orderedGeostoriesById]);
   // }); TO - DO - fix when API gets ready
 
-  // test('sort by date', async ({ page }) => {
-  //   const response = await page.waitForResponse(
-  //     'https://api.earthmonitor.org/monitors-and-geostories?sort_by=title'
-  //   );
+  test('sort by date', async ({ page }) => {
+    const response = await page.waitForResponse(
+      'https://api.earthmonitor.org/monitors-and-geostories?sort_by=title'
+    );
 
-  //   const defaultOrderedDataByTitle = (await response.json()) as MonitorsAndGeostoriesResponse[];
-  //   const sortByDateCheckbox = page.getByTestId('date-button');
+    const defaultOrderedDataByTitle = (await response.json()) as MonitorsAndGeostoriesResponse[];
+    const sortByDateCheckbox = page.getByTestId('date-button');
 
-  //   await sortByDateCheckbox.click();
-  //   const sortPromise = page.waitForResponse(
-  //     'https://api.earthmonitor.org/monitors-and-geostories?sort_by=date'
-  //   );
-  //   const sortedResponse = await sortPromise;
-  //   const sortedByDateResponse = (await sortedResponse.json()) as MonitorsAndGeostoriesResponse[];
+    await sortByDateCheckbox.click();
+    const sortPromise = page.waitForResponse(
+      'https://api.earthmonitor.org/monitors-and-geostories?sort_by=date'
+    );
+    const sortedResponse = await sortPromise;
+    const sortedByDateResponse = (await sortedResponse.json()) as MonitorsAndGeostoriesResponse[];
 
-  //   const monitors = defaultOrderedDataByTitle.filter((item) => item.geostories);
-  //   const geostories = defaultOrderedDataByTitle.filter((item) => item.layers);
-  //   const orderedMonitorsByDate = orderBy(monitors, ['date']) satisfies Monitor[];
-  //   const orderedGeostoriesByDate = orderBy(geostories, ['date']) satisfies Geostory[];
-  //   expect(sortedByDateResponse).toEqual([...orderedMonitorsByDate, ...orderedGeostoriesByDate]);
-  // }); TO - DO - fix when API gets ready
+    const monitors = defaultOrderedDataByTitle.filter((item) => item.geostories);
+    const geostories = defaultOrderedDataByTitle.filter((item) => item.layers);
+    const orderedMonitorsByDate = orderBy(monitors, ['date']) satisfies Monitor[];
+    const orderedGeostoriesByDate = orderBy(geostories, ['date']) satisfies Geostory[];
+    expect(sortedByDateResponse).toEqual([...orderedMonitorsByDate, ...orderedGeostoriesByDate]);
+  });
 
   test('sort by title (default option)', async ({ page }) => {
     const response = await page.waitForResponse(
