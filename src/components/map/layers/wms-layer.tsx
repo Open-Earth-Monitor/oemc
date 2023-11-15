@@ -1,10 +1,12 @@
 import { RLayerWMS } from 'rlayers';
 
 import { useLayerParsedSource } from '@/hooks/layers';
-import { useURLayerParams } from '@/hooks/url-params';
+import { useSyncLayersSettings } from '@/hooks/sync-query';
 
 export const RLayerWMSComponent = () => {
-  const { layerId, layerOpacity, date } = useURLayerParams();
+  const [layers] = useSyncLayersSettings();
+  const { id: layerId, opacity: layerOpacity, date } = layers?.[0] || {};
+
   const { data } = useLayerParsedSource(
     {
       layer_id: layerId,

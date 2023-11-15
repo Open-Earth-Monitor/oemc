@@ -36,7 +36,7 @@ const DropdownMenuTrigger = forwardRef<
   <DropdownMenuPrimitive.Trigger
     ref={ref}
     className={cn({
-      'group h-full rounded-none border border-secondary-900 px-8 text-secondary-500 hover:bg-secondary-900':
+      'group h-full rounded-none border border-secondary-900 px-8 text-secondary-500 hover:bg-secondary-700':
         true,
       'pl-8': inset,
       [className]: !!className,

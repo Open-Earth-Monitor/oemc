@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import Link from 'next/link';
 
@@ -10,12 +10,13 @@ import { cn } from '@/lib/classnames';
 import { MonitorParsed } from '@/types/monitors';
 
 import { TableCell } from '@/components/ui/table';
-
 const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const controls = useAnimationControls();
-  const { id, title, geostories, color, colorOpacity } = data ?? {};
+  const { id, title, geostories, color, colorOpacity } = (data ?? {}) as MonitorParsed;
   const geostoriesLength = geostories.length;
+  const defaultLayer = useMemo(() => !!geostories && geostories?.[0]?.layers?.[0], [geostories]);
+  const defaultRange = useMemo(() => !!defaultLayer && defaultLayer?.range?.[0], [defaultLayer]);
 
   const handleVisibility = async () => {
     setIsExpanded(!isExpanded);
@@ -33,7 +34,20 @@ const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
         <Link
           data-testid={`monitor-item-${id}`}
           key={id}
-          href={`/map/${id}/datasets`}
+          href={{
+            pathname: `/map/${id}/datasets`,
+            // query: {
+            //   layers: JSON.stringify([
+            //     {
+            //       id: defaultLayer?.layer_id,
+            //       opacity: 1,
+            //       ...(defaultRange && {
+            //         date: defaultRange,
+            //       }),
+            //     },
+            //   ]),
+            // },
+          }}
           className={`flex items-center border-l-4 px-4 font-bold`}
           style={{ borderLeftColor: color }}
         >
@@ -92,7 +106,23 @@ const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
                   initial="initial"
                   whileHover="hover"
                 >
-                  <Link href={`/map/geostories/${geostoryId}`} className="block">
+                  <Link
+                    href={{
+                      pathname: `/map/geostories/${geostoryId}`,
+                      // query: {
+                      //   layers: JSON.stringify([
+                      //     {
+                      //       id: defaultLayer?.layer_id,
+                      //       opacity: 1,
+                      //       ...(defaultLayer?.range?.[0] && {
+                      //         date: defaultLayer?.range?.[0],
+                      //       }),
+                      //     },
+                      //   ]),
+                      // },
+                    }}
+                    className="block"
+                  >
                     <div>
                       <span>{title}</span>
                       <motion.div
