@@ -1,5 +1,4 @@
-export type SortingCriteria = 'title';
-// | 'date' TO - DO: add date sorting when API gets readdy
+export type SortingCriteria = 'title' | 'date';
 export type Theme =
   | 'Water'
   | 'Agriculture'
