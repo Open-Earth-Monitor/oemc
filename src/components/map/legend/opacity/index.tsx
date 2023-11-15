@@ -1,36 +1,30 @@
-import { FC, useEffect, useState, useCallback } from 'react';
+import { FC, useState, useCallback } from 'react';
 
 import { MdOutlineOpacity } from 'react-icons/md';
-import { useDebounce } from 'usehooks-ts';
 
 import { cn } from '@/lib/classnames';
 
-import { useURLayerParams, useURLParams } from '@/hooks/url-params';
+import { useSyncLayersSettings } from '@/hooks/sync-query';
 
 import { Slider } from '@/components/slider';
 import { Popover, PopoverArrow, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export const OpacitySetting: FC = () => {
-  const { updateSearchParam } = useURLParams();
-  const { layerId, layerOpacity, date } = useURLayerParams();
-
+  const [layers, setLayers] = useSyncLayersSettings();
   const [isOpacityPopoverOpen, setOpacityPopoverOpen] = useState<boolean>(false);
-  const [opacity, setOpacity] = useState<number>(
-    !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity
-  );
-  const debouncedOpacity = useDebounce<number>(opacity, 300);
+
+  const layerOpacity = layers?.[0]?.opacity;
+  const opacity = !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity;
 
   const handleOpacityVisibility = useCallback(
     () => setOpacityPopoverOpen(!isOpacityPopoverOpen),
     [isOpacityPopoverOpen]
   );
 
-  const handleChange = useCallback((e: number[]) => setOpacity(e[0]), []);
-
-  useEffect(() => {
-    updateSearchParam({ layers: [{ id: layerId, opacity, date }] });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedOpacity]);
+  const handleChange = useCallback(
+    (e: number[]) => void setLayers((prevState) => [{ ...prevState?.[0], opacity: e[0] }]),
+    [setLayers]
+  );
 
   return (
     <Popover onOpenChange={handleOpacityVisibility}>
@@ -57,7 +51,7 @@ export const OpacitySetting: FC = () => {
           </div>
           <div className="relative py-1.5">
             <Slider
-              onValueChange={handleChange}
+              onValueChange={() => void handleChange()}
               value={[opacity]}
               min={0}
               max={1}
