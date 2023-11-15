@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useState, FC, useCallback, useEffect } from 'react';
+import React, { useMemo, useState, FC, useCallback, useEffect } from 'react';
 
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 
 import { MapBrowserEvent } from 'ol';
-import type { Coordinate } from 'ol/coordinate';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
@@ -13,7 +12,6 @@ import { useLayerParsedSource } from '@/hooks/layers';
 import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
-  useSyncViewportSettings,
   useSyncCenterSettings,
   useSyncZoomSettings,
 } from '@/hooks/sync-query';
@@ -28,23 +26,19 @@ import Legend from './legend';
 import type { CustomMapProps } from './types';
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
-  const layerId = layers?.[0]?.id;
+  const layerId = useMemo(() => layers?.[0]?.id, [layers]);
   const layerOpacity = layers?.[0]?.opacity;
   const date = layers?.[0]?.date;
-  const [nextSearchParams, setNextSearchParams] = useState<string>(searchParams.toString());
-  const [currentPathname, setCurrentPathname] = useState<string>(pathname);
-  const [viewportSettings, setViewportSettings] = useSyncViewportSettings();
+  const [, setNextSearchParams] = useState<string>(searchParams.toString());
   const [compareLayers] = useSyncCompareLayersSettings();
   const compareLayerId = compareLayers?.[0]?.id;
   const compareDate = compareLayers?.[0]?.date;
 
-  const [isCompareActive, setIsCompareActive] = useState<boolean>(false);
+  const [, setIsCompareActive] = useState<boolean>(false);
 
   useEffect(() => {
     if (!!compareLayerId) {
@@ -85,17 +79,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   }, []);
 
   /**
-   * Remove all params from the URL but not the viewport params
-   */
-  const cleanUpLayers = useCallback(() => {
-    const nextSearchParams = new URLSearchParams({
-      center: JSON.stringify(localViewState.center),
-      zoom: localViewState.zoom?.toString(),
-    });
-    setNextSearchParams(nextSearchParams.toString());
-  }, [localViewState?.center, localViewState?.zoom]);
-
-  /**
    * Update the URL when the user stops moving the map
    */
   const handleUpdateUrl = useCallback(() => {
@@ -113,21 +96,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     void setCenter(localViewState.center);
     void setZoom(localViewState.zoom.toString());
   }, [searchParams, localViewState, setCenter, setZoom]);
-  /**
-   * Update the viewport state when the URL pathname, and search params changes
-   */
-  useEffect(() => {
-    if (currentPathname !== pathname) {
-      setCurrentPathname(pathname);
-      cleanUpLayers();
-    } else if (!nextSearchParams || nextSearchParams === '') {
-      cleanUpLayers();
-    } else {
-      // setViewportSettings({ viewportSettings ?? nextSearchParams ?? localViewState });
-      // router.replace(`${pathname}?${nextSearchParams.toString()}`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewportSettings, pathname, nextSearchParams, router, currentPathname, compareLayerId]);
 
   const sharedViewportSettings = {
     ...(center && { center }),
