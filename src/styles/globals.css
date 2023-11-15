@@ -161,3 +161,41 @@
   padding-bottom: 8px !important;
 }
 
+.ol-swipe::before {
+background-color: hsla(210, 9%, 22%, 1) !important;
+}
+
+.ol-swipe button {
+  background-color: hsla(210, 9%, 22%, 1) !important;
+  width: 76px !important;
+  height: 76px !important;
+  border-radius: 50% !important;
+  border: 2px solid hsla(60, 100%, 95%, 1) !important;
+}
+
+.ol-swipe::after {
+  display: none !important;
+}
+
+.ol-swipe button::before,
+.ol-swipe button::after {
+  content: "" !important;
+  border: solid hsla(60, 100%, 95%, 1) !important;
+  border-width: 0 2px 2px 0 !important;
+  display: inline-block !important;
+  padding: 4px !important;
+  background-color: transparent !important;
+  top: 0 !important;
+  transform: rotate(135deg) !important;
+  position: relative !important;
+}
+
+.ol-swipe button::before {
+  transform: rotate(135deg) !important;
+  left: -2px !important;
+}
+
+.ol-swipe button::after {
+  transform: rotate(-45deg) !important;
+  left: 2px !important;
+}

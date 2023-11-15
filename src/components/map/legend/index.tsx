@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { MouseEvent } from 'react';
 
 import { cn } from '@/lib/classnames';
@@ -38,10 +38,6 @@ export const Legend = () => {
   const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layers?.length });
   const { title, range } = data ?? {};
 
-  const defaultId = layerId ?? data?.layer_id;
-  const defaultBaseDate = layers?.[0]?.date || range?.[0]?.value;
-  const defaultCompareDate = compareDate ?? defaultBaseDate;
-
   const [activeTab, setActiveTab] = useState<'layer-settings' | 'compare-layers'>(
     !!compareDate ? 'compare-layers' : 'layer-settings'
   );
@@ -50,32 +46,42 @@ export const Legend = () => {
     setActiveTab(value);
   };
 
-  const [selectedBaseDate, setSelectedBaseDate] = useState<string>(defaultBaseDate);
-  const [selectedCompareDate, setSelectedCompareDate] = useState<string>(defaultCompareDate);
-
-  useEffect(() => {
-    if (activeTab === 'compare-layers') {
-      void setLayers([{ id: defaultId, opacity, date: selectedBaseDate }]);
-      void setCompareLayers([{ id: defaultId, opacity, date: selectedCompareDate }]);
-    }
-  }, [selectedBaseDate, selectedCompareDate, activeTab]);
-
-  useEffect(() => {
-    if (activeTab === 'layer-settings' && layers?.[0]?.id) {
-      void setLayers([{ id: defaultId, opacity, date: selectedBaseDate }]);
-      void setCompareLayers(null);
-    }
-  }, [selectedBaseDate, activeTab]);
-
   const baseDateLabel = findLabel(layers?.[0]?.date, range);
   const CompareDateLabel = findLabel(compareLayers?.[0]?.date, range);
+
+  const handleBaseDate = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      void setLayers([{ id: layerId, opacity, date: e.currentTarget.value }]);
+    },
+    [layerId, opacity, setLayers]
+  );
+
+  const handleCompareDate = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      void setCompareLayers([{ id: layerId, opacity, date: e.currentTarget.value }]);
+    },
+    [layerId, opacity, setCompareLayers]
+  );
+
+  // needed to set the compare date to the base date when the user clicks on the compare tab
+  useEffect(() => {
+    if (activeTab === 'compare-layers') {
+      void setCompareLayers([{ id: layerId, opacity, date: compareDate || layers?.[0]?.date }]);
+    }
+    if (activeTab === 'layer-settings') {
+      void setCompareLayers(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   return (
     <div
       className="absolute bottom-3 right-3 z-10 space-y-1 font-inter text-xs"
       data-testid="map-legend"
     >
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-[400px]">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="min-w-[270px]">
         <TabsList className="border-box rounded border border-secondary-500">
           <TabsTrigger
             data-testid="map-legend-toggle-button"
@@ -95,7 +101,7 @@ export const Legend = () => {
         </TabsList>
         <TabsContent value="layer-settings">
           <div
-            className="relative flex min-h-[34px] items-center justify-between space-x-4 rounded-sm border border-gray-600 bg-brand-500 px-4 py-3 text-secondary-500"
+            className="relative flex min-h-[34px] items-start justify-between space-x-4 rounded-sm border border-gray-600 bg-brand-500 px-4 py-3 text-secondary-500"
             data-testid="map-legend-item"
           >
             <div data-testid="map-legend-item-title" className="text-xs font-bold">
@@ -113,10 +119,10 @@ export const Legend = () => {
             </div>
           </div>
         </TabsContent>
-        <TabsContent value="compare-layers">
+        <TabsContent value="compare-layers" className="ml-0">
           <div
             className={cn(
-              'relative flex min-h-[34px] flex-col items-center justify-between space-x-4 space-y-6 rounded-sm border border-gray-600 bg-brand-500 px-4 py-3 text-secondary-500'
+              'relative flex min-h-[34px] w-full flex-col justify-between space-y-6 rounded-sm border border-gray-600 bg-brand-500 px-4 py-3 text-secondary-500'
             )}
             data-testid="map-legend-item"
           >
@@ -124,17 +130,22 @@ export const Legend = () => {
               {title}
             </div>
 
-            <div className="flex w-full flex-col space-y-6">
+            <div className="flex w-full flex-col items-start space-y-6 ">
               <DropdownMenu>
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger className="w-full border-none p-0">
                   <div className="flex w-full justify-between">
                     <span>Selected year: {baseDateLabel}</span>
                   </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-brand-500">
+                <DropdownMenuContent className="w-full bg-brand-500">
                   {range?.map((d) => (
                     <DropdownMenuItem key={d.value}>
-                      <button type="button" onClick={() => setSelectedBaseDate(d.value)}>
+                      <button
+                        type="button"
+                        value={d.value}
+                        onClick={handleBaseDate}
+                        className="w-full"
+                      >
                         {d.label}
                       </button>
                     </DropdownMenuItem>
@@ -142,15 +153,20 @@ export const Legend = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger className="w-full border-none p-0">
                   <div className="flex w-full justify-between">
                     <span>Selected year: {CompareDateLabel}</span>
                   </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-brand-500">
+                <DropdownMenuContent className="max-w-[100px] bg-brand-500">
                   {range?.map((d) => (
                     <DropdownMenuItem key={d.value}>
-                      <button type="button" onClick={() => setSelectedCompareDate(d.value)}>
+                      <button
+                        type="button"
+                        value={d.value}
+                        onClick={handleCompareDate}
+                        className="w-full"
+                      >
                         {d.label}
                       </button>
                     </DropdownMenuItem>
