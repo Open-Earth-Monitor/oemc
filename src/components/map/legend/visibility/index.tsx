@@ -5,19 +5,17 @@ import { IoMdEye } from 'react-icons/io';
 
 import { cn } from '@/lib/classnames';
 
-import { useURLayerParams, useURLParams } from '@/hooks/url-params';
+import { useSyncLayersSettings } from '@/hooks/sync-query';
 
 export const LayerVisibility = () => {
-  const { updateSearchParam } = useURLParams();
-  const { layerId, layerOpacity, date } = useURLayerParams();
+  const [layers, setLayers] = useSyncLayersSettings();
+  const layerOpacity = layers?.[0]?.opacity;
 
   const isLayerVisible = useMemo(() => !!layerOpacity && layerOpacity > 0, [layerOpacity]);
 
   const onToggleLayerVisibility = useCallback(() => {
-    updateSearchParam({
-      layers: [{ id: layerId, opacity: isLayerVisible ? 0 : 1, date }],
-    });
-  }, [date, isLayerVisible, layerId, updateSearchParam]);
+    void setLayers((prevState) => [{ ...prevState?.[0], opacity: isLayerVisible ? 0 : 1 }]);
+  }, [isLayerVisible, setLayers]);
 
   return (
     <button

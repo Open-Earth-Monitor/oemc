@@ -2,13 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import type { FC } from 'react';
 
 import { HiPlay, HiPause } from 'react-icons/hi2';
-import { useInterval } from 'usehooks-ts';
+import { useInterval, useDebounce } from 'usehooks-ts';
 
 import cn from '@/lib/classnames';
 
 import type { LayerDateRange, LayerParsed } from '@/types/layers';
-
-import { useURLayerParams, useURLParams } from '@/hooks/url-params';
 
 import {
   Select,
@@ -18,6 +16,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import { useSyncLayersSettings } from '../../hooks/sync-query';
+
 const TIMEOUT_STEP_DURATION = 2500;
 
 const TimeSeries: FC<{
@@ -25,11 +25,28 @@ const TimeSeries: FC<{
   range: LayerParsed['range'];
   autoPlay?: boolean;
   isActive?: boolean;
-}> = ({ range, autoPlay = false, isActive = false }) => {
-  const { updateSearchParam } = useURLParams();
-  const { layerId, layerOpacity, date } = useURLayerParams();
-
+}> = ({ range, autoPlay = false, isActive = false, layerId }) => {
+  const [layers, setLayers] = useSyncLayersSettings();
+  const [compareLayers, setCompareLayers] = useSyncLayersSettings();
+  const isCompareActive = compareLayers?.[0]?.id;
+  const compareDate = compareLayers?.[0]?.date;
+  const layerOpacity = layers?.[0]?.opacity;
+  const date = layers?.[0]?.date;
+  const opacity = !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity;
+  const debouncedOpacity = useDebounce<number>(opacity, 300);
   const [currentRange, setCurrentRange] = useState<{ value: string; label: string }>(range[0]);
+
+  useEffect(
+    () => {
+      void setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
+      if (!!isCompareActive) {
+        void setCompareLayers([{ id: layerId, opacity, date: compareDate }]);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [debouncedOpacity, opacity, currentRange?.value]
+  );
+
   const [isPlaying, setPlaying] = useState<boolean>(autoPlay);
 
   const handlePlay = useCallback(() => {
@@ -53,24 +70,6 @@ const TimeSeries: FC<{
   );
 
   /**
-   * Updating layers params when range changes
-   */
-  useEffect(() => {
-    if (currentRange && isActive) {
-      updateSearchParam({
-        layers: [
-          {
-            id: layerId,
-            opacity: !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity,
-            date: currentRange?.value,
-          },
-        ],
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRange]);
-
-  /**
    * At mounting set initial current range based on the url params
    */
   useEffect(() => {
@@ -89,6 +88,19 @@ const TimeSeries: FC<{
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive]);
+
+  // Stop time series when compare is active
+  // useEffect(() => {
+  //   if (isCompareActive) {
+  //     setPlaying(false);
+  //   }
+  // }, [isCompareActive]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      void setCompareLayers(null);
+    }
+  }, [isPlaying]);
 
   return (
     <div className="space-y-4">

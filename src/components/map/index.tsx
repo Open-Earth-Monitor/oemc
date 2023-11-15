@@ -10,7 +10,7 @@ import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
 import { useLayerParsedSource } from '@/hooks/layers';
-import { useURLayerParams } from '@/hooks/url-params';
+import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
 
 import { DEFAULT_VIEWPORT } from './constants';
 // map controls
@@ -25,9 +25,37 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { layerId, layerOpacity, date } = useURLayerParams();
+  const [layers, setLayers] = useSyncLayersSettings();
+  const layerId = layers?.[0]?.id;
+  const layerOpacity = layers?.[0]?.opacity;
+  const date = layers?.[0]?.date;
   const [nextSearchParams, setNextSearchParams] = useState<string>(searchParams.toString());
   const [currentPathname, setCurrentPathname] = useState<string>(pathname);
+
+  const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
+  const compareLayerId = compareLayers?.[0]?.id;
+  const compareDate = compareLayers?.[0]?.date;
+
+  // activates map at first render
+  useEffect(() => {
+    if (!!layerId)
+      void setLayers([
+        {
+          opacity: layerOpacity ?? 1,
+          date: date || range?.[0]?.value,
+          id: layerId,
+        },
+      ]);
+
+    if (!!compareLayerId)
+      void setCompareLayers([
+        {
+          opacity: layerOpacity ?? 1,
+          date: compareDate || range?.[0]?.value,
+          id: compareLayerId,
+        },
+      ]);
+  }, []);
 
   /**
    * Local viewport state
@@ -99,7 +127,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     } else if (!nextSearchParams || nextSearchParams === '') {
       cleanUpLayers();
     } else {
-      router.replace(`${pathname}?${nextSearchParams.toString()}`);
+      // router.replace(`${pathname}?${nextSearchParams.toString()}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, nextSearchParams, router, currentPathname]);
@@ -122,47 +150,51 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           attributions="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
         />
 
-        <RLayerWMS
-          properties={{ label: gs_name, opacity: layerOpacity, date, range }}
-          url={gs_base_wms}
-          params={{
-            FORMAT: 'image/png',
-            WIDTH: 256,
-            HEIGHT: 256,
-            SERVICE: 'WMS',
-            VERSION: '1.3.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: gs_name,
-            DIM_DATE: date,
-            CRS: 'EPSG:3857',
-            BBOX: 'bbox-epsg-3857',
-          }}
-        />
+        {layerId && (
+          <RLayerWMS
+            properties={{ label: gs_name, opacity: layerOpacity, date, range }}
+            url={gs_base_wms}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 256,
+              HEIGHT: 256,
+              SERVICE: 'WMS',
+              VERSION: '1.3.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: gs_name,
+              DIM_DATE: date,
+              CRS: 'EPSG:3857',
+              BBOX: 'bbox-epsg-3857',
+            }}
+          />
+        )}
 
-        <RLayerWMS
-          properties={{ label: gs_name, opacity: layerOpacity, date, range }}
-          url={gs_base_wms}
-          params={{
-            FORMAT: 'image/png',
-            WIDTH: 256,
-            HEIGHT: 256,
-            SERVICE: 'WMS',
-            VERSION: '1.3.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: gs_name,
-            DIM_DATE: '20130101_20131231', // change this date to the one you want to compare
-            CRS: 'EPSG:3857',
-            BBOX: 'bbox-epsg-3857',
-          }}
-        />
+        {!!compareLayerId && (
+          <RLayerWMS
+            properties={{ label: gs_name, opacity: layerOpacity, date, range }}
+            url={gs_base_wms}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 256,
+              HEIGHT: 256,
+              SERVICE: 'WMS',
+              VERSION: '1.3.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: gs_name,
+              DIM_DATE: compareDate || date,
+              CRS: 'EPSG:3857',
+              BBOX: 'bbox-epsg-3857',
+            }}
+          />
+        )}
 
         <Controls className="absolute bottom-3 left-[554px] z-50">
           <RControl.RZoom />
           <BookmarkControl />
           <ShareControl />
-          <SwipeControl />
+          {compareLayerId && <SwipeControl />}
         </Controls>
         <Legend />
       </RMap>
