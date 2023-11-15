@@ -6,9 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## v0.1.0
+## v0.1.0-alpha.2 - Unreleased
 
-Unreleased
+### Added
+- Display of monitors and geostories in landing page [OEMC-25](https://vizzuality.atlassian.net/browse/OEMC-25?atlOrigin=eyJpIjoiNDZiOTM0YjkzN2NlNDJhNmE2OWJiODYxZTlmYzcwNjkiLCJwIjoiaiJ9)
+- Search monitors and geostories by title [OEMC-94](https://vizzuality.atlassian.net/browse/OEMC-94?atlOrigin=eyJpIjoiMGVlYmJhNmM5ODU4NDRiNWEzNTIyNWRjODdjNDg4MWUiLCJwIjoiaiJ9)
+- 404 - error management [OEMC-81](https://vizzuality.atlassian.net/browse/OEMC-81?atlOrigin=eyJpIjoiNWZkNTYwMjVkZGVjNDAwZGE2YWI3ZDgwMzgzOTRjMjEiLCJwIjoiaiJ9)
+- Sorting items in landing page [OEMC-24](https://vizzuality.atlassian.net/browse/OEMC-24?atlOrigin=eyJpIjoiZTlmNGE1Njk3MTRlNDNjMmExY2I3YmE1ZjUzMTBkYjIiLCJwIjoiaiJ9)
+- Alpha version tag added to site [OEMC-127](https://vizzuality.atlassian.net/browse/OEMC-127?atlOrigin=eyJpIjoiYzBiNGI0NDcwOGUzNGYzMzgzM2I1NWVhMWE0NjFkZjciLCJwIjoiaiJ9)
+- Functionality for returning from a geostory to its associated monitor [OEMC-121](https://vizzuality.atlassian.net/browse/OEMC-121?atlOrigin=eyJpIjoiNWY1OTkwZDNlMWNiNDA4M2JiOWM0NDNiODlkMDBlNmUiLCJwIjoiaiJ9)
+- Links to social media (twitter, github and linkedin), link to "contact us" and "privacy policy" [OEMC-108](https://vizzuality.atlassian.net/browse/OEMC-108?atlOrigin=eyJpIjoiMTFhMjI4MmE1NjYzNDNiNmJlNWFlOGJjYWI4MjdhYjQiLCJwIjoiaiJ9)
+
+## v0.1.0-alpha.1
 
 ### Added
 - Satoshi Font, main navigation, and test for navigation functionality [OEMC-18](https://vizzuality.atlassian.net/browse/OEMC-18)
@@ -23,23 +32,12 @@ Unreleased
 - Save bookmarks in map section [OEMC-72](https://vizzuality.atlassian.net/browse/OEMC-72?atlOrigin=eyJpIjoiYzg4MTQ2ZmJjZDQzNDBhMmI5NDg3M2YyZjM0Mzc4ZmUiLCJwIjoiaiJ9)
 - Stadiamaps basemap [OEMC-78](https://vizzuality.atlassian.net/browse/OEMC-78?atlOrigin=eyJpIjoiYzUzZmZjMDllNWI2NGY5Y2E1NmUwMmFjYmNhYmU2NjMiLCJwIjoiaiJ9)
 - Map view added to URL [OEMC-75](https://vizzuality.atlassian.net/browse/OEMC-75?atlOrigin=eyJpIjoiM2IyNDYxOTJkYzQ0NGY4NTgzOTgyODdkOThiYTJhMjAiLCJwIjoiaiJ9)
-- Display of monitors and geostories in landing page [OEMC-25](https://vizzuality.atlassian.net/browse/OEMC-25?atlOrigin=eyJpIjoiNDZiOTM0YjkzN2NlNDJhNmE2OWJiODYxZTlmYzcwNjkiLCJwIjoiaiJ9)
-- Search monitors and geostories by title [OEMC-94](https://vizzuality.atlassian.net/browse/OEMC-94?atlOrigin=eyJpIjoiMGVlYmJhNmM5ODU4NDRiNWEzNTIyNWRjODdjNDg4MWUiLCJwIjoiaiJ9)
-- 404 - error management [OEMC-81](https://vizzuality.atlassian.net/browse/OEMC-81?atlOrigin=eyJpIjoiNWZkNTYwMjVkZGVjNDAwZGE2YWI3ZDgwMzgzOTRjMjEiLCJwIjoiaiJ9)
-- Sorting items in landing page [OEMC-24](https://vizzuality.atlassian.net/browse/OEMC-24?atlOrigin=eyJpIjoiZTlmNGE1Njk3MTRlNDNjMmExY2I3YmE1ZjUzMTBkYjIiLCJwIjoiaiJ9)
-- Alpha version tag added to site [OEMC-127](https://vizzuality.atlassian.net/browse/OEMC-127?atlOrigin=eyJpIjoiYzBiNGI0NDcwOGUzNGYzMzgzM2I1NWVhMWE0NjFkZjciLCJwIjoiaiJ9)
-- Functionality for returning from a geostory to its associated monitor [OEMC-121](https://vizzuality.atlassian.net/browse/OEMC-121?atlOrigin=eyJpIjoiNWY1OTkwZDNlMWNiNDA4M2JiOWM0NDNiODlkMDBlNmUiLCJwIjoiaiJ9)
-- Links to social media (twitter, github and linkedin), link to "contact us" and "privacy policy" [OEMC-108](https://vizzuality.atlassian.net/browse/OEMC-108?atlOrigin=eyJpIjoiMTFhMjI4MmE1NjYzNDNiNmJlNWFlOGJjYWI4MjdhYjQiLCJwIjoiaiJ9)
 
 
 ### Changed
-
 - Migration from react-map-gl to [openlayers](https://openlayers.org/) [OEMC-85](https://vizzuality.atlassian.net/browse/OEMC-85?atlOrigin=eyJpIjoiNGU0ZTdlMDY0ZTk0NGQzYTljNjIyMGMwMjNmZDZjOTgiLCJwIjoiaiJ9)
 
 
 ### Fixed
-
 - Layer animation should keep visibility [OEMC-90](https://vizzuality.atlassian.net/browse/OEMC-90?atlOrigin=eyJpIjoiNTM0OWVlYmJmOWE4NDBiM2FjYjY4NGZlZjNiNzM4NjciLCJwIjoiaiJ9)
 - Visibility toggle should keep previous opacity value in the layer [OEMC-89](https://vizzuality.atlassian.net/browse/OEMC-89?atlOrigin=eyJpIjoiZDA0ZDIxYzdmNDU0NGExN2EwNzk2MDVkZGQ3NDlhOTciLCJwIjoiaiJ9)
-
-### Removed
