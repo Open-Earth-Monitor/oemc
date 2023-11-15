@@ -1,6 +1,14 @@
 name: e2e:tests
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   e2e_client:
