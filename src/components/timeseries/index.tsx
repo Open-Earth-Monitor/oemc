@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState, useMemo } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { FC } from 'react';
 
-import { HiPlay, HiPause } from 'react-icons/hi2';
+import { HiPlay, HiPause, HiCalendarDays } from 'react-icons/hi2';
 import { useInterval, useDebounce } from 'usehooks-ts';
 
 import cn from '@/lib/classnames';
@@ -30,10 +30,10 @@ const TimeSeries: FC<{
   range: LayerParsed['range'];
   autoPlay?: boolean;
   isActive?: boolean;
-}> = ({ range, autoPlay = false, isActive = false, layerId }) => {
+  setIsActive?: (value: boolean) => void;
+}> = ({ range, autoPlay = false, isActive = false, layerId, setIsActive }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
-  const defaultLayer = useMemo(() => layers?.[0]?.id, [layers]);
   const isCompareActive = compareLayers?.[0]?.id;
   const compareDate = compareLayers?.[0]?.date;
   const layerOpacity = layers?.[0]?.opacity;
@@ -42,14 +42,16 @@ const TimeSeries: FC<{
   const debouncedOpacity = useDebounce<number>(opacity, 300);
   const defaultDateLabel = findLabel(date, range);
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
-  const defaultDate = { label: defaultDateLabel, value: date } ?? range?.[0];
+  const defaultDate = !!date ? { label: defaultDateLabel, value: date } : range?.[0];
   const [currentRange, setCurrentRange] = useState<{ value: string; label: string }>(defaultDate);
-  const [isPlaying, setPlaying] = useState<boolean>(autoPlay);
+  const [isPlaying, setPlaying] = useState<boolean>(autoPlay && !isCompareActive);
 
+  // update selected  first render
   useEffect(
     () => {
       if (isActive && isFirstRender) {
-        setCurrentRange({ label: defaultDateLabel, value: date } ?? range?.[0]);
+        setCurrentRange(defaultDate);
+        void setLayers([{ id: layerId, opacity, date: defaultDate?.value }]);
       }
       setIsFirstRender(false);
     },
@@ -57,13 +59,9 @@ const TimeSeries: FC<{
     []
   );
 
-  useEffect(() => {
-    if (isPlaying && !compareDate) void setCompareLayers(null);
-  }, [isPlaying]);
-
   useEffect(
     () => {
-      if (isActive && layerId && !isFirstRender) {
+      if (isActive && layers?.[0]?.id && layerId && !isFirstRender) {
         void setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
         if (!!isCompareActive) {
           void setCompareLayers([{ id: layerId, opacity, date: compareDate }]);
@@ -73,15 +71,29 @@ const TimeSeries: FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [debouncedOpacity, opacity, currentRange?.value]
   );
+
+  useEffect(
+    () => {
+      if (!isActive) {
+        setPlaying(false);
+        setCurrentRange(range?.[0]);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isActive]
+  );
+
   const handlePlay = useCallback(() => {
     setPlaying(!isPlaying);
-  }, [isPlaying, setPlaying]);
+    if (!isPlaying) void setCompareLayers(null);
+  }, [isPlaying, setPlaying, setCompareLayers]);
 
   const handleSelect = useCallback(
     (value: string) => {
       const nextRange = range.find((r) => r.value === value) ?? range[0];
-      setCurrentRange(nextRange);
+      void setLayers([{ id: layerId, opacity, date: nextRange.value }]);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [range]
   );
 
@@ -95,62 +107,42 @@ const TimeSeries: FC<{
 
   // Reset to first position when the layer is hidden
   useEffect(() => {
-    if (layers?.[0]?.id !== layerId && !isFirstRender) {
+    if (!layers?.[0]?.id && !isFirstRender) {
       setPlaying(false);
       setCurrentRange(range[0]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layerId]);
+  }, [!layers?.[0]?.id]);
 
   // Stop time series when compare is active
   useEffect(() => {
-    if (!!isCompareActive) {
+    if (!!isCompareActive || (!layers?.[0]?.id && !isFirstRender)) {
       setPlaying(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCompareActive, setPlaying]);
 
-  // useEffect(() => {
-  //   if (isPlaying) {
-  //     void setCompareLayers(null);
-  //   }
-  // }, [isPlaying, setCompareLayers]);
-
   useEffect(() => {
-    if (!isPlaying && isActive) {
+    if (isActive && isPlaying && layers?.[0]?.id === layerId) {
       void setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
     }
-  }, [isPlaying, layerId, opacity, currentRange?.value, isActive, setLayers]);
-
-  useEffect(() => {
-    if (isActive) {
-      void setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
+    if (isActive && !isPlaying && date !== currentRange?.value) {
+      void setCurrentRange(date ? { label: defaultDateLabel, value: date } : range?.[0]);
     }
-  }, [isPlaying, layerId, opacity, currentRange?.value, isActive, setLayers]);
-
-  // useEffect(() => {
-  //   if (isPlaying && isActive) {
-  //     void setLayers([{ id: layerId, opacity, date: currentRange?.value }]);
-  //   }
-  // }, [isPlaying, layerId, opacity, currentRange?.value, isActive, setLayers]);
-
-  // updates date at first render based on url
-  useEffect(() => {
-    if (!!date) {
-      const labelDate = findLabel(date, range);
-      setCurrentRange({ value: date, label: labelDate });
-    }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 border-t-[0.5px] border-secondary-900 pt-2.5">
       <div className="flex justify-between">
         <div className="flex items-center space-x-2">
-          <span>DATE:</span>
+          <HiCalendarDays className="h-10 w-10" />
+          <span className="text-[10px]">DATE:</span>
           <Select value={currentRange.value} onValueChange={handleSelect} disabled={!isActive}>
-            <SelectTrigger>
+            <SelectTrigger className="text-xs font-semibold underline">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="max-h-[50vh]">
+            <SelectContent className="w-fit max-w-fit" alignOffset={-10} sideOffset={0}>
               {range.map((r: LayerDateRange) => (
                 <SelectItem key={r.value} value={r.value}>
                   {r.label}

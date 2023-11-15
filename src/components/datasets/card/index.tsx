@@ -36,7 +36,8 @@ const DatasetCard: FC<DatasetCardProps> = ({
   const layerId = layers?.[0]?.id;
   const layerOpacity = layers?.[0]?.opacity;
   const layerDate = layers?.[0]?.date;
-  const [isActive, setIsActive] = useState<boolean>(defaultActive);
+  const active = !!layerId || defaultActive;
+  const [isActive, setIsActive] = useState<boolean>(active);
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
   const opacity = layerOpacity ?? 1;
   const compareId = compareLayers?.[0]?.id;
@@ -48,11 +49,12 @@ const DatasetCard: FC<DatasetCardProps> = ({
         {
           opacity,
           date: range?.[0]?.value,
-          id: id,
+          id: layerId || id,
         },
       ]);
     }
     setIsFirstRender(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // activates layer on url
@@ -68,6 +70,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
       if (!!compareId)
         void setCompareLayers([{ id: layerId, opacity, date: layerDate ?? range?.[0]?.value }]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -85,6 +88,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
       void setLayers(null);
       void setCompareLayers(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive]);
 
   /**
@@ -129,7 +133,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
 
       <p data-testid="dataset-description">{description}</p>
 
-      {layerId === id && legendStyles && legendStyles.length > 8 && (
+      {isActive && legendStyles && legendStyles.length > 8 && (
         <div className="columns-2 gap-2 space-y-1">
           {legendStyles.map(({ color, label }) => (
             <div
@@ -149,7 +153,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
         </div>
       )}
 
-      {layerId === id && legendStyles && legendStyles.length <= 8 && (
+      {(isActive || layerId === id) && legendStyles && legendStyles.length <= 8 && (
         <div className="flex">
           {legendStyles.map(({ color, label }) => (
             <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
@@ -169,7 +173,8 @@ const DatasetCard: FC<DatasetCardProps> = ({
           range={range}
           layerId={id}
           autoPlay={defaultActive ?? autoPlay}
-          isActive={layerId === id}
+          isActive={isActive}
+          setIsActive={setIsActive}
         />
       )}
 
@@ -179,12 +184,12 @@ const DatasetCard: FC<DatasetCardProps> = ({
         className={cn(
           'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-secondary-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20',
           {
-            'bg-secondary-500 text-brand-500 hover:text-secondary-500': layerId === id,
+            'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive || layerId === id,
           }
         )}
         onClick={() => handleClick()}
       >
-        <span>{layerId === id ? 'Hide' : 'Show'} layer on the map</span>
+        <span>{isActive || layerId === id ? 'Hide' : 'Show'} layer on the map</span>
         <LuLayers className="h-3 w-3 text-inherit" title="layer" />
       </button>
     </div>
