@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo } from 'react';
 
 import { FiInfo } from 'react-icons/fi';
 import { HiOutlineExternalLink } from 'react-icons/hi';
@@ -16,7 +16,6 @@ import { useSyncCompareLayersSettings, useSyncLayersSettings } from '../../../ho
 type DatasetCardProps = LayerParsed & {
   id: string;
   active?: boolean;
-  autoPlay?: boolean;
   defaultActive?: boolean;
 };
 
@@ -28,75 +27,46 @@ const DatasetCard: FC<DatasetCardProps> = ({
   author,
   gs_style: legendStyles,
   range,
-  autoPlay = false,
-  defaultActive,
+  defaultActive = false,
 }) => {
   const [layers, setLayers] = useSyncLayersSettings();
-  const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
+  const [, setCompareLayers] = useSyncCompareLayersSettings();
+
+  // isActive is based on the url
   const layerId = layers?.[0]?.id;
-  const layerOpacity = layers?.[0]?.opacity;
-  const layerDate = layers?.[0]?.date;
-  const active = !!layerId || defaultActive;
-  const [isActive, setIsActive] = useState<boolean>(active);
-  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
-  const opacity = layerOpacity ?? 1;
-  const compareId = compareLayers?.[0]?.id;
-
-  // activates first layer at first render is there is nothing on the url
-  useEffect(() => {
-    if (isActive && !layerId && isFirstRender) {
-      void setLayers([
-        {
-          opacity,
-          date: range?.[0]?.value,
-          id: layerId || id,
-        },
-      ]);
-    }
-    setIsFirstRender(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // activates layer on url
-  useEffect(() => {
-    if (layerId) {
-      void setLayers([
-        {
-          opacity,
-          date: layerDate,
-          id: layerId,
-        },
-      ]);
-      if (!!compareId)
-        void setCompareLayers([{ id: layerId, opacity, date: layerDate ?? range?.[0]?.value }]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (isActive) {
-      void setLayers([
-        {
-          opacity,
-          date: layerDate ?? range?.[0]?.value,
-          id,
-        },
-      ]);
-    }
-
-    if (!isActive && layerId === id) {
-      void setLayers(null);
-      void setCompareLayers(null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActive]);
+  const isActive = useMemo(() => layerId === id, [id, layerId]);
 
   /**
    * Handle click on the toggle button
    */
-  const handleClick = useCallback(() => {
-    setIsActive(!isActive);
-  }, [isActive]);
+  const handleToggleLayer = useCallback(() => {
+    if (!isActive) {
+      void setLayers([
+        {
+          opacity: 1,
+          date: range?.[0]?.value,
+          id,
+        },
+      ]);
+    } else {
+      void setLayers(null);
+      void setCompareLayers(null);
+    }
+  }, [id, isActive, range, setCompareLayers, setLayers]);
+
+  // at first render, if defaultActive is true, activate layer
+  useEffect(() => {
+    if (!isActive && defaultActive) {
+      void setLayers([
+        {
+          opacity: 1,
+          date: range?.[0]?.value,
+          id,
+        },
+      ]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
@@ -153,7 +123,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
         </div>
       )}
 
-      {(isActive || layerId === id) && legendStyles && legendStyles.length <= 8 && (
+      {isActive && legendStyles && legendStyles.length <= 8 && (
         <div className="flex">
           {legendStyles.map(({ color, label }) => (
             <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
@@ -168,14 +138,9 @@ const DatasetCard: FC<DatasetCardProps> = ({
           ))}
         </div>
       )}
-      {range && (
-        <TimeSeries
-          range={range}
-          layerId={id}
-          autoPlay={defaultActive ?? autoPlay}
-          isActive={isActive}
-          setIsActive={setIsActive}
-        />
+
+      {range?.length > 0 && (
+        <TimeSeries range={range} layerId={id} autoPlay={defaultActive} isActive={isActive} />
       )}
 
       <button
@@ -184,12 +149,12 @@ const DatasetCard: FC<DatasetCardProps> = ({
         className={cn(
           'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-secondary-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20',
           {
-            'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive || layerId === id,
+            'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
           }
         )}
-        onClick={() => handleClick()}
+        onClick={handleToggleLayer}
       >
-        <span>{isActive || layerId === id ? 'Hide' : 'Show'} layer on the map</span>
+        <span>{isActive ? 'Hide' : 'Show'} layer on the map</span>
         <LuLayers className="h-3 w-3 text-inherit" title="layer" />
       </button>
     </div>
