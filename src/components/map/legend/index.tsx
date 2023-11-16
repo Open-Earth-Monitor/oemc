@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { MouseEvent } from 'react';
 
 import { cn } from '@/lib/classnames';
 
@@ -17,6 +16,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
 import LayerVisibility from './visibility';
+
+type ActiveTab = 'layer-settings' | 'compare-layers';
 
 const LEGEND_BUTTON_STYLES =
   'bg-brand-500 flex-1 text-center text-xs uppercase rounded font-medium grow px-2 h-[34px] py-1 tracking-wide text-white hover:bg-secondary-500 hover:text-brand-500 disabled:opacity-50 disabled:cursor-not-allowed';
@@ -38,11 +39,19 @@ export const Legend = () => {
   const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layers?.length });
   const { title, range } = data ?? {};
 
-  const [activeTab, setActiveTab] = useState<'layer-settings' | 'compare-layers'>(
+  const [activeTab, setActiveTab] = useState<ActiveTab>(
     !!compareDate ? 'compare-layers' : 'layer-settings'
   );
 
-  const handleTabChange = (value: 'layer-settings' | 'compare-layers') => {
+  const handleTabChange = (value: ActiveTab) => {
+    if (value === 'compare-layers') {
+      void setCompareLayers([
+        { id: layerId, opacity, date: compareDate || range[range.length - 1]?.value },
+      ]);
+    }
+    if (value === 'layer-settings') {
+      void setCompareLayers(null);
+    }
     setActiveTab(value);
   };
 
@@ -65,16 +74,12 @@ export const Legend = () => {
     [layerId, opacity, setCompareLayers]
   );
 
-  // needed to set the compare date to the base date when the user clicks on the compare tab
   useEffect(() => {
-    if (activeTab === 'compare-layers') {
-      void setCompareLayers([{ id: layerId, opacity, date: compareDate || layers?.[0]?.date }]);
-    }
-    if (activeTab === 'layer-settings') {
-      void setCompareLayers(null);
+    if (activeTab === 'compare-layers' && !compareDate) {
+      setActiveTab('layer-settings');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab]);
+  }, [compareDate]);
 
   return (
     <div
