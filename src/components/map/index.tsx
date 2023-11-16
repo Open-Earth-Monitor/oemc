@@ -3,6 +3,7 @@
 import React, { useMemo, FC, useCallback } from 'react';
 
 import { MapBrowserEvent } from 'ol';
+import { Attribution } from 'ol/control';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
@@ -14,6 +15,7 @@ import {
   useSyncZoomSettings,
 } from '@/hooks/sync-query';
 
+import Attributions from './attributions';
 import { DEFAULT_VIEWPORT } from './constants';
 // map controls
 import Controls from './controls';
@@ -133,14 +135,14 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           />
         )}
 
-        <Controls className="absolute bottom-3 left-[554px] z-50">
+        <Controls className="absolute bottom-3 left-[554px] z-50 flex flex-col">
           <RControl.RZoom />
           <BookmarkControl />
           <ShareControl />
           {isCompareLayerActive && <SwipeControl />}
         </Controls>
-
         {isLayerActive && <Legend />}
+        <Attributions className="absolute bottom-3 left-[620px] z-50" />
       </RMap>
     </>
   );
