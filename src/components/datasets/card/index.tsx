@@ -48,6 +48,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
           id,
         },
       ]);
+      if (range.length <= 1) void setCompareLayers(null);
     } else {
       void setLayers(null);
       void setCompareLayers(null);
