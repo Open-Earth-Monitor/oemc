@@ -48,8 +48,8 @@ test.describe('sort monitors and geostories', () => {
     const sortedResponse = await sortPromise;
     const sortedByDateResponse = (await sortedResponse.json()) as MonitorsAndGeostoriesResponse[];
 
-    const monitors = defaultOrderedDataByTitle.filter((item) => item.geostories);
-    const geostories = defaultOrderedDataByTitle.filter((item) => item.layers);
+    const monitors = (defaultOrderedDataByTitle as Monitor[]).filter((item) => item.geostories);
+    const geostories = (defaultOrderedDataByTitle as Geostory[]).filter((item) => item.layers);
     const orderedMonitorsByDate = orderBy(monitors, ['date']) satisfies Monitor[];
     const orderedGeostoriesByDate = orderBy(geostories, ['date']) satisfies Geostory[];
     expect(sortedByDateResponse).toEqual([...orderedMonitorsByDate, ...orderedGeostoriesByDate]);
