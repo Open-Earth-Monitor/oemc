@@ -13,6 +13,7 @@ import {
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from 'lib/classnames';
 
 const Dialog = ({ open, defaultOpen, onOpenChange, ...props }: DialogPrimitive.DialogProps) => {
@@ -64,12 +65,12 @@ const DialogContent = forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed left-[50%] top-[70px] z-50 w-full max-w-3xl translate-x-[-50%] bg-brand-400 p-12 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
+        'fixed left-[50%] top-[70px] z-50 flex max-h-[80%] w-full max-w-3xl translate-x-[-50%] flex-col bg-brand-400 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
         className
       )}
       {...props}
     >
-      {children}
+      <ScrollArea className="grow p-10">{children}</ScrollArea>
     </DialogPrimitive.Content>
   </DialogPortal>
 ));

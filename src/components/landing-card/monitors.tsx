@@ -53,7 +53,7 @@ const Card: FC<Partial<Monitor> & { color?: string }> = ({
       </DialogTrigger>
       <DialogContent
         data-testid={`monitor-card-${id}`}
-        className="w-[665px] bg-secondary-500 p-10 text-brand-500"
+        className="w-[665px] bg-secondary-500 text-brand-500"
       >
         <DialogHeader className="space-y-6">
           <DialogTitle asChild>
