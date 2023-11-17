@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { orderBy } from 'lodash-es';
+import { orderBy } from 'lodash';
 
 import type { Geostory } from '@/types/geostories';
 import type { Monitor } from '@/types/monitors';
