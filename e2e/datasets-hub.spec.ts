@@ -52,7 +52,7 @@ test.describe('monitors and geostories display', () => {
     await expect(monitorButton).toBeVisible();
     await monitorButton.click();
 
-    await page.waitForURL(`**/map/${monitorsIds[0]}/datasets`, { waitUntil: 'load' });
+    await page.waitForURL(`**/map/${monitorsIds[0]}/datasets*`, { waitUntil: 'load' });
   });
 
   test('geostories display', async ({ page }) => {
