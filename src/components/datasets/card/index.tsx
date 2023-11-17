@@ -30,11 +30,14 @@ const DatasetCard: FC<DatasetCardProps> = ({
   defaultActive = false,
 }) => {
   const [layers, setLayers] = useSyncLayersSettings();
-  const [, setCompareLayers] = useSyncCompareLayersSettings();
+  const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
   // isActive is based on the url
   const layerId = layers?.[0]?.id;
   const isActive = useMemo(() => layerId === id, [id, layerId]);
+
+  const compareLayerId = compareLayers?.[1]?.id;
+  const isCompareActive = useMemo(() => compareLayerId === id, [id, compareLayerId]);
 
   /**
    * Handle click on the toggle button
@@ -43,26 +46,35 @@ const DatasetCard: FC<DatasetCardProps> = ({
     if (!isActive) {
       void setLayers([
         {
-          opacity: 1,
-          date: range?.[0]?.value,
           id,
+          opacity: layers?.[0]?.opacity || 1,
+          date: range?.[0]?.value,
         },
       ]);
       if (range.length <= 1) void setCompareLayers(null);
+      if (range.length > 1 && isCompareActive) {
+        void setCompareLayers([
+          {
+            id,
+            opacity: layers?.[0]?.opacity || 1,
+            date: range[range.length - 1].value,
+          },
+        ]);
+      }
     } else {
       void setLayers(null);
       void setCompareLayers(null);
     }
-  }, [id, isActive, range, setCompareLayers, setLayers]);
+  }, [id, isActive, isCompareActive, layers, range, setCompareLayers, setLayers]);
 
   // at first render, if defaultActive is true, activate layer
   useEffect(() => {
     if (!isActive && defaultActive) {
       void setLayers([
         {
+          id,
           opacity: 1,
           date: range?.[0]?.value,
-          id,
         },
       ]);
     }
