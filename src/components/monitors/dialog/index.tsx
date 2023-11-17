@@ -20,23 +20,25 @@ const MonitorsDirectoryDialog: FC = () => {
           Monitors Directory
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-90vw p-12">
-        <DialogHeader>
-          <DialogTitle asChild>
-            <header className="divide-x-secondary-500 divide-x">
-              <h1 className="inline-block pr-6 font-satoshi text-4xl font-bold">
-                Monitors directory
-              </h1>
-              <span className="inline-block pl-6">Select one to discover</span>
-            </header>
-          </DialogTitle>
-          <DialogDescription asChild>
-            <div>
-              <MonitorsTable />
-              <DialogClose className="absolute right-10 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground" />
-            </div>
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="max-w-90vw">
+        <div className="p-2">
+          <DialogHeader>
+            <DialogTitle asChild>
+              <header className="divide-x-secondary-500 divide-x">
+                <h1 className="inline-block pr-6 font-satoshi text-4xl font-bold">
+                  Monitors directory
+                </h1>
+                <span className="inline-block pl-6">Select one to discover</span>
+              </header>
+            </DialogTitle>
+            <DialogDescription asChild>
+              <div>
+                <MonitorsTable />
+                <DialogClose className="absolute right-10 top-6 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground" />
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+        </div>
       </DialogContent>
     </Dialog>
   );
