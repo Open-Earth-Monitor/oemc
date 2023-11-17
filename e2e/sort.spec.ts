@@ -62,9 +62,9 @@ test.describe('sort monitors and geostories', () => {
 
     const defaultOrderedDataByTitle = (await response.json()) as MonitorsAndGeostoriesResponse[];
 
-    const manuallyOrderedByTitle = defaultOrderedDataByTitle?.sort((a, b) =>
-      a.title > b.title ? 1 : a.title < b.title ? -1 : 0
-    );
+    const manuallyOrderedByTitle = defaultOrderedDataByTitle.sort((a, b) => {
+      return a.title.localeCompare(b.title);
+    });
 
     expect(defaultOrderedDataByTitle).toEqual(manuallyOrderedByTitle);
   });
