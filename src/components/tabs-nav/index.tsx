@@ -3,7 +3,7 @@
 import type { FC } from 'react';
 
 import Link from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 import { cn } from '@/lib/classnames';
 
@@ -11,9 +11,7 @@ const TABS: string[] = ['datasets', 'geostories'];
 
 const TabsNav: FC = () => {
   const params = useParams();
-  const pathname = usePathname();
   const monitorId = params?.monitor_id as string;
-  const tabId = pathname.split(`${monitorId}/`)[1];
 
   return (
     <nav className="flex border-t border-brand-50">
