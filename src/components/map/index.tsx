@@ -3,7 +3,6 @@
 import React, { useMemo, FC, useCallback } from 'react';
 
 import { MapBrowserEvent } from 'ol';
-import { Attribution } from 'ol/control';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 

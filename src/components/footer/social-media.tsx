@@ -13,7 +13,7 @@ import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from './constants';
 
 const THEME = {
   light: 'text-secondary-800 hover:text-secondary-500',
-  dark: 'text-secondary-700 hover:text-secondary-500',
+  dark: 'text-secondary-700 hover:text-secondary-900',
 };
 
 const SIZE = {
@@ -148,7 +148,7 @@ export const SocialMedia: FC<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' }> =
                     initial: {
                       fill: theme === 'light' ? 'hsl(180, 3%, 35%)' : 'hsl(180, 3%, 55%)',
                     },
-                    hover: { fill: 'hsl(60, 100%, 95%)' },
+                    hover: { fill: theme === 'light' ? 'hsl(60, 100%, 95%)' : 'hsl(184, 5%, 19%)' },
                   }}
                 />
                 <motion.path
@@ -158,7 +158,7 @@ export const SocialMedia: FC<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' }> =
                     initial: {
                       fill: theme === 'light' ? 'hsl(180, 3%, 35%)' : 'hsl(180, 3%, 55%)',
                     },
-                    hover: { fill: 'hsl(60, 100%, 95%)' },
+                    hover: { fill: theme === 'light' ? 'hsl(60, 100%, 95%)' : 'hsl(184, 5%, 19%)' },
                   }}
                 />
                 <motion.path
@@ -168,7 +168,7 @@ export const SocialMedia: FC<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' }> =
                     initial: {
                       fill: theme === 'light' ? 'hsl(180, 3%, 35%)' : 'hsl(180, 3%, 55%)',
                     },
-                    hover: { fill: 'hsl(60, 100%, 95%)' },
+                    hover: { fill: theme === 'light' ? 'hsl(60, 100%, 95%)' : 'hsl(184, 5%, 19%)' },
                   }}
                 />
               </g>
