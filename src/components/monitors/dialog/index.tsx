@@ -20,7 +20,8 @@ const MonitorsDirectoryDialog: FC = () => {
           Monitors Directory
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-90vw p-12">
+      <DialogContent className="max-w-90vw max-h-[90vh] overflow-y-scroll p-12">
+        {' '}
         <DialogHeader>
           <DialogTitle asChild>
             <header className="divide-x-secondary-500 divide-x">
@@ -31,7 +32,7 @@ const MonitorsDirectoryDialog: FC = () => {
             </header>
           </DialogTitle>
           <DialogDescription asChild>
-            <div>
+            <div className="max-h-[90%]">
               <MonitorsTable />
               <DialogClose className="absolute right-10 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground" />
             </div>

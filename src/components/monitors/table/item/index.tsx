@@ -64,10 +64,11 @@ const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
           <div>Show </div>
           <div
             data-testid="geostories-container"
-            className="rounded-3xl px-2"
+            className="rounded-3xl bg-opacity-80 px-2 hover:border"
             style={{
               backgroundColor: isExpanded ? color : colorOpacity,
               color: isExpanded ? 'hsl(210, 53%, 7%)' : color,
+              borderColor: color,
             }}
           >
             {geostoriesLength > 1

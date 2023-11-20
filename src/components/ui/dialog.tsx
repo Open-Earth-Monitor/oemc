@@ -116,7 +116,7 @@ const DialogClose = forwardRef<
     ref={ref}
     {...props}
     className={cn({
-      'absolute right-4 top-6 items-center space-x-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground':
+      'absolute right-4 top-6 items-center space-x-2 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:text-brand-500 focus:outline-secondary-600 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground':
         true,
       [className]: !!className,
     })}
