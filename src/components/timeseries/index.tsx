@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { FC } from 'react';
 
+import { HiChevronDown } from 'react-icons/hi';
 import { HiPlay, HiPause, HiCalendarDays } from 'react-icons/hi2';
 import { useInterval } from 'usehooks-ts';
 
@@ -12,6 +13,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectIcon,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -26,6 +28,7 @@ const TimeSeries: FC<{
   autoPlay?: boolean;
   isActive?: boolean;
 }> = ({ range, autoPlay = false, isActive = false, layerId }) => {
+  const [contentVisibility, setContentVisibility] = useState<boolean>(false);
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
@@ -80,11 +83,29 @@ const TimeSeries: FC<{
           <HiCalendarDays className="h-10 w-10" />
           <span className="text-[10px]">DATE:</span>
           {currentRange && (
-            <Select value={currentRange.value} onValueChange={handleSelect} disabled={!isActive}>
+            <Select
+              value={currentRange.value}
+              onValueChange={handleSelect}
+              disabled={!isActive}
+              open={contentVisibility}
+              onOpenChange={() => setContentVisibility(!contentVisibility)}
+            >
               <SelectTrigger className="text-xs font-semibold underline">
-                <SelectValue />
+                <>
+                  <SelectValue />
+                  <SelectIcon className="w-full">
+                    <HiChevronDown
+                      className={cn({ 'h-5 w-5': true, 'rotate-180': contentVisibility })}
+                    />
+                  </SelectIcon>
+                </>
               </SelectTrigger>
-              <SelectContent className="w-fit max-w-fit" alignOffset={-10} sideOffset={0}>
+              <SelectContent
+                className="mx-1 flex max-h-56 items-center justify-center p-1 text-center"
+                alignOffset={-20}
+                sideOffset={0}
+                style={{ width: 'calc(100% - 2rem)' }}
+              >
                 {range.map((r: LayerDateRange) => (
                   <SelectItem key={r.value} value={r.value}>
                     {r.label}
