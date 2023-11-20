@@ -36,7 +36,7 @@ const DropdownMenuTrigger = forwardRef<
   <DropdownMenuPrimitive.Trigger
     ref={ref}
     className={cn({
-      'group h-full rounded-none border border-secondary-900 px-8 text-secondary-500 hover:bg-secondary-700 hover:text-secondary-500':
+      'group h-full rounded-none border border-secondary-900 px-8 text-secondary-500 hover:bg-secondary-900 hover:text-secondary-500':
         true,
       'pl-8': inset,
       [className]: !!className,
@@ -82,7 +82,7 @@ const DropdownMenuItem = forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn({
-      'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-secondary-700 data-[disabled]:pointer-events-none data-[disabled]:opacity-50':
+      'relative flex cursor-default select-none items-center whitespace-nowrap rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50':
         true,
       'pl-8': inset,
       [className]: !!className,
