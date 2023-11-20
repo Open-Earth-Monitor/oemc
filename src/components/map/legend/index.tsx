@@ -26,6 +26,9 @@ import LayerVisibility from './visibility';
 
 type ActiveTab = 'layer-settings' | 'compare-layers';
 
+const LEGEND_BUTTON_STYLES =
+  'bg-brand-500 flex-1 text-center text-xs uppercase font-medium grow px-2 h-[34px] py-1 text-white hover:bg-secondary-500 hover:text-brand-500 disabled:opacity-50 disabled:cursor-not-allowed';
+
 const findLabel = (value: string, range: { label: string; value: string | number }[]) =>
   range?.find((d: { label: string; value: string }) => d.value === value)?.label satisfies
     | string
@@ -158,7 +161,7 @@ export const Legend = () => {
 
             <div className="flex w-full flex-col items-start">
               <DropdownMenu>
-                <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
+                <DropdownMenuTrigger className="w-full border-none px-3.5 py-2.5">
                   <div className="flex w-full justify-between whitespace-nowrap ">
                     <span>Selected year: {baseDateLabel}</span>
                   </div>
@@ -166,28 +169,25 @@ export const Legend = () => {
                 <DropdownMenuContent
                   align="start"
                   alignOffset={0}
-                  sideOffset={0}
-                  className={DROPDOWN_CONTENT_STYLES}
+                  sideOffset={20}
+                  className="max-h-56 w-full bg-brand-500"
+                  style={{ width: 'calc(100% - 2rem)' }}
                 >
-                  <ScrollArea className="max-h-[200px] w-full">
-                    {range?.map((d) => (
-                      <DropdownMenuItem key={d.value} className={DROPDOWN_ITEM_STYLES}>
-                        <button
-                          type="button"
-                          value={d.value}
-                          onClick={handleBaseDate}
-                          className="rounded-sm px-2.5 py-1 hover:bg-secondary-900"
-                        >
-                          {d.label}
-                        </button>
-                      </DropdownMenuItem>
-                    ))}
-                  </ScrollArea>
+                  {range?.map((d) => (
+                    <DropdownMenuItem
+                      key={d.value}
+                      className="m-auto flex w-full flex-1 justify-center whitespace-nowrap px-6 text-center text-secondary-500 hover:bg-secondary-900"
+                    >
+                      <button type="button" value={d.value} onClick={handleBaseDate}>
+                        {d.label}
+                      </button>
+                    </DropdownMenuItem>
+                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
-                <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
-                  <div className="flex w-full justify-between whitespace-nowrap">
+                <DropdownMenuTrigger className="flex w-full border-none px-3.5 py-2.5">
+                  <div className="flex w-full justify-between whitespace-nowrap ">
                     <span>Selected year: {CompareDateLabel}</span>
                   </div>
                 </DropdownMenuTrigger>

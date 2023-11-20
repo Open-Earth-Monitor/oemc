@@ -55,15 +55,20 @@ const SelectContent = forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn({
-        'relative z-50 overflow-hidden border border-secondary-900 bg-brand-500 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2':
+        'relative z-50 overflow-hidden border border-secondary-900 bg-brand-500 p-1 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2':
           true,
+        // 'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1':
+        // position === 'popper',
         [className]: !!className,
       })}
       position={position}
       {...props}
     >
       <SelectPrimitive.Viewport
-        className={cn(position === 'popper' && 'h-[var(--radix-select-trigger-height)] w-full ')}
+        className={cn(
+          position === 'popper' &&
+            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] p-1'
+        )}
       >
         {children}
       </SelectPrimitive.Viewport>
@@ -91,7 +96,7 @@ const SelectItem = forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn({
-      'relative m-auto flex w-fit cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-sm px-2 py-1.5 text-sm text-secondary-500 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50':
+      'relative m-auto flex w-full flex-1 cursor-default select-none items-center justify-center whitespace-nowrap rounded-sm px-6 py-1.5 text-center text-sm text-secondary-500  outline-none hover:bg-secondary-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50':
         true,
       [className]: !!className,
     })}
