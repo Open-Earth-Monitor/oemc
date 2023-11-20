@@ -109,7 +109,7 @@ export const Footer: FC = () => {
               href="https://cordis.europa.eu/project/id/101059548"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline"
+              className="underline focus:outline-secondary-600"
               data-test-id="OEMC-factsheet-link"
             >
               grant agreement No. 101059548.
