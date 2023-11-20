@@ -3,7 +3,6 @@
 import { forwardRef, ElementRef, ComponentPropsWithoutRef } from 'react';
 
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { HiChevronDown } from 'react-icons/hi';
 
 import { cn } from 'lib/classnames';
 
@@ -20,7 +19,7 @@ const SelectIcon = forwardRef<
   <SelectPrimitive.Icon
     ref={ref}
     className={cn(
-      'flex h-9 w-full items-center justify-between bg-transparent text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+      'flex h-9 w-full items-center justify-between bg-transparent text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 data-[state-open]:rotate-180',
       className
     )}
     {...props}
@@ -38,15 +37,12 @@ const SelectTrigger = forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'flex h-9 w-full items-center justify-between space-x-2 bg-transparent text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+      'flex h-9 w-full items-center justify-between space-x-2 whitespace-nowrap bg-transparent text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
       className
     )}
     {...props}
   >
     {children}
-    <SelectIcon>
-      <HiChevronDown className="h-5 w-5" />
-    </SelectIcon>
   </SelectPrimitive.Trigger>
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
@@ -58,20 +54,18 @@ const SelectContent = forwardRef<
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       ref={ref}
-      className={cn(
-        'relative z-50 overflow-hidden border border-secondary-900 bg-brand-500 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-        position === 'popper' &&
-          'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
-        className
-      )}
+      className={cn({
+        'relative z-50 overflow-hidden border border-secondary-900 bg-brand-500 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2':
+          true,
+        [className]: !!className,
+      })}
       position={position}
       {...props}
     >
       <SelectPrimitive.Viewport
         className={cn(
-          'p-1',
           position === 'popper' &&
-            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]'
+            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] p-1'
         )}
       >
         {children}
@@ -100,7 +94,7 @@ const SelectItem = forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn({
-      'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2  text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50':
+      'relative m-auto flex w-fit cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-sm px-2 py-1.5 text-sm text-secondary-500 outline-none hover:bg-secondary-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50':
         true,
       [className]: !!className,
     })}
