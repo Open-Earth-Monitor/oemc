@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { motion } from 'framer-motion';
@@ -7,26 +8,34 @@ import { HiOutlineArrowTopRightOnSquare, HiArrowRight } from 'react-icons/hi2';
 
 import cn from '@/lib/classnames';
 
-import { Geostory } from '@/types/geostories';
+import { GeostoryParsed } from '@/types/geostories';
 
 import { TAG_STYLE } from '@/styles/constants';
 
-const Card: FC<Partial<Geostory> & { color?: string; headColor?: string }> = ({
+const Card: FC<Partial<GeostoryParsed>> = ({
   title,
   id,
   layers,
   color,
-  headColor,
+  theme,
+  icon,
+  background,
 }) => (
   <div
-    className="min-h-[388px] w-[384px]"
+    className="relative min-h-[388px] w-[384px]"
     style={{ backgroundColor: color }}
     data-testid={`card-${id}`}
   >
-    <div className="space-y-4 px-8 py-6" style={{ backgroundColor: headColor }}>
+    <div
+      className="space-y-4 bg-cover bg-center px-8 py-6"
+      style={{ backgroundImage: `url(${background})` }}
+    >
       <div>
-        <div data-testid={`card-type-${id}`} className={TAG_STYLE}>
-          <span>geostory</span>
+        <div className="flex h-full items-center space-x-2.5 divide-x-2 divide-secondary-950 text-xs">
+          <span data-testid={`card-type-${id}`} className={TAG_STYLE}>
+            <span>geostory</span>
+          </span>
+          <span className="pl-2.5">{theme}</span>
         </div>
         <h2 data-testid={`card-title-${id}`} className="font-satoshi text-2xl font-bold">
           {title}
@@ -46,7 +55,11 @@ const Card: FC<Partial<Geostory> & { color?: string; headColor?: string }> = ({
     {/* TO - DO - This should be a list of monitors, not layers. Implemented just for visualization purposes. Remove when API returns the monitor the geo story belongs to in the endpoint */}
     {!!layers.length && (
       <div className="px-10 py-4 text-brand-500">
-        <span className={TAG_STYLE}>monitor</span>
+        <div className="text-xs">
+          <span data-testid={`card-type-${id}`} className={TAG_STYLE}>
+            monitor
+          </span>
+        </div>
         <motion.div
           className="opacity-1 relative flex items-center"
           initial="initial"
@@ -85,6 +98,13 @@ const Card: FC<Partial<Geostory> & { color?: string; headColor?: string }> = ({
             </motion.span>
           </Link>
         </motion.div>
+        <Image
+          alt={theme}
+          src={icon}
+          width={45}
+          height={50}
+          className={`absolute bottom-3.5 right-3`}
+        />
       </div>
     )}
   </div>

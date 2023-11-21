@@ -1,5 +1,7 @@
 import { FC } from 'react';
 
+import { cn } from '@/lib/classnames';
+
 import type { Geostory } from '@/types/geostories';
 
 import { useGeostory } from '@/hooks/geostories';
@@ -14,8 +16,20 @@ const GeostoryHead: FC<{ geostoryId: Geostory['id']; color: string }> = ({ geost
     <div className="space-y-6 px-6 py-5">
       {isLoading && !isFetched && <Loading />}
       {/* TODO - get color from API when we get categories */}
-      <div className={TAG_STYLE} style={{ color }}>
-        geostory
+      <div
+        className={cn({
+          [`flex h-full items-center text-xs`]: true,
+          color,
+        })}
+        style={{ color }}
+      >
+        <span
+          className={cn({ [TAG_STYLE]: true, 'border-r pr-2.5': true })}
+          style={{ borderColor: color }}
+        >
+          geostory
+        </span>
+        <span className="pl-2.5">{data?.theme}</span>
       </div>
       {isFetched && !isError && (
         <>

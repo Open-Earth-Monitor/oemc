@@ -1,1 +1,1 @@
-export const TAG_STYLE = 'text-xs uppercase tracking-[0.96px]';
+export const TAG_STYLE = 'uppercase tracking-[0.96px]';

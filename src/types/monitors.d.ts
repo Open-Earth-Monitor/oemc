@@ -1,4 +1,5 @@
 import type { Geostory } from './geostories';
+import { Theme } from './global';
 
 export type Monitor = {
   author: string;
@@ -9,6 +10,13 @@ export type Monitor = {
   id: string;
   title: string;
   entity_type: 'monitor';
+  theme: Theme;
 };
 
-export type MonitorParsed = Monitor & { color: string; colorOpacity: string };
+export type MonitorParsed = Monitor & {
+  color: string;
+  colorOpacity: string;
+  label?: string;
+  icon?: string;
+  background?: string;
+};

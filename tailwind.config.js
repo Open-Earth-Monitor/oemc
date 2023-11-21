@@ -43,7 +43,7 @@ module.exports = {
           700: 'hsl(180, 3%, 55%)',
           800: 'hsl(180, 3%, 35%)',
           900: 'hsl(184, 5%, 19%)',
-          950: 'hsl(60, 6%, 10%,)',
+          950: 'hsl(60, 6%, 10%, 0.2)',
           1000: 'hsl(60, 5%, 19%)', // no ui kit
 
           foreground: 'hsl(var(--secondary-foreground))',

@@ -1,11 +1,12 @@
-import type { SortingCriteria, Theme } from '../types';
+import type { SortingCriteria, Theme } from 'types/global';
 
-export const SORTING = ['title', 'date'] satisfies SortingCriteria[];
+export const SORTING = ['title', 'date', 'theme'] satisfies SortingCriteria[];
 export const THEMES = [
-  'Water',
-  'Agriculture',
+  'Land Cover and Land Use',
   'Biodiversity',
-  'Soil',
-  'Climate & Health',
-  'Forest',
+  'Buildings and Settlements',
+  'Water',
+  'Geology and Soils',
+  'Climate',
+  'Population Distribution',
 ] satisfies Theme[];

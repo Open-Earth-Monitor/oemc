@@ -8,7 +8,7 @@ import { Geostory } from '@/types/geostories';
 
 import { TAG_STYLE } from '@/styles/constants';
 
-const GeostoryCard: FC<Geostory & { color: string }> = ({ id, color, title }) => {
+const GeostoryCard: FC<Geostory & { color: string }> = ({ id, color, title, theme }) => {
   return (
     <Link href={`/map/geostories/${id}`} data-testid={`geostory-link-${id}`}>
       <AnimatePresence>
@@ -24,8 +24,11 @@ const GeostoryCard: FC<Geostory & { color: string }> = ({ id, color, title }) =>
           className="space-y-4 px-6 py-5"
           data-testid={`geostory-item-${id}`}
         >
-          <div data-testid="geostory-tag" className={TAG_STYLE}>
-            geostory
+          <div className="flex h-full items-center space-x-2.5 divide-x-2 divide-secondary-950 text-xs">
+            <span data-testid="geostory-tag" className={TAG_STYLE}>
+              geostory
+            </span>
+            <span className="pl-2.5">{theme}</span>
           </div>
           <h2 className="font-satoshi text-2xl font-bold" data-testid={`geostory-title-${id}`}>
             {title}

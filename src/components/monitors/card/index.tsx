@@ -31,8 +31,11 @@ const MonitorCard: FC = () => {
           <MonitorsDirectoryDialog />
           <div className="space-y-6 text-brand-500" data-testid="monitor-card">
             <div className="space-y-2">
-              <div data-testid="monitor-tag" className={TAG_STYLE}>
-                monitor
+              <div className="flex h-full items-center space-x-2.5 divide-x-2 divide-secondary-950 text-xs">
+                <span data-testid="monitor-tag" className={TAG_STYLE}>
+                  monitor
+                </span>
+                <span className="pl-2.5">{data?.theme}</span>
               </div>
               <h1 data-testid="monitor-title" className="font-satoshi text-5xl font-bold">
                 {data.title}

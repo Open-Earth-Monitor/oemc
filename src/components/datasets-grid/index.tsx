@@ -22,9 +22,9 @@ import { Label } from '@/components/ui/label';
 // import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { TAG_STYLE } from '@/styles/constants';
+import type { Theme, SortingCriteria, Dataset } from 'types/global';
 
 import { THEMES, SORTING } from './constants';
-import type { Theme, SortingCriteria, Dataset } from './types';
 
 const LandingDatasets = () => {
   const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
@@ -80,7 +80,7 @@ const LandingDatasets = () => {
           />
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger className="flex h-full min-w-[258px] items-center border-[0.5px] border-l-0 font-inter">
-              <div className="w-full">
+              <div className="w-full first-letter:uppercase">
                 {THEMES.length === activeThemes.length && 'All categories selected'}
                 {activeThemes.length === 0 && 'No categories selected'}
                 {activeThemes.length === 1 && activeThemes[0]}
@@ -96,7 +96,7 @@ const LandingDatasets = () => {
               {THEMES.map((theme) => (
                 <DropdownMenuItem
                   key={theme}
-                  className="flex w-full flex-1 space-x-4 text-secondary-500"
+                  className="flex w-full flex-1 cursor-pointer space-x-4 text-secondary-500"
                 >
                   <Checkbox
                     id={theme}

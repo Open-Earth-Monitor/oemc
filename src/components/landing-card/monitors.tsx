@@ -1,12 +1,13 @@
 import { FC } from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { HiOutlineNewspaper, HiOutlineGlobeAlt } from 'react-icons/hi';
 
 import cn from '@/lib/classnames';
 
-import { Monitor } from '@/types/monitors';
+import { MonitorParsed } from '@/types/monitors';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -21,22 +22,27 @@ import {
 } from '@/components/ui/dialog';
 import { TAG_STYLE } from '@/styles/constants';
 
-const Card: FC<Partial<Monitor> & { color?: string }> = ({
+const Card: FC<Partial<MonitorParsed> & { color?: string }> = ({
   id,
   description,
   title,
   color,
   author,
+  theme,
+  icon,
 }) => (
   <div
-    className="h-[388px] w-[384px] space-y-4 px-10 py-6 text-brand-500"
+    className="relative h-[388px] w-[384px] space-y-4 px-10 py-6 text-brand-500"
     style={{ backgroundColor: color }}
     data-testid={`card-${id}`}
   >
     <div>
-      <span data-testid={`card-type-${id}`} className={TAG_STYLE}>
-        monitor
-      </span>
+      <div className="flex h-full items-center space-x-2.5 divide-x-2 divide-secondary-950 text-xs">
+        <span data-testid={`card-type-${id}`} className={TAG_STYLE}>
+          monitor
+        </span>
+        <span className="pl-2.5">{theme}</span>
+      </div>
       <h2 data-testid={`card-title-${id}`} className="font-satoshi text-2xl font-bold">
         {title}
       </h2>
@@ -72,7 +78,7 @@ const Card: FC<Partial<Monitor> & { color?: string }> = ({
               <div className="space-y-5 border-y border-brand-500 py-3">
                 <p>
                   <span className="pr-2.5 font-bold">Developed by:</span>
-                  {author || 'Lorem Ipsum'}
+                  {author}
                 </p>
                 <p>
                   <span className="pr-2.5 font-bold">Monitor tool website:</span>www.toolname.com
@@ -121,6 +127,13 @@ const Card: FC<Partial<Monitor> & { color?: string }> = ({
         </DialogHeader>
       </DialogContent>
     </Dialog>
+    <Image
+      alt={theme}
+      src={icon}
+      width={45}
+      height={50}
+      className={`absolute bottom-3.5 right-3`}
+    />
   </div>
 );
 

@@ -1,3 +1,4 @@
+import type { Theme } from './global';
 import type { Layer } from './layers';
 
 export type Geostory = {
@@ -8,4 +9,13 @@ export type Geostory = {
   layers: Layer[];
   title: string;
   entity_type: 'geo_story';
+  theme: Theme;
+};
+
+export type GeostoryParsed = Geostory & {
+  color: string;
+  colorOpacity: string;
+  label: string;
+  icon: string;
+  background: string;
 };
