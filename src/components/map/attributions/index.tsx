@@ -34,7 +34,7 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
       <DialogTrigger asChild data-testid="attributions">
         <div className={ATTRIBUTION_STYLES}>Attributions</div>
       </DialogTrigger>
-      <DialogContent className="top-1/2 w-[740px] -translate-y-[50%] transform bg-secondary-500 p-10 text-brand-500">
+      <DialogContent className="top-1/2 w-[740px] -translate-y-[50%] transform bg-secondary-500 text-brand-500">
         <DialogHeader className="space-y-5">
           <DialogTitle asChild>
             <header className="flex items-center justify-between">
@@ -70,7 +70,7 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
       <DialogTrigger asChild data-testid="disclaimer">
         <div className={ATTRIBUTION_STYLES}>Disclaimer</div>
       </DialogTrigger>
-      <DialogContent className="top-1/2 w-[665px] -translate-y-[50%] transform bg-secondary-500 p-10 text-brand-500">
+      <DialogContent className="top-1/2 w-[665px] -translate-y-[50%] transform bg-secondary-500 text-brand-500">
         <DialogHeader className="space-y-5">
           <DialogTitle asChild>
             <header className="flex items-center justify-between">
