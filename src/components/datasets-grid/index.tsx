@@ -7,9 +7,11 @@ import { BiCheck } from 'react-icons/bi';
 // import { HiChevronDown } from 'react-icons/hi2';
 
 import { useMonitorsAndGeostories } from '@/hooks/datasets';
+import type { PaginatedResponse } from '@/hooks/datasets';
 
 import Card from '@/components/landing-card';
 import Loading from '@/components/loading';
+import Pagination from '@/components/pagination';
 import Search from '@/components/search';
 import { Checkbox, CheckboxIndicator } from '@/components/ui/checkbox';
 import {
@@ -27,6 +29,7 @@ import { THEMES, SORTING } from './constants';
 import type { Theme, SortingCriteria, Dataset } from './types';
 
 const LandingDatasets = () => {
+  const [page, setPage] = useState(1);
   const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
   const [searchValue, setSearchValue] = useState<string>('');
   const [active, setActive] = useState<Dataset>('all');
@@ -36,11 +39,15 @@ const LandingDatasets = () => {
       ...(active !== 'all' && { type: active }),
       ...(searchValue !== '' && { title: searchValue }),
       sort_by: sortingCriteria,
+      pagination: true,
+      page,
     },
     {
       enabled: activeThemes.length > 0,
     }
   );
+
+  const cardsData = data as PaginatedResponse;
 
   const handleCategoriesFilter = useCallback(
     (id: Dataset) => {
@@ -70,7 +77,7 @@ const LandingDatasets = () => {
 
   return (
     <div className="w-full">
-      <div className="m-auto max-w-[1200px]  py-10">
+      <div className="m-auto max-w-[1200px] pt-10">
         <div className="mb-10 flex h-14">
           <Search
             placeholder="Search by name, type of dataset..."
@@ -203,10 +210,10 @@ const LandingDatasets = () => {
             </DropdownMenu>
           </div>
         </div>
-        {!!data?.length && (
+        {!!cardsData?.data?.length && (
           <div data-testid="datasets-result" className="py-5 font-inter text-secondary-700">
-            <span data-testid="result-number">{data?.length}</span>{' '}
-            {data?.length === 1 ? 'result' : 'results'}
+            <span data-testid="result-number">{cardsData?.data?.length}</span>{' '}
+            {cardsData?.data?.length === 1 ? 'result' : 'results'}
           </div>
         )}
         <div className="min-h-[380px]">
@@ -217,14 +224,25 @@ const LandingDatasets = () => {
               className="grid max-w-7xl grid-cols-3 gap-6"
               data-testid="datasets-list"
             >
-              {data.map(({ id, ...d }) => (
+              {cardsData?.data?.map(({ id, ...d }) => (
                 <li key={id} data-testid="datasets-card">
                   <Card id={id} {...d} />
                 </li>
               ))}
             </ul>
           )}
-          {isFetched && !isError && !data.length && (
+          {isFetched && !isError && !!cardsData?.data.length && (
+            <Pagination
+              page={page}
+              setPage={setPage}
+              totalItems={cardsData?.total_items}
+              maxLength={cardsData?.data.length}
+              nextPage={cardsData?.next_page}
+              previousPage={cardsData?.previous_page}
+              numButtons={5}
+            />
+          )}
+          {isFetched && !isError && !cardsData?.data.length && (
             <div className="flex w-full flex-col justify-center space-y-7 bg-gradient-to-b from-[#08121c] to-[#0a182a] py-56 text-center">
               <div className="m-auto w-full max-w-xl">
                 <p className="text-5xl font-bold">No results found.</p>
