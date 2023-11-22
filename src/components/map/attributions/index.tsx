@@ -20,7 +20,7 @@ import type { ControlsProps } from './types';
 
 type ControlsPropsWithChildren = PropsWithChildren<ControlsProps>;
 const ATTRIBUTION_STYLES =
-  'cursor-pointer text-5xl text-[10px] text-secondary-500 shadow-brand-500 drop-shadow-[2px_2px_2px_var(--tw-shadow-color)]';
+  'cursor-pointer text-5xl text-[10px] text-secondary-500 shadow-brand-500 drop-shadow-[2px_2px_2px_var(--tw-shadow-color)] whitespace-nowrap';
 export const Controls: FC<ControlsPropsWithChildren> = ({
   className = 'absolute bottom-3 space-x-4',
 }: ControlsPropsWithChildren) => (
