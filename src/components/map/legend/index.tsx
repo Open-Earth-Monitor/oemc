@@ -13,14 +13,16 @@ import {
 } from '@/components/ui/dropdown';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
+import {
+  DROPDOWN_TRIGGER_STYLES,
+  LEGEND_BUTTON_STYLES,
+  DROPDOWN_CONTENT_STYLES,
+} from './constants';
 import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
 import LayerVisibility from './visibility';
 
 type ActiveTab = 'layer-settings' | 'compare-layers';
-
-const LEGEND_BUTTON_STYLES =
-  'bg-brand-500 flex-1 text-center text-xs uppercase font-medium grow px-2 h-[34px] py-1 text-white hover:bg-secondary-500 hover:text-brand-500 disabled:opacity-50 disabled:cursor-not-allowed';
 
 const findLabel = (value: string, range: { label: string; value: string | number }[]) =>
   range?.find((d: { label: string; value: string }) => d.value === value)?.label satisfies
@@ -93,7 +95,7 @@ export const Legend = () => {
 
   return (
     <div
-      className="absolute bottom-3 right-3 z-10 space-y-1 font-inter text-xs"
+      className="absolute bottom-3 right-3 z-[55] space-y-1 font-inter text-xs"
       data-testid="map-legend"
     >
       <Tabs value={activeTab} onValueChange={handleTabChange} className="min-w-[270px]">
@@ -154,7 +156,7 @@ export const Legend = () => {
 
             <div className="flex w-full flex-col items-start">
               <DropdownMenu>
-                <DropdownMenuTrigger className="w-full border-none px-3.5 py-2.5">
+                <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
                   <div className="flex w-full justify-between whitespace-nowrap ">
                     <span>Selected year: {baseDateLabel}</span>
                   </div>
@@ -163,7 +165,7 @@ export const Legend = () => {
                   align="start"
                   alignOffset={0}
                   sideOffset={0}
-                  className="max-h-56 w-full bg-brand-500"
+                  className={DROPDOWN_CONTENT_STYLES}
                   style={{ width: 'calc(100% - 2rem)' }}
                 >
                   {range?.map((d) => (
@@ -179,7 +181,7 @@ export const Legend = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex w-full border-none px-3.5 py-2.5">
+                <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
                   <div className="flex w-full justify-between whitespace-nowrap">
                     <span>Selected year: {CompareDateLabel}</span>
                   </div>
@@ -188,7 +190,7 @@ export const Legend = () => {
                   align="start"
                   alignOffset={0}
                   sideOffset={0}
-                  className="max-h-56 w-full bg-brand-500"
+                  className={DROPDOWN_CONTENT_STYLES}
                   style={{ width: 'calc(100% - 2rem)' }}
                 >
                   {range?.map((d) => (
