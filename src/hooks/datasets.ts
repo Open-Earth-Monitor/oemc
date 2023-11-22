@@ -8,8 +8,18 @@ import API from 'services/api';
 
 type UseParams = {
   type?: 'monitors' | 'geostories' | 'all';
+  page?: number;
   monitor_id?: string;
+  pagination?: boolean;
   sort_by?: 'title' | 'date';
+};
+
+export type PaginatedResponse = {
+  ['monitors and geostories']: (Monitor | Geostory)[];
+  data: (Monitor | Geostory)[];
+  next_page: string | null;
+  previous_page: string | null;
+  total_items: number;
 };
 
 const COLORS = (<{ [key: string]: string }>{
@@ -50,9 +60,10 @@ const DEFAULT_QUERY_OPTIONS = {
   retry: false,
   staleTime: Infinity,
 };
+
 export function useMonitorsAndGeostories(
   params?: UseParams,
-  queryOptions?: UseQueryOptions<(Monitor | Geostory)[], Error>
+  queryOptions?: UseQueryOptions<PaginatedResponse | (Monitor | Geostory)[], Error>
 ) {
   const fetchMonitorAndGeostories = () =>
     API.request({
@@ -60,16 +71,30 @@ export function useMonitorsAndGeostories(
       url: '/monitors-and-geostories',
       params,
       ...queryOptions,
-    }).then((response: AxiosResponse<(Monitor | Geostory)[]>) => response.data);
+    }).then((response: AxiosResponse<PaginatedResponse | (Monitor | Geostory)[]>) => response.data);
+
   return useQuery(['monitor-and-geostories', params], fetchMonitorAndGeostories, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) =>
-      data?.map((d) => ({
-        ...d,
-        color: COLORS[d.id] || COLORS_GEOSTORIES[d.id],
-        ...(COLORS_OPACITY[d.id] && { headColor: COLORS_OPACITY[d.id] }),
-      })),
-
+    select: (data) => {
+      if (params?.pagination) {
+        const paginatedData = data as PaginatedResponse;
+        return {
+          ...paginatedData,
+          data: paginatedData['monitors and geostories'].map((d) => ({
+            ...d,
+            color: COLORS[d.id] || COLORS_GEOSTORIES[d.id] || 'hsla(209, 94%, 87%, 1)',
+            ...(COLORS_OPACITY[d.id] && { headColor: COLORS_OPACITY[d.id] }),
+          })),
+        };
+      } else {
+        const nonPaginatedData = data as (Monitor | Geostory)[];
+        return nonPaginatedData.map((d) => ({
+          ...d,
+          color: COLORS[d.id] || COLORS_GEOSTORIES[d.id] || 'hsla(209, 94%, 87%, 1)',
+          ...(COLORS_OPACITY[d.id] && { headColor: COLORS_OPACITY[d.id] }),
+        }));
+      }
+    },
     ...queryOptions,
   });
 }

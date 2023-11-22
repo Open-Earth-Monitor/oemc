@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 import type { Geostory } from '@/types/geostories';
 import type { Monitor } from '@/types/monitors';
 
+import { usePagination } from '@/hooks/pagination';
 test.beforeEach(async ({ page }) => {
   await page.goto('/', { waitUntil: 'load' });
 });
