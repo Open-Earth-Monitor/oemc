@@ -11,12 +11,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 import {
   DROPDOWN_TRIGGER_STYLES,
   LEGEND_BUTTON_STYLES,
   DROPDOWN_CONTENT_STYLES,
+  DROPDOWN_ITEM_STYLES,
 } from './constants';
 import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
@@ -166,18 +168,21 @@ export const Legend = () => {
                   alignOffset={0}
                   sideOffset={0}
                   className={DROPDOWN_CONTENT_STYLES}
-                  style={{ width: 'calc(100% - 2rem)' }}
                 >
-                  {range?.map((d) => (
-                    <DropdownMenuItem
-                      key={d.value}
-                      className="m-auto flex w-full flex-1 justify-center whitespace-nowrap px-6 text-center text-secondary-500 hover:bg-secondary-900"
-                    >
-                      <button type="button" value={d.value} onClick={handleBaseDate}>
-                        {d.label}
-                      </button>
-                    </DropdownMenuItem>
-                  ))}
+                  <ScrollArea className="max-h-[200px] w-full">
+                    {range?.map((d) => (
+                      <DropdownMenuItem key={d.value} className={DROPDOWN_ITEM_STYLES}>
+                        <button
+                          type="button"
+                          value={d.value}
+                          onClick={handleBaseDate}
+                          className="rounded-sm px-2.5 py-1 hover:bg-secondary-900"
+                        >
+                          {d.label}
+                        </button>
+                      </DropdownMenuItem>
+                    ))}
+                  </ScrollArea>
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
@@ -191,18 +196,21 @@ export const Legend = () => {
                   alignOffset={0}
                   sideOffset={0}
                   className={DROPDOWN_CONTENT_STYLES}
-                  style={{ width: 'calc(100% - 2rem)' }}
                 >
-                  {range?.map((d) => (
-                    <DropdownMenuItem
-                      key={d.value}
-                      className="m-auto flex w-full flex-1 justify-center whitespace-nowrap px-6 text-center text-secondary-500 hover:bg-secondary-900"
-                    >
-                      <button type="button" value={d.value} onClick={handleCompareDate}>
-                        {d.label}
-                      </button>
-                    </DropdownMenuItem>
-                  ))}
+                  <ScrollArea className="max-h-[200px] w-full">
+                    {range?.map((d) => (
+                      <DropdownMenuItem key={d.value} className={DROPDOWN_ITEM_STYLES}>
+                        <button
+                          type="button"
+                          value={d.value}
+                          onClick={handleCompareDate}
+                          className="rounded-sm px-2.5 py-1 hover:bg-secondary-900"
+                        >
+                          {d.label}
+                        </button>
+                      </DropdownMenuItem>
+                    ))}
+                  </ScrollArea>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
