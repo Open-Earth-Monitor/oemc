@@ -113,8 +113,12 @@
   }
 }
 
+.dropdown-menu-trigger {
+  width: var(--radix-dropdown-menu-trigger-width);
+}
+
 .dropdown-menu-content {
-  width: var(--radix-dropdown-menu-trigger-width) 
+  width: var(--radix-dropdown-menu-content-transform-origin);
 }
 
 .visually-hidden {
