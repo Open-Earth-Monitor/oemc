@@ -9,6 +9,7 @@ import cn from '@/lib/classnames';
 
 import type { LayerDateRange, LayerParsed } from '@/types/layers';
 
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -101,16 +102,18 @@ const TimeSeries: FC<{
                 </>
               </SelectTrigger>
               <SelectContent
-                className="mx-1 flex max-h-56 items-center justify-center p-1 text-center"
+                className="flex max-h-56 w-full min-w-fit items-center text-center"
                 alignOffset={-20}
                 sideOffset={0}
                 style={{ width: 'calc(100% - 2rem)' }}
               >
-                {range.map((r: LayerDateRange) => (
-                  <SelectItem key={r.value} value={r.value}>
-                    {r.label}
-                  </SelectItem>
-                ))}
+                <ScrollArea className="max-h-[200px] w-full">
+                  {range.map((r: LayerDateRange) => (
+                    <SelectItem key={r.value} value={r.value} className="px-2">
+                      <span className="rounded-sm px-2 py-1 hover:bg-secondary-900">{r.label}</span>
+                    </SelectItem>
+                  ))}
+                </ScrollArea>
               </SelectContent>
             </Select>
           )}
