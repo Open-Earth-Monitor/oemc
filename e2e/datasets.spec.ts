@@ -34,14 +34,18 @@ test('datasets list', async ({ page }) => {
   expect(datasetsListCount).toBe(layersData.length);
 });
 
+// TODO: once we know monitors with datasets, we can test this in a better way
 test('datasets item', async ({ page }) => {
-  const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
+  const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors*');
   const monitorsData = (await monitorsResponse.json()) as Monitor[];
-  await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
+  // Find a monitor with layers (m1)
+  const firstMonitorWithLayers = monitorsData.find((monitor) => monitor.id === 'm1');
+
+  await page.getByTestId(`monitor-item-${firstMonitorWithLayers.id}`).click();
   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
 
   const layersResponse = await page.waitForResponse(
-    `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/layers`
+    `https://api.earthmonitor.org/monitors/${firstMonitorWithLayers.id}/layers`
   );
   const layersData = (await layersResponse.json()) as Layer[];
   const firstDataset = page.getByTestId(`dataset-item-${layersData[0].layer_id}`);
@@ -69,7 +73,7 @@ test('datasets item', async ({ page }) => {
   // Toggle layer: adding layer_id to the url
   await expect(firstDataset.getByTestId('dataset-layer-toggle-button')).toBeVisible();
   await firstDataset.getByTestId('dataset-layer-toggle-button').click(); // off
-  await expect(page).toHaveURL(new RegExp(`/map/${monitorsData[0].id}/datasets`, 'g'));
+  await expect(page).toHaveURL(new RegExp(`/map/${firstMonitorWithLayers.id}/datasets`, 'g'));
   await firstDataset.getByTestId('dataset-layer-toggle-button').click(); // on
   await expect(page).toHaveURL(new RegExp(layersData[0].layer_id));
 });
