@@ -1,8 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-import type { Geostory } from '@/types/geostories';
-import type { Monitor } from '@/types/monitors';
-
 import type { PaginatedResponse } from '@/hooks/datasets';
 
 test.beforeEach(async ({ page }) => {

@@ -20,8 +20,8 @@ test('legend', async ({ page }) => {
   ).toHaveAttribute('data-active', 'false');
   await expect(page).toHaveURL(
     new RegExp(
-      /layers=%5B%7B%22id%22%3A%22l1%22%2C%22opacity%22%3A0%2C%22date%22%3A%2220000101_20001231%22%7D%5D/,
-      'g'
+      /layers=\[{%22id%22:%22l1%22,%22opacity%22:0,%22date%22:%2220000101_20001231%22}\]/,
+      'gi'
     )
   );
   await page.getByTestId('map-legend-item').getByTestId('layer-visibility').first().click();
@@ -30,7 +30,7 @@ test('legend', async ({ page }) => {
   ).toHaveAttribute('data-active', 'true');
   await expect(page).toHaveURL(
     new RegExp(
-      /layers=%5B%7B%22id%22%3A%22l1%22%2C%22opacity%22%3A1%2C%22date%22%3A%2220000101_20001231%22%7D%5D/,
+      /layers=\[{%22id%22:%22l1%22,%22opacity%22:1,%22date%22:%2220000101_20001231%22}\]/,
       'g'
     )
   );
@@ -99,6 +99,7 @@ test.describe('general information in map page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/map/m1/datasets', { waitUntil: 'load' });
   });
+
   test('attributtions', async ({ page }) => {
     await page.goto('/map/m1/datasets', { waitUntil: 'load' });
     const attributions = page.getByTestId('attributions');
@@ -160,10 +161,6 @@ test.describe('social media', () => {
     const linkedinLink = page.getByTestId('linkedin-link');
     await expect(linkedinLink).toHaveAttribute('href', `https://www.linkedin.com/in/opengeohub`);
   });
-  // test('mastodon', async ({ page }) => {
-  //   const mastodonLink = page.getByTestId('mastodon-link');
-  //   await expect(mastodonLink).toHaveAttribute('href', ``);
-  // });
   test('github', async ({ page }) => {
     const githubLink = page.getByTestId('github-link');
     await expect(githubLink).toHaveAttribute('href', `https://github.com/Open-Earth-Monitor`);
