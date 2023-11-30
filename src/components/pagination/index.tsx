@@ -26,7 +26,7 @@ const Pagination: React.FC<PaginationProps> = ({
 }: PaginationProps) => {
   const lastElement = Math.ceil(totalItems / maxLength);
 
-  const pages = maxLength > numButtons ? range(1, lastElement + 1) : range(1, numButtons + 2);
+  const pages = range(1, lastElement + 1);
 
   const pagesToShow = usePagination(pages.length, numButtons, page);
 

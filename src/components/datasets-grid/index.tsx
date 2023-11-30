@@ -54,6 +54,7 @@ const LandingDatasets = () => {
   const handleCategoriesFilter = useCallback(
     (id: Dataset) => {
       setActive(id);
+      setPage(1);
     },
     [setActive]
   );
@@ -247,7 +248,7 @@ const LandingDatasets = () => {
               page={page}
               setPage={setPage}
               totalItems={cardsData?.total_items}
-              maxLength={cardsData?.data.length}
+              maxLength={5}
               nextPage={cardsData?.next_page}
               previousPage={cardsData?.previous_page}
               numButtons={5}
