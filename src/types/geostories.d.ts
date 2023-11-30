@@ -8,4 +8,5 @@ export type Geostory = {
   layers: Layer[];
   title: string;
   entity_type: 'geo_story';
+  ready: boolean;
 };

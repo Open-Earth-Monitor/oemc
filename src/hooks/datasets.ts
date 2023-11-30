@@ -82,7 +82,7 @@ export function useMonitorsAndGeostories(
           ...paginatedData,
           data: paginatedData['monitors and geostories'].map((d) => ({
             ...d,
-            color: COLORS[d.id] || COLORS_GEOSTORIES[d.id] || 'hsla(209, 94%, 87%, 1)',
+            color: COLORS[d.id] || COLORS_GEOSTORIES[d.id] || 'hsla(0, 0%, 79%, 1)',
             ...(COLORS_OPACITY[d.id] && { headColor: COLORS_OPACITY[d.id] }),
           })),
         };
@@ -90,7 +90,7 @@ export function useMonitorsAndGeostories(
         const nonPaginatedData = data as (Monitor | Geostory)[];
         return nonPaginatedData.map((d) => ({
           ...d,
-          color: COLORS[d.id] || COLORS_GEOSTORIES[d.id] || 'hsla(209, 94%, 87%, 1)',
+          color: COLORS[d.id] || COLORS_GEOSTORIES[d.id] || 'hsla(0, 0%, 79%, 1)',
           ...(COLORS_OPACITY[d.id] && { headColor: COLORS_OPACITY[d.id] }),
         }));
       }
