@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v0.1.0-alpha.2 - Unreleased
 
 ### Added
+- Added metadata link to active geostory on the map page [OEMC-41](https://vizzuality.atlassian.net/browse/OEMC-41)
+- Added computational notebook link to active geostory on the map page [OEMC-43](https://vizzuality.atlassian.net/browse/OEMC-43)
+- Added related publications to geostories on the map page [OEMC-34](https://vizzuality.atlassian.net/browse/OEMC-34)
+- Added related publications to geostories on the landing page [OEMC-32](https://vizzuality.atlassian.net/browse/OEMC-32)
+- Added related publications t to geostories and monitors on the map page [OEMC-33](https://vizzuality.atlassian.net/browse/OEMC-33)
+- Geostories in the landing page include a link to related publications [OEMC-30](https://vizzuality.atlassian.net/browse/OEMC-30)
+- Filtering monitors with layers only in map
+- Temporally add monitors with no categories
+- Unifying link styles in landing [OEMC-144](https://vizzuality.atlassian.net/browse/OEMC-144)
 - Display of monitors and geostories in landing page [OEMC-25](https://vizzuality.atlassian.net/browse/OEMC-25?atlOrigin=eyJpIjoiNDZiOTM0YjkzN2NlNDJhNmE2OWJiODYxZTlmYzcwNjkiLCJwIjoiaiJ9)
 - Search monitors and geostories by title [OEMC-94](https://vizzuality.atlassian.net/browse/OEMC-94?atlOrigin=eyJpIjoiMGVlYmJhNmM5ODU4NDRiNWEzNTIyNWRjODdjNDg4MWUiLCJwIjoiaiJ9)
 - 404 - error management [OEMC-81](https://vizzuality.atlassian.net/browse/OEMC-81?atlOrigin=eyJpIjoiNWZkNTYwMjVkZGVjNDAwZGE2YWI3ZDgwMzgzOTRjMjEiLCJwIjoiaiJ9)
@@ -18,9 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Links to social media (twitter, github and linkedin), link to "contact us" and "privacy policy" [OEMC-108](https://vizzuality.atlassian.net/browse/OEMC-108?atlOrigin=eyJpIjoiMTFhMjI4MmE1NjYzNDNiNmJlNWFlOGJjYWI4MjdhYjQiLCJwIjoiaiJ9)
 - Pagination in monitors and geostories hub [OEMC-20](https://vizzuality.atlassian.net/browse/OEMC-133?atlOrigin=eyJpIjoiMGFlYjg0NWM4Mzk3NDBjN2JhNjkzMzRhZmI4MTIyZDgiLCJwIjoiaiJ9)
 - Show monitors under development [OEMC-149](https://vizzuality.atlassian.net/browse/OEMC-149)
-- Filtering monitors with layers only in map
-- Temporally add monitors with no categories
-- Unifying link styles in landing [OEMC-144](https://vizzuality.atlassian.net/browse/OEMC-144)
 
 ## v0.1.0-alpha.1
 
