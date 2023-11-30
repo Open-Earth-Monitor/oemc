@@ -30,6 +30,10 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = ({
   color,
   author,
   ready,
+  metadata_url,
+  notebooks_url,
+  use_case_link,
+  publications,
 }) => (
   <div
     className="h-[388px] w-[384px] space-y-4 px-10 py-6 text-brand-500"
@@ -67,47 +71,61 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = ({
                     {title}
                   </h2>
                   <div data-testid="monitor-description" className="font-inter leading-[25px]">
-                    {description ||
-                      'Long description lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.'}
+                    {description}
                   </div>
                 </header>
               </DialogTitle>
               <DialogDescription asChild>
-                <div className="font-inter">
-                  <div className="space-y-5 border-y border-brand-500 py-3">
-                    <p>
-                      <span className="pr-2.5 font-bold">Developed by:</span>
-                      {author || 'Lorem Ipsum'}
-                    </p>
-                    <p>
-                      <span className="pr-2.5 font-bold">Monitor tool website:</span>
-                      www.toolname.com
-                    </p>
-                    <p>
-                      <span className="pr-2.5 font-bold">Output format:</span>GeoTiff, gpkg
-                    </p>
-                    <p>
-                      <span className="pr-2.5 font-bold">Spatial resolution:</span>Lorem Ipsum
-                    </p>
-                    <p>
-                      <span className="pr-2.5 font-bold">Temporal resolution:</span>Lorem Ipsum
-                    </p>
+                <div>
+                  <div className="border-t border-brand-500 py-6">
+                    <dl className="space-y-2 py-2">
+                      <div className="flex items-center space-x-2">
+                        <dt className="font-bold">Author:</dt>
+                        <dd>{author}</dd>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <dt className="font-bold">Computational notebook:</dt>
+                        <dd>{notebooks_url}</dd>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <dt className="font-bold">Metadata link:</dt>
+                        <dd>{metadata_url}</dd>
+                      </div>
+                    </dl>
                   </div>
-                  <div>
-                    <Link
-                      href=""
-                      className="flex items-center space-x-2 border-b border-brand-500 py-5 text-2xl font-bold"
-                    >
-                      <HiOutlineNewspaper />
-                      <span>Publications</span>
-                    </Link>
-                    <Link
-                      href=""
-                      className="flex items-center space-x-2 border-b border-brand-500 py-5 text-2xl font-bold"
-                    >
-                      <HiOutlineGlobeAlt />
-                      <span>Use cases</span>
-                    </Link>
+                  <div className="border-t border-brand-500 py-6">
+                    <h3 className="flex items-center space-x-2">
+                      <HiOutlineNewspaper className="h-6 w-6" />
+                      <span className="text-2xl font-bold">Publications</span>
+                    </h3>
+                    {publications.length > 0 && (
+                      <ul className="space-y-2 py-2 pl-8">
+                        {publications.map(({ url, title }) => (
+                          <li key={title}>
+                            <a href={url} className="underline">
+                              {title}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  <div className="border-t border-brand-500 py-6">
+                    <h3 className="flex items-center space-x-2">
+                      <HiOutlineNewspaper className="h-6 w-6" />
+                      <span className="text-2xl font-bold">Use cases</span>
+                    </h3>
+                    {use_case_link.length > 0 && (
+                      <ul className="space-y-2 py-2 pl-8">
+                        {use_case_link.map(({ url, title }) => (
+                          <li key={title}>
+                            <a href={url} className="underline">
+                              {title}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
 
                   <Link
