@@ -10,6 +10,9 @@ import MonitorsItem from './item';
 const MonitorsDirectory = () => {
   const { data, isLoading, isFetched, isError } = useMonitors();
 
+  // Filtering monitors ready (not under development)
+  const dataFiltered = data?.filter((d) => d.ready);
+
   return (
     <>
       {isLoading && !isFetched && <Loading />}
@@ -22,7 +25,7 @@ const MonitorsDirectory = () => {
             </TableRow>
           </TableHeader>
           <TableBody data-testid="monitors-list">
-            {data?.map((d) => (
+            {dataFiltered?.map((d) => (
               <TableRow key={d.id}>
                 <MonitorsItem data={d} />
               </TableRow>
