@@ -16,7 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Alpha version tag added to site [OEMC-127](https://vizzuality.atlassian.net/browse/OEMC-127?atlOrigin=eyJpIjoiYzBiNGI0NDcwOGUzNGYzMzgzM2I1NWVhMWE0NjFkZjciLCJwIjoiaiJ9)
 - Functionality for returning from a geostory to its associated monitor [OEMC-121](https://vizzuality.atlassian.net/browse/OEMC-121?atlOrigin=eyJpIjoiNWY1OTkwZDNlMWNiNDA4M2JiOWM0NDNiODlkMDBlNmUiLCJwIjoiaiJ9)
 - Links to social media (twitter, github and linkedin), link to "contact us" and "privacy policy" [OEMC-108](https://vizzuality.atlassian.net/browse/OEMC-108?atlOrigin=eyJpIjoiMTFhMjI4MmE1NjYzNDNiNmJlNWFlOGJjYWI4MjdhYjQiLCJwIjoiaiJ9)
-- Pagination in  monitors and geostories hub [OEMC-20](https://vizzuality.atlassian.net/browse/OEMC-133?atlOrigin=eyJpIjoiMGFlYjg0NWM4Mzk3NDBjN2JhNjkzMzRhZmI4MTIyZDgiLCJwIjoiaiJ9)
+- Pagination in monitors and geostories hub [OEMC-20](https://vizzuality.atlassian.net/browse/OEMC-133?atlOrigin=eyJpIjoiMGFlYjg0NWM4Mzk3NDBjN2JhNjkzMzRhZmI4MTIyZDgiLCJwIjoiaiJ9)
+- Show monitors under development [OEMC-149](https://vizzuality.atlassian.net/browse/OEMC-149)
+- Filtering monitors with layers only in map
+- Temporally add monitors with no categories
+- Unifying link styles in landing [OEMC-144](https://vizzuality.atlassian.net/browse/OEMC-144)
 
 ## v0.1.0-alpha.1
 

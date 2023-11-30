@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { HiOutlineArrowUp } from 'react-icons/hi';
 
-const Prefooter = () => {
+const PreFooter = () => {
   return (
     <section className="m-auto font-satoshi">
       <div className="relative m-auto flex bg-[url('/images/landing/prefooter.png')] bg-cover bg-top">
@@ -49,4 +49,4 @@ const Prefooter = () => {
   );
 };
 
-export default Prefooter;
+export default PreFooter;
