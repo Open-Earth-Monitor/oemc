@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react';
 
+import { motion } from 'framer-motion';
 import { BiCheck } from 'react-icons/bi';
 // import { FiInfo } from 'react-icons/fi';
 // import { HiChevronDown } from 'react-icons/hi2';
@@ -9,8 +10,9 @@ import { BiCheck } from 'react-icons/bi';
 import { useMonitorsAndGeostories } from '@/hooks/datasets';
 import type { PaginatedResponse } from '@/hooks/datasets';
 
-import Card from '@/components/landing-card';
+import GeostoryCard from '@/components/geostories/card';
 import Loading from '@/components/loading';
+import MonitorCard from '@/components/monitors/card';
 import Pagination from '@/components/pagination';
 import Search from '@/components/search';
 import { Checkbox, CheckboxIndicator } from '@/components/ui/checkbox';
@@ -226,7 +228,16 @@ const LandingDatasets = () => {
             >
               {cardsData?.data?.map(({ id, ...d }) => (
                 <li key={id} data-testid="datasets-card">
-                  <Card id={id} {...d} />
+                  <motion.div
+                    className="overflow-hidden font-inter"
+                    whileHover={{
+                      translateY: '-10px',
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {d.entity_type === 'monitor' && <MonitorCard id={id} {...d} />}
+                    {d.entity_type === 'geo_story' && <GeostoryCard id={id} {...d} />}
+                  </motion.div>
                 </li>
               ))}
             </ul>

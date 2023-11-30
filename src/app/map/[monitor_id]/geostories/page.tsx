@@ -4,7 +4,7 @@ import type { NextPage } from 'next';
 
 import { useMonitor, useMonitorGeostories } from '@/hooks/monitors';
 
-import GeostoryCard from '@/components/geostories/card';
+import GeostoryItem from '@/components/geostories/item';
 import Loading from '@/components/loading';
 
 const GeostoriesPage: NextPage<{ params: { monitor_id: string } }> = ({ params }) => {
@@ -24,7 +24,7 @@ const GeostoriesPage: NextPage<{ params: { monitor_id: string } }> = ({ params }
         <ul className="space-y-6 text-brand-500" data-testid="geostories-list">
           {data.map((geostory) => (
             <li key={geostory.id}>
-              <GeostoryCard {...geostory} color={color} />
+              <GeostoryItem {...geostory} color={color} />
             </li>
           ))}
         </ul>
