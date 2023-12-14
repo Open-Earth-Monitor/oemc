@@ -8,6 +8,7 @@ export type Monitor = {
   geostories: Geostory[];
   id: string;
   title: string;
+  theme: string;
   entity_type: 'monitor';
   ready: boolean;
   metadata_url: string;

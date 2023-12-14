@@ -33,6 +33,11 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; headColor?: string 
   color,
   headColor,
   ready,
+  theme,
+  notebooks_url,
+  metadata_url,
+  publications,
+  use_case_link,
 }) => (
   <div
     className="min-h-[388px] w-[384px]"
@@ -40,9 +45,9 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; headColor?: string 
     data-testid={`card-${id}`}
   >
     <div className="space-y-4 px-8 py-6" style={{ backgroundColor: headColor }}>
-      <div>
+      <div className="space-y-2">
         <div data-testid={`card-type-${id}`} className={TAG_STYLE}>
-          <span>geostory</span>
+          <span>geostory</span> | <span className="capitalize">#{theme || 'Unknown'}</span>
         </div>
         <h2 data-testid={`card-title-${id}`} className="font-satoshi text-2xl font-bold">
           {title}
@@ -77,43 +82,69 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; headColor?: string 
                   </header>
                 </DialogTitle>
                 <DialogDescription asChild>
-                  <div className="font-inter">
-                    <div className="space-y-5 border-y border-brand-500 py-3">
-                      <p>
-                        <span className="pr-2.5 font-bold">Developed by:</span>
-                        {author || 'Lorem Ipsum'}
-                      </p>
-                      <p>
-                        <span className="pr-2.5 font-bold">Monitor tool website:</span>
-                        www.toolname.com
-                      </p>
-                      <p>
-                        <span className="pr-2.5 font-bold">Output format:</span>GeoTiff, gpkg
-                      </p>
-                      <p>
-                        <span className="pr-2.5 font-bold">Spatial resolution:</span>Lorem Ipsum
-                      </p>
-                      <p>
-                        <span className="pr-2.5 font-bold">Temporal resolution:</span>Lorem Ipsum
-                      </p>
+                  <div>
+                    <div className="border-t border-brand-500 py-6">
+                      <dl className="space-y-2 py-2">
+                        <div className="flex space-x-2">
+                          <dt className="whitespace-nowrap font-bold">Author:</dt>
+                          <dd>{author}</dd>
+                        </div>
+                        <div className="flex space-x-2">
+                          <dt className="whitespace-nowrap font-bold">Computational notebook:</dt>
+                          <dd>
+                            {notebooks_url && (
+                              <a href={notebooks_url} className="break-all hover:underline">
+                                {notebooks_url}
+                              </a>
+                            )}
+                          </dd>
+                        </div>
+                        <div className="flex space-x-2">
+                          <dt className="whitespace-nowrap font-bold">Metadata link:</dt>
+                          <dd className="grow-0">
+                            {metadata_url && (
+                              <a href={metadata_url} className="break-all hover:underline">
+                                {metadata_url}
+                              </a>
+                            )}
+                          </dd>
+                        </div>
+                      </dl>
                     </div>
-                    <div>
-                      <Link
-                        href=""
-                        className="flex items-center space-x-2 border-b border-brand-500 py-5 text-2xl font-bold"
-                      >
-                        <HiOutlineNewspaper />
-                        <span>Publications</span>
-                      </Link>
-                      <Link
-                        href=""
-                        className="flex items-center space-x-2 border-b border-brand-500 py-5 text-2xl font-bold"
-                      >
-                        <HiOutlineGlobeAlt />
-                        <span>Use cases</span>
-                      </Link>
+                    <div className="border-t border-brand-500 py-6">
+                      <h3 className="flex items-center space-x-2">
+                        <HiOutlineNewspaper className="h-6 w-6" />
+                        <span className="text-2xl font-bold">Publications</span>
+                      </h3>
+                      {publications.length > 0 && (
+                        <ul className="space-y-2 py-2 pl-8 font-bold">
+                          {publications.map(({ url, title }) => (
+                            <li key={title}>
+                              <a href={url} className="underline">
+                                {title}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
-
+                    <div className="border-t border-brand-500 py-6">
+                      <h3 className="flex items-center space-x-2">
+                        <HiOutlineGlobeAlt className="h-6 w-6" />
+                        <span className="text-2xl font-bold">Use cases</span>
+                      </h3>
+                      {use_case_link.length > 0 && (
+                        <ul className="space-y-2 py-2 pl-8 font-bold">
+                          {use_case_link.map(({ url, title }) => (
+                            <li key={title}>
+                              <a href={url} className="underline">
+                                {title}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                     <Link
                       href={`/map/${id}/datasets`}
                       data-testid="monitor-button"
