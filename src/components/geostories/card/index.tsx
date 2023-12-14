@@ -68,7 +68,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; headColor?: string 
             >
               <DialogHeader className="space-y-6">
                 <DialogTitle asChild>
-                  <header className="space-y-4">
+                  <header className="space-y-6">
                     <h2
                       data-testid="monitor-title"
                       className="inline-block pr-6 text-6xl font-bold"
