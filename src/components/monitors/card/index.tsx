@@ -30,20 +30,19 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = ({
   color,
   author,
   ready,
-  metadata_url,
-  notebooks_url,
   use_case_link,
   publications,
+  theme,
 }) => (
   <div
     className="h-[388px] w-[384px] space-y-4 px-10 py-6 text-brand-500"
     style={{ backgroundColor: color }}
     data-testid={`card-${id}`}
   >
-    <div>
-      <span data-testid={`card-type-${id}`} className={TAG_STYLE}>
-        monitor
-      </span>
+    <div className="space-y-2">
+      <div data-testid={`card-type-${id}`} className={TAG_STYLE}>
+        <span>monitor</span> | <span className="capitalize">#{theme || 'Unknown'}</span>
+      </div>
       <h2 data-testid={`card-title-${id}`} className="font-satoshi text-2xl font-bold">
         {title}
       </h2>
@@ -79,17 +78,9 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = ({
                 <div>
                   <div className="border-t border-brand-500 py-6">
                     <dl className="space-y-2 py-2">
-                      <div className="flex items-center space-x-2">
-                        <dt className="font-bold">Author:</dt>
+                      <div className="flex space-x-2">
+                        <dt className="whitespace-nowrap font-bold">Author:</dt>
                         <dd>{author}</dd>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <dt className="font-bold">Computational notebook:</dt>
-                        <dd>{notebooks_url}</dd>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <dt className="font-bold">Metadata link:</dt>
-                        <dd>{metadata_url}</dd>
                       </div>
                     </dl>
                   </div>
@@ -99,7 +90,7 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = ({
                       <span className="text-2xl font-bold">Publications</span>
                     </h3>
                     {publications.length > 0 && (
-                      <ul className="space-y-2 py-2 pl-8">
+                      <ul className="space-y-2 py-2 pl-8 font-bold">
                         {publications.map(({ url, title }) => (
                           <li key={title}>
                             <a href={url} className="underline">
@@ -112,11 +103,11 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = ({
                   </div>
                   <div className="border-t border-brand-500 py-6">
                     <h3 className="flex items-center space-x-2">
-                      <HiOutlineNewspaper className="h-6 w-6" />
+                      <HiOutlineGlobeAlt className="h-6 w-6" />
                       <span className="text-2xl font-bold">Use cases</span>
                     </h3>
                     {use_case_link.length > 0 && (
-                      <ul className="space-y-2 py-2 pl-8">
+                      <ul className="space-y-2 py-2 pl-8 font-bold">
                         {use_case_link.map(({ url, title }) => (
                           <li key={title}>
                             <a href={url} className="underline">
