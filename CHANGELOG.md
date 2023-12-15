@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v0.1.0-alpha.2 - Unreleased
 
 ### Added
+- Use case links, publications and computational notebooks in geostories [OEMC-43](https://vizzuality.atlassian.net/browse/OEMC-43) [OEMC-34](https://vizzuality.atlassian.net/browse/OEMC-34)
 - Geostories enables comparison by default when a left layer exists [OEMC-113](https://vizzuality.atlassian.net/browse/OEMC-113)
 - Added metadata link to active geostory on the map page [OEMC-41](https://vizzuality.atlassian.net/browse/OEMC-41)
 - Added computational notebook link to active geostory on the map page [OEMC-43](https://vizzuality.atlassian.net/browse/OEMC-43)

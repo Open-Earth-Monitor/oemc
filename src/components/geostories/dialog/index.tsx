@@ -64,7 +64,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                   <dt className="whitespace-nowrap font-bold">Computational notebook:</dt>
                   <dd>
                     {notebooks_url && (
-                      <a href={notebooks_url} className="break-all hover:underline">
+                      <a href={notebooks_url} className="break-all underline">
                         {notebooks_url}
                       </a>
                     )}
@@ -74,7 +74,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                   <dt className="whitespace-nowrap font-bold">Metadata link:</dt>
                   <dd className="grow-0">
                     {metadata_url && (
-                      <a href={metadata_url} className="break-all hover:underline">
+                      <a href={metadata_url} className="break-all underline">
                         {metadata_url}
                       </a>
                     )}
