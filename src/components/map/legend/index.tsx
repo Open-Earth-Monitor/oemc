@@ -31,7 +31,7 @@ const findLabel = (value: string, range: { label: string; value: string | number
     | string
     | number;
 
-export const Legend = () => {
+export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
@@ -42,6 +42,10 @@ export const Legend = () => {
 
   const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layers?.length });
   const { title, range } = data ?? {};
+  const { data: compareLayerData } = useLayerParsedSource(
+    { layer_id: compareLayers?.[0]?.id },
+    { enabled: !!compareLayers?.[0]?.id && isGeostory }
+  );
 
   const [activeTab, setActiveTab] = useState<ActiveTab>(
     !!compareDate ? 'compare-layers' : 'layer-settings'
@@ -84,6 +88,7 @@ export const Legend = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [compareDate]);
+
   const [legendWidth, setLegendWith] = useState<number>(0);
 
   const titleRef = createRef<HTMLDivElement>();
@@ -94,6 +99,14 @@ export const Legend = () => {
       setLegendWith(width);
     }
   }, [titleRef, setLegendWith]);
+
+  // Enable compare legend if compare layer is in the URL
+  useEffect(() => {
+    if (compareLayers) {
+      setActiveTab('compare-layers');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
@@ -106,6 +119,7 @@ export const Legend = () => {
             data-testid="map-legend-toggle-button"
             value="layer-settings"
             className={cn(LEGEND_BUTTON_STYLES)}
+            disabled={isGeostory}
           >
             Layer
           </TabsTrigger>
@@ -185,34 +199,38 @@ export const Legend = () => {
                   </ScrollArea>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
-                  <div className="flex w-full justify-between whitespace-nowrap">
-                    <span>Selected year: {CompareDateLabel}</span>
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="start"
-                  alignOffset={0}
-                  sideOffset={0}
-                  className={DROPDOWN_CONTENT_STYLES}
-                >
-                  <ScrollArea className="max-h-[200px] w-full">
-                    {range?.map((d) => (
-                      <DropdownMenuItem key={d.value} className={DROPDOWN_ITEM_STYLES}>
-                        <button
-                          type="button"
-                          value={d.value}
-                          onClick={handleCompareDate}
-                          className="rounded-sm px-2.5 py-1 hover:bg-secondary-900"
-                        >
-                          {d.label}
-                        </button>
-                      </DropdownMenuItem>
-                    ))}
-                  </ScrollArea>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {isGeostory ? (
+                <div className={DROPDOWN_TRIGGER_STYLES}>{compareLayerData?.title}</div>
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
+                    <div className="flex w-full justify-between whitespace-nowrap">
+                      <span>Selected year: {CompareDateLabel}</span>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="start"
+                    alignOffset={0}
+                    sideOffset={0}
+                    className={DROPDOWN_CONTENT_STYLES}
+                  >
+                    <ScrollArea className="max-h-[200px] w-full">
+                      {range?.map((d) => (
+                        <DropdownMenuItem key={d.value} className={DROPDOWN_ITEM_STYLES}>
+                          <button
+                            type="button"
+                            value={d.value}
+                            onClick={handleCompareDate}
+                            className="rounded-sm px-2.5 py-1 hover:bg-secondary-900"
+                          >
+                            {d.label}
+                          </button>
+                        </DropdownMenuItem>
+                      ))}
+                    </ScrollArea>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
           </div>
         </TabsContent>

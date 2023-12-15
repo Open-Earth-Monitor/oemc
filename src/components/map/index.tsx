@@ -24,7 +24,7 @@ import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import type { CustomMapProps } from './types';
 
-const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
+const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeostory = false }) => {
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
@@ -140,7 +140,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           <ShareControl />
           {isCompareLayerActive && <SwipeControl />}
         </Controls>
-        {isLayerActive && <Legend />}
+        {isLayerActive && <Legend isGeostory={isGeostory} />}
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
       </RMap>
     </>
