@@ -136,7 +136,7 @@ const LandingDatasets = () => {
         <div className="flex items-center justify-between">
           <div>
             <RadioGroup
-              defaultValue="all"
+              defaultValue={active}
               className="flex items-center space-x-10 py-3 font-inter font-medium"
               onValueChange={handleCategoriesFilter}
             >
@@ -248,7 +248,7 @@ const LandingDatasets = () => {
               page={page}
               setPage={setPage}
               totalItems={cardsData?.total_items}
-              maxLength={5}
+              maxLength={cardsData?.data?.length}
               nextPage={cardsData?.next_page}
               previousPage={cardsData?.previous_page}
               numButtons={5}

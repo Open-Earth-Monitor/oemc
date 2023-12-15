@@ -3,8 +3,6 @@ import { GoTriangleLeft } from 'react-icons/go';
 
 import { cn } from '@/lib/classnames';
 
-import { usePagination } from '@/hooks/pagination';
-
 type PaginationProps = {
   page: number;
   setPage: (page: number) => void;
@@ -19,7 +17,6 @@ const Pagination: React.FC<PaginationProps> = ({
   page,
   setPage,
   totalItems,
-  numButtons,
   maxLength,
   nextPage,
   previousPage,
@@ -27,8 +24,7 @@ const Pagination: React.FC<PaginationProps> = ({
   const lastElement = Math.ceil(totalItems / maxLength);
 
   const pages = range(1, lastElement + 1);
-
-  const pagesToShow = usePagination(pages.length, numButtons, page);
+  const pagesToShow = pages;
 
   const handlePreviousClick = () => {
     setPage(page - 1);
@@ -63,7 +59,7 @@ const Pagination: React.FC<PaginationProps> = ({
               'bg-secondary-500  text-brand-500': d === page,
             })}
           >
-            <button type="button" onClick={handleCurrentPage} value={d} disabled={d === '...'}>
+            <button type="button" onClick={handleCurrentPage} value={d}>
               {d}
             </button>
           </li>
