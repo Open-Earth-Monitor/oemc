@@ -4,7 +4,7 @@ import { HiOutlineNewspaper, HiOutlineGlobeAlt } from 'react-icons/hi';
 
 import cn from '@/lib/classnames';
 
-import type { Monitor } from '@/types/monitors';
+import type { Geostory } from '@/types/geostories';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -18,20 +18,22 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 
-type MonitorDialogProps = Partial<Monitor>;
+type GeostoryDialogProps = Partial<Geostory>;
 
-const MonitorDialog: React.FC<MonitorDialogProps> = ({
+const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
   id,
   title,
   description,
   author,
-  publications,
+  metadata_url,
+  notebooks_url,
   use_case_link,
+  publications,
 }) => (
   <Dialog>
     <DialogOverlay className="bg-brand-500 bg-opacity-50" />
     <DialogTrigger asChild>
-      <Button variant="light" data-testid={`card-button-${id}`} className="max-w-fit p-4">
+      <Button data-testid={`card-button-${id}`} className="max-w-fit p-4">
         Known more
       </Button>
     </DialogTrigger>
@@ -57,6 +59,26 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
                 <div className="flex space-x-2">
                   <dt className="whitespace-nowrap font-bold">Author:</dt>
                   <dd>{author}</dd>
+                </div>
+                <div className="flex space-x-2">
+                  <dt className="whitespace-nowrap font-bold">Computational notebook:</dt>
+                  <dd>
+                    {notebooks_url && (
+                      <a href={notebooks_url} className="break-all hover:underline">
+                        {notebooks_url}
+                      </a>
+                    )}
+                  </dd>
+                </div>
+                <div className="flex space-x-2">
+                  <dt className="whitespace-nowrap font-bold">Metadata link:</dt>
+                  <dd className="grow-0">
+                    {metadata_url && (
+                      <a href={metadata_url} className="break-all hover:underline">
+                        {metadata_url}
+                      </a>
+                    )}
+                  </dd>
                 </div>
               </dl>
             </div>
@@ -94,7 +116,6 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
                 </ul>
               )}
             </div>
-
             <Link
               href={`/map/${id}/datasets`}
               data-testid="monitor-button"
@@ -114,4 +135,4 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
   </Dialog>
 );
 
-export default MonitorDialog;
+export default GeostoryDialog;

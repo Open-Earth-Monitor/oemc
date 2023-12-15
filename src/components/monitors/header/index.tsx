@@ -7,7 +7,8 @@ import { useParams } from 'next/navigation';
 import { useMonitor } from '@/hooks/monitors';
 
 import Loading from '@/components/loading';
-import MonitorsDirectoryDialog from '@/components/monitors/dialog';
+import MonitorDialog from '@/components/monitors/dialog';
+import MonitorsDirectoryDialog from '@/components/monitors/directory';
 import { TAG_STYLE } from '@/styles/constants';
 
 const MonitorHeader: FC = () => {
@@ -39,6 +40,9 @@ const MonitorHeader: FC = () => {
               </h1>
             </div>
             {data.description && <p data-testid="monitor-description">{data.description}</p>}
+            <div className="flex items-center">
+              <MonitorDialog {...data} />
+            </div>
           </div>
         </>
       )}
