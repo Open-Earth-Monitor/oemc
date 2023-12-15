@@ -8,6 +8,8 @@ const GeostoryHeader: FC<Geostory & { color: string }> = ({
   title,
   description,
   notebooks_url,
+  author,
+  metadata_url,
   color,
 }) => {
   return (
@@ -23,11 +25,25 @@ const GeostoryHeader: FC<Geostory & { color: string }> = ({
       <div className="p-6">
         <dl className="space-y-2 py-2">
           <div>
+            <dt className="inline-block whitespace-nowrap font-bold">Author:</dt>
+            <dd>{author && <span className="inline-block break-all">{author}</span>}</dd>
+          </div>
+          <div>
             <dt className="inline-block whitespace-nowrap font-bold">Computational notebook:</dt>
             <dd>
               {notebooks_url && (
                 <a href={notebooks_url} className="inline-block break-all underline">
                   {notebooks_url}
+                </a>
+              )}
+            </dd>
+          </div>
+          <div>
+            <dt className="inline-block whitespace-nowrap font-bold">Metadata link:</dt>
+            <dd>
+              {metadata_url && (
+                <a href={metadata_url} className="inline-block break-all underline">
+                  {metadata_url}
                 </a>
               )}
             </dd>
