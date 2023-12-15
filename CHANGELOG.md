@@ -5,10 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## v0.1.0-alpha.2 - Unreleased
 
 ### Added
+- Geostories enables comparison by default when a left layer exists [OEMC-113](https://vizzuality.atlassian.net/browse/OEMC-113)
 - Added metadata link to active geostory on the map page [OEMC-41](https://vizzuality.atlassian.net/browse/OEMC-41)
 - Added computational notebook link to active geostory on the map page [OEMC-43](https://vizzuality.atlassian.net/browse/OEMC-43)
 - Added related publications to geostories on the map page [OEMC-34](https://vizzuality.atlassian.net/browse/OEMC-34)
@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Links to social media (twitter, github and linkedin), link to "contact us" and "privacy policy" [OEMC-108](https://vizzuality.atlassian.net/browse/OEMC-108?atlOrigin=eyJpIjoiMTFhMjI4MmE1NjYzNDNiNmJlNWFlOGJjYWI4MjdhYjQiLCJwIjoiaiJ9)
 - Pagination in monitors and geostories hub [OEMC-20](https://vizzuality.atlassian.net/browse/OEMC-133?atlOrigin=eyJpIjoiMGFlYjg0NWM4Mzk3NDBjN2JhNjkzMzRhZmI4MTIyZDgiLCJwIjoiaiJ9)
 - Show monitors under development [OEMC-149](https://vizzuality.atlassian.net/browse/OEMC-149)
+
+### Changed
+- Metadata info in monitors and geostories [OEMC-41](https://vizzuality.atlassian.net/browse/OEMC-41) [OEMC-32](https://vizzuality.atlassian.net/browse/OEMC-32) [OEMC-30](https://vizzuality.atlassian.net/browse/OEMC-30)
 
 ## v0.1.0-alpha.1
 

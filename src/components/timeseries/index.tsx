@@ -28,7 +28,8 @@ const TimeSeries: FC<{
   range: LayerParsed['range'];
   autoPlay?: boolean;
   isActive?: boolean;
-}> = ({ range, autoPlay = false, isActive = false, layerId }) => {
+  dataType?: 'monitor' | 'geostory';
+}> = ({ range, autoPlay = false, isActive = false, layerId, dataType = 'monitor' }) => {
   const [contentVisibility, setContentVisibility] = useState<boolean>(false);
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
@@ -65,13 +66,13 @@ const TimeSeries: FC<{
   );
 
   useEffect(() => {
-    if (isCompareActive) setPlaying(false);
-  }, [isCompareActive]);
+    if (isCompareActive && dataType === 'monitor') setPlaying(false);
+  }, [dataType, isCompareActive]);
 
   useEffect(() => {
     if (!isActive) {
       setPlaying(false);
-    } else if (isActive && !isPlaying && !isCompareActive) {
+    } else if (isActive && !isPlaying && !(isCompareActive && dataType === 'monitor')) {
       setPlaying(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
