@@ -14,7 +14,7 @@ const GeostoriesLayout: FC<PropsWithChildren> = ({ children }) => {
           {children}
         </ScrollArea>
       </section>
-      <Map />
+      <Map isGeostory />
     </>
   );
 };

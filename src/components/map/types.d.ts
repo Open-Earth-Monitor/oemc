@@ -22,6 +22,8 @@ export interface CustomMapProps extends Omit<RMapProps, 'initial'> {
 
   /** A function that exposes the viewport */
   onMapViewStateChange?: (viewstate: Partial<RView>) => void;
+
+  isGeostory?: boolean;
 }
 
 export type ExplicitViewState = Pick<RView, 'center' | 'zoom'>;
