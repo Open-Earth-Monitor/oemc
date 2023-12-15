@@ -6,10 +6,11 @@ import Link from 'next/link';
 
 import type { NextPage } from 'next';
 import { HiArrowLeft } from 'react-icons/hi';
+import { HiOutlineNewspaper, HiOutlineGlobeAlt } from 'react-icons/hi';
 
 import type { MonitorParsed } from '@/types/monitors';
 
-import { useGeostoryLayers } from '@/hooks/geostories';
+import { useGeostory, useGeostoryLayers } from '@/hooks/geostories';
 import { useMonitors } from '@/hooks/monitors';
 import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
 
@@ -25,6 +26,7 @@ const findMonitorByGeoStoryId = (monitors: MonitorParsed[], geoStoryId: string) 
 const GeostoryPage: NextPage<{ params: { geostory_id: string } }> = ({
   params: { geostory_id },
 }) => {
+  const { data: geostory, isLoading: isLoadingGeostory } = useGeostory({ geostory_id });
   const { data, isLoading, isFetched, isError } = useGeostoryLayers({ geostory_id });
   const { data: monitors } = useMonitors();
   const monitor = findMonitorByGeoStoryId(monitors, geostory_id);
@@ -50,7 +52,7 @@ const GeostoryPage: NextPage<{ params: { geostory_id: string } }> = ({
         {monitorTitle && (
           <Link
             href={`/map/${monitorId}/geostories`}
-            className="block space-x-3 pb-8 font-bold"
+            className="sticky top-0 z-10 block space-x-3 bg-brand-500 pb-8 font-bold"
             data-testid="back-to-monitor"
             style={{ color }}
           >
@@ -58,7 +60,8 @@ const GeostoryPage: NextPage<{ params: { geostory_id: string } }> = ({
             <span data-testid="monitor-title-back-btn">Back to {monitorTitle}.</span>
           </Link>
         )}
-        <GeostoryHead geostoryId={geostory_id} color={color} />
+        {isLoadingGeostory && <Loading />}
+        {geostory && !isLoadingGeostory && <GeostoryHead {...geostory} color={color} />}
       </div>
       <div>
         {isLoading && <Loading />}
@@ -78,6 +81,44 @@ const GeostoryPage: NextPage<{ params: { geostory_id: string } }> = ({
           </ul>
         )}
       </div>
+      {geostory && !isLoadingGeostory && (
+        <div className="divide-y divide-secondary-900">
+          <div className="p-6">
+            <h3 className="flex items-center space-x-2">
+              <HiOutlineGlobeAlt className="h-6 w-6" />
+              <span className="font-satoshi text-2xl font-bold">Use cases</span>
+            </h3>
+            {geostory.use_case_link.length > 0 && (
+              <ul className="space-y-2 py-2 font-bold">
+                {geostory.use_case_link.map(({ url, title }) => (
+                  <li key={title}>
+                    <a href={url} className="underline">
+                      {title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className="p-6">
+            <h3 className="flex items-center space-x-2">
+              <HiOutlineNewspaper className="h-6 w-6" />
+              <span className="font-satoshi text-2xl font-bold">Publications</span>
+            </h3>
+            {geostory.publications.length > 0 && (
+              <ul className="space-y-2 py-2 font-bold">
+                {geostory.publications.map(({ url, title }) => (
+                  <li key={title}>
+                    <a href={url} className="underline">
+                      {title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
