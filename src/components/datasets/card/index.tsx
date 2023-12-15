@@ -17,6 +17,7 @@ type DatasetCardProps = LayerParsed & {
   id: string;
   active?: boolean;
   defaultActive?: boolean;
+  type?: 'monitor' | 'geostory';
 };
 
 const DatasetCard: FC<DatasetCardProps> = ({
@@ -28,6 +29,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
   gs_style: legendStyles,
   range,
   defaultActive = false,
+  type = 'monitor',
 }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
@@ -153,7 +155,13 @@ const DatasetCard: FC<DatasetCardProps> = ({
       )}
 
       {range?.length > 0 && (
-        <TimeSeries range={range} layerId={id} autoPlay={defaultActive} isActive={isActive} />
+        <TimeSeries
+          dataType={type}
+          range={range}
+          layerId={id}
+          autoPlay={defaultActive}
+          isActive={isActive}
+        />
       )}
 
       <button
