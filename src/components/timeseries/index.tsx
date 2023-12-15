@@ -46,8 +46,8 @@ const TimeSeries: FC<{
 
   const handleTogglePlay = useCallback(() => {
     setPlaying(!isPlaying);
-    if (isCompareActive) void setCompareLayers(null);
-  }, [isCompareActive, isPlaying, setCompareLayers]);
+    if (isCompareActive && dataType === 'monitor') void setCompareLayers(null);
+  }, [dataType, isCompareActive, isPlaying, setCompareLayers]);
 
   const handleSelect = useCallback(
     (value: string) => {

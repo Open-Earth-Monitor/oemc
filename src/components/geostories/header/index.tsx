@@ -2,29 +2,40 @@ import { FC } from 'react';
 
 import type { Geostory } from '@/types/geostories';
 
-import { useGeostory } from '@/hooks/geostories';
-
-import Loading from '@/components/loading';
 import { TAG_STYLE } from '@/styles/constants';
 
-const GeostoryHead: FC<{ geostoryId: Geostory['id']; color: string }> = ({ geostoryId, color }) => {
-  const { data, isLoading, isFetched, isError } = useGeostory({ geostory_id: geostoryId });
-
+const GeostoryHeader: FC<Geostory & { color: string }> = ({
+  title,
+  description,
+  notebooks_url,
+  color,
+}) => {
   return (
-    <div className="space-y-6 px-6 py-5">
-      {isLoading && !isFetched && <Loading />}
-      {/* TODO - get color from API when we get categories */}
-      <div className={TAG_STYLE} style={{ color }}>
-        geostory
+    <>
+      <div className="space-y-6 p-6">
+        {/* TODO - get color from API when we get categories */}
+        <div className={TAG_STYLE} style={{ color }}>
+          geostory
+        </div>
+        <h1 className="font-satoshi text-4xl font-bold">{title}</h1>
+        <p className="text-xl font-light">{description}</p>
       </div>
-      {isFetched && !isError && (
-        <>
-          <h1 className="font-satoshi text-4xl font-bold">{data.title}</h1>
-          <p className="text-xl font-light">{data.description}</p>
-        </>
-      )}
-    </div>
+      <div className="p-6">
+        <dl className="space-y-2 py-2">
+          <div>
+            <dt className="inline-block whitespace-nowrap font-bold">Computational notebook:</dt>
+            <dd>
+              {notebooks_url && (
+                <a href={notebooks_url} className="inline-block break-all underline">
+                  {notebooks_url}
+                </a>
+              )}
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </>
   );
 };
 
-export default GeostoryHead;
+export default GeostoryHeader;
