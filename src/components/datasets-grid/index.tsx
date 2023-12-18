@@ -4,10 +4,10 @@ import { useCallback, useState } from 'react';
 
 import { motion } from 'framer-motion';
 import { BiCheck } from 'react-icons/bi';
-// import { FiInfo } from 'react-icons/fi';
-// import { HiChevronDown } from 'react-icons/hi2';
 
 import { useMonitorsAndGeostoriesPaginated } from '@/hooks/datasets';
+
+import { THEMES, type Theme } from '@/constants/themes';
 
 import GeostoryCard from '@/components/geostories/card';
 import Loading from '@/components/loading';
@@ -22,31 +22,27 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown';
 import { Label } from '@/components/ui/label';
-// import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { TAG_STYLE } from '@/styles/constants';
 
-import { THEMES, SORTING } from './constants';
-import type { Theme, SortingCriteria, Dataset } from './types';
+import { SORTING } from './constants';
+import type { SortingCriteria, Dataset } from './types';
 
 const LandingDatasets = () => {
   const [page, setPage] = useState(1);
   const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
   const [searchValue, setSearchValue] = useState<string>('');
   const [active, setActive] = useState<Dataset>('all');
-  const [activeThemes, setActiveThemes] = useState<Theme[]>(THEMES);
-  const { data, isFetched, isError, isFetching } = useMonitorsAndGeostoriesPaginated(
-    {
-      ...(active !== 'all' && { type: active }),
-      ...(searchValue !== '' && { title: searchValue }),
-      sort_by: sortingCriteria,
-      pagination: true,
-      page,
-    },
-    {
-      enabled: activeThemes.length > 0,
-    }
-  );
+  const [activeThemes, setActiveThemes] = useState<Theme[]>([]);
+  const { data, isFetched, isError, isFetching } = useMonitorsAndGeostoriesPaginated({
+    ...(active !== 'all' && { type: active }),
+    ...(searchValue !== '' && { title: searchValue }),
+    // TO-DO: API doesn't support filtering by multiple themes
+    ...(activeThemes.length > 0 && { theme: activeThemes[0] }),
+    sort_by: sortingCriteria,
+    pagination: true,
+    page,
+  });
 
   const handleCategoriesFilter = useCallback(
     (id: Dataset) => {
@@ -61,13 +57,14 @@ const LandingDatasets = () => {
       e.stopPropagation(); // avoid to close the dropdown interacting with the checkbox
 
       const id = e.currentTarget.id as Theme;
-      const themesUpdate = activeThemes.includes(id)
-        ? activeThemes.filter((e) => e !== id)
-        : [id, ...activeThemes];
+      // TO-DO: uncomment when API supports filtering by multiple themes
+      // const themesUpdate = activeThemes.includes(id)
+      //   ? activeThemes.filter((e) => e !== id)
+      //   : [id, ...activeThemes];
 
-      setActiveThemes(themesUpdate);
+      setActiveThemes([id]);
     },
-    [setActiveThemes, activeThemes]
+    [setActiveThemes]
   );
 
   const handleSortingCriteria = useCallback(
@@ -89,7 +86,7 @@ const LandingDatasets = () => {
             <DropdownMenuTrigger className="flex h-full min-w-[258px] items-center border-[0.5px] border-l-0 font-inter">
               <div className="w-full">
                 {THEMES.length === activeThemes.length && 'All categories selected'}
-                {activeThemes.length === 0 && 'No categories selected'}
+                {activeThemes.length === 0 && 'Filter by categories'}
                 {activeThemes.length === 1 && activeThemes[0]}
                 {activeThemes.length > 1 &&
                   THEMES.length > activeThemes.length &&
@@ -142,14 +139,6 @@ const LandingDatasets = () => {
                 <Label htmlFor="monitors" className={TAG_STYLE}>
                   monitors
                 </Label>
-                {/* <Popover>
-                <PopoverTrigger data-testid="dataset-info-button">
-                  <FiInfo className="h-6 w-6 text-secondary-500" title="Show info" />
-                </PopoverTrigger>
-                <PopoverContent align="center" sideOffset={-80} data-testid="dataset-info-content">
-                  <div className="flex flex-col">{info}</div>
-                </PopoverContent>
-              </Popover> */}
               </div>
               <div
                 className="flex items-center space-x-2.5"
@@ -159,14 +148,6 @@ const LandingDatasets = () => {
                 <Label htmlFor="geostories" className={TAG_STYLE}>
                   Geostories
                 </Label>
-                {/* <Popover>
-                <PopoverTrigger data-testid="dataset-info-button">
-                  <FiInfo className="h-6 w-6 text-secondary-500" title="Show info" />
-                </PopoverTrigger>
-                <PopoverContent align="center" sideOffset={-80} data-testid="dataset-info-content">
-                  <div className="flex flex-col">{info}</div>
-                </PopoverContent>
-              </Popover> */}
               </div>
               <div className="flex items-center space-x-2.5" data-testid="all-button">
                 <RadioGroupItem value="all" id="all" />
