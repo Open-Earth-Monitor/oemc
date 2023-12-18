@@ -38,7 +38,7 @@ const ShareControl: FC = () => {
 
   return (
     <Popover>
-      <PopoverTrigger data-testid="share-tool-trigger">
+      <PopoverTrigger data-testid="share-tool-trigger" asChild>
         <button type="button" aria-label="share tool" className={CONTROL_BUTTON_STYLES.default}>
           <HiOutlineShare className={CONTROL_ICON_STYLES.default} />
         </button>

@@ -11,14 +11,16 @@ let swipeControl: Control | null = null; // control instance
 
 const SwipeControl = () => {
   const { map } = useOL();
-  const layers = map.getAllLayers();
-  const layersKeys = map.getKeys();
 
   const [layersUrl] = useSyncLayersSettings();
   const [layersUrlCompare] = useSyncCompareLayersSettings();
 
   useEffect(() => {
+    const layers = map.getAllLayers();
+    // const layersKeys = map.getKeys();
+
     if (layers.length && layers[1] && layers[2] && !swipeControl) {
+      console.log('SwipeControl', layers[1], layers[2]);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       swipeControl = new Swipe({ layers: [layers[1]], rightLayers: [layers[2]] }) as Control;
       map.addControl(swipeControl);
@@ -29,7 +31,7 @@ const SwipeControl = () => {
         swipeControl = null;
       }
     };
-  }, [layers, map, layersUrl, layersUrlCompare, layersKeys]);
+  }, [map, layersUrl, layersUrlCompare]);
 
   return null;
 };
