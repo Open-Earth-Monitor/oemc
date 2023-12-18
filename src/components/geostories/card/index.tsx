@@ -107,7 +107,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
 
       <div className="flex justify-end px-6 pb-6">
         <div className="relative h-[40px] w-[40px]">
-          <Image src={`/svgs/theme-icons/${theme}.svg`} fill alt={theme} />
+          <Image src={`/svgs/theme-icons/${theme.toLowerCase()}.svg`} fill alt={theme} />
         </div>
       </div>
     </div>

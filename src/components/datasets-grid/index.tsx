@@ -226,7 +226,7 @@ const LandingDatasets = () => {
               page={page}
               setPage={setPage}
               totalItems={data?.total_items}
-              maxLength={data?.data?.length}
+              maxLength={6}
               nextPage={data?.next_page}
               previousPage={data?.previous_page}
               numButtons={5}
