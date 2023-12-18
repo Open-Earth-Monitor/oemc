@@ -59,7 +59,9 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
       </div>
 
       <div className="flex justify-end">
-        <Image src={`/svgs/theme-icons/agriculture.svg`} width="50" height="61" alt={theme} />
+        <div className="relative h-[60px] w-[60px]">
+          <Image src={`/svgs/theme-icons/${theme.toLowerCase()}.svg`} fill alt={theme} />
+        </div>
       </div>
     </div>
   );
