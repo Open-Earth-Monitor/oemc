@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { Control } from 'ol/control';
+import type BaseEvent from 'ol/events/Event';
 import Swipe from 'ol-ext/control/Swipe';
 import { useOL } from 'rlayers';
 
@@ -10,6 +11,7 @@ import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/syn
 let swipeControl: Control | null = null; // control instance
 
 const SwipeControl = () => {
+  const [position, setPosition] = useState<number>(0.5);
   const { map } = useOL();
 
   const [layersUrl] = useSyncLayersSettings();
@@ -17,13 +19,18 @@ const SwipeControl = () => {
 
   useEffect(() => {
     const layers = map.getAllLayers();
-    // const layersKeys = map.getKeys();
 
     if (layers.length && layers[1] && layers[2] && !swipeControl) {
-      console.log('SwipeControl', layers[1], layers[2]);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      swipeControl = new Swipe({ layers: [layers[1]], rightLayers: [layers[2]] }) as Control;
+      swipeControl = new Swipe({
+        layers: [layers[1]],
+        rightLayers: [layers[2]],
+        position,
+      }) as Control;
       map.addControl(swipeControl);
+      swipeControl.addEventListener('moving', (e: BaseEvent & { position: number[] }) => {
+        setPosition(e.position[0]);
+      });
     }
     return () => {
       if (swipeControl) {
@@ -31,6 +38,7 @@ const SwipeControl = () => {
         swipeControl = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, layersUrl, layersUrlCompare]);
 
   return null;
