@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Metadata info in monitors and geostories [OEMC-41](https://vizzuality.atlassian.net/browse/OEMC-41) [OEMC-32](https://vizzuality.atlassian.net/browse/OEMC-32) [OEMC-30](https://vizzuality.atlassian.net/browse/OEMC-30)
-
+- Removed info button at datasets level [OEMC-69](https://vizzuality.atlassian.net/browse/OEMC-69)
 ## v0.1.0-alpha.1
 
 ### Added

@@ -1,6 +1,5 @@
 import { FC, useCallback, useEffect, useMemo } from 'react';
 
-import { FiInfo } from 'react-icons/fi';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { LuLayers } from 'react-icons/lu';
 
@@ -9,7 +8,6 @@ import cn from '@/lib/classnames';
 import type { LayerParsed } from '@/types/layers';
 
 import TimeSeries from '@/components/timeseries';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '../../../hooks/sync-query';
 
@@ -25,7 +23,6 @@ const DatasetCard: FC<DatasetCardProps> = ({
   title,
   download_url,
   description,
-  author,
   gs_style: legendStyles,
   range,
   defaultActive = false,
@@ -90,18 +87,6 @@ const DatasetCard: FC<DatasetCardProps> = ({
           {title}
         </h2>
         <div className="mt-1.5 flex items-baseline space-x-2">
-          <Popover>
-            <PopoverTrigger data-testid="dataset-info-button">
-              <FiInfo className="h-6 w-6" title="Show info" />
-            </PopoverTrigger>
-            <PopoverContent align="center" sideOffset={5} data-testid="dataset-info-content">
-              <div className="flex flex-col">
-                <ul>
-                  <li>Data author: {author}</li>
-                </ul>
-              </div>
-            </PopoverContent>
-          </Popover>
           {!!download_url && (
             <a
               href={download_url}
