@@ -23,7 +23,6 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
   id,
   title,
   description,
-  author,
   publications,
   use_case_link,
   responsible_partner_name,
@@ -55,13 +54,11 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
             <div className="border-t border-brand-500 py-6">
               <dl className="space-y-2 py-2">
                 <div className="flex space-x-2">
-                  <dt className="whitespace-nowrap font-bold">Author:</dt>
-                  <dd>{author}</dd>
-                </div>
-                <div className="flex space-x-2">
                   <dt className="whitespace-nowrap font-bold">Partner:</dt>
                   <dd>
-                    <a href={responsible_partner_url}>{responsible_partner_name}</a>
+                    <a href={responsible_partner_url} className="underline">
+                      {responsible_partner_name}
+                    </a>
                   </dd>
                 </div>
               </dl>

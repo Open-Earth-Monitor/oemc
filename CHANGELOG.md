@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Wrong link in geostory card on the landing page
 - Fixed pagination
+- Removed author from monitor dialog
 
 ## v1.0.0-alpha.2
 
