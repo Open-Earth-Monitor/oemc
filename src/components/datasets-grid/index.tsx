@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { motion } from 'framer-motion';
 import { BiCheck } from 'react-icons/bi';
@@ -15,12 +15,7 @@ import MonitorCard from '@/components/monitors/card';
 import Pagination from '@/components/pagination';
 import Search from '@/components/search';
 import { Checkbox, CheckboxIndicator } from '@/components/ui/checkbox';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { TAG_STYLE } from '@/styles/constants';
@@ -43,6 +38,7 @@ const LandingDatasets = () => {
     pagination: true,
     page,
   });
+  const filteredThemes = useMemo(() => THEMES.filter((theme) => theme !== 'Unknown'), []);
 
   const handleCategoriesFilter = useCallback(
     (id: Dataset) => {
@@ -62,9 +58,13 @@ const LandingDatasets = () => {
       //   ? activeThemes.filter((e) => e !== id)
       //   : [id, ...activeThemes];
 
-      setActiveThemes([id]);
+      if (activeThemes.includes(id)) {
+        setActiveThemes([]);
+      } else {
+        setActiveThemes([id]);
+      }
     },
-    [setActiveThemes]
+    [activeThemes]
   );
 
   const handleSortingCriteria = useCallback(
@@ -85,11 +85,11 @@ const LandingDatasets = () => {
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger className="flex h-full min-w-[258px] items-center border-[0.5px] border-l-0 font-inter">
               <div className="w-full">
-                {THEMES.length === activeThemes.length && 'All categories selected'}
+                {filteredThemes.length === activeThemes.length && 'All categories selected'}
                 {activeThemes.length === 0 && 'Filter by categories'}
                 {activeThemes.length === 1 && activeThemes[0]}
                 {activeThemes.length > 1 &&
-                  THEMES.length > activeThemes.length &&
+                  filteredThemes.length > activeThemes.length &&
                   `${activeThemes[0]} +${activeThemes.length - 1}`}
               </div>
             </DropdownMenuTrigger>
@@ -97,10 +97,10 @@ const LandingDatasets = () => {
               className="align-left flex w-full flex-1 flex-col bg-brand-500 font-inter"
               sideOffset={-1}
             >
-              {THEMES.map((theme) => (
-                <DropdownMenuItem
-                  key={theme}
-                  className="flex w-full flex-1 space-x-4 text-secondary-500"
+              {filteredThemes.map((theme) => (
+                <div
+                  key={`menu-item-${theme}`}
+                  className="flex w-full flex-1 space-x-4 p-2 text-secondary-500"
                 >
                   <Checkbox
                     id={theme}
@@ -108,7 +108,7 @@ const LandingDatasets = () => {
                     onClick={handleThemes}
                     defaultChecked
                     checked={activeThemes.includes(theme)}
-                    className="border-none bg-secondary-500 text-brand-500 outline-none ring-0"
+                    className="border border-secondary-500 text-brand-500 outline-none ring-0"
                   >
                     <CheckboxIndicator className="border-none bg-secondary-500 text-brand-500 outline-0 ring-0">
                       <BiCheck className="h-4 w-4 fill-current" />
@@ -121,7 +121,7 @@ const LandingDatasets = () => {
                   >
                     {theme}
                   </Label>
-                </DropdownMenuItem>
+                </div>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
