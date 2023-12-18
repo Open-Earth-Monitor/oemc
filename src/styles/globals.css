@@ -166,11 +166,11 @@
 }
 
 .ol-swipe::before {
-background-color: hsla(210, 9%, 22%, 1) !important;
+  background-color: hsla(210, 9%, 22%, 1) !important;
 }
 
-.ol-swipe {
-  background-color: none !important;
+.ol-swipe, .ol-control {
+  background-color: transparent !important;
 }
 
 .ol-swipe button {
