@@ -17,9 +17,11 @@ export type Monitor = {
   notebooks_url: string;
   publications: { title: string; url: string }[];
   use_case_link: { title: string; url: string }[];
+  responsible_partner_name?: string;
+  responsible_partner_url?: string;
 };
 
-export type MonitorParsed = Monitor & { color: string; colorOpacity: string; colorHead: string };
+export type MonitorParsed = Monitor & { color: string; colorOpacity?: string; colorHead?: string };
 
 export type MonitorsPaginated = {
   monitors: Monitor[];

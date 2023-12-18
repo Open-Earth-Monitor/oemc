@@ -18,7 +18,11 @@ export type Geostory = {
   use_case_link: { title: string; url: string }[];
 };
 
-export type GeostoryParsed = Geostory & { color: string; colorOpacity: string; colorHead: string };
+export type GeostoryParsed = Geostory & {
+  color: string;
+  colorOpacity?: string;
+  colorHead?: string;
+};
 
 export type GeostoriesPaginated = {
   monitors: Geostory[];

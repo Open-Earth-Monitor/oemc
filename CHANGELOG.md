@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Filter by theme in monitors and geostories [OEMC-26](https://vizzuality.atlassian.net/browse/OEMC-26)
 - Icons and colors by theme in monitors and geostories on the landing page
+- Added partner link to monitors on the dialog [OEMC-68](https://vizzuality.atlassian.net/browse/OEMC-68)
 
 ### Changed
 - Removed info button at datasets level [OEMC-69](https://vizzuality.atlassian.net/browse/OEMC-69)

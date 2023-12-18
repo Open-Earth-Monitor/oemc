@@ -26,6 +26,8 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
   author,
   publications,
   use_case_link,
+  responsible_partner_name,
+  responsible_partner_url,
 }) => (
   <Dialog>
     <DialogTrigger asChild>
@@ -55,6 +57,12 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
                 <div className="flex space-x-2">
                   <dt className="whitespace-nowrap font-bold">Author:</dt>
                   <dd>{author}</dd>
+                </div>
+                <div className="flex space-x-2">
+                  <dt className="whitespace-nowrap font-bold">Partner:</dt>
+                  <dd>
+                    <a href={responsible_partner_url}>{responsible_partner_name}</a>
+                  </dd>
                 </div>
               </dl>
             </div>
