@@ -117,13 +117,13 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
               )}
             </div>
             <Link
-              href={`/map/${id}/datasets`}
-              data-testid="monitor-button"
+              href={`/map/geostories/${id}`}
+              data-testid="geostory-button"
               className={cn(
                 'mt-3 flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
               )}
             >
-              Launch monitor
+              Launch geostory
             </Link>
             <DialogClose className="right-10 top-10 flex h-4 items-center space-x-2 text-xs font-medium uppercase tracking-[0.96px] text-brand-500">
               Close

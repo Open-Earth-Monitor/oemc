@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.1.0-alpha.2 - Unreleased
+## v1.0.0 Unreleased
+
+### Changed
+- Removed info button at datasets level [OEMC-69](https://vizzuality.atlassian.net/browse/OEMC-69)
+
+### Fixed
+- Wrong link in geostory card on the landing page
+
+## v1.0.0-alpha.2
 
 ### Added
 - Use case links, publications and computational notebooks in geostories [OEMC-43](https://vizzuality.atlassian.net/browse/OEMC-43) [OEMC-34](https://vizzuality.atlassian.net/browse/OEMC-34)
@@ -31,8 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Metadata info in monitors and geostories [OEMC-41](https://vizzuality.atlassian.net/browse/OEMC-41) [OEMC-32](https://vizzuality.atlassian.net/browse/OEMC-32) [OEMC-30](https://vizzuality.atlassian.net/browse/OEMC-30)
-- Removed info button at datasets level [OEMC-69](https://vizzuality.atlassian.net/browse/OEMC-69)
-## v0.1.0-alpha.1
+
+## v1.0.0-alpha.1
 
 ### Added
 - Satoshi Font, main navigation, and test for navigation functionality [OEMC-18](https://vizzuality.atlassian.net/browse/OEMC-18)
