@@ -60,7 +60,7 @@ const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
-  <DialogPortal>
+  <DialogPrimitive.Portal>
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
@@ -72,7 +72,7 @@ const DialogContent = forwardRef<
     >
       <ScrollArea className="grow p-10">{children}</ScrollArea>
     </DialogPrimitive.Content>
-  </DialogPortal>
+  </DialogPrimitive.Portal>
 ));
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 

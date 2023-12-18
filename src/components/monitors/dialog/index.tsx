@@ -9,7 +9,6 @@ import type { Monitor } from '@/types/monitors';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogOverlay,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -29,7 +28,6 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
   use_case_link,
 }) => (
   <Dialog>
-    <DialogOverlay className="bg-brand-500 bg-opacity-50" />
     <DialogTrigger asChild>
       <Button variant="light" data-testid={`card-button-${id}`} className="max-w-fit p-4">
         Known more

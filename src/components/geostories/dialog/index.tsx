@@ -9,7 +9,6 @@ import type { Geostory } from '@/types/geostories';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogOverlay,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -31,7 +30,6 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
   publications,
 }) => (
   <Dialog>
-    <DialogOverlay className="bg-brand-500 bg-opacity-50" />
     <DialogTrigger asChild>
       <Button data-testid={`card-button-${id}`} className="max-w-fit p-4">
         Known more
