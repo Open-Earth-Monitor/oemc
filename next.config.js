@@ -8,6 +8,9 @@ const nextConfig = {
   // ? https://nextjs.org/docs/advanced-features/output-file-tracing#automatically-copying-traced-files
   output: 'standalone',
   poweredByHeader: false,
+  env: {
+    API_URL: process.env.API_URL || 'https://api.earthmonitor.org/',
+  },
 };
 
 module.exports = nextConfig;
