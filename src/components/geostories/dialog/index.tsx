@@ -32,7 +32,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
   <Dialog>
     <DialogTrigger asChild>
       <Button data-testid={`card-button-${id}`} className="max-w-fit p-4">
-        Known more
+        Know more
       </Button>
     </DialogTrigger>
     <DialogContent
