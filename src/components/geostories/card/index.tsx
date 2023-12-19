@@ -20,13 +20,13 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
   return (
     <div
       className="flex min-h-[468px] flex-col justify-between"
-      style={{ backgroundColor: color }}
+      style={{ backgroundColor: color, color: ready ? 'inherit' : '#000' }}
       data-testid={`card-${id}`}
     >
       <div>
         <div
           className="flex min-h-[235px] grow-0 flex-col justify-between space-y-4 px-8 py-6"
-          style={{ backgroundColor: colorHead }}
+          style={{ backgroundColor: colorHead, color: ready ? 'inherit' : '#000' }}
         >
           <div className="space-y-2">
             <div data-testid={`card-type-${id}`} className={TAG_STYLE}>
@@ -37,7 +37,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
             </h2>
           </div>
           {ready ? (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-8">
               <GeostoryDialog {...geostory} />
               <Link
                 href={`/map/geostories/${id}`}
@@ -54,7 +54,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
             <div>
               <div className="float-left flex items-center space-x-2 rounded-md bg-black/10 px-3 py-2 leading-none">
                 <LuRefreshCcw className="h-5 w-5" />
-                <span className="text-xs">Geostory under-development</span>
+                <span className="text-xs font-bold">Geostory under-development</span>
               </div>
             </div>
           )}

@@ -135,7 +135,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         )}
 
         <Controls className="absolute bottom-3 left-[554px] z-50 flex flex-col">
-          <RControl.RZoom />
+          <RControl.RZoom zoomOutLabel="-" zoomInLabel="+" />
           <BookmarkControl />
           <ShareControl />
           {isCompareLayerActive && <SwipeControl />}

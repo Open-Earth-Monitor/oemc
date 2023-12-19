@@ -19,7 +19,7 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
   return (
     <div
       className="flex h-[468px] flex-col justify-between px-8 py-6 text-brand-500"
-      style={{ backgroundColor: color }}
+      style={{ backgroundColor: color, color: ready && '#000' }}
       data-testid={`card-${id}`}
     >
       <div className="space-y-4">
@@ -35,7 +35,7 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
         {description && <p data-testid={`card-description-${id}`}>{description}</p>}
 
         {ready ? (
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-8">
             <MonitorDialog {...monitor} />
             <Link
               href={`/map/${id}/datasets`}
@@ -52,7 +52,7 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
           <div>
             <div className="float-left flex items-center space-x-2 rounded-md bg-black/10 px-3 py-2 leading-none">
               <LuRefreshCcw className="h-5 w-5" />
-              <span className="text-xs">Monitor under-development</span>
+              <span className="text-xs font-bold">Monitor under-development</span>
             </div>
           </div>
         )}

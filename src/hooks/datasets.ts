@@ -7,9 +7,14 @@ import type {
   MonitorsAndGeostoriesPaginatedParsed,
 } from '@/types/monitors-and-geostories';
 
-import { THEMES_COLORS } from '@/constants/themes';
+import { Theme, THEMES_COLORS } from '@/constants/themes';
 
 import API from 'services/api';
+
+const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'light') => {
+  if (!ready) return 'hsla(0, 0%, 79%, 1)';
+  return THEMES_COLORS[theme][themeType] || THEMES_COLORS.Unknown[themeType];
+};
 
 type UseParams = {
   type?: 'monitors' | 'geostories' | 'all';
@@ -75,9 +80,9 @@ export function useMonitorsAndGeostoriesPaginated(
       ...data,
       data: data['monitors and geostories'].map((d) => ({
         ...d,
-        color: THEMES_COLORS[d.theme].base || THEMES_COLORS.Unknown.base,
-        colorHead: THEMES_COLORS[d.theme].dark || THEMES_COLORS.Unknown.dark,
-        colorOpacity: THEMES_COLORS[d.theme].light || THEMES_COLORS.Unknown.light,
+        color: getColor(d.ready, d.theme, 'base'),
+        colorHead: getColor(d.ready, d.theme, 'dark'),
+        colorOpacity: getColor(d.ready, d.theme, 'light'),
       })),
     }),
   });
