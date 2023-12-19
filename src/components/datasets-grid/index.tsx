@@ -108,9 +108,9 @@ const LandingDatasets = () => {
                     onClick={handleThemes}
                     defaultChecked
                     checked={activeThemes.includes(theme)}
-                    className="border border-secondary-500 text-brand-500 outline-none ring-0"
+                    className="bg-secondary-500 text-brand-500 outline-none ring-0 hover:border-2 hover:border-secondary-500 hover:bg-secondary-900 data-[state=checked]:border-none"
                   >
-                    <CheckboxIndicator className="border-none bg-secondary-500 text-brand-500 outline-0 ring-0">
+                    <CheckboxIndicator className="border-none bg-secondary-500 text-brand-500 outline-0 ring-0 hover:bg-secondary-900">
                       <BiCheck className="h-4 w-4 fill-current" />
                     </CheckboxIndicator>
                   </Checkbox>

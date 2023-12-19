@@ -4,6 +4,8 @@ import { FC } from 'react';
 
 import Image from 'next/image';
 
+import { motion } from 'framer-motion';
+
 import {
   Dialog,
   DialogContent,
@@ -34,7 +36,17 @@ export const Footer: FC = () => {
           <div className="flex flex-1 cursor-pointer items-center justify-center space-x-10 text-sm font-medium text-secondary-500">
             <Dialog>
               <DialogTrigger asChild data-testid="disclaimer">
-                <div>Disclaimer</div>
+                <motion.div initial="initial" whileHover="hover" className="w-fit">
+                  <span>Disclaimer</span>
+
+                  <motion.div
+                    className="h-0.5 w-0 bg-secondary-500"
+                    variants={{
+                      initial: { width: 0 },
+                      hover: { width: '100%' },
+                    }}
+                  />
+                </motion.div>
               </DialogTrigger>
               <DialogContent className="top-1/2 w-[665px] -translate-y-[50%] transform bg-secondary-500 text-brand-500">
                 <DialogHeader className="space-y-5">
@@ -74,7 +86,9 @@ export const Footer: FC = () => {
               </DialogContent>
             </Dialog>
 
-            <a
+            <motion.a
+              initial="initial"
+              whileHover="hover"
               target="_blank"
               rel="noopener noreferrer"
               href="https://earthmonitor.org/privacy-policy/"
@@ -83,9 +97,18 @@ export const Footer: FC = () => {
               aria-label="OEMC privacy policy"
               data-testid="privacy-policy-link"
             >
-              Privacy Policy
-            </a>
-            <a
+              <span>Privacy Policy</span>
+              <motion.div
+                className="h-0.5 w-0 bg-secondary-500"
+                variants={{
+                  initial: { width: 0 },
+                  hover: { width: '100%' },
+                }}
+              />
+            </motion.a>
+            <motion.a
+              initial="initial"
+              whileHover="hover"
               target="_blank"
               rel="noopener noreferrer"
               href="https://earthmonitor.org/contact-us/"
@@ -94,8 +117,15 @@ export const Footer: FC = () => {
               aria-label="OEMC contact page"
               data-testid="contact-link"
             >
-              Contact us
-            </a>
+              <span>Contact us</span>{' '}
+              <motion.div
+                className="h-0.5 w-0 bg-secondary-500"
+                variants={{
+                  initial: { width: 0 },
+                  hover: { width: '100%' },
+                }}
+              />
+            </motion.a>
           </div>
           <SocialMedia />
         </div>

@@ -50,16 +50,19 @@ const Pagination: React.FC<PaginationProps> = ({
       </button>
       <ol className="flex space-x-8" data-testid="pages-list">
         {pagesToShow.map((d, index) => (
-          <li
-            key={d}
-            data-testid={`pagination-item-${index}`}
-            className={cn({
-              'm-auto flex h-10 w-10 items-center justify-center rounded-full text-secondary-500':
-                true,
-              'bg-secondary-500  text-brand-500': d === page,
-            })}
-          >
-            <button type="button" onClick={handleCurrentPage} value={d}>
+          <li key={d} data-testid={`pagination-item-${index}`}>
+            <button
+              type="button"
+              className={cn({
+                'm-auto flex h-10 w-10 items-center justify-center rounded-full text-secondary-500':
+                  true,
+                'hover:bg-secondary-900': d !== page,
+                'bg-secondary-500 text-brand-500': d === page,
+              })}
+              onClick={handleCurrentPage}
+              value={d}
+              disabled={d === page}
+            >
               {d}
             </button>
           </li>

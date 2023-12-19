@@ -30,7 +30,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
 }) => (
   <Dialog>
     <DialogTrigger asChild>
-      <Button variant="light" data-testid={`card-button-${id}`} className="max-w-fit p-4">
+      <Button variant="light" data-testid={`card-button-${id}`} className="max-w-fit p-4 text-xs">
         Know more
       </Button>
     </DialogTrigger>
