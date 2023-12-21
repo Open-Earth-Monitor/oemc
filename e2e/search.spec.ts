@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-import type { PaginatedResponse } from '@/hooks/datasets';
+import type { MonitorsAndGeostoriesPaginated } from '@/types/monitors-and-geostories';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -11,7 +11,7 @@ test.describe('search of monitors and geostories', () => {
     const response = await page.waitForResponse(
       'https://api.earthmonitor.org/monitors-and-geostories*'
     );
-    const datasetsData = (await response.json()) as PaginatedResponse;
+    const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
     const searchInput = page.getByTestId('search-input');
 
     const searchPromise = page.waitForResponse(
@@ -20,7 +20,7 @@ test.describe('search of monitors and geostories', () => {
     await searchInput.fill(datasetsData['monitors and geostories'][0].title);
     const filteredResponse = await searchPromise;
     const inputValue = await searchInput.inputValue();
-    const filteredJson = (await filteredResponse.json()) as PaginatedResponse;
+    const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
 
     // compare filtered response with manually filtered response
     const manuallyFilteredResponse = datasetsData['monitors and geostories'].filter(

@@ -2,8 +2,7 @@ import { test, expect } from '@playwright/test';
 
 import type { Geostory } from '@/types/geostories';
 import type { Monitor } from '@/types/monitors';
-
-import type { PaginatedResponse } from '@/hooks/datasets';
+import type { MonitorsAndGeostoriesPaginated } from '@/types/monitors-and-geostories';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/', { waitUntil: 'load' });
@@ -14,7 +13,7 @@ test('geostories and monitors display', async ({ page }) => {
     'https://api.earthmonitor.org/monitors-and-geostories*'
   );
 
-  const datasetsData = (await datasetsResponse.json()) as PaginatedResponse;
+  const datasetsData = (await datasetsResponse.json()) as MonitorsAndGeostoriesPaginated;
   const dataLength = datasetsData['monitors and geostories'].length;
 
   const datasetCard = page.getByTestId('datasets-list').locator('li');
@@ -36,7 +35,7 @@ test.describe('monitors and geostories display', () => {
       'https://api.earthmonitor.org/monitors-and-geostories?type=monitors*'
     );
 
-    const monitorsData = (await monitorsResponse.json()) as PaginatedResponse;
+    const monitorsData = (await monitorsResponse.json()) as MonitorsAndGeostoriesPaginated;
     const monitorsIds = monitorsData['monitors and geostories'].map((data) => data.id);
     const firstMonitor = monitorsData['monitors and geostories'][0] as Monitor;
 
@@ -84,7 +83,7 @@ test.describe('monitors and geostories display', () => {
       'https://api.earthmonitor.org/monitors-and-geostories?type=geostories*'
     );
 
-    const geostoriesData = (await geostoriesResponse.json()) as PaginatedResponse;
+    const geostoriesData = (await geostoriesResponse.json()) as MonitorsAndGeostoriesPaginated;
     const geostoriesIds = geostoriesData['monitors and geostories'].map((data) => data.id);
     const firstGeostory = geostoriesData['monitors and geostories'][0] as Geostory;
 
