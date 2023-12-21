@@ -22,6 +22,8 @@ export const BookmarkControl: FC = () => {
   );
   const [isInputVisible, setInputVisibility] = useState(false);
   const pathname = usePathname();
+
+  // TO - DO - update url with useSearchParams
   const url = `${pathname}${window.location.search}`;
 
   // update as necessary
