@@ -69,12 +69,14 @@ export const BookmarkControl: FC = () => {
                     type="text"
                     defaultValue=""
                     placeholder="Insert bookmark name..."
-                    className="w-full border-none bg-transparent py-2.5 outline-none placeholder:bg-transparent placeholder:text-secondary-500"
+                    className="w-full border-none bg-transparent py-2.5 outline-none placeholder:bg-transparent placeholder:text-secondary-500 focus:ring-[0.2px] focus:ring-[#848981] focus:ring-opacity-50"
                     onChange={handleInputChange}
                     autoFocus={true}
                   />
                 </div>
-                <div className="overflow-hidden break-words pl-8 text-sm text-[#848981]">{url}</div>
+                <div className="overflow-hidden break-words pl-8 pt-2 text-sm text-[#848981]">
+                  {url}
+                </div>
                 <div className="flex space-x-4 py-7">
                   <Button
                     type="submit"
