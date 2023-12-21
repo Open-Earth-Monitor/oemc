@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import type { FC, FormEvent, MouseEvent } from 'react';
 
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useParams, usePathname, useSearchParams } from 'next/navigation';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { AiFillStar } from 'react-icons/ai';
@@ -22,10 +22,9 @@ export const BookmarkControl: FC = () => {
   );
   const [isInputVisible, setInputVisibility] = useState(false);
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const url = `${pathname}${window.location.search}`;
 
-  const url = `${pathname}?${searchParams.toString()}`;
-
+  // update as necessary
   const handleSaveBookmark = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
