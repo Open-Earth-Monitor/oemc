@@ -85,13 +85,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         height="100%"
         className="relative"
         initial={initialViewport}
-        view={[
-          { zoom: Number(zoom), center },
-          (view) => {
-            void setCenter(view.center);
-            void setZoom(view.zoom.toString());
-          },
-        ]}
         onMoveEnd={handleMapMove}
         noDefaultControls
       >
