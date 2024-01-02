@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, FC, useCallback } from 'react';
+import React, { useMemo, FC, useCallback, useRef } from 'react';
 
 import { MapBrowserEvent } from 'ol';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
@@ -23,6 +23,7 @@ import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import type { CustomMapProps } from './types';
+
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeostory = false }) => {
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
@@ -43,12 +44,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   /**
    * Initial viewport from the URL or the default one
    */
-  const initialViewport: RView = {
+  const initialViewport = {
     center: center ? center : initialViewState.center,
     zoom: zoom ? Number(zoom) : initialViewState.zoom,
-  };
-
-  // const [localViewport, setLocalViewport] = useState<RView>(initialViewport);
+  } satisfies RView;
 
   /**
    * Get the layer source from the API
@@ -81,6 +80,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   return (
     <>
       <RMap
+        key={initialViewport.zoom}
         width="100%"
         height="100%"
         className="relative"
