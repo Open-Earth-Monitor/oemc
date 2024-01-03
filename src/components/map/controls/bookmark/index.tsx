@@ -1,8 +1,8 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import type { FC, FormEvent, MouseEvent } from 'react';
 
 import Link from 'next/link';
-import { useParams, usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { AiFillStar } from 'react-icons/ai';
