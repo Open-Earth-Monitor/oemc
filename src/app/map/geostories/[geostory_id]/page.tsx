@@ -15,7 +15,7 @@ import { useMonitors } from '@/hooks/monitors';
 import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
 
 import DatasetCard from '@/components/datasets/card';
-import GeostoryHead from '@/components/geostories/header';
+import GeostoryHeader from '@/components/geostories/header';
 import Loading from '@/components/loading';
 
 const findMonitorByGeoStoryId = (monitors: MonitorParsed[], geoStoryId: string) =>
@@ -61,7 +61,7 @@ const GeostoryPage: NextPage<{ params: { geostory_id: string } }> = ({
           </Link>
         )}
         {isLoadingGeostory && <Loading />}
-        {geostory && !isLoadingGeostory && <GeostoryHead {...geostory} color={color} />}
+        {geostory && !isLoadingGeostory && <GeostoryHeader {...geostory} color={color} />}
       </div>
       <div>
         {isLoading && <Loading />}

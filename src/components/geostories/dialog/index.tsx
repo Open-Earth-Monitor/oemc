@@ -89,7 +89,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                   <HiOutlineNewspaper className="h-6 w-6" />
                   <span className="text-2xl font-bold">Publications</span>
                 </h3>
-                {publications.length > 0 && (
+                {publications?.length > 0 && (
                   <ul className="space-y-2 py-2 pl-8 font-bold">
                     {publications.map(({ url, title }) => (
                       <li key={title}>
@@ -106,7 +106,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                   <HiOutlineGlobeAlt className="h-6 w-6" />
                   <span className="text-2xl font-bold">Use cases</span>
                 </h3>
-                {use_case_link.length > 0 && (
+                {use_case_link?.length > 0 && (
                   <ul className="space-y-2 py-2 pl-8 font-bold">
                     {use_case_link.map(({ url, title }) => (
                       <li key={title}>
