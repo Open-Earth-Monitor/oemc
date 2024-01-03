@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, FC, useCallback, useRef } from 'react';
+import React, { useMemo, FC, useCallback } from 'react';
 
 import { MapBrowserEvent } from 'ol';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
@@ -80,7 +80,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   return (
     <>
       <RMap
-        key={initialViewport.zoom}
+        key={`${initialViewport.center.join('-')}-${initialViewport.zoom}`}
         width="100%"
         height="100%"
         className="relative"
