@@ -75,6 +75,8 @@ export function useMonitorsAndGeostoriesPaginated(
 
   return useQuery(['monitor-and-geostories', params], fetchMonitorAndGeostories, {
     ...DEFAULT_QUERY_OPTIONS,
+    keepPreviousData: true,
+
     ...queryOptions,
     select: (data): MonitorsAndGeostoriesPaginatedParsed => ({
       ...data,
