@@ -29,15 +29,18 @@ const LandingDatasets = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [active, setActive] = useState<Dataset>('all');
   const [activeThemes, setActiveThemes] = useState<Theme[]>([]);
-  const { data, isFetched, isError, isFetching } = useMonitorsAndGeostoriesPaginated({
-    ...(active !== 'all' && { type: active }),
-    ...(searchValue !== '' && { title: searchValue }),
-    // TO-DO: API doesn't support filtering by multiple themes
-    ...(activeThemes.length > 0 && { theme: activeThemes[0] }),
-    sort_by: sortingCriteria,
-    pagination: true,
-    page,
-  });
+  const { data, isError, isLoading, isFetching } = useMonitorsAndGeostoriesPaginated(
+    {
+      ...(active !== 'all' && { type: active }),
+      ...(searchValue !== '' && { title: searchValue }),
+      // TO-DO: API doesn't support filtering by multiple themes
+      ...(activeThemes.length > 0 && { theme: activeThemes[0] }),
+      sort_by: sortingCriteria,
+      pagination: true,
+      page,
+    },
+    { keepPreviousData: true }
+  );
   const filteredThemes = useMemo(() => THEMES.filter((theme) => theme !== 'Unknown'), []);
 
   const handleCategoriesFilter = useCallback(
@@ -126,7 +129,6 @@ const LandingDatasets = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-
         <div className="flex items-center justify-between">
           <div>
             <RadioGroup
@@ -198,8 +200,7 @@ const LandingDatasets = () => {
           </div>
         )}
         <div className="min-h-[380px]">
-          {isFetching && <Loading />}
-          {isFetched && !isError && (
+          {!isLoading && !isError && (
             <ul
               id="explore-section"
               className="grid max-w-7xl grid-cols-3 gap-6"
@@ -221,7 +222,9 @@ const LandingDatasets = () => {
               ))}
             </ul>
           )}
-          {isFetched && !isError && !!data?.data.length && (
+          {isFetching && <Loading />}
+
+          {!isLoading && !isError && !!data?.data.length && (
             <Pagination
               page={page}
               setPage={setPage}
@@ -232,8 +235,9 @@ const LandingDatasets = () => {
               numButtons={5}
             />
           )}
-          {isFetched && !isError && !data?.data.length && (
-            <div className="flex w-full flex-col justify-center space-y-7 bg-gradient-to-b from-[#08121c] to-[#0a182a] py-56 text-center">
+
+          {!isLoading && !isError && !data?.data.length && (
+            <div className="flex w-full flex-col justify-center space-y-7 py-56 text-center">
               <div className="m-auto w-full max-w-xl">
                 <p className="text-5xl font-bold">No results found.</p>
                 <p className="inter font-inter text-secondary-700">

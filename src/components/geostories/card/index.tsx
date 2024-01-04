@@ -17,6 +17,7 @@ import GeostoryDialog from '../dialog';
 
 const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string }> = (geostory) => {
   const { id, colorHead, title, color, ready, theme, layers } = geostory;
+
   return (
     <div
       className="flex min-h-[468px] flex-col justify-between"
