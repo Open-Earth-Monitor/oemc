@@ -2,6 +2,8 @@
 
 import { useCallback, useMemo, useState } from 'react';
 
+import { Element, scroller } from 'react-scroll';
+
 import { motion } from 'framer-motion';
 import { BiCheck } from 'react-icons/bi';
 
@@ -24,6 +26,7 @@ import { SORTING } from './constants';
 import type { SortingCriteria, Dataset } from './types';
 
 const LandingDatasets = () => {
+  const [counter, setCounter] = useState(0);
   const [page, setPage] = useState(1);
   const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
   const [searchValue, setSearchValue] = useState<string>('');
@@ -39,7 +42,21 @@ const LandingDatasets = () => {
       pagination: true,
       page,
     },
-    { keepPreviousData: true }
+    {
+      keepPreviousData: true,
+      onSuccess: () => {
+        // avoiding scroll on first render
+        if (counter > 0) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+          scroller.scrollTo('datasetsGrid', {
+            duration: 500,
+            delay: 20,
+            smooth: 'easeInOutQuint',
+          });
+        }
+        setCounter(counter + 1);
+      },
+    }
   );
   const filteredThemes = useMemo(() => THEMES.filter((theme) => theme !== 'Unknown'), []);
 
@@ -76,7 +93,7 @@ const LandingDatasets = () => {
   );
 
   return (
-    <div className="w-full">
+    <Element className="w-full" name="datasetsGrid">
       <div className="m-auto max-w-[1200px] pt-10">
         <div className="mb-10 flex h-14">
           <Search
@@ -249,7 +266,7 @@ const LandingDatasets = () => {
           )}
         </div>
       </div>
-    </div>
+    </Element>
   );
 };
 
