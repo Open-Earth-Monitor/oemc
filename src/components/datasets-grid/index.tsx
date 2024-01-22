@@ -120,7 +120,7 @@ const LandingDatasets = () => {
               {filteredThemes.map((theme) => (
                 <div
                   key={`menu-item-${theme}`}
-                  className="flex w-full flex-1 space-x-4 p-2 text-secondary-500"
+                  className="flex w-full flex-1 items-center space-x-4 p-2 text-secondary-500"
                 >
                   <Checkbox
                     id={theme}
@@ -128,9 +128,9 @@ const LandingDatasets = () => {
                     onClick={handleThemes}
                     defaultChecked
                     checked={activeThemes.includes(theme)}
-                    className="bg-secondary-500 text-brand-500 outline-none ring-0 hover:border-2 hover:border-secondary-500 hover:bg-secondary-900 data-[state=checked]:border-none"
+                    className="h-5 w-5 border border-secondary-500 bg-transparent text-brand-500 outline-none ring-0 hover:bg-secondary-900 data-[state=checked]:border-none"
                   >
-                    <CheckboxIndicator className="border-none bg-secondary-500 text-brand-500 outline-0 ring-0 hover:bg-secondary-900">
+                    <CheckboxIndicator className="h-full w-full border-none bg-secondary-500 text-brand-500 outline-0 ring-0 hover:bg-secondary-900">
                       <BiCheck className="h-4 w-4 fill-current" />
                     </CheckboxIndicator>
                   </Checkbox>
