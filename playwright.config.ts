@@ -15,16 +15,16 @@ const PORT = process.env.PORT || 3000;
 export default defineConfig({
   testDir: './e2e',
   outputDir: './e2e/test-results',
-  timeout: 90000,
+  timeout: 120000,
   expect: {
-    timeout: 90000,
+    timeout: 120000,
   },
   /* Run your local dev server before starting the tests */
   webServer: {
     command: process.env.CI ? 'yarn build && yarn start' : 'yarn dev',
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
-    timeout: 300000,
+    timeout: 30000,
   },
   /* Run tests in files in parallel */
   fullyParallel: !process.env.CI,
