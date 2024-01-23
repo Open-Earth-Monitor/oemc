@@ -36,43 +36,47 @@ test.describe('monitors and geostories display', () => {
     );
 
     const monitorsData = (await monitorsResponse.json()) as MonitorsAndGeostoriesPaginated;
-    const monitorsIds = monitorsData['monitors and geostories'].map((data) => data.id);
-    const firstMonitor = monitorsData['monitors and geostories'][0] as Monitor;
+    const firstMonitorWithData = monitorsData['monitors and geostories'].find(
+      (monitor) => monitor.ready && monitor.description !== null
+    ) as Monitor;
 
-    await expect(page.getByTestId(`card-${monitorsIds[0]}`)).toBeVisible();
+    await expect(page.getByTestId(`card-${firstMonitorWithData.id}`)).toBeVisible();
 
-    const cardType = page.getByTestId(`card-type-${monitorsIds[0]}`);
+    const cardType = page
+      .getByTestId(`card-type-${firstMonitorWithData.id}`)
+      .locator('span')
+      .first();
     await expect(cardType).toBeVisible();
     await expect(cardType).toHaveText('monitor');
 
-    const cardTitle = page.getByTestId(`card-title-${monitorsIds[0]}`);
+    const cardTitle = page.getByTestId(`card-title-${firstMonitorWithData.id}`);
     await expect(cardTitle).toBeVisible();
-    await expect(cardTitle).toHaveText(firstMonitor.title);
+    await expect(cardTitle).toHaveText(firstMonitorWithData.title);
 
-    // const cardDescription = page.getByTestId(`card-description-${monitorsIds[0]}`);
-    // await expect(cardDescription).toBeVisible();
-    // await expect(cardDescription).toHaveText(firstMonitor.description);
+    const cardDescription = page.getByTestId(`card-description-${firstMonitorWithData.id}`);
+    await expect(cardDescription).toBeVisible();
+    await expect(cardDescription).toHaveText(firstMonitorWithData.description);
 
-    const cardButton = page.getByTestId(`card-button-${monitorsIds[0]}`);
+    const cardButton = page.getByTestId(`card-button-${firstMonitorWithData.id}`);
     await expect(cardButton).toBeVisible();
     await cardButton.click();
 
-    const monitorCard = page.getByTestId(`monitor-card-${monitorsIds[0]}`);
+    const monitorCard = page.getByTestId(`monitor-card-${firstMonitorWithData.id}`);
     await expect(monitorCard).toBeVisible();
 
     const monitorTitle = page.getByTestId('monitor-title');
     await expect(monitorTitle).toBeVisible();
-    await expect(monitorTitle).toHaveText(firstMonitor.title);
+    await expect(monitorTitle).toHaveText(firstMonitorWithData.title);
 
-    // const monitorDescription = page.getByTestId('monitor-description');
-    // await expect(monitorDescription).toBeVisible();
-    // await expect(monitorDescription).toHaveText(firstMonitor.description);
+    const monitorDescription = page.getByTestId('monitor-description');
+    await expect(monitorDescription).toBeVisible();
+    await expect(monitorDescription).toHaveText(firstMonitorWithData.description);
 
     const monitorButton = page.getByTestId('monitor-button');
     await expect(monitorButton).toBeVisible();
     await monitorButton.click();
 
-    await page.waitForURL(`**/map/${monitorsIds[0]}/datasets*`, { waitUntil: 'load' });
+    await page.waitForURL(`**/map/${firstMonitorWithData.id}/datasets*`, { waitUntil: 'load' });
   });
 
   test('geostories display', async ({ page }) => {
@@ -84,27 +88,27 @@ test.describe('monitors and geostories display', () => {
     );
 
     const geostoriesData = (await geostoriesResponse.json()) as MonitorsAndGeostoriesPaginated;
-    const geostoriesIds = geostoriesData['monitors and geostories'].map((data) => data.id);
-    const firstGeostory = geostoriesData['monitors and geostories'][0] as Geostory;
+    const firstGeostoryWithData = geostoriesData['monitors and geostories'].find(
+      (geostory) => geostory.ready && geostory.description !== null
+    ) as Geostory;
 
-    await expect(page.getByTestId(`card-${geostoriesIds[0]}`)).toBeVisible();
+    await expect(page.getByTestId(`card-${firstGeostoryWithData.id}`)).toBeVisible();
 
-    const cardType = page.getByTestId(`card-type-${geostoriesIds[0]}`);
+    const cardType = page
+      .getByTestId(`card-type-${firstGeostoryWithData.id}`)
+      .locator('span')
+      .first();
     await expect(cardType).toBeVisible();
     await expect(cardType).toHaveText('geostory');
 
-    const cardTitle = page.getByTestId(`card-title-${geostoriesIds[0]}`);
+    const cardTitle = page.getByTestId(`card-title-${firstGeostoryWithData.id}`);
     await expect(cardTitle).toBeVisible();
-    await expect(cardTitle).toHaveText(firstGeostory.title);
+    await expect(cardTitle).toHaveText(firstGeostoryWithData.title);
 
-    // const cardDescription = page.getByTestId(`card-description-${geostoriesIds[0]}`);
-    // await expect(cardDescription).toBeVisible();
-    // await expect(cardDescription).toHaveText(firstGeostory.description);
-
-    const cardLink = page.getByTestId(`card-link-${geostoriesIds[0]}`);
-    await expect(cardLink).toHaveAttribute('href', `/map/geostories/${geostoriesIds[0]}`);
+    const cardLink = page.getByTestId(`card-link-${firstGeostoryWithData.id}`);
+    await expect(cardLink).toHaveAttribute('href', `/map/geostories/${firstGeostoryWithData.id}`);
     await cardLink.click();
 
-    await page.waitForURL(`**/map/geostories/${geostoriesIds[0]}`, { waitUntil: 'load' });
+    await page.waitForURL(`**/map/geostories/${firstGeostoryWithData.id}`, { waitUntil: 'load' });
   });
 });

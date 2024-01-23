@@ -15,7 +15,6 @@ test.describe('geostories tab', () => {
     const firstMonitorWithGeostories = monitorsData.find(
       (monitor) => monitor.geostories.length > 0
     );
-    await page.getByTestId(`monitor-item-${firstMonitorWithGeostories.id}`).click();
 
     // click on the first monitor
     await page.getByTestId(`monitor-item-${firstMonitorWithGeostories.id}`).click();
@@ -142,7 +141,6 @@ test('From a selected geostory, user should be able to go back to the monitor it
   const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
   const monitorsData = (await monitorsResponse.json()) as Monitor[];
   const firstMonitorWithGeostories = monitorsData.find((monitor) => monitor.geostories.length > 0);
-  await page.getByTestId(`monitor-item-${firstMonitorWithGeostories.id}`).click();
 
   // click on the first monitor
   await page.getByTestId(`monitor-item-${firstMonitorWithGeostories.id}`).click();

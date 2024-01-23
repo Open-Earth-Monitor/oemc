@@ -10,7 +10,9 @@ test.describe('monitors navigation', () => {
   test('from modal in /map', async ({ page }) => {
     const response = await page.waitForResponse('https://api.earthmonitor.org/monitors');
     const json = (await response.json()) as Monitor[];
-    const monitorsIds = json.map((data) => data.id);
+    const monitorsIds = json
+      .filter((monitor) => monitor.ready && monitor.description !== null)
+      .map((data) => data.id);
     const monitorsList = page.getByTestId('monitors-list');
 
     await expect(monitorsList).toBeVisible();
@@ -30,7 +32,9 @@ test.describe('monitors navigation', () => {
     const monitorsFetchResponse = page.waitForResponse('https://api.earthmonitor.org/monitors');
     const response = await monitorsFetchResponse;
     const json = (await response.json()) as Monitor[];
-    const monitorsIds = json.map((data) => data.id);
+    const monitorsIds = json
+      .filter((monitor) => monitor.ready && monitor.description !== null)
+      .map((data) => data.id);
 
     await page.getByTestId(`monitor-item-${monitorsIds[0]}`).click();
     await page.waitForURL(`**/map/${monitorsIds[0]}/datasets`, { waitUntil: 'load' });
