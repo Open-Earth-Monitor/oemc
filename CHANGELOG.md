@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Removed info button at datasets level [OEMC-69](https://vizzuality.atlassian.net/browse/OEMC-69)
 - Geostory info moved from sidebar to geostory dialog [OEMC-163](https://vizzuality.atlassian.net/browse/OEMC-163)
+- Ability to filter by multiple categories (themes) in Hub page [OEMC-165](https://vizzuality.atlassian.net/browse/OEMC-165?atlOrigin=eyJpIjoiNWE1ZmY3MWU3ZGJlNGU0ZmFjZGU3NGUyM2E3ZTBkMjMiLCJwIjoiaiJ9)
 
 ### Fixed
 - Wrong link in geostory card on the landing page

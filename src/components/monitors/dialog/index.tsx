@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-import { HiOutlineNewspaper, HiOutlineGlobeAlt } from 'react-icons/hi';
+import { HiOutlineGlobeAlt } from 'react-icons/hi';
 
 import cn from '@/lib/classnames';
 
@@ -24,7 +24,6 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
   id,
   title,
   description,
-  publications,
   use_case_link,
   responsible_partner_name,
   responsible_partner_url,
