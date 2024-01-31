@@ -6,6 +6,7 @@ import { Element, scroller } from 'react-scroll';
 
 import { motion } from 'framer-motion';
 import { BiCheck } from 'react-icons/bi';
+import { RxCross2 } from 'react-icons/rx';
 
 import { useMonitorsAndGeostoriesPaginated } from '@/hooks/datasets';
 
@@ -32,12 +33,12 @@ const LandingDatasets = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [active, setActive] = useState<Dataset>('all');
   const [activeThemes, setActiveThemes] = useState<Theme[]>([]);
+
   const { data, isError, isLoading, isFetching } = useMonitorsAndGeostoriesPaginated(
     {
       ...(active !== 'all' && { type: active }),
       ...(searchValue !== '' && { title: searchValue }),
-      // TO-DO: API doesn't support filtering by multiple themes
-      ...(activeThemes.length > 0 && { theme: activeThemes[0] }),
+      ...(activeThemes.length > 0 && { theme: activeThemes }),
       sort_by: sortingCriteria,
       pagination: true,
       page,
@@ -73,16 +74,11 @@ const LandingDatasets = () => {
       e.stopPropagation(); // avoid to close the dropdown interacting with the checkbox
 
       const id = e.currentTarget.id as Theme;
-      // TO-DO: uncomment when API supports filtering by multiple themes
-      // const themesUpdate = activeThemes.includes(id)
-      //   ? activeThemes.filter((e) => e !== id)
-      //   : [id, ...activeThemes];
+      const themesUpdate = activeThemes.includes(id)
+        ? activeThemes.filter((e) => e !== id)
+        : [id, ...activeThemes];
 
-      if (activeThemes.includes(id)) {
-        setActiveThemes([]);
-      } else {
-        setActiveThemes([id]);
-      }
+      setActiveThemes(themesUpdate);
     },
     [activeThemes]
   );
@@ -95,7 +91,7 @@ const LandingDatasets = () => {
   return (
     <Element className="w-full" name="datasetsGrid">
       <div className="m-auto max-w-[1200px] pt-10">
-        <div className="mb-10 flex h-14">
+        <div className="flex h-14">
           <Search
             placeholder="Search by name, type of dataset..."
             value={searchValue}
@@ -103,7 +99,10 @@ const LandingDatasets = () => {
             className="flex h-full flex-1 border-[0.5px] border-secondary-900"
           />
           <DropdownMenu modal={false}>
-            <DropdownMenuTrigger className="flex h-full min-w-[258px] items-center border-[0.5px] border-l-0 font-inter">
+            <DropdownMenuTrigger
+              className="flex h-full min-w-[258px] items-center border-[0.5px] border-l-0 font-inter"
+              data-testid="themes-filter"
+            >
               <div className="w-full">
                 {filteredThemes.length === activeThemes.length && 'All categories selected'}
                 {activeThemes.length === 0 && 'Filter by categories'}
@@ -146,6 +145,23 @@ const LandingDatasets = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+        <ul className="mb-12 mt-3 flex space-x-3 text-secondary-500">
+          {activeThemes.map((theme) => (
+            <li key={theme} className="rounded-sm bg-secondary-900 px-2 py-0.5">
+              <button
+                id={theme}
+                type="button"
+                onClick={handleThemes}
+                className="flex items-center space-x-2"
+                data-testid={`${theme}-button`}
+                aria-label={`Remove ${theme}`}
+              >
+                <span>{theme}</span>
+                <RxCross2 className="h-4 w-4 fill-current" />
+              </button>
+            </li>
+          ))}
+        </ul>
         <div className="flex items-center justify-between">
           <div>
             <RadioGroup

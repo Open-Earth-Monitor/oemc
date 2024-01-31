@@ -19,6 +19,7 @@ const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'li
 type UseParams = {
   type?: 'monitors' | 'geostories' | 'all';
   page?: number;
+  theme?: Theme[];
   monitor_id?: string;
   pagination?: boolean;
   sort_by?: 'title' | 'date';
@@ -65,18 +66,25 @@ export function useMonitorsAndGeostoriesPaginated(
     MonitorsAndGeostoriesPaginatedParsed
   >
 ) {
+  const { theme, ...restParams } = params || { theme: undefined };
+  const themeQuery =
+    theme && theme.length > 0
+      ? `?${theme.map((t) => `theme=${encodeURIComponent(t)}`).join('&')}`
+      : '';
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostoriesPaginated>({
       method: 'GET',
-      url: '/monitors-and-geostories',
-      params: { ...params, pagination: true },
+      url: `/monitors-and-geostories${themeQuery}`,
+      params: {
+        ...restParams,
+        pagination: true,
+      },
       ...queryOptions,
     }).then((response) => response.data);
 
   return useQuery(['monitor-and-geostories', params], fetchMonitorAndGeostories, {
     ...DEFAULT_QUERY_OPTIONS,
     keepPreviousData: true,
-
     ...queryOptions,
     select: (data): MonitorsAndGeostoriesPaginatedParsed => ({
       ...data,
