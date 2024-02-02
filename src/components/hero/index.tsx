@@ -30,7 +30,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative bg-[url('/images/landing/hero.png')] bg-cover bg-right-bottom xl:pt-36">
+    <div className="relative bg-[url('/images/landing/hero.png')] bg-cover bg-right-bottom">
       <div className="m-auto max-w-[1200px]">
         <h1 className="whitespace-wrap max-w-[800px] pb-20 pt-32 font-satoshi text-8xl font-black md:pt-36">
           {' '}
