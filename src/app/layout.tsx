@@ -2,10 +2,7 @@ import { ReactNode } from 'react';
 
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
-import Image from 'next/image';
-import Link from 'next/link';
 
-import MainMenu from '@/components/main-menu';
 import Providers from '@/utils/providers';
 
 const inter = Inter({
@@ -48,29 +45,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="mx-auto h-full min-h-screen bg-gradient-to-b from-[#0a141e] to-[#0a1520] font-inter">
         <Providers>
           <div className="flex h-full flex-col">
-            <div className="h-[70px] w-full items-center border-b border-b-secondary-900 bg-brand-500/80">
-              <div className="m-auto flex h-full max-w-[1200px] items-center justify-between">
-                <div className="mx-2 flex items-center space-x-4">
-                  <Link href="/">
-                    <Image
-                      alt="Open-earth-monitor"
-                      src="/images/OEM-logo.svg"
-                      width={147}
-                      height={40}
-                      className="block"
-                    />
-                  </Link>
-                  <div
-                    data-testid="alpha-site"
-                    className="rounded-sm border border-alert px-[6px] py-1 font-inter text-xs text-alert"
-                  >
-                    Alpha version
-                  </div>
-                </div>
-                <MainMenu />
-              </div>
-            </div>
-            <main className="relative h-[calc(100%-4.375rem)] flex-1">{children}</main>
+            <main className="relative h-full flex-1">{children}</main>
           </div>
         </Providers>
       </body>

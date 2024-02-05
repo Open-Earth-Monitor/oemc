@@ -4,8 +4,13 @@ import { useCallback } from 'react';
 
 import { scroller } from 'react-scroll';
 
+import Image from 'next/image';
+import Link from 'next/link';
+
 import { motion, useAnimation } from 'framer-motion';
 import { HiOutlineArrowCircleRight } from 'react-icons/hi';
+
+import MainMenu from '@/components/main-menu';
 
 const Hero = () => {
   const controls = useAnimation();
@@ -30,9 +35,31 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative bg-[url('/images/landing/hero.png')] bg-cover bg-right-bottom">
+    <div className="relative h-[746px] bg-[url('/images/landing/hero.png')] bg-cover bg-right-bottom">
+      <div className="h-[70px] w-full items-center border-b border-b-secondary-900 bg-brand-500 bg-opacity-20">
+        <div className="m-auto flex h-full max-w-[1200px] items-center justify-between">
+          <div className="mx-2 flex items-center space-x-4">
+            <Link href="/">
+              <Image
+                alt="Open-earth-monitor"
+                src="/images/OEM-logo.svg"
+                width={147}
+                height={40}
+                className="block"
+              />
+            </Link>
+            <div
+              data-testid="alpha-site"
+              className="rounded-sm border border-alert px-[6px] py-1 font-inter text-xs text-alert"
+            >
+              Alpha version
+            </div>
+          </div>
+          <MainMenu />
+        </div>
+      </div>
       <div className="m-auto max-w-[1200px]">
-        <h1 className="whitespace-wrap max-w-[800px] pb-20 pt-32 font-satoshi text-8xl font-black md:pt-36">
+        <h1 className="whitespace-wrap max-w-[800px] pb-20 pt-32 font-satoshi text-8xl text-[115px] font-black md:pt-36">
           {' '}
           Discover and empower with monitoring solutions.
         </h1>
