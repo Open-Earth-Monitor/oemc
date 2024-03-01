@@ -52,7 +52,7 @@ test(`Filter by themes Agriculture and Climate & Health`, async ({ page, request
     (dataset) => dataset.theme === 'Agriculture' || dataset.theme === 'Climate & Health'
   );
 
-  if (manuallyFilteredResponse.length > 6) {
+  if (manuallyFilteredResponse.length >= 6) {
     expect(filteredJson['monitors and geostories'].length).toBe(6);
   } else
     expect(filteredJson['monitors and geostories'].length).toBe(manuallyFilteredResponse.length);

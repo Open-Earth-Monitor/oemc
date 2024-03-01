@@ -11,28 +11,9 @@ type UseParams = {
   monitor_id?: string;
 };
 
-const COLORS = {
-  default: 'hsla(0, 0%, 79%, 1)',
-  m1: 'hsla(209, 94%, 87%, 1)',
-  m2: 'hsla(133, 97%, 85%, 1)',
-  m3: 'hsla(29, 77%, 78%, 1)',
-  m4: 'hsla(8, 100%, 76%, 1)',
-  m5: 'hsla(133, 97%, 85%, 1)',
-  m6: 'hsla(254, 78%, 87%, 1)',
-  m7: 'hsla(60, 100%, 95%, 1)',
-  m8: 'hsla(60, 90%, 84%, 1)',
-} satisfies { [key: string]: string };
-const COLORS_OPACITY = {
-  default: 'hsla(0, 0%, 79%, 0.2)',
-  m1: 'hsla(209, 94%, 87%, 0.2)',
-  m2: 'hsla(133, 97%, 85%, 0.2)',
-  m3: 'hsla(29, 77%, 78%, 0.2)',
-  m4: 'hsla(8, 100%, 76%, 0.2)',
-  m5: 'hsla(133, 97%, 85%, 0.2)',
-  m6: 'hsla(254, 78%, 87%, 0.2)',
-  m7: 'hsla(60, 100%, 95%, 0.2)',
-  m8: 'hsla(60, 90%, 84%, 0.2)',
-} satisfies { [key: string]: string };
+import { THEMES_COLORS } from '@/constants/themes';
+
+const DEFAULT_COLOR = 'hsla(0, 0%, 79%, 1)';
 
 const DEFAULT_QUERY_OPTIONS = {
   refetchOnWindowFocus: false,
@@ -57,8 +38,8 @@ export function useMonitor(
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) => ({
       ...data,
-      color: (COLORS[data.id] as string) || COLORS.default,
-      colorOpacity: COLORS_OPACITY[data.id] as string,
+      color: THEMES_COLORS[data.theme].base || DEFAULT_COLOR,
+      colorOpacity: THEMES_COLORS[data.theme].light || DEFAULT_COLOR,
     }),
     ...queryOptions,
   });
@@ -76,8 +57,8 @@ export function useMonitors(queryOptions?: UseQueryOptions<Monitor[], Error, Mon
     select: (data) => {
       return data.map((monitor) => ({
         ...monitor,
-        color: (COLORS[monitor.id] as string) || COLORS.default,
-        colorOpacity: COLORS_OPACITY[monitor.id] as string,
+        color: THEMES_COLORS[monitor.theme].base || DEFAULT_COLOR,
+        colorOpacity: THEMES_COLORS[monitor.theme].light || DEFAULT_COLOR,
       }));
     },
     ...queryOptions,
