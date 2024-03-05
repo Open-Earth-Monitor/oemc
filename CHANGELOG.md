@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added a default env variable for the API_URL
+- BaseMap boundaries [OEMC-185](https://vizzuality.atlassian.net/browse/OEMC-185?atlOrigin=eyJpIjoiODg1NTVjZTg1YmI2NDg4Mzg3NWFlYjg0NDgxNjRmNDAiLCJwIjoiaiJ9)
+- BaseMap labels [OEMC-185](https://vizzuality.atlassian.net/browse/OEMC-185?atlOrigin=eyJpIjoiODg1NTVjZTg1YmI2NDg4Mzg3NWFlYjg0NDgxNjRmNDAiLCJwIjoiaiJ9)
 
 ## v1.0.0-alpha.3
 

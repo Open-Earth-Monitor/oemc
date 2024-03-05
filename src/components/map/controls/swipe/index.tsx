@@ -12,7 +12,6 @@ const swipeControl = new Swipe();
 const SwipeControl = () => {
   const [position, setPosition] = useState<number>(0.5);
   const { map } = useOL();
-
   const [layersUrl] = useSyncLayersSettings();
   const [layersUrlCompare] = useSyncCompareLayersSettings();
   const handleMoving = useCallback((e: BaseEvent & { position: number[] }) => {
@@ -21,7 +20,6 @@ const SwipeControl = () => {
 
   useEffect(() => {
     const layers = map.getAllLayers();
-
     if (layers.length && layers[1] && layers[2]) {
       swipeControl.setProperties({ position });
       swipeControl.addLayer([layers[2]], true);

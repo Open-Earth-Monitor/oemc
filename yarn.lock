@@ -3541,6 +3541,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"color-parse@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "color-parse@npm:2.0.0"
+  dependencies:
+    color-name: ^1.0.0
+  checksum: f08abfba0032412fbded1a0d406243dec3c84b59ef60ca99069a868e8d6dc9b757446ce4df6333ad21fde806525d868edefdb14f0bee64c435fc643f2405b160
+  languageName: node
+  linkType: hard
+
+"color-rgba@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "color-rgba@npm:3.0.0"
+  dependencies:
+    color-parse: ^2.0.0
+    color-space: ^2.0.0
+  checksum: 003b5fa70a77f46df3753e4b941154986163ccabbd9a8a80b2ca6cc4a0c9e505f3d4909c46a0b085e095d19b80297cf1c02dfefa33666b9ea1661ff52b3597bc
+  languageName: node
+  linkType: hard
+
+"color-space@npm:^2.0.0, color-space@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "color-space@npm:2.0.1"
+  checksum: 98f8f6acc716d2332705ef6a98876b47e8e39094256b83eec1df17246a5b5c37d107ae682e87d96488b06da12df3595ed5ad4f0e354a45571e23fb2196e4c6e7
+  languageName: node
+  linkType: hard
+
 "color-string@npm:^1.9.0":
   version: 1.9.1
   resolution: "color-string@npm:1.9.1"
@@ -6697,15 +6723,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ol@npm:8.1.0":
-  version: 8.1.0
-  resolution: "ol@npm:8.1.0"
+"ol@npm:9.0.0":
+  version: 9.0.0
+  resolution: "ol@npm:9.0.0"
   dependencies:
+    color-rgba: ^3.0.0
+    color-space: ^2.0.1
     earcut: ^2.2.3
     geotiff: ^2.0.7
     pbf: 3.2.1
     rbush: ^3.0.1
-  checksum: 9bf5ee0b8eb8f55763f4e9203afa8ad60ec9ba6e7a8cb4a3600a6fc0a72c3597dd96f59c6e165f186576f0727a848b7546289c3b88dd5945f18aa5ce9e31b958
+  checksum: 99d42b615ee5f2dafdad95eb361305f10fbcbccea354bcab6a48968e6fe3f92d035584dfdf270757d7b3681244c0c6484f57a5a22a99554b838303fc5a614b80
   languageName: node
   linkType: hard
 
@@ -6795,7 +6823,7 @@ __metadata:
     lucide-react: ^0.257.0
     next: 13.5.4
     next-usequerystate: 1.9.2
-    ol: 8.1.0
+    ol: 9.0.0
     ol-ext: ^4.0.11
     postcss: 8.4.21
     prettier: ^2.8.8
@@ -6806,7 +6834,7 @@ __metadata:
     react-icons: 4.11.0
     react-scroll: ^1.9.0
     react-share: 4.4.1
-    rlayers: 2.1.0
+    rlayers: 2.3.0
     shadcn-ui: 0.4.1
     sharp: ^0.32.6
     sheet: ^0.2.0
@@ -7726,16 +7754,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rlayers@npm:2.1.0":
-  version: 2.1.0
-  resolution: "rlayers@npm:2.1.0"
+"rlayers@npm:2.3.0":
+  version: 2.3.0
+  resolution: "rlayers@npm:2.3.0"
   dependencies:
     lru-cache: ^7.10.0
   peerDependencies:
-    ol: ">=6.10.0 <=8.1.0"
+    ol: ">=6.10.0 <9.1.0"
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: b66ad89e0cef77632d8d3b350e2ff46abc9942630dbebe88e1d29515754cd91b697bf03d92930f76f5afe9aed2b52a0e516cb9dfbf702dc4df8a25674c775322
+  checksum: dc1d6154f15d76c6080144108c21ec5969337eae0de9631329abb87900272412bfe8615c68405c7c5f27bd2ef850dc6acd83d8f079c622d1fabdcba0cbb952a1
   languageName: node
   linkType: hard
 
