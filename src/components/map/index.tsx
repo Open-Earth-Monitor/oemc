@@ -80,11 +80,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   return (
     <>
       <RMap
-        key={`${initialViewport.center.join('-')}-${initialViewport.zoom}`}
         width="100%"
         height="100%"
         className="relative"
         initial={initialViewport}
+        view={[initialViewport, null]}
         onMoveEnd={handleMapMove}
         noDefaultControls
       >
