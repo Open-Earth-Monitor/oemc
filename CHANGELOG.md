@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ability to filter by multiple categories (themes) in Hub page [OEMC-165](https://vizzuality.atlassian.net/browse/OEMC-165)
 - Legend should be visible all time, legend redesign [OEMC-186](https://vizzuality.atlassian.net/browse/OEMC-186)
 - Autoplay in monitors removed [OEMC-201](https://vizzuality.atlassian.net/browse/OEMC-201)
+- Images in landing page [OEMC-194](https://vizzuality.atlassian.net/browse/OEMC-194)
 
 ### Fixed
 - Wrong link in geostory card on the landing page
