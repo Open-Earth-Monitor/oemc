@@ -5,13 +5,13 @@ import type { Geostory } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
 import type { Monitor, MonitorParsed } from '@/types/monitors';
 
+import { THEMES_COLORS } from '@/constants/themes';
+
 import API from 'services/api';
 
 type UseParams = {
   monitor_id?: string;
 };
-
-import { THEMES_COLORS } from '@/constants/themes';
 
 const DEFAULT_COLOR = 'hsla(0, 0%, 79%, 1)';
 
