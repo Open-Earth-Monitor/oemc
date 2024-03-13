@@ -17,7 +17,7 @@ const Hero = () => {
   const startBounce = useCallback(
     () =>
       controls.start({
-        x: [-5, 5, -5, 5, -5, 5],
+        y: [-5, 5, -5, 5, -5, 5],
         transition: { duration: 2, ease: 'easeInOut', repeat: Infinity },
       }),
     [controls]
@@ -35,7 +35,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative h-[746px] bg-[url('/images/landing/hero.png')] bg-cover bg-right-bottom">
+    <div className="relative h-[654px] bg-[url('/images/landing/hero.jpg')] bg-cover">
       <div className="h-[70px] w-full items-center border-b border-b-secondary-900 bg-brand-500 bg-opacity-20">
         <div className="m-auto flex h-full max-w-[1200px] items-center justify-between">
           <div className="mx-2 flex items-center space-x-4">
@@ -58,8 +58,8 @@ const Hero = () => {
           <MainMenu />
         </div>
       </div>
-      <div className="m-auto max-w-[1200px]">
-        <h1 className="whitespace-wrap max-w-[800px] pb-20 pt-32 font-satoshi text-8xl text-[115px] font-black md:pt-36">
+      <div className="m-auto ">
+        <h1 className="whitespace-wrap m-auto px-48 pb-20 pt-52 text-center font-satoshi text-[80px] font-black leading-[96px]">
           {' '}
           Discover and empower with monitoring solutions.
         </h1>
@@ -69,19 +69,19 @@ const Hero = () => {
         whileHover="hover"
         onHoverStart={startBounce}
         onHoverEnd={stopBounce}
-        className="absolute -right-6 bottom-1/4 flex -translate-y-1/2 rotate-90 cursor-pointer items-center space-x-2 uppercase"
+        className="flex w-full cursor-pointer items-center justify-center space-x-2 uppercase"
         onClick={handleScroll}
       >
         <span className="font-inter text-xs font-medium">scroll to explore</span>
         <motion.div
-          initial={{ x: 0 }}
+          initial={{ y: 0 }}
           whileHover={{ scale: 1.1 }}
           animate={controls}
           onHoverStart={startBounce}
           onHoverEnd={stopBounce}
           className="cursor-pointer"
         >
-          <HiOutlineArrowCircleRight className="h-6 w-6" />
+          <HiOutlineArrowCircleRight className="h-6 w-6 rotate-90" />
         </motion.div>
       </motion.button>
     </div>
