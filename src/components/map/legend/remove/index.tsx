@@ -24,7 +24,7 @@ export const RemoveLayer: FC<{ className?: string }> = ({ className }) => {
       onClick={handleRemoveLayer}
       aria-label="Toggle layer visibility"
     >
-      <RxCross2 className="h-4 w-4 text-gray-600 hover:text-secondary-500" />
+      <RxCross2 className="h-6 w-6 text-gray-600 hover:text-secondary-500" />
     </button>
   );
 };
