@@ -27,6 +27,7 @@ import RemoveLayer from './remove';
 import LayerVisibility from './visibility';
 
 type ActiveTab = 'timeSeries' | 'comparison';
+
 const findLabel = (value: string, range: { label: string; value: string | number }[]) =>
   range?.find((d: { label: string; value: string }) => d.value === value)?.label satisfies
     | string
@@ -47,10 +48,14 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     }
     setActiveTab(value);
   };
+
   const layerId = layers?.[0]?.id;
   const opacity = layers?.[0]?.opacity;
   const compareDate = compareLayers?.[0]?.date;
-  const compareLayerData = useLayer({ layer_id: compareLayers?.[0]?.id });
+  const compareLayerData = useLayer(
+    { layer_id: compareLayers?.[0]?.id },
+    { enabled: !!compareLayers }
+  );
 
   const [activeTab, setActiveTab] = useState<ActiveTab>(
     !!compareDate ? 'comparison' : 'timeSeries'
@@ -98,7 +103,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
 
   useLayoutEffect(() => {
     if (titleRef && titleRef.current) {
-      const width = titleRef.current.clientWidth;
+      const width = titleRef.current.clientWidth > 294 ? 294 : titleRef.current.clientWidth;
       setLegendWith(width);
     }
   }, [titleRef, setLegendWith]);
@@ -121,8 +126,8 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div
-            className="flex flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500 p-4 "
-            style={{ minWidth: legendWidth + 130 }}
+            className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500 p-4"
+            style={{ minWidth: legendWidth }}
           >
             <div
               className="relative flex items-center justify-between space-x-4 text-secondary-500"
@@ -179,7 +184,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 </div>
               )}
               <div className="from-black-500 absolute bottom-0 left-0 right-0 h-9 bg-gradient-to-t via-transparent to-transparent" />
-              {/* <div className="absolute bottom-0 left-0 right-0 top-0 z-10 flex w-full flex-col shadow-md transition-transform duration-500 before:absolute before:left-0 before:top-0 before:h-6 before:w-full before:bg-gradient-to-b before:from-brand-900 before:via-white/100 before:to-white/0 after:absolute after:bottom-0 after:left-0 after:h-6 after:w-full after:bg-gradient-to-b after:from-white/0 after:to-white/100 after:content-['']" /> */}
             </ScrollArea>
             {!isGeostory && (
               <Tabs value={activeTab} onValueChange={handleTabChange} className="pt-2">
@@ -200,54 +204,22 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 <TabsContent value="timeSeries">
                   {range?.length > 0 && (
                     <TimeSeries
-                      dataType={'monitor'}
+                      dataType="monitor"
                       range={range}
                       layerId={layerId}
-                      autoPlay={true}
+                      autoPlay={false}
                       isActive={true}
                     />
                   )}
                 </TabsContent>
                 <TabsContent value="comparison">
-                  <div className="flex w-full flex-col items-start divide-y divide-dashed">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
-                        <div className="flex w-full space-x-2 whitespace-nowrap">
-                          <HiArrowLeftOnRectangle className="h-full w-4" />
-                          <span>Selected year: {baseDateLabel}</span>
-                        </div>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="start"
-                        alignOffset={0}
-                        sideOffset={0}
-                        className={DROPDOWN_CONTENT_STYLES}
-                      >
-                        <ScrollArea className="max-h-[200px] w-full">
-                          {range?.map((d) => (
-                            <DropdownMenuItem key={d.value} className={DROPDOWN_ITEM_STYLES}>
-                              <button
-                                type="button"
-                                value={d.value}
-                                onClick={handleBaseDate}
-                                className="rounded-sm px-2.5 py-1 hover:bg-secondary-900"
-                              >
-                                {d.label}
-                              </button>
-                            </DropdownMenuItem>
-                          ))}
-                        </ScrollArea>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                    {isGeostory ? (
-                      <div className={DROPDOWN_TRIGGER_STYLES}>{compareLayerData?.title}</div>
-                    ) : (
+                  <div className="flex w-full flex-col items-start">
+                    <div className=" divide-y divide-dashed">
                       <DropdownMenu>
                         <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
                           <div className="flex w-full space-x-2 whitespace-nowrap">
-                            <HiArrowLeftOnRectangle className="h-full w-4 rotate-180" />
-
-                            <span>Selected year: {CompareDateLabel}</span>
+                            <HiArrowLeftOnRectangle className="h-full w-4" />
+                            <span>Selected year: {baseDateLabel}</span>
                           </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
@@ -262,7 +234,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                                 <button
                                   type="button"
                                   value={d.value}
-                                  onClick={handleCompareDate}
+                                  onClick={handleBaseDate}
                                   className="rounded-sm px-2.5 py-1 hover:bg-secondary-900"
                                 >
                                   {d.label}
@@ -272,14 +244,48 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                           </ScrollArea>
                         </DropdownMenuContent>
                       </DropdownMenu>
-                    )}
+                      {isGeostory ? (
+                        <div className={DROPDOWN_TRIGGER_STYLES}>{compareLayerData?.title}</div>
+                      ) : (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
+                            <div className="flex w-full space-x-2 whitespace-nowrap">
+                              <HiArrowLeftOnRectangle className="h-full w-4 rotate-180" />
+
+                              <span>Selected year: {CompareDateLabel}</span>
+                            </div>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="start"
+                            alignOffset={0}
+                            sideOffset={0}
+                            className={DROPDOWN_CONTENT_STYLES}
+                          >
+                            <ScrollArea className="max-h-[200px] w-full">
+                              {range?.map((d) => (
+                                <DropdownMenuItem key={d.value} className={DROPDOWN_ITEM_STYLES}>
+                                  <button
+                                    type="button"
+                                    value={d.value}
+                                    onClick={handleCompareDate}
+                                    className="rounded-sm px-2.5 py-1 hover:bg-secondary-900"
+                                  >
+                                    {d.label}
+                                  </button>
+                                </DropdownMenuItem>
+                              ))}
+                            </ScrollArea>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </div>
                   </div>
                 </TabsContent>
               </Tabs>
             )}
             {isGeostory && range?.length > 0 && (
               <TimeSeries
-                dataType={'monitor'}
+                dataType="geostory"
                 range={range}
                 layerId={layerId}
                 autoPlay={true}
