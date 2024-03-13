@@ -68,14 +68,13 @@ export function useMonitorsAndGeostoriesPaginated(
 ) {
   const { theme, ...restParams } = params || { theme: undefined };
   const themeQuery =
-    theme && theme.length > 0
-      ? `?${theme.map((t) => `theme=${encodeURIComponent(t)}`).join('&')}`
-      : '';
+    theme && theme.length > 0 ? `${theme.map((t) => `${encodeURIComponent(t)}`).join(',')}` : '';
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostoriesPaginated>({
       method: 'GET',
-      url: `/monitors-and-geostories${themeQuery}`,
+      url: '/monitors-and-geostories',
       params: {
+        ...(theme && theme.length > 0 && { theme: themeQuery }),
         ...restParams,
         pagination: true,
       },
