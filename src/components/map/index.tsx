@@ -134,7 +134,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
           />
         )}
 
-        <RLayerTile url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}" />
+        <RLayerTile
+          zIndex={100}
+          url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+        />
 
         <Controls className="absolute bottom-3 left-[554px] z-50 flex flex-col">
           <RControl.RZoom zoomOutLabel="-" zoomInLabel="+" />
