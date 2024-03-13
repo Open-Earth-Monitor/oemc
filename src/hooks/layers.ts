@@ -26,15 +26,41 @@ export function useLayers(queryOptions?: UseQueryOptions<Layer[], Error, LayerPa
     }).then((response: AxiosResponse<Layer[]>) => response.data);
   return useQuery(['layers'], fetchLayer, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) =>
-      data.map((d) => ({
+    select: (data) => {
+      return data.map((d) => ({
         ...d,
         gs_style: JSON.parse(d?.gs_style || null) as LayerParsed['gs_style'],
         range: d?.range?.map((r, index) => ({
           value: r,
           label: d?.range_labels[index],
         })),
+      }));
+    },
+    ...queryOptions,
+  });
+}
+
+export function useLayer(
+  params: { layer_id: string },
+  queryOptions?: UseQueryOptions<Layer, Error, LayerParsed>
+) {
+  const fetchLayer = () =>
+    API.request({
+      method: 'GET',
+      url: '/layers',
+      params,
+      ...queryOptions,
+    }).then((response: AxiosResponse<Layer[]>) => response.data[0]);
+  return useQuery(['layer', params], fetchLayer, {
+    ...DEFAULT_QUERY_OPTIONS,
+    select: (data) => ({
+      ...data,
+      gs_style: JSON.parse(data?.gs_style || null) as LayerParsed['gs_style'],
+      range: data?.range?.map((r, index) => ({
+        value: r,
+        label: data?.range_labels[index],
       })),
+    }),
     ...queryOptions,
   });
 }
