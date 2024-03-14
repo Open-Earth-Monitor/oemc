@@ -13,3 +13,5 @@ export const useSyncCompareLayersSettings = () =>
   useQueryState('compareLayers', parseAsJson<LayerSettings[]>());
 export const useSyncCenterSettings = () => useQueryState('center', parseAsJson<Coordinate>());
 export const useSyncZoomSettings = () => useQueryState('zoom');
+export const useSyncTimeseriesOn = () =>
+  useQueryState('timeseries', parseAsJson<boolean>().withDefault(false));
