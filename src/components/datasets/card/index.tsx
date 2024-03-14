@@ -7,7 +7,7 @@ import cn from '@/lib/classnames';
 
 import type { LayerParsed } from '@/types/layers';
 
-import TimeSeries from '@/components/timeseries';
+import TimeSeries from '@/containers/timeseries';
 
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '../../../hooks/sync-query';
 
@@ -141,6 +141,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
 
       {range?.length > 0 && (
         <TimeSeries
+          type="sidebar"
           dataType={type}
           range={range}
           layerId={id}
