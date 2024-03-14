@@ -45,7 +45,7 @@ const TimeSeriesSidebar: FC<{
   const handleTogglePlay = useCallback(() => {
     void setPlaying(!isPlaying);
   }, [isPlaying, setPlaying]);
-  console.log(isPlaying, isActive);
+
   return (
     <div className="space-y-4 border-t-[0.5px] border-secondary-900 pt-2.5">
       <div className="flex justify-between">
