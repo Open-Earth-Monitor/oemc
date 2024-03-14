@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { FC } from 'react';
 
 import { HiChevronDown } from 'react-icons/hi';
@@ -48,7 +48,6 @@ const TimeSeriesLegend: FC<{
 
   return (
     <div className="space-y-4 border-secondary-900 pt-2.5">
-      <h1>{isPlaying.toString()}</h1>
       <div className="flex justify-between">
         <div className="flex items-center space-x-2">
           <span className="text-[10px]">DATE:</span>
