@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, createRef, useLayoutEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback, createRef, useLayoutEffect } from 'react';
 
 import { HiCalendarDays, HiArrowLeftOnRectangle } from 'react-icons/hi2';
 import { LuGitCompare } from 'react-icons/lu';
@@ -6,7 +6,8 @@ import { LuGitCompare } from 'react-icons/lu';
 import { useLayerParsedSource, useLayer } from '@/hooks/layers';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
-import TimeSeries from '@/components/map/legend/timeseries';
+import TimeSeries from '@/containers/timeseries';
+
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   DropdownMenu,
@@ -149,7 +150,9 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
             </div>
             <ScrollArea className="max-h-[216px]">
               {layerData?.gs_style && layerData?.gs_style.length > 8 && (
-                <div className="flex flex-col space-y-1">
+                <div className="flex flex-col space-y-1 p-2">
+                  <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
+
                   {layerData?.gs_style.map(({ color, label }) => (
                     <div
                       key={label}
@@ -165,6 +168,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                       <div className="text-left text-xs opacity-50">{label}</div>
                     </div>
                   ))}
+                  <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />
                 </div>
               )}
 
@@ -183,7 +187,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                   ))}
                 </div>
               )}
-              <div className="from-black-500 absolute bottom-0 left-0 right-0 h-9 bg-gradient-to-t via-transparent to-transparent" />
             </ScrollArea>
             {!isGeostory && (
               <Tabs value={activeTab} onValueChange={handleTabChange} className="pt-2">
@@ -204,11 +207,13 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 <TabsContent value="timeSeries">
                   {range?.length > 0 && (
                     <TimeSeries
+                      type="legend"
                       dataType="monitor"
                       range={range}
                       layerId={layerId}
                       autoPlay={false}
                       isActive={true}
+                      defaultActive={false}
                     />
                   )}
                 </TabsContent>
@@ -285,11 +290,13 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
             )}
             {isGeostory && range?.length > 0 && (
               <TimeSeries
+                type="legend"
                 dataType="geostory"
                 range={range}
                 layerId={layerId}
                 autoPlay={true}
                 isActive={true}
+                defaultActive={true}
               />
             )}
           </div>
