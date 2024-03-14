@@ -145,7 +145,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
           dataType={type}
           range={range}
           layerId={id}
-          autoPlay={defaultActive}
+          autoPlay={type === 'monitor' ? false : defaultActive}
           isActive={isActive}
         />
       )}

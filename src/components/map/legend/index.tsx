@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useCallback, createRef, useLayoutEffect } from 'react';
+import { useState, useEffect, useCallback, createRef, useLayoutEffect } from 'react';
 
 import { HiCalendarDays, HiArrowLeftOnRectangle } from 'react-icons/hi2';
 import { LuGitCompare } from 'react-icons/lu';
@@ -53,14 +53,15 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
   const layerId = layers?.[0]?.id;
   const opacity = layers?.[0]?.opacity;
   const compareDate = compareLayers?.[0]?.date;
-  const compareLayerData = useLayer(
+  const { data: compareLayerData } = useLayer(
     { layer_id: compareLayers?.[0]?.id },
     { enabled: !!compareLayers }
   );
 
   const [activeTab, setActiveTab] = useState<ActiveTab>(
-    !!compareDate ? 'comparison' : 'timeSeries'
+    !!compareDate || isGeostory ? 'comparison' : 'timeSeries'
   );
+
   const { data: layerData } = useLayer({
     layer_id: layerId,
   });
@@ -77,7 +78,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
   );
 
   useEffect(() => {
-    if (activeTab === 'comparison' && !compareDate) {
+    if (activeTab === 'comparison' && !compareDate && !isGeostory) {
       setActiveTab('timeSeries');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,11 +86,19 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
 
   // Enable compare legend if compare layer is in the URL
   useEffect(() => {
-    if (compareLayers) {
+    if (compareLayers || isGeostory) {
       setActiveTab('comparison');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (activeTab === 'comparison' && !compareLayerData) {
+      void setCompareLayers([
+        { id: layerId, opacity, date: compareDate || range[range.length - 1]?.value },
+      ]);
+    }
+  }, [setCompareLayers, compareLayerData, opacity, compareDate, range, layerId, activeTab]);
 
   const handleCompareDate = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -188,6 +197,18 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 </div>
               )}
             </ScrollArea>
+            {isGeostory && range?.length > 0 && (
+              <TimeSeries
+                type="legend"
+                dataType="monitor"
+                range={range}
+                layerId={layerId}
+                autoPlay={false}
+                isActive={true}
+                defaultActive={false}
+              />
+            )}
+
             {!isGeostory && (
               <Tabs value={activeTab} onValueChange={handleTabChange} className="pt-2">
                 <TabsList>
@@ -288,16 +309,90 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 </TabsContent>
               </Tabs>
             )}
-            {isGeostory && range?.length > 0 && (
-              <TimeSeries
-                type="legend"
-                dataType="geostory"
-                range={range}
-                layerId={layerId}
-                autoPlay={true}
-                isActive={true}
-                defaultActive={true}
-              />
+            {isGeostory && (
+              <div
+                className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
+                style={{ minWidth: legendWidth }}
+              >
+                <div
+                  className="relative flex items-center justify-between space-x-4 text-secondary-500"
+                  data-testid="map-legend-item"
+                >
+                  <div
+                    data-testid="map-legend-item-title"
+                    className="text-xs font-bold"
+                    ref={titleRef}
+                  >
+                    {title}
+                  </div>
+                  <div
+                    className="flex space-x-2 divide-x divide-secondary-800"
+                    data-testid="map-legend-item-toolbar"
+                  >
+                    <div className="flex space-x-2">
+                      <OpacitySetting />
+                      {!isGeostory && <LayerVisibility />}
+                    </div>
+                    {!isGeostory && <RemoveLayer className="pl-2" />}
+                  </div>
+                </div>
+
+                <ScrollArea className="max-h-[216px]">
+                  {compareLayerData?.gs_style && compareLayerData?.gs_style.length > 8 && (
+                    <div className="flex flex-col space-y-1 p-2">
+                      <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
+
+                      {compareLayerData?.gs_style.map(({ color, label }) => (
+                        <div
+                          key={label}
+                          className="flex items-baseline space-x-2"
+                          data-testid="dataset-legend-item"
+                        >
+                          <div
+                            className="h-2 w-2"
+                            style={{
+                              backgroundColor: color,
+                            }}
+                          />
+                          <div className="text-left text-xs opacity-50">{label}</div>
+                        </div>
+                      ))}
+                      <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />
+                    </div>
+                  )}
+
+                  {compareLayerData?.gs_style && compareLayerData?.gs_style.length <= 8 && (
+                    <div className="flex">
+                      {compareLayerData?.gs_style.map(({ color, label }) => (
+                        <div
+                          key={label}
+                          className="grow space-y-2"
+                          data-testid="dataset-legend-item"
+                        >
+                          <div
+                            className="h-2 w-full"
+                            style={{
+                              backgroundColor: color,
+                            }}
+                          />
+                          <div className="text-center text-xs opacity-50">{label}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </ScrollArea>
+                {/* {range?.length > 0 && (
+                  <TimeSeries
+                    type="legend"
+                    dataType="geostory"
+                    range={range}
+                    layerId={layerId}
+                    autoPlay={true}
+                    isActive={true}
+                    defaultActive={true}
+                  />
+                )} */}
+              </div>
             )}
           </div>
         </CollapsibleContent>
