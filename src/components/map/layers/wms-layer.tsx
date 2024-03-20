@@ -1,4 +1,4 @@
-import { RLayerWMS } from 'rlayers';
+import { RLayerTileWMS } from 'rlayers';
 
 import { useLayerParsedSource } from '@/hooks/layers';
 import { useSyncLayersSettings } from '@/hooks/sync-query';
@@ -18,7 +18,7 @@ export const RLayerWMSComponent = () => {
 
   const { gs_base_wms, gs_name, range } = data || {};
   return (
-    <RLayerWMS
+    <RLayerTileWMS
       properties={{ label: gs_name, opacity: layerOpacity, date, range }}
       url={gs_base_wms}
       params={{
