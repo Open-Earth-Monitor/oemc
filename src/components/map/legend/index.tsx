@@ -6,8 +6,7 @@ import { LuGitCompare } from 'react-icons/lu';
 import { useLayerParsedSource, useLayer } from '@/hooks/layers';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
-import TimeSeries from '@/containers/timeseries';
-
+import TimeSeries from '@/components/timeseries';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   DropdownMenu,
@@ -41,7 +40,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
   const handleTabChange = (value: ActiveTab) => {
     if (value === 'comparison') {
       void setCompareLayers([
-        { id: layerId, opacity, date: compareDate || range[range.length - 1]?.value },
+        { id: layerId, opacity, date: compareDate || range[range?.length - 1].value },
       ]);
     }
     if (value === 'timeSeries') {
@@ -77,6 +76,8 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     [layerId, opacity, setLayers]
   );
 
+  const lastDateValue = range && range?.[range?.length - 1]?.value;
+
   useEffect(() => {
     if (activeTab === 'comparison' && !compareDate && !isGeostory) {
       setActiveTab('timeSeries');
@@ -95,10 +96,14 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
   useEffect(() => {
     if (activeTab === 'comparison' && !compareLayerData) {
       void setCompareLayers([
-        { id: layerId, opacity, date: compareDate || range[range.length - 1]?.value },
+        {
+          id: layerId,
+          opacity,
+          date: compareDate || lastDateValue,
+        },
       ]);
     }
-  }, [setCompareLayers, compareLayerData, opacity, compareDate, range, layerId, activeTab]);
+  }, [setCompareLayers, compareLayerData, opacity, compareDate, lastDateValue, layerId, activeTab]);
 
   const handleCompareDate = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -125,7 +130,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
       className="absolute bottom-3 right-3 z-[55] max-w-[294px] space-y-1 font-inter text-xs"
       data-testid="map-legend"
     >
-      <Collapsible>
+      <Collapsible defaultOpen>
         <CollapsibleTrigger>
           <div
             data-testid="map-legend-toggle-button"
@@ -199,13 +204,11 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
             </ScrollArea>
             {isGeostory && range?.length > 0 && (
               <TimeSeries
-                type="legend"
-                dataType="monitor"
                 range={range}
                 layerId={layerId}
-                autoPlay={false}
+                autoPlay={true}
                 isActive={true}
-                defaultActive={false}
+                defaultActive={true}
               />
             )}
 
@@ -228,8 +231,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 <TabsContent value="timeSeries">
                   {range?.length > 0 && (
                     <TimeSeries
-                      type="legend"
-                      dataType="monitor"
                       range={range}
                       layerId={layerId}
                       autoPlay={false}
@@ -384,7 +385,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 {/* {range?.length > 0 && (
                   <TimeSeries
                     type="legend"
-                    dataType="geostory"
                     range={range}
                     layerId={layerId}
                     autoPlay={true}
