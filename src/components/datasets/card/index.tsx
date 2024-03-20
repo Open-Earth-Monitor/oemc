@@ -7,8 +7,6 @@ import cn from '@/lib/classnames';
 
 import type { LayerParsed } from '@/types/layers';
 
-import TimeSeries from '@/containers/timeseries';
-
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '../../../hooks/sync-query';
 
 type DatasetCardProps = LayerParsed & {
@@ -23,10 +21,8 @@ const DatasetCard: FC<DatasetCardProps> = ({
   title,
   download_url,
   description,
-  gs_style: legendStyles,
   range,
   defaultActive = false,
-  type = 'monitor',
 }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
@@ -56,7 +52,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
           {
             id,
             opacity: layers?.[0]?.opacity || 1,
-            date: range[range.length - 1].value,
+            date: range[range?.length - 1].value,
           },
         ]);
       }
@@ -102,53 +98,6 @@ const DatasetCard: FC<DatasetCardProps> = ({
       </div>
 
       <p data-testid="dataset-description">{description}</p>
-
-      {isActive && legendStyles && legendStyles.length > 8 && (
-        <div className="columns-2 gap-2 space-y-1">
-          {legendStyles.map(({ color, label }) => (
-            <div
-              key={label}
-              className="flex items-baseline space-x-2"
-              data-testid="dataset-legend-item"
-            >
-              <div
-                className="h-2 w-2"
-                style={{
-                  backgroundColor: color,
-                }}
-              />
-              <div className="text-left text-xs opacity-50">{label}</div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {isActive && legendStyles && legendStyles.length <= 8 && (
-        <div className="flex">
-          {legendStyles.map(({ color, label }) => (
-            <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
-              <div
-                className="h-2 w-full"
-                style={{
-                  backgroundColor: color,
-                }}
-              />
-              <div className="text-center text-xs opacity-50">{label}</div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {range?.length > 0 && (
-        <TimeSeries
-          type="sidebar"
-          dataType={type}
-          range={range}
-          layerId={id}
-          autoPlay={type === 'monitor' ? false : defaultActive}
-          isActive={isActive}
-        />
-      )}
 
       <button
         data-testid="dataset-layer-toggle-button"
