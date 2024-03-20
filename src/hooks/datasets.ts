@@ -67,8 +67,7 @@ export function useMonitorsAndGeostoriesPaginated(
   >
 ) {
   const { theme, ...restParams } = params || { theme: undefined };
-  const themeQuery =
-    theme && theme.length > 0 ? `${theme.map((t) => `${encodeURIComponent(t)}`).join(',')}` : '';
+  const themeQuery = theme && theme.length > 0 ? `${theme.join(',')}` : '';
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostoriesPaginated>({
       method: 'GET',
