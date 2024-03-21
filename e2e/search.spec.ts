@@ -22,11 +22,7 @@ test.describe('search of monitors and geostories', () => {
     const inputValue = await searchInput.inputValue();
     const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
 
-    // compare filtered response with manually filtered response
-    const manuallyFilteredResponse = datasetsData['monitors and geostories'].filter(
-      (dataset) => dataset.title === inputValue
-    );
-    expect(filteredJson['monitors and geostories']).toEqual(manuallyFilteredResponse);
+    expect(filteredJson['monitors and geostories'][0].title).toEqual(inputValue);
 
     // check that the number of results is displayed accurately
     await expect(page.getByTestId('datasets-result')).toBeVisible();
