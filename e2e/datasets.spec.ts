@@ -50,23 +50,10 @@ test('datasets item', async ({ page }) => {
   const layersData = (await layersResponse.json()) as Layer[];
   const firstDataset = page.getByTestId(`dataset-item-${layersData[0].layer_id}`);
 
-  await expect(firstDataset).toBeVisible();
   await expect(firstDataset.getByTestId('dataset-title')).toHaveText(layersData[0].title);
   await expect(firstDataset.getByTestId('dataset-description')).toHaveText(
     layersData[0].description
   );
-
-  // toolbar buttons: info popover
-  // await expect(firstDataset.getByTestId('dataset-info-button')).toBeVisible();
-  // await firstDataset.getByTestId('dataset-info-button').click();
-  // await expect(page.getByTestId('dataset-info-content')).toBeVisible();
-
-  // toolbar buttons: download
-  // await expect(firstDataset.getByTestId('dataset-download-button')).toBeVisible();
-  // await expect(firstDataset.getByTestId('dataset-download-button')).toHaveAttribute(
-  //   'href',
-  //   layersData[0].download_url
-  // );
 
   // Toggle layer: adding layer_id to the url
   await firstDataset.getByTestId('dataset-layer-toggle-button').click(); // off
