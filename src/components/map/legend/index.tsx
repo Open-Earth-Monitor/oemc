@@ -221,7 +221,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                       <span>Timeline</span>
                     </div>
                   </TabsTrigger>
-                  <TabsTrigger value="comparison">
+                  <TabsTrigger value="comparison" disabled={!range || range.length < 1}>
                     <div className="flex items-center space-x-2">
                       <LuGitCompare className="h-[19px] w-[19px]" />
                       <span>Comparison</span>
