@@ -3,7 +3,7 @@
 import React, { useMemo, FC, useCallback } from 'react';
 
 import { MapBrowserEvent } from 'ol';
-import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
+import { RLayerTileWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
 import { useLayerParsedSource } from '@/hooks/layers';
@@ -95,7 +95,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         />
 
         {layerId && (
-          <RLayerWMS
+          <RLayerTileWMS
             properties={{ label: gs_name, opacity, date, range }}
             url={gs_base_wms}
             params={{
@@ -115,7 +115,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         )}
 
         {isCompareLayerActive && (
-          <RLayerWMS
+          <RLayerTileWMS
             properties={{ label: gs_name, opacity, date: compareDate, range }}
             url={gs_base_wms}
             params={{
