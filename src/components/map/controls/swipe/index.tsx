@@ -2,14 +2,17 @@ import { useCallback, useEffect, useState } from 'react';
 
 import type BaseEvent from 'ol/events/Event';
 import Swipe from 'ol-ext/control/Swipe';
-import { useOL } from 'rlayers';
+import { RLayerWMS, useOL } from 'rlayers';
 
 import 'ol-ext/dist/ol-ext.css';
 import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
 
 const swipeControl = new Swipe();
 
-const SwipeControl = () => {
+const SwipeControl: React.FC<{
+  layerLeft: React.RefObject<RLayerWMS>;
+  layerRight: React.RefObject<RLayerWMS>;
+}> = ({ layerLeft, layerRight }) => {
   const [position, setPosition] = useState<number>(0.5);
   const { map } = useOL();
   const [layersUrl] = useSyncLayersSettings();
@@ -19,10 +22,9 @@ const SwipeControl = () => {
   }, []);
 
   useEffect(() => {
-    const layers = map.getAllLayers();
-    if (layers.length && layers[1] && layers[2]) {
+    if (layerLeft && layerRight) {
       swipeControl.setProperties({ position });
-      swipeControl.addLayer([layers[2]], true);
+      swipeControl.addLayer([layerRight?.current?.ol], true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layersUrl, layersUrlCompare]);
