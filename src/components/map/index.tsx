@@ -29,6 +29,8 @@ import type { CustomMapProps } from './types';
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeostory = false }) => {
   const mapRef = useRef(null);
+  const layerRightRef = useRef(null);
+  const layerLeftRef = useRef(null);
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
@@ -117,6 +119,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
 
         {layerId && (
           <RLayerWMS
+            ref={layerLeftRef}
             properties={{ label: gs_name, opacity, date, range }}
             url={gs_base_wms}
             params={{
@@ -137,6 +140,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
 
         {isCompareLayerActive && (
           <RLayerWMS
+            ref={layerRightRef}
             properties={{ label: gs_name, opacity, date: compareDate, range }}
             url={gs_base_wms}
             params={{
@@ -164,7 +168,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
           <RControl.RZoom zoomOutLabel="-" zoomInLabel="+" />
           <BookmarkControl />
           <ShareControl />
-          {isCompareLayerActive && <SwipeControl />}
+          {isCompareLayerActive && (
+            <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
+          )}
         </Controls>
         {isLayerActive && <Legend isGeostory={isGeostory} />}
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
