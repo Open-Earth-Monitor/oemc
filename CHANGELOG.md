@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BaseMap boundaries [OEMC-185](https://vizzuality.atlassian.net/browse/OEMC-185)
 - BaseMap labels [OEMC-185](https://vizzuality.atlassian.net/browse/OEMC-185)
 - On the geostory page, center the map given bounds from the API [OEMC-190](https://vizzuality.atlassian.net/browse/OEMC-190)
+- Added interactivity on the map [OEMC-199](https://vizzuality.atlassian.net/browse/OEMC-199)
 
 ## v1.0.0-alpha.3
 
