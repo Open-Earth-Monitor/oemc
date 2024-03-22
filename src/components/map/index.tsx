@@ -1,10 +1,14 @@
 'use client';
 
-import React, { useMemo, FC, useCallback, useEffect, useRef } from 'react';
+import React, { useMemo, FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import { useParams } from 'next/navigation';
 
-import { MapBrowserEvent } from 'ol';
+import axios from 'axios';
+import { format } from 'd3-format';
+import { XIcon } from 'lucide-react';
+import type { MapBrowserEvent } from 'ol';
+import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
@@ -27,10 +31,14 @@ import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import type { CustomMapProps } from './types';
 
+const numberFormat = format(',.2f');
+
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeostory = false }) => {
   const mapRef = useRef(null);
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
+  const [tooltipPosition, setTooltipPosition] = useState<[number, number]>(null);
+  const [tooltipValue, setTooltipValue] = useState<number>(null);
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
@@ -73,6 +81,16 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   );
   const { gs_base_wms, gs_name, range } = data || {};
 
+  /* Interactivity */
+  const wmsSource = useMemo(() => {
+    return new TileWMS({
+      url: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
+      params: { LAYERS: gs_name, TILED: true },
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous',
+    });
+  }, [gs_name]);
+
   /**
    * Update the URL when the user stops moving the map
    */
@@ -88,10 +106,29 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
     [setCenter, setZoom]
   );
 
+  const handleSingleClick = useCallback(
+    (e: MapBrowserEvent<UIEvent>) => {
+      setTooltipPosition([e.pixel[0], e.pixel[1]]);
+      const resolution = mapRef?.current?.ol.getView().getResolution();
+      const url = wmsSource.getFeatureInfoUrl(e.coordinate, resolution, 'EPSG:3857', {
+        INFO_FORMAT: 'application/json',
+      });
+      axios
+        .get<{ features: { properties: Record<string, number> }[] }>(url)
+        .then(({ data }) => {
+          const value = Object.values(data.features[0].properties)?.[0];
+          setTooltipValue(value);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    [wmsSource]
+  );
+
   useEffect(() => {
     if (geostory && !isLoadingGeostory && geostory?.geostory_bbox) {
-      // TO-DO: Fix the type of extent, remove once the API is fixed
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      // TO-DO: remove split once the API is fixed
       mapRef?.current?.ol
         .getView()
         .fit((geostory?.geostory_bbox as unknown as string).split(',').map(Number));
@@ -109,6 +146,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         initial={initialViewport}
         view={[initialViewport, null] as [RView, (view: RView) => void]}
         onMoveEnd={handleMapMove}
+        onSingleClick={handleSingleClick}
         noDefaultControls
       >
         <RLayerTile
@@ -174,6 +212,24 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         </Controls>
         {isLayerActive && <Legend isGeostory={isGeostory} />}
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
+
+        {/* Interactivity */}
+        {tooltipPosition && (
+          <div
+            className="max-w-32 text-2xs absolute z-10 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md"
+            style={{
+              left: `${tooltipPosition[0]}px`,
+              top: `${tooltipPosition[1] - 10}px`,
+            }}
+          >
+            <button className="absolute right-1 top-1" onClick={() => setTooltipPosition(null)}>
+              <XIcon size={10} className="text-brand-500" />
+            </button>
+            <div className="font-satoshi font-bold text-brand-500">
+              {numberFormat(tooltipValue)}
+            </div>
+          </div>
+        )}
       </RMap>
     </>
   );
