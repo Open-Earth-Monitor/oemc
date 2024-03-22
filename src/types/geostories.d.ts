@@ -16,6 +16,7 @@ export type Geostory = {
   notebooks_url: string;
   publications: { title: string; url: string }[];
   use_case_link: { title: string; url: string }[];
+  geostory_bbox: number[] | null;
 };
 
 export type GeostoryParsed = Geostory & {

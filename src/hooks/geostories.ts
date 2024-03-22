@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
-import type { Geostory } from '@/types/geostories';
+import type { Geostory, GeostoryParsed } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
 
 import API from 'services/api';
@@ -28,7 +28,6 @@ export function useGeostory(params: UseParams, queryOptions?: UseQueryOptions<Ge
     }).then((response: AxiosResponse<Geostory[]>) => response.data[0]);
   return useQuery(['geostories', params], fetchGeostory, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => data,
     ...queryOptions,
   });
 }
@@ -68,7 +67,6 @@ export function useGeostories(queryOptions?: UseQueryOptions<Geostory[], Error>)
     }).then((response: AxiosResponse<Geostory[]>) => response.data);
   return useQuery(['geostories'], fetchGeostories, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => data,
     ...queryOptions,
   });
 }

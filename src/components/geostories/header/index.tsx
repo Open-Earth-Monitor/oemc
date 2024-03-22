@@ -1,13 +1,13 @@
 import { FC } from 'react';
 
-import type { Geostory } from '@/types/geostories';
+import type { GeostoryParsed } from '@/types/geostories';
 
 import { THEMES_COLORS } from '@/constants/themes';
 
 import GeostoryDialog from '@/components/geostories/dialog';
 import { TAG_STYLE } from '@/styles/constants';
 
-const GeostoryHeader: FC<Geostory & { color: string }> = (data) => (
+const GeostoryHeader: FC<GeostoryParsed> = (data) => (
   <div className="space-y-6 p-6">
     <div className={TAG_STYLE} style={{ color: THEMES_COLORS[data.theme].base }}>
       geostory
