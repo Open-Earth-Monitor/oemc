@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, FC, useCallback, useEffect } from 'react';
+import React, { useMemo, FC, useCallback, useEffect, useRef } from 'react';
 
 import { useParams } from 'next/navigation';
 
@@ -28,6 +28,7 @@ import Legend from './legend';
 import type { CustomMapProps } from './types';
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeostory = false }) => {
+  const mapRef = useRef(null);
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
@@ -87,22 +88,24 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
 
   useEffect(() => {
     if (geostory && !isLoadingGeostory) {
-      document.title = geostory.title;
+      // TO-DO: Fix the type of extent, remove once the API is fixed
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      mapRef?.current?.ol
+        .getView()
+        .fit((geostory?.geostory_bbox as unknown as string).split(',').map(Number));
     }
   }, [geostory, isLoadingGeostory]);
 
   return (
     <>
       <RMap
+        ref={mapRef}
         projection="EPSG:3857"
         width="100%"
         height="100%"
         className="relative"
         initial={initialViewport}
         view={[initialViewport, null] as [RView, (view: RView) => void]}
-        // TO-DO: Fix the type of extent, remove once the API is fixed
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-type-assertion
-        extent={(geostory?.geostory_bbox as unknown as string)?.split(',').map(Number) as number[]}
         onMoveEnd={handleMapMove}
         noDefaultControls
       >
