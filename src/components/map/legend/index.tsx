@@ -87,14 +87,14 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
 
   // Enable compare legend if compare layer is in the URL
   useEffect(() => {
-    if (compareLayers || isGeostory) {
+    if (compareLayers) {
       setActiveTab('comparison');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (activeTab === 'comparison' && !compareLayerData) {
+    if (activeTab === 'comparison' && !compareLayerData && !isGeostory) {
       void setCompareLayers([
         {
           id: layerId,
@@ -103,7 +103,16 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
         },
       ]);
     }
-  }, [setCompareLayers, compareLayerData, opacity, compareDate, lastDateValue, layerId, activeTab]);
+  }, [
+    setCompareLayers,
+    compareLayerData,
+    opacity,
+    compareDate,
+    lastDateValue,
+    layerId,
+    activeTab,
+    isGeostory,
+  ]);
 
   const handleCompareDate = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -310,7 +319,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 </TabsContent>
               </Tabs>
             )}
-            {isGeostory && (
+            {isGeostory && compareLayers && (
               <div
                 className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
                 style={{ minWidth: legendWidth }}
