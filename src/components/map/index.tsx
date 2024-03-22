@@ -87,7 +87,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   );
 
   useEffect(() => {
-    if (geostory && !isLoadingGeostory) {
+    if (geostory && !isLoadingGeostory && geostory?.geostory_bbox) {
       // TO-DO: Fix the type of extent, remove once the API is fixed
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       mapRef?.current?.ol
