@@ -1,11 +1,14 @@
 'use client';
 
-import React, { useMemo, FC, useCallback } from 'react';
+import React, { useMemo, FC, useCallback, useEffect } from 'react';
+
+import { useParams } from 'next/navigation';
 
 import { MapBrowserEvent } from 'ol';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
+import { useGeostory } from '@/hooks/geostories';
 import { useLayerParsedSource } from '@/hooks/layers';
 import {
   useSyncLayersSettings,
@@ -28,6 +31,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
+  const { geostory_id } = useParams();
+  const { data: geostory, isLoading: isLoadingGeostory } = useGeostory(
+    { geostory_id: geostory_id as string },
+    { enabled: isGeostory }
+  );
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -77,14 +85,24 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
     [setCenter, setZoom]
   );
 
+  useEffect(() => {
+    if (geostory && !isLoadingGeostory) {
+      document.title = geostory.title;
+    }
+  }, [geostory, isLoadingGeostory]);
+
   return (
     <>
       <RMap
+        projection="EPSG:3857"
         width="100%"
         height="100%"
         className="relative"
         initial={initialViewport}
         view={[initialViewport, null] as [RView, (view: RView) => void]}
+        // TO-DO: Fix the type of extent, remove once the API is fixed
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-type-assertion
+        extent={(geostory?.geostory_bbox as unknown as string)?.split(',').map(Number) as number[]}
         onMoveEnd={handleMapMove}
         noDefaultControls
       >

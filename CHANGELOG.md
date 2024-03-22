@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added a default env variable for the API_URL
-- BaseMap boundaries [OEMC-185](https://vizzuality.atlassian.net/browse/OEMC-185?atlOrigin=eyJpIjoiODg1NTVjZTg1YmI2NDg4Mzg3NWFlYjg0NDgxNjRmNDAiLCJwIjoiaiJ9)
-- BaseMap labels [OEMC-185](https://vizzuality.atlassian.net/browse/OEMC-185?atlOrigin=eyJpIjoiODg1NTVjZTg1YmI2NDg4Mzg3NWFlYjg0NDgxNjRmNDAiLCJwIjoiaiJ9)
+- BaseMap boundaries [OEMC-185](https://vizzuality.atlassian.net/browse/OEMC-185)
+- BaseMap labels [OEMC-185](https://vizzuality.atlassian.net/browse/OEMC-185)
+- On the geostory page, center the map given bounds from the API [OEMC-190](https://vizzuality.atlassian.net/browse/OEMC-190)
 
 ## v1.0.0-alpha.3
 
@@ -22,9 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Removed info button at datasets level [OEMC-69](https://vizzuality.atlassian.net/browse/OEMC-69)
 - Geostory info moved from sidebar to geostory dialog [OEMC-163](https://vizzuality.atlassian.net/browse/OEMC-163)
-- Ability to filter by multiple categories (themes) in Hub page [OEMC-165](https://vizzuality.atlassian.net/browse/OEMC-165?atlOrigin=eyJpIjoiNWE1ZmY3MWU3ZGJlNGU0ZmFjZGU3NGUyM2E3ZTBkMjMiLCJwIjoiaiJ9)
-- Legend should be visible all time, legend redesign [OEMC-186](https://vizzuality.atlassian.net/browse/OEMC-186?atlOrigin=eyJpIjoiZTBiYzA3MTA5MWE2NGVlM2EzZjBiOTIzZjYwZjlhMDIiLCJwIjoiaiJ9)
-- Autoplay in monitors removed [OEMC-201](https://vizzuality.atlassian.net/browse/OEMC-201?atlOrigin=eyJpIjoiYjU1M2IwZmY5YWQxNDI4MmIzNjY4MTgwYTIxOThhZjQiLCJwIjoiaiJ9)
+- Ability to filter by multiple categories (themes) in Hub page [OEMC-165](https://vizzuality.atlassian.net/browse/OEMC-165)
+- Legend should be visible all time, legend redesign [OEMC-186](https://vizzuality.atlassian.net/browse/OEMC-186)
+- Autoplay in monitors removed [OEMC-201](https://vizzuality.atlassian.net/browse/OEMC-201)
 
 ### Fixed
 - Wrong link in geostory card on the landing page
@@ -45,14 +46,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Filtering monitors with layers only in map
 - Temporally add monitors with no categories
 - Unifying link styles in landing [OEMC-144](https://vizzuality.atlassian.net/browse/OEMC-144)
-- Display of monitors and geostories in landing page [OEMC-25](https://vizzuality.atlassian.net/browse/OEMC-25?atlOrigin=eyJpIjoiNDZiOTM0YjkzN2NlNDJhNmE2OWJiODYxZTlmYzcwNjkiLCJwIjoiaiJ9)
-- Search monitors and geostories by title [OEMC-94](https://vizzuality.atlassian.net/browse/OEMC-94?atlOrigin=eyJpIjoiMGVlYmJhNmM5ODU4NDRiNWEzNTIyNWRjODdjNDg4MWUiLCJwIjoiaiJ9)
-- 404 - error management [OEMC-81](https://vizzuality.atlassian.net/browse/OEMC-81?atlOrigin=eyJpIjoiNWZkNTYwMjVkZGVjNDAwZGE2YWI3ZDgwMzgzOTRjMjEiLCJwIjoiaiJ9)
-- Sorting items in landing page [OEMC-24](https://vizzuality.atlassian.net/browse/OEMC-24?atlOrigin=eyJpIjoiZTlmNGE1Njk3MTRlNDNjMmExY2I3YmE1ZjUzMTBkYjIiLCJwIjoiaiJ9)
-- Alpha version tag added to site [OEMC-127](https://vizzuality.atlassian.net/browse/OEMC-127?atlOrigin=eyJpIjoiYzBiNGI0NDcwOGUzNGYzMzgzM2I1NWVhMWE0NjFkZjciLCJwIjoiaiJ9)
-- Functionality for returning from a geostory to its associated monitor [OEMC-121](https://vizzuality.atlassian.net/browse/OEMC-121?atlOrigin=eyJpIjoiNWY1OTkwZDNlMWNiNDA4M2JiOWM0NDNiODlkMDBlNmUiLCJwIjoiaiJ9)
-- Links to social media (twitter, github and linkedin), link to "contact us" and "privacy policy" [OEMC-108](https://vizzuality.atlassian.net/browse/OEMC-108?atlOrigin=eyJpIjoiMTFhMjI4MmE1NjYzNDNiNmJlNWFlOGJjYWI4MjdhYjQiLCJwIjoiaiJ9)
-- Pagination in monitors and geostories hub [OEMC-20](https://vizzuality.atlassian.net/browse/OEMC-133?atlOrigin=eyJpIjoiMGFlYjg0NWM4Mzk3NDBjN2JhNjkzMzRhZmI4MTIyZDgiLCJwIjoiaiJ9)
+- Display of monitors and geostories in landing page [OEMC-25](https://vizzuality.atlassian.net/browse/OEMC-25)
+- Search monitors and geostories by title [OEMC-94](https://vizzuality.atlassian.net/browse/OEMC-94)
+- 404 - error management [OEMC-81](https://vizzuality.atlassian.net/browse/OEMC-81)
+- Sorting items in landing page [OEMC-24](https://vizzuality.atlassian.net/browse/OEMC-24)
+- Alpha version tag added to site [OEMC-127](https://vizzuality.atlassian.net/browse/OEMC-127)
+- Functionality for returning from a geostory to its associated monitor [OEMC-121](https://vizzuality.atlassian.net/browse/OEMC-121)
+- Links to social media (twitter, github and linkedin), link to "contact us" and "privacy policy" [OEMC-108](https://vizzuality.atlassian.net/browse/OEMC-108)
+- Pagination in monitors and geostories hub [OEMC-20](https://vizzuality.atlassian.net/browse/OEMC-133)
 - Show monitors under development [OEMC-149](https://vizzuality.atlassian.net/browse/OEMC-149)
 
 ### Changed
@@ -62,23 +63,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Satoshi Font, main navigation, and test for navigation functionality [OEMC-18](https://vizzuality.atlassian.net/browse/OEMC-18)
-- Map set up and layers display [OEMC-23](https://vizzuality.atlassian.net/jira/software/c/projects/OEMC/boards/95?selectedIssue=OEMC-23)
-- Map controls to move around the map (zoom in, out, fit bounds)[OEMC-44](https://vizzuality.atlassian.net/browse/OEMC-44?atlOrigin=eyJpIjoiMGYzNzk5OWQwNmExNDRkNjllOWE5NWMxNjc4MmIwMmQiLCJwIjoiaiJ9)
-- Toggle layers displayed on the map [OEMC-58](https://vizzuality.atlassian.net/browse/OEMC-58?atlOrigin=eyJpIjoiMTgyZDgyNzgzNzBhNGMxODljZThjYTk0YTQ3N2VkYzciLCJwIjoiaiJ9)
-- Datasets display on the map [OECM-62](https://vizzuality.atlassian.net/browse/OEMC-62?atlOrigin=eyJpIjoiZThhZDBmZTQyYTJiNDM1ZmFmZWI4MzZhNGNjYjkzMWMiLCJwIjoiaiJ9)
-- Dataset info displayed on the sidebar [OEMC-21](https://vizzuality.atlassian.net/browse/OEMC-21?atlOrigin=eyJpIjoiZmM3NzkwNjlhMjA0NDUwOWExNDhiOGM0ODMwYTRkZGEiLCJwIjoiaiJ9)
-- Implement monitors directory [OEMC-65](https://vizzuality.atlassian.net/browse/OEMC-65?atlOrigin=eyJpIjoiZGZmYjJiNTg1NmY3NDhiM2I5NTNmMWZmMTIwZjA2NDMiLCJwIjoiaiJ9)
-- Legend settings (change opacity in layer, layer toggle visibility, remove layer) [OEMC-59](https://vizzuality.atlassian.net/browse/OEMC-59?atlOrigin=eyJpIjoiNDI0NzBkYmExODFmNGVjODllZDk3NTAyNjY4M2YwYzAiLCJwIjoiaiJ9)
-- Monitor geostories and datasets for selected geostory displayed on sidebar [OEMC-60](https://vizzuality.atlassian.net/browse/OEMC-60?atlOrigin=eyJpIjoiZjc4YjlhMTUzNTZkNGVmMWFhN2Y0OWI3ZDUyNWM2NDUiLCJwIjoiaiJ9)
-- Save bookmarks in map section [OEMC-72](https://vizzuality.atlassian.net/browse/OEMC-72?atlOrigin=eyJpIjoiYzg4MTQ2ZmJjZDQzNDBhMmI5NDg3M2YyZjM0Mzc4ZmUiLCJwIjoiaiJ9)
-- Stadiamaps basemap [OEMC-78](https://vizzuality.atlassian.net/browse/OEMC-78?atlOrigin=eyJpIjoiYzUzZmZjMDllNWI2NGY5Y2E1NmUwMmFjYmNhYmU2NjMiLCJwIjoiaiJ9)
-- Map view added to URL [OEMC-75](https://vizzuality.atlassian.net/browse/OEMC-75?atlOrigin=eyJpIjoiM2IyNDYxOTJkYzQ0NGY4NTgzOTgyODdkOThiYTJhMjAiLCJwIjoiaiJ9)
+- Map set up and layers display [OEMC-23](https://vizzuality.atlassian.net/browse/OEMC-23)
+- Map controls to move around the map (zoom in, out, fit bounds)[OEMC-44](https://vizzuality.atlassian.net/browse/OEMC-44)
+- Toggle layers displayed on the map [OEMC-58](https://vizzuality.atlassian.net/browse/OEMC-58)
+- Datasets display on the map [OECM-62](https://vizzuality.atlassian.net/browse/OEMC-62)
+- Dataset info displayed on the sidebar [OEMC-21](https://vizzuality.atlassian.net/browse/OEMC-21)
+- Implement monitors directory [OEMC-65](https://vizzuality.atlassian.net/browse/OEMC-65)
+- Legend settings (change opacity in layer, layer toggle visibility, remove layer) [OEMC-59](https://vizzuality.atlassian.net/browse/OEMC-59)
+- Monitor geostories and datasets for selected geostory displayed on sidebar [OEMC-60](https://vizzuality.atlassian.net/browse/OEMC-60)
+- Save bookmarks in map section [OEMC-72](https://vizzuality.atlassian.net/browse/OEMC-72)
+- Stadiamaps basemap [OEMC-78](https://vizzuality.atlassian.net/browse/OEMC-78)
+- Map view added to URL [OEMC-75](https://vizzuality.atlassian.net/browse/OEMC-75)
 
 
 ### Changed
-- Migration from react-map-gl to [openlayers](https://openlayers.org/) [OEMC-85](https://vizzuality.atlassian.net/browse/OEMC-85?atlOrigin=eyJpIjoiNGU0ZTdlMDY0ZTk0NGQzYTljNjIyMGMwMjNmZDZjOTgiLCJwIjoiaiJ9)
+- Migration from react-map-gl to [openlayers](https://openlayers.org/) [OEMC-85](https://vizzuality.atlassian.net/browse/OEMC-85)
 
 
 ### Fixed
-- Layer animation should keep visibility [OEMC-90](https://vizzuality.atlassian.net/browse/OEMC-90?atlOrigin=eyJpIjoiNTM0OWVlYmJmOWE4NDBiM2FjYjY4NGZlZjNiNzM4NjciLCJwIjoiaiJ9)
-- Visibility toggle should keep previous opacity value in the layer [OEMC-89](https://vizzuality.atlassian.net/browse/OEMC-89?atlOrigin=eyJpIjoiZDA0ZDIxYzdmNDU0NGExN2EwNzk2MDVkZGQ3NDlhOTciLCJwIjoiaiJ9)
+- Layer animation should keep visibility [OEMC-90](https://vizzuality.atlassian.net/browse/OEMC-90)
+- Visibility toggle should keep previous opacity value in the layer [OEMC-89](https://vizzuality.atlassian.net/browse/OEMC-89)
