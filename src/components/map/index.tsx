@@ -5,8 +5,8 @@ import React, { useMemo, FC, useCallback, useEffect, useRef, useState } from 're
 import { useParams } from 'next/navigation';
 
 import axios from 'axios';
-import { format } from 'd3-format';
 import type { MapBrowserEvent } from 'ol';
+import ol from 'ol';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
@@ -32,7 +32,11 @@ import MapTooltip from './tooltip';
 import type { CustomMapProps } from './types';
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeostory = false }) => {
-  const mapRef = useRef(null);
+  const mapRef: React.MutableRefObject<{
+    map: ol.Map;
+    getView: () => ol.View;
+  }> = useRef<null>(null);
+
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
   const [tooltipPosition, setTooltipPosition] = useState<[number, number]>(null);
@@ -108,7 +112,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
     (e: MapBrowserEvent<UIEvent>) => {
       setTooltipValue(null);
       setTooltipPosition([e.pixel[0], e.pixel[1]]);
-      const resolution = mapRef?.current?.ol.getView().getResolution();
+      const olMap: ol.Map = mapRef?.current?.map as unknown as ol.Map;
+      const resolution = olMap?.getView()?.getResolution();
+      // const resolution = mapRef?.current?.getView().getResolution() as number;
       const url = wmsSource.getFeatureInfoUrl(e.coordinate, resolution, 'EPSG:3857', {
         INFO_FORMAT: 'application/json',
       });
@@ -116,9 +122,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         .get<{ features: { properties: Record<string, number> }[] }>(url)
         .then(({ data }) => {
           const value = Object.values(data.features[0].properties)?.[0];
-          if (value === undefined) {
-            setTooltipPosition(null);
-          }
           setTooltipValue(value);
         })
         .catch((error) => {
@@ -131,16 +134,21 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   useEffect(() => {
     if (geostory && !isLoadingGeostory && geostory?.geostory_bbox) {
       // TO-DO: remove split once the API is fixed
-      mapRef?.current?.ol
-        .getView()
+      mapRef?.current
+        ?.getView()
         .fit((geostory?.geostory_bbox as unknown as string).split(',').map(Number));
     }
   }, [geostory, isLoadingGeostory]);
 
+  useEffect(() => {
+    // Reset tooltip value whenever layerId changes
+    setTooltipValue(null);
+  }, [layerId]);
+
   return (
     <>
       <RMap
-        ref={mapRef}
+        ref={mapRef as React.RefObject<null>}
         projection="EPSG:3857"
         width="100%"
         height="100%"
@@ -216,7 +224,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
 
         {/* Interactivity */}
-        {tooltipPosition && tooltipValue && (
+        {tooltipPosition && typeof tooltipValue === 'number' && (
           <MapTooltip
             setTooltipPosition={setTooltipPosition}
             tooltipPosition={tooltipPosition}
