@@ -6,7 +6,6 @@ import { useParams } from 'next/navigation';
 
 import axios from 'axios';
 import { format } from 'd3-format';
-import { XIcon } from 'lucide-react';
 import type { MapBrowserEvent } from 'ol';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
@@ -29,9 +28,8 @@ import BookmarkControl from './controls/bookmark';
 import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import Legend from './legend';
+import MapTooltip from './tooltip';
 import type { CustomMapProps } from './types';
-
-const numberFormat = format(',.2f');
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeostory = false }) => {
   const mapRef = useRef(null);
@@ -79,7 +77,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
       enabled: !!layerId,
     }
   );
-  const { gs_base_wms, gs_name, range } = data || {};
+  const { gs_base_wms, gs_name, range, title } = data || {};
 
   /* Interactivity */
   const wmsSource = useMemo(() => {
@@ -108,6 +106,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
+      setTooltipValue(null);
       setTooltipPosition([e.pixel[0], e.pixel[1]]);
       const resolution = mapRef?.current?.ol.getView().getResolution();
       const url = wmsSource.getFeatureInfoUrl(e.coordinate, resolution, 'EPSG:3857', {
@@ -117,6 +116,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         .get<{ features: { properties: Record<string, number> }[] }>(url)
         .then(({ data }) => {
           const value = Object.values(data.features[0].properties)?.[0];
+          if (value === undefined) {
+            setTooltipPosition(null);
+          }
           setTooltipValue(value);
         })
         .catch((error) => {
@@ -214,21 +216,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
 
         {/* Interactivity */}
-        {tooltipPosition && (
-          <div
-            className="max-w-32 text-2xs absolute z-10 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md"
-            style={{
-              left: `${tooltipPosition[0]}px`,
-              top: `${tooltipPosition[1] - 10}px`,
-            }}
-          >
-            <button className="absolute right-1 top-1" onClick={() => setTooltipPosition(null)}>
-              <XIcon size={10} className="text-brand-500" />
-            </button>
-            <div className="font-satoshi font-bold text-brand-500">
-              {numberFormat(tooltipValue)}
-            </div>
-          </div>
+        {tooltipPosition && tooltipValue && (
+          <MapTooltip
+            setTooltipPosition={setTooltipPosition}
+            tooltipPosition={tooltipPosition}
+            tooltipValue={tooltipValue}
+            title={title}
+          />
         )}
       </RMap>
     </>
