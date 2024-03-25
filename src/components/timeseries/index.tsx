@@ -39,8 +39,9 @@ const TimeSeries: FC<{
     (value: string) => {
       const nextRange = range.find((r) => r.value === value);
       void setLayers([{ id: layerId, opacity, date: nextRange.value }]);
+      setContentVisibility(false);
     },
-    [layerId, opacity, range, setLayers]
+    [layerId, opacity, range, setLayers, setContentVisibility]
   );
 
   const handleTogglePlay = useCallback(() => {
@@ -81,7 +82,10 @@ const TimeSeries: FC<{
               value={currentRange.value}
               onValueChange={handleSelect}
               open={contentVisibility}
-              onOpenChange={() => setContentVisibility(!contentVisibility)}
+              onOpenChange={() => {
+                console.log;
+                setContentVisibility(!contentVisibility);
+              }}
             >
               <SelectTrigger className="text-xs font-semibold underline">
                 <>

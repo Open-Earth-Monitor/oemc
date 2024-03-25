@@ -36,6 +36,8 @@ const findLabel = (value: string, range: { label: string; value: string | number
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
+  const [dropdownVisibility, setDropdownVisibility] = useState(false);
+  const [compareDropdownVisibility, setCompareDropdownVisibility] = useState(false);
 
   const handleTabChange = (value: ActiveTab) => {
     if (value === 'comparison') {
@@ -72,6 +74,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       void setLayers([{ id: layerId, opacity, date: e.currentTarget.value }]);
+      setDropdownVisibility(false);
     },
     [layerId, opacity, setLayers]
   );
@@ -118,6 +121,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       void setCompareLayers([{ id: layerId, opacity, date: e.currentTarget.value }]);
+      setCompareDropdownVisibility(false);
     },
     [layerId, opacity, setCompareLayers]
   );
@@ -251,12 +255,16 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 <TabsContent value="comparison">
                   <div className="flex w-full flex-col items-start">
                     <div className=" divide-y divide-dashed">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
-                          <div className="flex w-full space-x-2 whitespace-nowrap">
+                      <DropdownMenu open={dropdownVisibility}>
+                        <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES} asChild>
+                          <button
+                            type="button"
+                            onClick={() => setDropdownVisibility(!dropdownVisibility)}
+                            className="flex w-full space-x-2 whitespace-nowrap"
+                          >
                             <HiArrowLeftOnRectangle className="h-full w-4" />
                             <span>Selected year: {baseDateLabel}</span>
-                          </div>
+                          </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                           align="start"
@@ -283,13 +291,19 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                       {isGeostory ? (
                         <div className={DROPDOWN_TRIGGER_STYLES}>{compareLayerData?.title}</div>
                       ) : (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
-                            <div className="flex w-full space-x-2 whitespace-nowrap">
+                        <DropdownMenu open={compareDropdownVisibility}>
+                          <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES} asChild>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCompareDropdownVisibility(!compareDropdownVisibility)
+                              }
+                              className="flex w-full space-x-2 whitespace-nowrap"
+                            >
                               <HiArrowLeftOnRectangle className="h-full w-4 rotate-180" />
 
                               <span>Selected year: {CompareDateLabel}</span>
-                            </div>
+                            </button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                             align="start"
