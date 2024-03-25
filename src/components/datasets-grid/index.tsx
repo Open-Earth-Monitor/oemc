@@ -89,8 +89,11 @@ const LandingDatasets = () => {
   );
 
   return (
-    <Element className="w-full" name="datasetsGrid">
-      <div className="m-auto max-w-[1200px] pt-10">
+    <Element
+      className="w-full bg-gradient-to-b from-brand-500 via-brand-400 to-[#0B1E32]"
+      name="datasetsGrid"
+    >
+      <div className="m-auto max-w-[1200px]">
         <div className="flex h-14">
           <Search
             placeholder="Search by name, type of dataset..."
@@ -258,15 +261,17 @@ const LandingDatasets = () => {
           {isFetching && <Loading />}
 
           {!isLoading && !isError && !!data?.data.length && (
-            <Pagination
-              page={page}
-              setPage={setPage}
-              totalItems={data?.total_items}
-              maxLength={6}
-              nextPage={data?.next_page}
-              previousPage={data?.previous_page}
-              numButtons={5}
-            />
+            <div className="relative pb-32">
+              <Pagination
+                page={page}
+                setPage={setPage}
+                totalItems={data?.total_items}
+                maxLength={6}
+                nextPage={data?.next_page}
+                previousPage={data?.previous_page}
+                numButtons={5}
+              />
+            </div>
           )}
 
           {!isLoading && !isError && !data?.data.length && (
