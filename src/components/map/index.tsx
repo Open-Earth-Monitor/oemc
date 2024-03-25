@@ -83,7 +83,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
       enabled: !!layerId,
     }
   );
-  const { gs_base_wms, gs_name, range, title } = data || {};
+  const { gs_base_wms, gs_name, range, title, unit } = data || {};
 
   /* Interactivity */
   const wmsSource = useMemo(() => {
@@ -232,6 +232,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
             tooltipPosition={tooltipPosition}
             tooltipValue={tooltipValue}
             title={title}
+            unit={unit}
           />
         )}
       </RMap>
