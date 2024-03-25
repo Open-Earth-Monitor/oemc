@@ -70,7 +70,7 @@ const TimeSeries: FC<{
 
   const startRangelabel = range && range[0].label;
   const endRangelabel = range && range[range.length - 1].label;
-  console.log(currentRange, range, startRangelabel, endRangelabel, contentVisibility);
+
   return (
     <div className="space-y-4 border-secondary-900 pt-2.5">
       <div className="flex justify-between">
