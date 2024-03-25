@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
-import type { Geostory, GeostoryParsed } from '@/types/geostories';
+import type { Geostory } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
 
 import API from 'services/api';

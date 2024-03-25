@@ -70,7 +70,7 @@ const TimeSeries: FC<{
 
   const startRangelabel = range && range[0].label;
   const endRangelabel = range && range[range.length - 1].label;
-
+  console.log(currentRange, range, startRangelabel, endRangelabel, contentVisibility);
   return (
     <div className="space-y-4 border-secondary-900 pt-2.5">
       <div className="flex justify-between">
@@ -94,7 +94,7 @@ const TimeSeries: FC<{
                 </>
               </SelectTrigger>
               <SelectContent
-                className="flex max-h-56 w-full min-w-fit items-center text-center"
+                className="z-[1000] flex max-h-56 w-full min-w-fit items-center text-center"
                 alignOffset={-20}
                 sideOffset={0}
                 style={{ width: 'calc(100% - 2rem)' }}
@@ -133,7 +133,7 @@ const TimeSeries: FC<{
           )}
         </button>
         <div className="flex w-full flex-col space-y-2">
-          <div className="flex w-full">
+          <div className="max-w flex w-full max-w-[218px] overflow-hidden">
             {range.map((r) => (
               <div key={r.value} className="flex w-full items-center justify-center">
                 <div
@@ -143,7 +143,6 @@ const TimeSeries: FC<{
                 />
               </div>
             ))}
-            s
           </div>
           <div className="flex justify-between text-[10px] tracking-tight">
             <div>{startRangelabel}</div>
