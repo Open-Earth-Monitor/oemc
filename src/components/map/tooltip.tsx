@@ -12,6 +12,7 @@ type TooltipProps = {
   setTooltipPosition: React.Dispatch<React.SetStateAction<[number, number]>>;
   tooltipValue: number;
   title: string;
+  unit?: string;
 };
 
 const MapTooltip: FC<TooltipProps> = ({
@@ -19,6 +20,7 @@ const MapTooltip: FC<TooltipProps> = ({
   setTooltipPosition,
   tooltipValue,
   title,
+  unit,
 }: TooltipProps) => (
   <div
     className="max-w-32 text-2xs absolute z-10 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md"
@@ -32,7 +34,10 @@ const MapTooltip: FC<TooltipProps> = ({
     </button>
     <div className="space-y-2 font-satoshi font-bold text-brand-500">
       <p>{title}</p>
-      <span className="text-3xl">{numberFormat(tooltipValue)}</span>
+      <span className="text-3xl">
+        {numberFormat(tooltipValue)}
+        {!!unit && unit}
+      </span>
     </div>
   </div>
 );
