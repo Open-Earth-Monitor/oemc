@@ -35,7 +35,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative h-[654px] bg-[url('/images/landing/hero.jpg')] bg-cover">
+    <div className="relative h-[739px] bg-[url('/images/landing/hero.jpg')] bg-cover bg-top">
       <div className="h-[70px] w-full items-center border-b border-b-secondary-900 bg-brand-500 bg-opacity-20">
         <div className="m-auto flex h-full max-w-[1200px] items-center justify-between">
           <div className="mx-2 flex items-center space-x-4">
@@ -59,7 +59,7 @@ const Hero = () => {
         </div>
       </div>
       <div className="m-auto ">
-        <h1 className="whitespace-wrap m-auto px-48 pb-20 pt-52 text-center font-satoshi text-[80px] font-black leading-[96px]">
+        <h1 className="whitespace-wrap m-auto px-48 pb-16 pt-[295px] text-center font-satoshi text-[80px] font-black leading-[96px]">
           {' '}
           Discover and empower with monitoring solutions.
         </h1>

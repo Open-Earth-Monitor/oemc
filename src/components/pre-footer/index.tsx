@@ -7,9 +7,9 @@ import { HiOutlineArrowUp } from 'react-icons/hi';
 
 const PreFooter = () => {
   return (
-    <section className="m-auto font-satoshi">
-      <div className="relative m-auto flex bg-[url('/images/landing/prefooter.webp')] bg-cover bg-top">
-        <div className="m-auto flex w-full max-w-[1200px] space-y-12 pb-32 pt-2">
+    <section className="m-auto max-h-[510px] font-satoshi">
+      <div className="relative m-auto flex bg-[url('/images/landing/prefooter.webp')] bg-cover bg-bottom">
+        <div className="relative m-auto flex w-full max-w-[1200px] space-y-12 pb-32 pt-2">
           <div className="pt-44">
             <div className="m-auto w-full space-y-10">
               <p className="max-w-[700px] text-8xl font-black">
@@ -40,7 +40,7 @@ const PreFooter = () => {
               </motion.div>
             </div>
           </div>
-          <div className="absolute right-0 top-1/2 -translate-y-[50%]">
+          <div className="absolute -right-60 top-1/2 -translate-y-[50%]">
             <Image src="/images/landing/screens.png" alt="screens" width={488} height={491} />
           </div>
         </div>
