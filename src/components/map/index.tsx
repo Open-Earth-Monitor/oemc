@@ -34,7 +34,9 @@ import type { CustomMapProps } from './types';
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeostory = false }) => {
   const mapRef: React.MutableRefObject<{
     map: ol.Map;
-    getView: () => ol.View;
+    ol: {
+      getView: () => ol.View;
+    };
   }> = useRef<null>(null);
 
   const layerRightRef = useRef(null);
@@ -132,11 +134,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   );
 
   useEffect(() => {
-    if (geostory && !isLoadingGeostory && geostory?.geostory_bbox) {
+    if (geostory && !isLoadingGeostory && geostory?.geostory_bbox && mapRef?.current) {
       // TO-DO: remove split once the API is fixed
-      mapRef?.current
+      mapRef?.current?.ol
         ?.getView()
-        .fit((geostory?.geostory_bbox as unknown as string).split(',').map(Number));
+        ?.fit((geostory?.geostory_bbox as unknown as string).split(',').map(Number));
     }
   }, [geostory, isLoadingGeostory]);
 
@@ -148,7 +150,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   return (
     <>
       <RMap
-        ref={mapRef as React.RefObject<null>}
+        ref={mapRef as unknown as React.RefObject<null>}
         projection="EPSG:3857"
         width="100%"
         height="100%"
