@@ -201,7 +201,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
 
               {layerData?.gs_style && layerData?.gs_style.length <= 8 && (
                 <div className="flex">
-                  {layerData?.gs_style.map(({ color, label }) => (
+                  {layerData?.gs_style?.map(({ color, label }) => (
                     <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
                       <div
                         className="h-2 w-full"

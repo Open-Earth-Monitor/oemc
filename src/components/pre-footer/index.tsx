@@ -7,12 +7,12 @@ import { HiOutlineArrowUp } from 'react-icons/hi';
 
 const PreFooter = () => {
   return (
-    <section className="m-auto max-h-[510px] font-satoshi">
-      <div className="relative m-auto flex bg-[url('/images/landing/prefooter.webp')] bg-cover bg-bottom">
+    <section className="relative m-auto font-satoshi">
+      <div className="relative m-auto flex w-full space-y-12 bg-[url('/images/landing/prefooter.webp')] bg-contain bg-center bg-no-repeat">
         <div className="relative m-auto flex w-full max-w-[1200px] space-y-12 pb-32 pt-2">
-          <div className="pt-44">
-            <div className="m-auto w-full space-y-10">
-              <p className="max-w-[700px] text-8xl font-black">
+          <div className="mt-44">
+            <div className="m-auto w-full space-y-10 ">
+              <p className="max-w-[700px] text-7xl font-black">
                 Interested in more project details?
               </p>
               <motion.div
