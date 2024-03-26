@@ -3,6 +3,7 @@ import { AxiosResponse } from 'axios';
 
 import type { Layer, LayerParsed } from '@/types/layers';
 
+import { isValidJSON } from '@/utils/json';
 import API from 'services/api';
 
 const DEFAULT_QUERY_OPTIONS = {
@@ -26,16 +27,20 @@ export function useLayers(queryOptions?: UseQueryOptions<Layer[], Error, LayerPa
     }).then((response: AxiosResponse<Layer[]>) => response.data);
   return useQuery(['layers'], fetchLayer, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => {
-      return data.map((d) => ({
-        ...d,
-        gs_style: JSON.parse(d?.gs_style || null) as LayerParsed['gs_style'],
-        range: d?.range?.map((r, index) => ({
-          value: r,
-          label: d?.range_labels[index],
-        })),
-      }));
-    },
+    select: (data) =>
+      data.map((d) => {
+        const isLegendValid = isValidJSON(d?.gs_style);
+        return {
+          ...d,
+          gs_style: isLegendValid
+            ? (JSON.parse(d?.gs_style || null) as LayerParsed['gs_style'])
+            : [],
+          range: d?.range?.map((r, index) => ({
+            value: r,
+            label: d?.range_labels?.[index] || null,
+          })),
+        };
+      }),
     ...queryOptions,
   });
 }
@@ -53,14 +58,19 @@ export function useLayer(
     }).then((response: AxiosResponse<Layer[]>) => response.data[0]);
   return useQuery(['layer', params], fetchLayer, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => ({
-      ...data,
-      gs_style: JSON.parse(data?.gs_style || null) as LayerParsed['gs_style'],
-      range: data?.range?.map((r, index) => ({
-        value: r,
-        label: data?.range_labels[index],
-      })),
-    }),
+    select: (data) => {
+      const isLegendValid = isValidJSON(data?.gs_style);
+      return {
+        ...data,
+        gs_style: isLegendValid
+          ? (JSON.parse(data?.gs_style || null) as LayerParsed['gs_style'])
+          : [],
+        range: data?.range?.map((r, index) => ({
+          value: r,
+          label: data?.range_labels?.[index] || null,
+        })),
+      };
+    },
     ...queryOptions,
   });
 }
@@ -79,14 +89,19 @@ export function useLayerParsedSource(
 
   return useQuery(['layer', params], fetchLayer, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => ({
-      ...data,
-      gs_style: JSON.parse(data?.gs_style || null) as LayerParsed['gs_style'],
-      range: data?.range?.map((r, index) => ({
-        value: r,
-        label: data?.range_labels[index],
-      })),
-    }),
+    select: (data) => {
+      const isLegendValid = isValidJSON(data?.gs_style);
+      return {
+        ...data,
+        gs_style: isLegendValid
+          ? (JSON.parse(data?.gs_style || null) as LayerParsed['gs_style'])
+          : [],
+        range: data?.range?.map((r, index) => ({
+          value: r,
+          label: data?.range_labels?.[index] || null,
+        })),
+      };
+    },
     ...queryOptions,
   });
 }

@@ -83,7 +83,6 @@ const TimeSeries: FC<{
               onValueChange={handleSelect}
               open={contentVisibility}
               onOpenChange={() => {
-                console.log;
                 setContentVisibility(!contentVisibility);
               }}
             >
