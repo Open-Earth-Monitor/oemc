@@ -7,6 +7,7 @@ import type { Monitor, MonitorParsed } from '@/types/monitors';
 
 import { THEMES_COLORS } from '@/constants/themes';
 
+import { isValidJSON } from '@/utils/json';
 import API from 'services/api';
 
 type UseParams = {
@@ -79,14 +80,20 @@ export function useMonitorLayers(
   return useQuery(['monitor-datasets', params], fetchMonitorLayers, {
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) =>
-      data.map((d) => ({
-        ...d,
-        gs_style: JSON.parse(d?.gs_style || null) as LayerParsed['gs_style'],
-        range: d?.range?.map((r, index) => ({
-          value: r,
-          label: d?.range_labels[index],
-        })),
-      })),
+      data.map((d) => {
+        const isLegendValid = isValidJSON(d?.gs_style);
+        return {
+          ...d,
+          gs_style: isLegendValid
+            ? (JSON.parse(d?.gs_style || null) as LayerParsed['gs_style'])
+            : [],
+          range:
+            d?.range?.map((r, index) => ({
+              value: r,
+              label: d?.range_labels?.[index] || null,
+            })) || [],
+        };
+      }),
     ...queryOptions,
   });
 }

@@ -89,10 +89,7 @@ const LandingDatasets = () => {
   );
 
   return (
-    <Element
-      className="w-full bg-gradient-to-b from-brand-500 via-brand-400 to-[#0B1E32]"
-      name="datasetsGrid"
-    >
+    <Element className="w-full" name="datasetsGrid">
       <div className="m-auto max-w-[1200px]">
         <div className="flex h-14">
           <Search
@@ -261,17 +258,15 @@ const LandingDatasets = () => {
           {isFetching && <Loading />}
 
           {!isLoading && !isError && !!data?.data.length && (
-            <div className="relative pb-32">
-              <Pagination
-                page={page}
-                setPage={setPage}
-                totalItems={data?.total_items}
-                maxLength={6}
-                nextPage={data?.next_page}
-                previousPage={data?.previous_page}
-                numButtons={5}
-              />
-            </div>
+            <Pagination
+              page={page}
+              setPage={setPage}
+              totalItems={data?.total_items}
+              maxLength={6}
+              nextPage={data?.next_page}
+              previousPage={data?.previous_page}
+              numButtons={5}
+            />
           )}
 
           {!isLoading && !isError && !data?.data.length && (
@@ -286,6 +281,12 @@ const LandingDatasets = () => {
             </div>
           )}
         </div>
+      </div>
+
+      <div className="relative h-32">
+        <div className="h-32 bg-custom-horizontal-gradient"></div>
+        <div className="absolute inset-0 h-full bg-opacity-50 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 h-full bg-custom-top-gradient"></div>
       </div>
     </Element>
   );
