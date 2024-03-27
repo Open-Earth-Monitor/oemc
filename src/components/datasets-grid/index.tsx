@@ -89,7 +89,7 @@ const LandingDatasets = () => {
   );
 
   return (
-    <Element className="w-full" name="datasetsGrid">
+    <Element className="to-bg-brand-500 w-full bg-gradient-to-t from-[#09131D]" name="datasetsGrid">
       <div className="m-auto max-w-[1200px]">
         <div className="flex h-14">
           <Search
