@@ -35,7 +35,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative h-[739px] bg-[url('/images/landing/hero.jpg')] bg-cover bg-top">
+    <div className="relative h-[739px] bg-[url('/images/landing/hero.webp')] bg-cover bg-top">
       <div className="h-[70px] w-full items-center border-b border-b-secondary-900 bg-brand-500 bg-opacity-20">
         <div className="m-auto flex h-full max-w-[1200px] items-center justify-between">
           <div className="mx-2 flex items-center space-x-4">
