@@ -42,7 +42,7 @@ import 'ol/ol.css';
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${inter.className} ${satoshi.className} h-full min-h-screen`}>
-      <body className="mx-auto h-full min-h-screen bg-gradient-to-b from-[#0a141e] to-[#0a1520] font-inter">
+      <body className="mx-auto h-full min-h-screen bg-brand-500 font-inter">
         <Providers>
           <div className="flex h-full flex-col">
             <main className="relative h-full flex-1">{children}</main>
