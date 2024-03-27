@@ -20,7 +20,7 @@ import SocialMedia from './social-media';
 
 export const Footer: FC = () => {
   return (
-    <footer className="relative flex w-full bg-brand-400 font-inter outline-none">
+    <footer className="relative m-auto flex w-full max-w-[1200px] bg-gradient-to-b from-[#09131D] to-brand-500 font-inter outline-none">
       <div className="m-auto flex w-full max-w-[1200px] flex-col items-center divide-y divide-secondary-900">
         <div className="flex w-full flex-1 justify-between py-7">
           <div className="flex items-center space-x-3">
