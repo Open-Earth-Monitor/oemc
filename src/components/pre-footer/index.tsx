@@ -8,7 +8,7 @@ import { HiOutlineArrowUp } from 'react-icons/hi';
 const PreFooter = () => {
   return (
     <section className="relative m-auto font-satoshi">
-      <div className="relative m-auto flex w-full space-y-12 bg-[url('/images/landing/prefooter.webp')] bg-contain bg-center bg-no-repeat">
+      <div className="relative m-auto flex h-[694px] w-auto space-y-12 bg-[url('/images/landing/prefooter.webp')] bg-contain bg-center bg-no-repeat">
         <div className="relative m-auto flex w-full max-w-[1200px] space-y-12 pb-32 pt-2">
           <div className="mt-44">
             <div className="m-auto w-full space-y-10 ">

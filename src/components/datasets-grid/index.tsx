@@ -282,12 +282,6 @@ const LandingDatasets = () => {
           )}
         </div>
       </div>
-
-      <div className="relative h-32">
-        <div className="h-32 bg-custom-horizontal-gradient"></div>
-        <div className="absolute inset-0 h-full bg-opacity-50 backdrop-blur-sm"></div>
-        <div className="absolute inset-0 h-full bg-custom-top-gradient"></div>
-      </div>
     </Element>
   );
 };
