@@ -71,8 +71,9 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
               transition={{ duration: 0.3 }}
             >
               <Link
-                href={`/map/${layers[0]?.layer_id}/datasets`}
+                href={`/map/${layers[0]?.monitor_id}/datasets`}
                 className="w-full font-bold underline"
+                data-testid={`geostory-card-monitor-link-${id}`}
               >
                 <motion.span
                   variants={{
@@ -97,8 +98,9 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
                     },
                   }}
                   transition={{ duration: 0.25 }}
+                  data-testid={`geostory-card-monitor-title-${id}`}
                 >
-                  {layers[0]?.title}
+                  {layers[0]?.monitor}
                 </motion.span>
               </Link>
             </motion.div>
