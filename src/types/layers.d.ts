@@ -19,6 +19,7 @@ export type Layer = {
   location_query_url: string;
   metadata_url: string;
   monitor: string;
+  monitor_id: string;
   polygon_query_url: string;
   range_labels: string[] | null;
   regex: string;
