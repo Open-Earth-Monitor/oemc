@@ -333,7 +333,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 </TabsContent>
               </Tabs>
             )}
-            {isGeostory && compareLayers && (
+            {isGeostory && compareLayerData && (
               <div
                 className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
                 style={{ minWidth: legendWidth }}
@@ -347,7 +347,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                     className="text-xs font-bold"
                     ref={titleRef}
                   >
-                    {title}
+                    {compareLayerData.title}
                   </div>
                   <div
                     className="flex space-x-2 divide-x divide-secondary-800"
