@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Using monitors attribute instead of layers to show monitor details [OEMC-225](https://vizzuality.atlassian.net/browse/OEMC-225)
 
 ### Fixed
+- Fixed default layer was not showed in the map navigating monitors [OEMC-216](https://vizzuality.atlassian.net/browse/OEMC-216)
 - In homepage the geostories card are displaying the wrong monitor name [OEMC-221](https://vizzuality.atlassian.net/browse/OEMC-221)
 - Compare layer should show the correct title in the legend [OEMC-222](https://vizzuality.atlassian.net/browse/OEMC-222)
 - Do not show timeline or comparison when is not available in monitors [OEMC-223](https://vizzuality.atlassian.net/browse/OEMC-223)

@@ -8,7 +8,11 @@ type LayerSettings = {
   date?: string;
 };
 
-export const useSyncLayersSettings = () => useQueryState('layers', parseAsJson<LayerSettings[]>());
+export const useSyncLayersSettings = () =>
+  useQueryState('layers', {
+    ...parseAsJson<LayerSettings[]>(),
+    shallow: false,
+  });
 export const useSyncCompareLayersSettings = () =>
   useQueryState('compareLayers', parseAsJson<LayerSettings[]>());
 export const useSyncCenterSettings = () => useQueryState('center', parseAsJson<Coordinate>());

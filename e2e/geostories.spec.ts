@@ -19,6 +19,8 @@ test.describe('geostories tab', () => {
     // click on the first monitor
     await page.getByTestId(`monitor-item-${firstMonitorWithGeostories.id}`).click();
 
+    await page.waitForURL('**/map/**/datasets*', { waitUntil: 'load' });
+
     // move to geostories tab
     const geostoriesTabLink = page.getByTestId('tab-geostories');
 
@@ -68,7 +70,17 @@ test.describe('geostories tab', () => {
     // go to geostories tab
     await page.getByTestId(`monitor-item-${firstMonitorWithGeostories.id}`).click();
 
+    await page.waitForURL('**/map/**/datasets*', { waitUntil: 'load' });
+
+    const datasetLists = page.getByTestId('datasets-list');
+    await expect(datasetLists).toBeVisible();
+
     const geostoriesTabLink = page.getByTestId('tab-geostories');
+
+    await expect(geostoriesTabLink).toHaveAttribute(
+      'href',
+      `/map/${firstMonitorWithGeostories.id}/geostories`
+    );
     await geostoriesTabLink.click();
 
     await page.waitForURL(`**/map/${firstMonitorWithGeostories.id}/geostories`, {
@@ -144,6 +156,11 @@ test('From a selected geostory, user should be able to go back to the monitor it
 
   // click on the first monitor
   await page.getByTestId(`monitor-item-${firstMonitorWithGeostories.id}`).click();
+
+  await page.waitForURL('**/map/**/datasets*', { waitUntil: 'load' });
+
+  const datasetLists = page.getByTestId('datasets-list');
+  await expect(datasetLists).toBeVisible();
 
   // move to geostories tab
   const geostoriesTabLink = page.getByTestId('tab-geostories');
