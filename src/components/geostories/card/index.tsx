@@ -16,7 +16,7 @@ import { TAG_STYLE } from '@/styles/constants';
 import GeostoryDialog from '../dialog';
 
 const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string }> = (geostory) => {
-  const { id, colorHead, title, color, ready, theme, layers } = geostory;
+  const { id, colorHead, title, color, ready, theme, monitors } = geostory;
 
   return (
     <div
@@ -60,8 +60,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
             </div>
           )}
         </div>
-        {/* TO - DO - This should be a list of monitors, not layers. Implemented just for visualization purposes. Remove when API returns the monitor the geo story belongs to in the endpoint */}
-        {!!layers.length && (
+        {!!monitors.length && (
           <div className="px-10 py-4 text-brand-500">
             <span className={TAG_STYLE}>monitor</span>
             <motion.div
@@ -71,7 +70,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
               transition={{ duration: 0.3 }}
             >
               <Link
-                href={`/map/${layers[0]?.monitor_id}/datasets`}
+                href={`/map/${monitors[0].id}/datasets`}
                 className="w-full font-bold underline"
                 data-testid={`geostory-card-monitor-link-${id}`}
               >
@@ -100,7 +99,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
                   transition={{ duration: 0.25 }}
                   data-testid={`geostory-card-monitor-title-${id}`}
                 >
-                  {layers[0]?.monitor}
+                  {monitors[0].title}
                 </motion.span>
               </Link>
             </motion.div>

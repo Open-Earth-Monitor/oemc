@@ -1,36 +1,30 @@
-'use client';
+import axios from 'axios';
+import type { Metadata, NextPage } from 'next';
 
-import type { NextPage } from 'next';
+import type { Monitor } from '@/types/monitors';
 
-import { useMonitor, useMonitorGeostories } from '@/hooks/monitors';
+import MonitorGeostoriesPage from '@/components/monitors/geostories-page';
 
-import GeostoryItem from '@/components/geostories/item';
-import Loading from '@/components/loading';
+type Props = {
+  params: { monitor_id: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // read route params
+  const id = params.monitor_id;
+
+  // fetch data
+  const monitorData = await axios
+    .get<Monitor[]>(`${process.env.NEXT_PUBLIC_API_URL}monitors/${id}`)
+    .then((response) => response.data);
+
+  return {
+    title: `Geostories of ${monitorData[0].title} - Open Earth Monitor Cyberinfrastructure`,
+  };
+}
 
 const GeostoriesPage: NextPage<{ params: { monitor_id: string } }> = ({ params }) => {
-  const monitorId = params.monitor_id;
-
-  const { data: monitor } = useMonitor({ monitor_id: monitorId }, { enabled: !!monitorId });
-  const { data, isLoading, isFetched, isError } = useMonitorGeostories(
-    { monitor_id: monitorId },
-    { enabled: !!monitorId }
-  );
-  const { color } = monitor ?? {};
-
-  return (
-    <div>
-      {isLoading && <Loading />}
-      {isFetched && !isError && (
-        <ul className="space-y-6 text-brand-500" data-testid="geostories-list">
-          {data.map((geostory) => (
-            <li key={geostory.id}>
-              <GeostoryItem {...geostory} color={color} />
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+  return <MonitorGeostoriesPage monitor_id={params.monitor_id} />;
 };
 
 export default GeostoriesPage;
