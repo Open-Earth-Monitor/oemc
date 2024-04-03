@@ -1,8 +1,10 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
-import type { Geostory } from '@/types/geostories';
+import type { Geostory, GeostoryParsed } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
+
+import { Theme, THEMES_COLORS } from '@/constants/themes';
 
 import { isValidJSON } from '@/utils/json';
 import API from 'services/api';
@@ -19,6 +21,11 @@ const DEFAULT_QUERY_OPTIONS = {
   staleTime: Infinity,
 };
 
+const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'light') => {
+  if (!ready) return 'hsla(0, 0%, 79%, 1)';
+  return THEMES_COLORS[theme][themeType] || THEMES_COLORS.Unknown[themeType];
+};
+
 export function useGeostory(params: UseParams, queryOptions?: UseQueryOptions<Geostory, Error>) {
   const fetchGeostory = () =>
     API.request({
@@ -29,6 +36,27 @@ export function useGeostory(params: UseParams, queryOptions?: UseQueryOptions<Ge
     }).then((response: AxiosResponse<Geostory[]>) => response.data[0]);
   return useQuery(['geostories', params], fetchGeostory, {
     ...DEFAULT_QUERY_OPTIONS,
+    ...queryOptions,
+  });
+}
+
+export function useGeostoryParsed(
+  params: UseParams,
+  queryOptions?: UseQueryOptions<Geostory, Error, GeostoryParsed>
+) {
+  const fetchGeostory = () =>
+    API.request({
+      method: 'GET',
+      url: '/geostories',
+      params,
+      ...queryOptions,
+    }).then((response: AxiosResponse<Geostory[]>) => response.data[0]);
+  return useQuery(['geostories-parsed', params], fetchGeostory, {
+    ...DEFAULT_QUERY_OPTIONS,
+    select: (data) => ({
+      ...data,
+      color: getColor(data.ready, data.theme, 'base'),
+    }),
     ...queryOptions,
   });
 }

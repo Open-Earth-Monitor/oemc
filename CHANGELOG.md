@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-alpha.5 Unreleased
 
+### Added
+- Titles in monitor and geostories pages
+
 ### Fixed
 - In homepage the geostories card are displaying the wrong monitor name [OEMC-221](https://vizzuality.atlassian.net/browse/OEMC-221)
 - Compare layer should show the correct title in the legend [OEMC-222](https://vizzuality.atlassian.net/browse/OEMC-222)

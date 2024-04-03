@@ -1,3 +1,5 @@
+'use client';
+
 import { FC, useCallback, useEffect, useMemo } from 'react';
 
 import { HiOutlineExternalLink } from 'react-icons/hi';
