@@ -225,7 +225,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
               />
             )}
 
-            {!isGeostory && (
+            {!isGeostory && range?.length > 1 && (
               <Tabs value={activeTab} onValueChange={handleTabChange} className="pt-2">
                 <TabsList>
                   <TabsTrigger value="timeSeries">
