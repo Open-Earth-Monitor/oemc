@@ -42,7 +42,7 @@ test('datasets item', async ({ page }) => {
   const firstMonitorWithLayers = monitorsData.find((monitor) => monitor.id === 'm2');
 
   await page.getByTestId(`monitor-item-${firstMonitorWithLayers.id}`).click();
-  await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
+  await page.waitForURL('**/map/**/datasets*', { waitUntil: 'load' });
 
   const layersResponse = await page.waitForResponse(
     `https://api.earthmonitor.org/monitors/${firstMonitorWithLayers.id}/layers`
