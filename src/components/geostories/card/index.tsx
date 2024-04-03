@@ -60,7 +60,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
             </div>
           )}
         </div>
-        {!!monitors.length && (
+        {!!monitors?.length && (
           <div className="px-10 py-4 text-brand-500">
             <span className={TAG_STYLE}>monitor</span>
             <motion.div
