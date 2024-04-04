@@ -21,6 +21,9 @@ test.describe('geostories tab', () => {
 
     await page.waitForURL('**/map/**/datasets*', { waitUntil: 'load' });
 
+    const datasetLists = page.getByTestId('datasets-list');
+    await expect(datasetLists).toBeVisible();
+
     // move to geostories tab
     const geostoriesTabLink = page.getByTestId('tab-geostories');
 
