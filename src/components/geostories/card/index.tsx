@@ -63,46 +63,52 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
         {!!monitors?.length && (
           <div className="px-10 py-4 text-brand-500">
             <span className={TAG_STYLE}>monitor</span>
-            <motion.div
-              className="opacity-1 relative flex items-center"
-              initial="initial"
-              whileHover="hover"
-              transition={{ duration: 0.3 }}
-            >
-              <Link
-                href={`/map/${monitors[0].id}/datasets`}
-                className="w-full font-bold underline"
-                data-testid={`geostory-card-monitor-link-${id}`}
-              >
-                <motion.span
-                  variants={{
-                    initial: {
-                      opacity: 0,
-                    },
-                    hover: {
-                      opacity: 1,
-                    },
-                  }}
-                >
-                  <HiArrowRight className="absolute left-0 top-2 inline-block h-5 w-5 fill-current" />
-                </motion.span>
-                <motion.span
-                  className="absolute left-0 top-2 inline-flex whitespace-normal pb-11 underline"
-                  variants={{
-                    initial: {
-                      x: 0,
-                    },
-                    hover: {
-                      x: 30,
-                    },
-                  }}
-                  transition={{ duration: 0.25 }}
-                  data-testid={`geostory-card-monitor-title-${id}`}
-                >
-                  {monitors[0].title}
-                </motion.span>
-              </Link>
-            </motion.div>
+            <div className="space-y-2">
+              {monitors.map((monitor) => (
+                <div key={`geostory-card-monitor-link-${monitor.id}`}>
+                  <motion.div
+                    className="opacity-1 relative flex items-center"
+                    initial="initial"
+                    whileHover="hover"
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Link
+                      href={`/map/${monitor.id}/datasets`}
+                      className="w-full font-bold underline"
+                      data-testid={`geostory-card-monitor-link-${id}`}
+                    >
+                      <motion.span
+                        variants={{
+                          initial: {
+                            opacity: 0,
+                          },
+                          hover: {
+                            opacity: 1,
+                          },
+                        }}
+                      >
+                        <HiArrowRight className="relative left-0 top-2 inline-block h-5 w-5 fill-current" />
+                      </motion.span>
+                      <motion.span
+                        className="absolute left-0 top-2 inline-flex whitespace-normal pb-11 underline"
+                        variants={{
+                          initial: {
+                            x: 0,
+                          },
+                          hover: {
+                            x: 30,
+                          },
+                        }}
+                        transition={{ duration: 0.25 }}
+                        data-testid={`geostory-card-monitor-title-${id}`}
+                      >
+                        {monitor.title}
+                      </motion.span>
+                    </Link>
+                  </motion.div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
