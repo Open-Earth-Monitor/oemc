@@ -1,5 +1,7 @@
 'use client';
 
+import { redirect } from 'next/navigation';
+
 import { useMonitor, useMonitorGeostories } from '@/hooks/monitors';
 
 import GeostoryItem from '@/components/geostories/item';
@@ -9,11 +11,13 @@ const GeostoriesPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   const monitorId = monitor_id;
 
   const { data: monitor } = useMonitor({ monitor_id: monitorId }, { enabled: !!monitorId });
-  const { data, isLoading, isFetched, isError } = useMonitorGeostories(
+  const { data, error, isLoading, isFetched, isError } = useMonitorGeostories(
     { monitor_id: monitorId },
     { enabled: !!monitorId }
   );
   const { color } = monitor ?? {};
+
+  if (error?.code === '400') return redirect('/not-found');
 
   return (
     <div>

@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 import type { Geostory } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
@@ -26,7 +26,7 @@ const DEFAULT_QUERY_OPTIONS = {
 
 export function useMonitor(
   params: UseParams,
-  queryOptions?: UseQueryOptions<Monitor, Error, MonitorParsed>
+  queryOptions?: UseQueryOptions<Monitor, AxiosError, MonitorParsed>
 ) {
   const { monitor_id } = params;
   const fetchMonitor = () =>
@@ -46,7 +46,9 @@ export function useMonitor(
   });
 }
 
-export function useMonitors(queryOptions?: UseQueryOptions<Monitor[], Error, MonitorParsed[]>) {
+export function useMonitors(
+  queryOptions?: UseQueryOptions<Monitor[], AxiosError, MonitorParsed[]>
+) {
   const fetchMonitors = () =>
     API.request({
       method: 'GET',
@@ -68,7 +70,7 @@ export function useMonitors(queryOptions?: UseQueryOptions<Monitor[], Error, Mon
 
 export function useMonitorLayers(
   params: UseParams,
-  queryOptions?: UseQueryOptions<Layer[], Error, LayerParsed[]>
+  queryOptions?: UseQueryOptions<Layer[], AxiosError, LayerParsed[]>
 ) {
   const { monitor_id } = params;
   const fetchMonitorLayers = () =>
@@ -100,7 +102,7 @@ export function useMonitorLayers(
 
 export function useMonitorGeostories(
   params: UseParams,
-  queryOptions?: UseQueryOptions<Geostory[], Error>
+  queryOptions?: UseQueryOptions<Geostory[], AxiosError>
 ) {
   const { monitor_id } = params;
   const fetchMonitorGeostories = () =>

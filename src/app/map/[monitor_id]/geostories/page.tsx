@@ -18,6 +18,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .get<Monitor[]>(`${process.env.NEXT_PUBLIC_API_URL}monitors/${id}`)
     .then((response) => response.data);
 
+  if (!monitorData?.length) return { title: 'Geostory not found' };
+
   return {
     title: `Geostories of ${monitorData[0].title} - Open Earth Monitor Cyberinfrastructure`,
   };

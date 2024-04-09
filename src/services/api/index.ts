@@ -1,32 +1,22 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const API = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {},
-  // transformResponse: (data) => {
-  //   try {
-  //     const parsedData = JSON.parse(data);
-  //     return {
-  //       data: dataFormatter.deserialize(parsedData),
-  //       meta: parsedData.meta,
-  //     };
-  //   } catch (error) {
-  //     return data;
-  //   }
-  // },
-  // paramsSerializer: (prms) => {
-  //   const parsedParams = Object.keys(prms).reduce((acc, key) => {
-  //     // Convert key to snake_case
-  //     const snakeKey = key.replace(/([A-Z])/g, '_$1').toLowerCase();
-
-  //     return {
-  //       ...acc,
-  //       [snakeKey]: prms[key],
-  //     };
-  //   }, {});
-
-  //   return qs.stringify(parsedParams, { arrayFormat: 'comma' });
-  // },
 });
+
+API.interceptors.response.use(
+  (response) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (response.data?.status === 400) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      throw new AxiosError(response.data?.message, '400');
+    }
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export default API;
