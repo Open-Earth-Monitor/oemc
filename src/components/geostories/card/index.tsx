@@ -63,19 +63,19 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
         {!!monitors?.length && (
           <div className="px-10 py-4 text-brand-500">
             <span className={TAG_STYLE}>monitor</span>
-            <div className="space-y-2">
+            <div className="space-y-4">
               {monitors.map((monitor) => (
                 <div key={`geostory-card-monitor-link-${monitor.id}`}>
-                  <motion.div
-                    className="opacity-1 relative flex items-center"
-                    initial="initial"
-                    whileHover="hover"
-                    transition={{ duration: 0.3 }}
+                  <Link
+                    href={`/map/${monitor.id}/datasets`}
+                    className="w-full font-bold underline"
+                    data-testid={`geostory-card-monitor-link-${id}`}
                   >
-                    <Link
-                      href={`/map/${monitor.id}/datasets`}
-                      className="w-full font-bold underline"
-                      data-testid={`geostory-card-monitor-link-${id}`}
+                    <motion.div
+                      className="opacity-1 relative flex items-start"
+                      initial="initial"
+                      whileHover="hover"
+                      transition={{ duration: 0.3 }}
                     >
                       <motion.span
                         variants={{
@@ -87,10 +87,10 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
                           },
                         }}
                       >
-                        <HiArrowRight className="relative left-0 top-2 inline-block h-5 w-5 fill-current" />
+                        <HiArrowRight className="inline-block h-5 w-5 fill-current" />
                       </motion.span>
                       <motion.span
-                        className="absolute left-0 top-2 inline-flex whitespace-normal pb-11 underline"
+                        className="relative -left-5 inline-flex whitespace-normal underline"
                         variants={{
                           initial: {
                             x: 0,
@@ -104,8 +104,8 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
                       >
                         {monitor.title}
                       </motion.span>
-                    </Link>
-                  </motion.div>
+                    </motion.div>
+                  </Link>
                 </div>
               ))}
             </div>
