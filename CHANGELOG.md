@@ -11,13 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Titles in monitor and geostories pages
 
 ### Changed
+- Upgrade to Next.js 14.1.4
+- Upgrade to Node.js 18.17 required by Next 14.1.4
 - Using monitors attribute instead of layers to show monitor details [OEMC-225](https://vizzuality.atlassian.net/browse/OEMC-225)
 
 ### Fixed
+- Warnings related to image sizes
+- Warnings related to ref and dropdowns
 - Fixed default layer was not showed in the map navigating monitors [OEMC-216](https://vizzuality.atlassian.net/browse/OEMC-216)
 - In homepage the geostories card are displaying the wrong monitor name [OEMC-221](https://vizzuality.atlassian.net/browse/OEMC-221)
 - Compare layer should show the correct title in the legend [OEMC-222](https://vizzuality.atlassian.net/browse/OEMC-222)
 - Do not show timeline or comparison when is not available in monitors [OEMC-223](https://vizzuality.atlassian.net/browse/OEMC-223)
+- Default location from geostories was resetting [OEMC-238](https://vizzuality.atlassian.net/browse/OEMC-238)
 
 ## v1.0.0-alpha.4
 
