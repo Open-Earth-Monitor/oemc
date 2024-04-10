@@ -41,7 +41,13 @@ const PreFooter = () => {
             </div>
           </div>
           <div className="absolute -right-60 top-1/2 -translate-y-[50%]">
-            <Image src="/images/landing/screens.png" alt="screens" width={488} height={491} />
+            <Image
+              src="/images/landing/screens.png"
+              alt="screens"
+              width={488}
+              height={491}
+              style={{ width: 'auto', height: 'auto' }}
+            />
           </div>
         </div>
       </div>
