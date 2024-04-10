@@ -18,6 +18,7 @@ const MapLayout: FC<PropsWithChildren> = ({ children }) => {
                 width={147}
                 height={40}
                 className="block"
+                priority
               />
             </Link>
             <div

@@ -46,6 +46,7 @@ const Hero = () => {
                 width={147}
                 height={40}
                 className="block"
+                priority
               />
             </Link>
             <div

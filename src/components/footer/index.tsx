@@ -31,6 +31,7 @@ export const Footer: FC = () => {
               width={147}
               height={40}
               className="inline-block"
+              priority
             />
           </div>
           <div className="flex flex-1 cursor-pointer items-center justify-center space-x-10 text-sm font-medium text-secondary-500">
