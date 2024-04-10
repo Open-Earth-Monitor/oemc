@@ -19,8 +19,10 @@ const DropdownMenu = forwardRef<
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root> & {
     inset?: boolean;
   }
->(({ children, ...props }) => (
-  <DropdownMenuPrimitive.Root {...props}>{children}</DropdownMenuPrimitive.Root>
+>(({ children, ...props }, ref) => (
+  <DropdownMenuPrimitive.Root {...props}>
+    <div ref={ref}>{children}</div>
+  </DropdownMenuPrimitive.Root>
 ));
 
 DropdownMenu.displayName = DropdownMenuPrimitive.Root.displayName;
