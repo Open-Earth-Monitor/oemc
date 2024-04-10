@@ -1,5 +1,5 @@
 # Install dependencies only when needed
-FROM node:18.15-bullseye AS deps
+FROM node:18.17-bullseye AS deps
 WORKDIR /app
 COPY .yarn ./.yarn
 COPY package.json yarn.lock .yarnrc.yml ./
