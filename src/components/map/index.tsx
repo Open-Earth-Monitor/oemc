@@ -83,7 +83,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
       enabled: !!layerId,
     }
   );
-  const { gs_base_wms, gs_name, range, title, unit } = data || {};
+  const { gs_base_wms, gs_name, title, unit } = data || {};
 
   /* Interactivity */
   const wmsSource = useMemo(() => {
@@ -170,7 +170,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         {layerId && (
           <RLayerWMS
             ref={layerLeftRef}
-            properties={{ label: gs_name, opacity, date, range }}
+            properties={{ label: gs_name, opacity, date }}
             url={gs_base_wms}
             params={{
               FORMAT: 'image/png',
@@ -191,7 +191,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         {isCompareLayerActive && (
           <RLayerWMS
             ref={layerRightRef}
-            properties={{ label: gs_name, opacity, date: compareDate, range }}
+            properties={{ label: gs_name, opacity, date: compareDate }}
             url={gs_base_wms}
             params={{
               FORMAT: 'image/png',

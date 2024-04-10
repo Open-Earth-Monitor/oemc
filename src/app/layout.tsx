@@ -1,5 +1,3 @@
-import { ReactNode } from 'react';
-
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 
@@ -39,15 +37,15 @@ const satoshi = localFont({
 import '@/styles/globals.css';
 import 'ol/ol.css';
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.className} ${satoshi.className} h-full min-h-screen`}>
       <body className="mx-auto h-full min-h-screen bg-brand-500 font-inter">
-        <Providers>
-          <div className="flex h-full flex-col">
-            <main className="relative h-full flex-1">{children}</main>
-          </div>
-        </Providers>
+        <div className="flex h-full flex-col">
+          <main className="relative h-full flex-1">
+            <Providers>{children}</Providers>
+          </main>
+        </div>
       </body>
     </html>
   );
