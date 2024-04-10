@@ -130,7 +130,7 @@ export const Footer: FC = () => {
           <SocialMedia />
         </div>
         <div className="flex w-full items-center space-x-2">
-          <Image src="/images/landing/EU.svg" width={52} height={35} alt="eu" />
+          <Image src="/images/landing/EU.svg" width={53} height={35} alt="European Union Logo" />
 
           <span className="block max-w-[376px] flex-1 flex-wrap space-x-2 py-7 text-[10px] leading-3">
             This project has received funding from the European Union&apos;s Horizon Europe research
