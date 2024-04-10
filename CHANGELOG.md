@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Compare layer should show the correct title in the legend [OEMC-222](https://vizzuality.atlassian.net/browse/OEMC-222)
 - Do not show timeline or comparison when is not available in monitors [OEMC-223](https://vizzuality.atlassian.net/browse/OEMC-223)
 - Default location from geostories was resetting [OEMC-238](https://vizzuality.atlassian.net/browse/OEMC-238)
+- Better performance for opacity slider [OEMC-235](https://vizzuality.atlassian.net/browse/OEMC-235)
 
 ## v1.0.0-alpha.4
 
