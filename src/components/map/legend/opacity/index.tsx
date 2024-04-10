@@ -1,6 +1,7 @@
 import { FC, useState, useCallback } from 'react';
 
 import { MdOutlineOpacity } from 'react-icons/md';
+import { useDebounceCallback } from 'usehooks-ts';
 
 import { cn } from '@/lib/classnames';
 
@@ -15,16 +16,22 @@ export const OpacitySetting: FC = () => {
   const [isOpacityPopoverOpen, setOpacityPopoverOpen] = useState<boolean>(false);
 
   const layerOpacity = layers?.[0]?.opacity;
-  const opacity = !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity;
+  const [opacity, setOpacity] = useState<number>(
+    !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity
+  );
 
   const handleOpacityVisibility = useCallback(() => {
     setOpacityPopoverOpen(!isOpacityPopoverOpen);
   }, [isOpacityPopoverOpen]);
 
-  const handleChange = useCallback(
-    (e: number[]) => setLayers((prevState) => [{ ...prevState?.[0], opacity: e[0] }]),
-    [setLayers]
-  );
+  const debouncedChange = useDebounceCallback((nexOpacity: number) => {
+    void setLayers((prevState) => [{ ...prevState?.[0], opacity: nexOpacity }]);
+  }, 200);
+
+  // const handleChange = (e: number[]) => {
+  //   setOpacity(e[0]);
+  //   debouncedSetOpacity(e[0]);
+  // };
 
   // const handleMouseLeave = useCallback(() => {
   //   setOpacityContent('slider');
@@ -63,7 +70,8 @@ export const OpacitySetting: FC = () => {
           </div>
           <div className="relative py-1.5">
             <Slider
-              onValueChange={handleChange}
+              onValueChange={(e) => setOpacity(e[0])}
+              onValueCommit={(e) => debouncedChange(e[0])}
               value={[opacity]}
               min={0}
               max={1}

@@ -8,7 +8,7 @@ import axios from 'axios';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import TileWMS from 'ol/source/TileWMS';
-import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
+import { RLayerWMS, RLayerTileWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
 import { useGeostory } from '@/hooks/geostories';
@@ -83,7 +83,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
       enabled: !!layerId,
     }
   );
-  const { gs_base_wms, gs_name, title, unit } = data || {};
+  const { gs_base_wms, gs_name, title, unit, range } = data || {};
 
   /* Interactivity */
   const wmsSource = useMemo(() => {
@@ -167,11 +167,34 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
           attributions="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
         />
 
-        {layerId && (
+        {layerId && range?.length > 1 && (
           <RLayerWMS
             ref={layerLeftRef}
-            properties={{ label: gs_name, opacity, date }}
+            properties={{ label: gs_name, date }}
             url={gs_base_wms}
+            opacity={opacity}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 256,
+              HEIGHT: 256,
+              SERVICE: 'WMS',
+              VERSION: '1.3.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: gs_name,
+              DIM_DATE: date,
+              CRS: 'EPSG:3857',
+              BBOX: 'bbox-epsg-3857',
+            }}
+          />
+        )}
+
+        {layerId && range?.length <= 1 && (
+          <RLayerTileWMS
+            ref={layerLeftRef}
+            properties={{ label: gs_name, date }}
+            url={gs_base_wms}
+            opacity={opacity}
             params={{
               FORMAT: 'image/png',
               WIDTH: 256,
@@ -191,8 +214,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         {isCompareLayerActive && (
           <RLayerWMS
             ref={layerRightRef}
-            properties={{ label: gs_name, opacity, date: compareDate }}
+            properties={{ label: gs_name, date: compareDate }}
             url={gs_base_wms}
+            opacity={opacity}
             params={{
               FORMAT: 'image/png',
               WIDTH: 256,
