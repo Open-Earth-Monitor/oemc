@@ -76,7 +76,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
       ]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id, isActive, defaultActive]);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
