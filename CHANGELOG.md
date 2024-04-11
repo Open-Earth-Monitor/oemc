@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Using monitors attribute instead of layers to show monitor details [OEMC-225](https://vizzuality.atlassian.net/browse/OEMC-225)
+- Dropdown in legend styles and inteeractivity [OEMC-231](https://vizzuality.atlassian.net/browse/OEMC-231)
 
 ### Fixed
 - Fixed default layer was not showed in the map navigating monitors [OEMC-216](https://vizzuality.atlassian.net/browse/OEMC-216)
