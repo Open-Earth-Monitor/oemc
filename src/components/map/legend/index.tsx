@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, createRef, useLayoutEffect } from 'react';
 
-import { HiCalendarDays, HiArrowLeftOnRectangle } from 'react-icons/hi2';
+import Image from 'next/image';
+
+import { HiCalendarDays } from 'react-icons/hi2';
 import { LuGitCompare } from 'react-icons/lu';
 
 import { useLayerParsedSource, useLayer } from '@/hooks/layers';
@@ -19,6 +21,7 @@ import { Tabs, TabsContent, TabsTrigger, TabsList } from '@/components/ui/tabs';
 
 import {
   DROPDOWN_TRIGGER_STYLES,
+  DROPDOWN_TRIGGER_CONTENT_STYLES,
   DROPDOWN_CONTENT_STYLES,
   DROPDOWN_ITEM_STYLES,
 } from './constants';
@@ -36,8 +39,6 @@ const findLabel = (value: string, range: { label: string; value: string | number
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
-  const [dropdownVisibility, setDropdownVisibility] = useState(false);
-  const [compareDropdownVisibility, setCompareDropdownVisibility] = useState(false);
 
   const handleTabChange = (value: ActiveTab) => {
     if (value === 'comparison') {
@@ -74,7 +75,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       void setLayers([{ id: layerId, opacity, date: e.currentTarget.value }]);
-      setDropdownVisibility(false);
     },
     [layerId, opacity, setLayers]
   );
@@ -121,7 +121,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       void setCompareLayers([{ id: layerId, opacity, date: e.currentTarget.value }]);
-      setCompareDropdownVisibility(false);
     },
     [layerId, opacity, setCompareLayers]
   );
@@ -237,7 +236,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                   <TabsTrigger value="comparison" disabled={!range || range.length < 1}>
                     <div className="flex items-center space-x-2">
                       <LuGitCompare className="h-[19px] w-[19px]" />
-                      <span>Comparison</span>
+                      <span>Compare</span>
                     </div>
                   </TabsTrigger>
                 </TabsList>
@@ -254,17 +253,21 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 </TabsContent>
                 <TabsContent value="comparison">
                   <div className="flex w-full flex-col items-start">
-                    <div className=" divide-y divide-dashed">
-                      <DropdownMenu open={dropdownVisibility}>
-                        <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES} asChild>
-                          <button
-                            type="button"
-                            onClick={() => setDropdownVisibility(!dropdownVisibility)}
-                            className="flex w-full space-x-2 whitespace-nowrap"
-                          >
-                            <HiArrowLeftOnRectangle className="h-full w-4" />
-                            <span>Selected year: {baseDateLabel}</span>
-                          </button>
+                    <div className="w-full divide-x-0 divide-y divide-dashed">
+                      <DropdownMenu modal={false}>
+                        <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
+                          <div className={DROPDOWN_TRIGGER_CONTENT_STYLES}>
+                            <Image
+                              src={`/svgs/active-layer-position.svg`}
+                              width={21}
+                              height={17}
+                              alt="left layer active"
+                            />
+                            <div>
+                              Selected year:{' '}
+                              <span className="font-bold tracking-tight">{baseDateLabel}</span>
+                            </div>
+                          </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                           align="start"
@@ -291,19 +294,22 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                       {isGeostory ? (
                         <div className={DROPDOWN_TRIGGER_STYLES}>{compareLayerData?.title}</div>
                       ) : (
-                        <DropdownMenu open={compareDropdownVisibility}>
-                          <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES} asChild>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setCompareDropdownVisibility(!compareDropdownVisibility)
-                              }
-                              className="flex w-full space-x-2 whitespace-nowrap"
-                            >
-                              <HiArrowLeftOnRectangle className="h-full w-4 rotate-180" />
+                        <DropdownMenu modal={false}>
+                          <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
+                            <div className={DROPDOWN_TRIGGER_CONTENT_STYLES}>
+                              <Image
+                                src={`/svgs/active-layer-position.svg`}
+                                width={20}
+                                height={20}
+                                alt="right layer active"
+                                className="rotate-180 transform"
+                              />
 
-                              <span>Selected year: {CompareDateLabel}</span>
-                            </button>
+                              <div>
+                                Selected year:{' '}
+                                <span className="font-bold tracking-tight">{CompareDateLabel}</span>
+                              </div>
+                            </div>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                             align="start"
