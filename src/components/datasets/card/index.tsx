@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useCallback, useEffect, useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { LuLayers } from 'react-icons/lu';
@@ -14,18 +14,10 @@ import { useSyncCompareLayersSettings, useSyncLayersSettings } from '../../../ho
 type DatasetCardProps = LayerParsed & {
   id: string;
   active?: boolean;
-  defaultActive?: boolean;
   type?: 'monitor' | 'geostory';
 };
 
-const DatasetCard: FC<DatasetCardProps> = ({
-  id,
-  title,
-  download_url,
-  description,
-  range,
-  defaultActive = false,
-}) => {
+const DatasetCard: FC<DatasetCardProps> = ({ id, title, download_url, description, range }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
@@ -63,20 +55,6 @@ const DatasetCard: FC<DatasetCardProps> = ({
       void setCompareLayers(null);
     }
   }, [id, isActive, isCompareActive, layers, range, setCompareLayers, setLayers]);
-
-  // at first render, if defaultActive is true, activate layer
-  useEffect(() => {
-    if (!isActive && defaultActive) {
-      void setLayers([
-        {
-          id,
-          opacity: 1,
-          date: range?.[0]?.value,
-        },
-      ]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, isActive, defaultActive]);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
