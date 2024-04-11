@@ -12,6 +12,7 @@ type TooltipProps = {
   setTooltipPosition: React.Dispatch<React.SetStateAction<[number, number]>>;
   tooltipValue: number;
   title: string;
+  date?: string;
   unit?: string;
 };
 
@@ -33,11 +34,11 @@ const MapTooltip: FC<TooltipProps> = ({
       <XIcon size={10} className="text-brand-500" />
     </button>
     <div className="space-y-2 font-satoshi font-bold text-brand-500">
-      <p>{title}</p>
-      <span className="text-3xl">
+      <h3 className="text-sm">{title}</h3>
+      <div className="text-xl">
         {numberFormat(tooltipValue)}
         {!!unit && unit}
-      </span>
+      </div>
     </div>
   </div>
 );

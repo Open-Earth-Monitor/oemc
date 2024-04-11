@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Titles in monitor and geostories pages
+- Tooltip update value when the user change date of the layer and the tooltip is already open
 
 ### Changed
 - Upgrade to Next.js 14.1.4
@@ -23,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In homepage the geostories card are displaying the wrong monitor name [OEMC-221](https://vizzuality.atlassian.net/browse/OEMC-221)
 - Compare layer should show the correct title in the legend [OEMC-222](https://vizzuality.atlassian.net/browse/OEMC-222)
 - Do not show timeline or comparison when is not available in monitors [OEMC-223](https://vizzuality.atlassian.net/browse/OEMC-223)
-- Default location from geostories was resetting [OEMC-238](https://vizzuality.atlassian.net/browse/OEMC-238)
+- Tooltip was not updating value when date changes [OEMC-238](https://vizzuality.atlassian.net/browse/OEMC-238)
 - Better performance for opacity slider [OEMC-235](https://vizzuality.atlassian.net/browse/OEMC-235)
 - Geolocation position on page loading [OEMC-236](https://vizzuality.atlassian.net/browse/OEMC-236)
 
