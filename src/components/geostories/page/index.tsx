@@ -23,13 +23,14 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
 
   // Only show layers with position right
   const geostoryLayers = data?.filter(({ position }) => position === 'right');
+  const comparisonLayer = data?.find(({ position }) => position === 'left');
 
   useEffect(() => {
-    const comparisonLayer = data?.find(({ position }) => position === 'left');
     if (opacity && comparisonLayer && !compareLayers) {
       void setCompareLayers([{ id: comparisonLayer.layer_id, opacity }]);
     }
-  }, [compareLayers, data, opacity, setCompareLayers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, opacity, setCompareLayers]);
 
   useEffect(() => {
     if (data?.length && !layers?.length) {
@@ -42,7 +43,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
       ]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, setLayers]);
+  }, [data, setLayers, setCompareLayers]);
 
   return (
     <div className="space-y-6">
