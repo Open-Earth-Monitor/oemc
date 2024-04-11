@@ -16,7 +16,7 @@ import Loading from '@/components/loading';
 const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   const { data: geostory, isLoading: isLoadingGeostory } = useGeostoryParsed({ geostory_id });
   const { data, isLoading, isFetched, isError } = useGeostoryLayers({ geostory_id });
-  const [layers] = useSyncLayersSettings();
+  const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
   const opacity = layers?.[0]?.opacity;
@@ -26,10 +26,23 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
 
   useEffect(() => {
     const comparisonLayer = data?.find(({ position }) => position === 'left');
-    if (comparisonLayer && !compareLayers) {
+    if (opacity && comparisonLayer && !compareLayers) {
       void setCompareLayers([{ id: comparisonLayer.layer_id, opacity }]);
     }
   }, [compareLayers, data, opacity, setCompareLayers]);
+
+  useEffect(() => {
+    if (data?.length && !layers?.length) {
+      void setLayers([
+        {
+          id: geostoryLayers[0].layer_id,
+          opacity: 1,
+          date: geostoryLayers[0].range?.[0]?.value,
+        },
+      ]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, setLayers]);
 
   return (
     <div className="space-y-6">
@@ -53,14 +66,9 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
 
         {isFetched && !isError && (
           <ul className="space-y-6" data-testid="datasets-list">
-            {geostoryLayers.map((dataset, index) => (
+            {geostoryLayers.map((dataset) => (
               <li key={dataset.layer_id}>
-                <DatasetCard
-                  {...dataset}
-                  type="geostory"
-                  id={dataset.layer_id}
-                  defaultActive={index === 0}
-                />
+                <DatasetCard {...dataset} type="geostory" id={dataset.layer_id} />
               </li>
             ))}
           </ul>

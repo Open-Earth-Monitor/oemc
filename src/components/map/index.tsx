@@ -126,8 +126,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         const value = Object.values(data.features[0].properties)?.[0];
         setTooltipValue(value);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        setTooltipValue(null);
       });
   }, [date, gs_name, tooltipCoordinate, wmsSource]);
 
@@ -141,6 +141,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
     [fetchTooltipValue]
   );
 
+  const handleCloseTooltip = useCallback(() => {
+    setTooltipValue(null);
+    setTooltipPosition(null);
+  }, []);
+
   useEffect(() => {
     if (geostory && !isLoadingGeostory && geostory?.geostory_bbox && mapRef?.current) {
       // TO-DO: remove split once the API is fixed
@@ -153,6 +158,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
     setTooltipValue(null);
+    setTooltipPosition(null);
   }, [layerId]);
 
   // Update tooltip value when the layer changes and it's already open
@@ -160,7 +166,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
     if (tooltipPosition && typeof tooltipValue === 'number') {
       fetchTooltipValue();
     }
-  }, [fetchTooltipValue, tooltipPosition, tooltipValue, date, compareDate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [layerId]);
 
   return (
     <>
@@ -173,7 +180,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         initial={initialViewport}
         view={[initialViewport, null] as [RView, (view: RView) => void]}
         onMoveEnd={handleMapMove}
-        onSingleClick={handleSingleClick}
+        // onSingleClick={handleSingleClick}
+        onClick={handleSingleClick}
         noDefaultControls
       >
         <RLayerTile
@@ -265,15 +273,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
 
         {/* Interactivity */}
-        {tooltipPosition && typeof tooltipValue === 'number' && (
-          <MapTooltip
-            setTooltipPosition={setTooltipPosition}
-            tooltipPosition={tooltipPosition}
-            tooltipValue={tooltipValue}
-            title={title}
-            unit={unit}
-          />
-        )}
+        <MapTooltip
+          onCloseTooltip={handleCloseTooltip}
+          tooltipPosition={tooltipPosition}
+          tooltipValue={tooltipValue}
+          title={title}
+          unit={unit}
+        />
       </RMap>
     </>
   );
