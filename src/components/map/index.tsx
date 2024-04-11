@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation';
 import axios from 'axios';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
+import type { Coordinate } from 'ol/coordinate';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RLayerTileWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
@@ -42,6 +43,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
   const [tooltipPosition, setTooltipPosition] = useState<[number, number]>(null);
+  const [tooltipCoordinate, setTooltipCoordinate] = useState<Coordinate>(null);
   const [tooltipValue, setTooltipValue] = useState<number>(null);
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
@@ -110,27 +112,33 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
     [setCenter, setZoom]
   );
 
+  const fetchTooltipValue = useCallback(() => {
+    const olMap: ol.Map = mapRef?.current?.map as unknown as ol.Map;
+    const resolution = olMap?.getView()?.getResolution();
+    const url = wmsSource.getFeatureInfoUrl(tooltipCoordinate, resolution, 'EPSG:3857', {
+      INFO_FORMAT: 'application/json',
+      DIM_DATE: date,
+      LAYERS: gs_name,
+    });
+    axios
+      .get<{ features: { properties: Record<string, number> }[] }>(url)
+      .then(({ data }) => {
+        const value = Object.values(data.features[0].properties)?.[0];
+        setTooltipValue(value);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [date, gs_name, tooltipCoordinate, wmsSource]);
+
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
       setTooltipValue(null);
       setTooltipPosition([e.pixel[0], e.pixel[1]]);
-      const olMap: ol.Map = mapRef?.current?.map as unknown as ol.Map;
-      const resolution = olMap?.getView()?.getResolution();
-      // const resolution = mapRef?.current?.getView().getResolution() as number;
-      const url = wmsSource.getFeatureInfoUrl(e.coordinate, resolution, 'EPSG:3857', {
-        INFO_FORMAT: 'application/json',
-      });
-      axios
-        .get<{ features: { properties: Record<string, number> }[] }>(url)
-        .then(({ data }) => {
-          const value = Object.values(data.features[0].properties)?.[0];
-          setTooltipValue(value);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTooltipCoordinate(e.coordinate);
+      fetchTooltipValue();
     },
-    [wmsSource]
+    [fetchTooltipValue]
   );
 
   useEffect(() => {
@@ -146,6 +154,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT, isGeosto
     // Reset tooltip value whenever layerId changes
     setTooltipValue(null);
   }, [layerId]);
+
+  // Update tooltip value when the layer changes and it's already open
+  useEffect(() => {
+    if (tooltipPosition && typeof tooltipValue === 'number') {
+      fetchTooltipValue();
+    }
+  }, [fetchTooltipValue, tooltipPosition, tooltipValue, date, compareDate]);
 
   return (
     <>
