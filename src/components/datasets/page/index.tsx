@@ -25,7 +25,8 @@ const DatasetsPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
         },
       ]);
     }
-  }, [data, layers?.length, setLayers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, setLayers]);
 
   if (error?.code === '400') return redirect('/not-found');
 
@@ -34,7 +35,7 @@ const DatasetsPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
       {isLoading && <Loading />}
       {isFetched && !isError && (
         <ul className="space-y-6" data-testid="datasets-list">
-          {data.map((dataset, index) => {
+          {data.map((dataset) => {
             return (
               <li key={dataset.layer_id}>
                 <DatasetCard {...dataset} id={dataset.layer_id} />
