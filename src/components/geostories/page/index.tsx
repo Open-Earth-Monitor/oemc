@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import Link from 'next/link';
 
@@ -19,31 +19,32 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
-  const opacity = layers?.[0]?.opacity;
-
   // Only show layers with position right
-  const geostoryLayers = data?.filter(({ position }) => position === 'right');
-  const comparisonLayer = data?.find(({ position }) => position === 'left');
+  const geostoryLayers = useMemo(
+    () => data?.filter(({ position }) => position === 'right'),
+    [data]
+  );
+  const comparisonLayer = useMemo(() => data?.find(({ position }) => position === 'left'), [data]);
 
   useEffect(() => {
-    if (opacity && comparisonLayer && !compareLayers) {
-      void setCompareLayers([{ id: comparisonLayer.layer_id, opacity }]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, opacity, setCompareLayers]);
+    if (geostoryLayers && !layers) {
+      void setLayers(
+        [
+          {
+            id: geostoryLayers[0].layer_id,
+            opacity: 1,
+            date: geostoryLayers[0].range?.[0]?.value,
+          },
+        ],
+        { shallow: false }
+      );
 
-  useEffect(() => {
-    if (data?.length && !layers?.length) {
-      void setLayers([
-        {
-          id: geostoryLayers[0].layer_id,
-          opacity: 1,
-          date: geostoryLayers[0].range?.[0]?.value,
-        },
-      ]);
+      if (!compareLayers && comparisonLayer) {
+        void setCompareLayers([{ id: comparisonLayer.layer_id, opacity: 1 }], { shallow: false });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, setLayers, setCompareLayers]);
+  }, [geostoryLayers, comparisonLayer]);
 
   return (
     <div className="space-y-6">
@@ -69,7 +70,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
           <ul className="space-y-6" data-testid="datasets-list">
             {geostoryLayers.map((dataset) => (
               <li key={dataset.layer_id}>
-                <DatasetCard {...dataset} type="geostory" id={dataset.layer_id} />
+                <DatasetCard {...dataset} type="geostory" id={dataset.layer_id} isGeostory />
               </li>
             ))}
           </ul>

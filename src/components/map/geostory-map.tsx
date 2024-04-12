@@ -2,6 +2,8 @@
 
 import React, { useMemo, FC, useCallback, useEffect, useRef, useState } from 'react';
 
+import { useParams } from 'next/navigation';
+
 import axios from 'axios';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
@@ -10,6 +12,7 @@ import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RLayerTileWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
+import { useGeostory } from '@/hooks/geostories';
 import { useLayerParsedSource } from '@/hooks/layers';
 import {
   useSyncLayersSettings,
@@ -45,6 +48,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
+  const { geostory_id } = useParams();
+  const { data: geostory, isLoading: isLoadingGeostory } = useGeostory({
+    geostory_id: geostory_id as string,
+  });
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -56,6 +63,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [compareLayers] = useSyncCompareLayersSettings();
   const compareLayerId = compareLayers?.[0]?.id;
   const compareDate = compareLayers?.[0]?.date;
+  const compareOpacity = compareLayers?.[0]?.opacity;
   const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
 
   /**
@@ -137,6 +145,15 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     setTooltipValue(null);
     setTooltipPosition(null);
   }, []);
+
+  useEffect(() => {
+    if (geostory && !isLoadingGeostory && geostory?.geostory_bbox && mapRef?.current) {
+      // TO-DO: remove split once the API is fixed
+      mapRef?.current?.ol
+        ?.getView()
+        ?.fit((geostory?.geostory_bbox as unknown as string).split(',').map(Number));
+    }
+  }, [geostory, isLoadingGeostory, layers]);
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
@@ -221,7 +238,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             ref={layerRightRef}
             properties={{ label: gs_name, date: compareDate }}
             url={gs_base_wms}
-            opacity={opacity}
+            opacity={compareOpacity}
             params={{
               FORMAT: 'image/png',
               WIDTH: 256,
@@ -251,7 +268,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
           )}
         </Controls>
-        {isLayerActive && <Legend />}
+        {isLayerActive && <Legend isGeostory />}
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
 
         {/* Interactivity */}
