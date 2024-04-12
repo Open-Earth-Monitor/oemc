@@ -15,18 +15,23 @@ type DatasetCardProps = LayerParsed & {
   id: string;
   active?: boolean;
   type?: 'monitor' | 'geostory';
+  isGeostory?: boolean;
 };
 
-const DatasetCard: FC<DatasetCardProps> = ({ id, title, download_url, description, range }) => {
+const DatasetCard: FC<DatasetCardProps> = ({
+  id,
+  title,
+  download_url,
+  description,
+  range,
+  isGeostory = false,
+}) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
   // isActive is based on the url
-  const layerId = layers?.[0]?.id;
-  const isActive = useMemo(() => layerId === id, [id, layerId]);
-
-  const compareLayerId = compareLayers?.[1]?.id;
-  const isCompareActive = useMemo(() => compareLayerId === id, [id, compareLayerId]);
+  const isActive = useMemo(() => layers?.[0]?.id === id, [id, layers]);
+  const isCompareActive = useMemo(() => compareLayers?.[1]?.id === id, [id, compareLayers]);
 
   /**
    * Handle click on the toggle button
@@ -40,8 +45,8 @@ const DatasetCard: FC<DatasetCardProps> = ({ id, title, download_url, descriptio
           date: range?.[0]?.value,
         },
       ]);
-      if (range.length <= 1) void setCompareLayers(null);
-      if (range.length > 1 && isCompareActive) {
+      if (!isGeostory && range.length <= 1) void setCompareLayers(null);
+      if (!isGeostory && range.length > 1 && isCompareActive) {
         void setCompareLayers([
           {
             id,
@@ -54,7 +59,7 @@ const DatasetCard: FC<DatasetCardProps> = ({ id, title, download_url, descriptio
       void setLayers(null);
       void setCompareLayers(null);
     }
-  }, [id, isActive, isCompareActive, layers, range, setCompareLayers, setLayers]);
+  }, [id, isActive, isCompareActive, isGeostory, layers, range, setCompareLayers, setLayers]);
 
   return (
     <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
