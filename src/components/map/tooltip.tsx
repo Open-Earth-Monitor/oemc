@@ -26,7 +26,7 @@ const MapTooltip: FC<TooltipProps> = ({
   if (!tooltipPosition || !tooltipValue) return null;
   return (
     <div
-      className="max-w-32 text-2xs absolute z-10 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md"
+      className="max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md"
       style={{
         left: `${tooltipPosition[0]}px`,
         top: `${tooltipPosition[1] - 10}px`,

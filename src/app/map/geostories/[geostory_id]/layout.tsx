@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-const Map = dynamic(() => import('@/components/map'), { ssr: false });
+const Map = dynamic(() => import('@/components/map/geostory-map'), { ssr: false });
 
 const GeostoriesLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
@@ -14,7 +14,7 @@ const GeostoriesLayout: FC<PropsWithChildren> = ({ children }) => {
           {children}
         </ScrollArea>
       </section>
-      <Map isGeostory />
+      <Map />
     </>
   );
 };
