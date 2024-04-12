@@ -87,6 +87,15 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   );
   const { gs_base_wms, gs_name, title, unit, range } = data || {};
 
+  const { data: compareData } = useLayerParsedSource(
+    {
+      layer_id: compareLayerId,
+    },
+    {
+      enabled: !!compareLayerId,
+    }
+  );
+
   /* Interactivity */
   const wmsSource = useMemo(() => {
     return new TileWMS({
@@ -236,8 +245,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         {isCompareLayerActive && (
           <RLayerWMS
             ref={layerRightRef}
-            properties={{ label: gs_name, date: compareDate }}
-            url={gs_base_wms}
+            properties={{ label: compareData.gs_name }}
+            url={compareData.gs_base_wms}
             opacity={compareOpacity}
             params={{
               FORMAT: 'image/png',
@@ -247,8 +256,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
               VERSION: '1.3.0',
               REQUEST: 'GetMap',
               TRANSPARENT: true,
-              LAYERS: gs_name,
-              DIM_DATE: compareDate,
+              LAYERS: compareData.gs_name,
               CRS: 'EPSG:3857',
               BBOX: 'bbox-epsg-3857',
             }}
