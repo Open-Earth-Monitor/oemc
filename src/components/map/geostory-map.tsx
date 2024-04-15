@@ -9,7 +9,7 @@ import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import TileWMS from 'ol/source/TileWMS';
-import { RLayerWMS, RLayerTileWMS, RMap, RLayerTile, RControl } from 'rlayers';
+import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
 import { useGeostory } from '@/hooks/geostories';
@@ -62,7 +62,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   // Compare layer from the URL
   const [compareLayers] = useSyncCompareLayersSettings();
   const compareLayerId = compareLayers?.[0]?.id;
-  const compareDate = compareLayers?.[0]?.date;
   const compareOpacity = compareLayers?.[0]?.opacity;
   const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
 
@@ -85,7 +84,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       enabled: !!layerId,
     }
   );
-  const { gs_base_wms, gs_name, title, unit, range } = data || {};
+  const { gs_base_wms, gs_name, title, unit } = data || {};
 
   const { data: compareData } = useLayerParsedSource(
     {
@@ -218,28 +217,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             CRS: 'EPSG:3857',
             BBOX: 'bbox-epsg-3857',
           }}
-          visible={!!data && layerId && range?.length > 1}
-        />
-
-        <RLayerTileWMS
-          ref={layerLeftRef}
-          properties={{ label: gs_name, date }}
-          url={gs_base_wms}
-          opacity={opacity}
-          params={{
-            FORMAT: 'image/png',
-            WIDTH: 256,
-            HEIGHT: 256,
-            SERVICE: 'WMS',
-            VERSION: '1.3.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: gs_name,
-            DIM_DATE: date,
-            CRS: 'EPSG:3857',
-            BBOX: 'bbox-epsg-3857',
-          }}
-          visible={!!data && layerId && range?.length <= 1}
+          visible={!!data && !!layerId}
         />
 
         <RLayerWMS
