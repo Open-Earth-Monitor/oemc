@@ -178,6 +178,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layerId]);
 
+  if (!data) return null;
+
   return (
     <>
       <RMap
@@ -198,70 +200,67 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           attributions="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
         />
 
-        {layerId && range?.length > 1 && (
-          <RLayerWMS
-            ref={layerLeftRef}
-            properties={{ label: gs_name, date }}
-            url={gs_base_wms}
-            opacity={opacity}
-            params={{
-              FORMAT: 'image/png',
-              WIDTH: 256,
-              HEIGHT: 256,
-              SERVICE: 'WMS',
-              VERSION: '1.3.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: gs_name,
-              DIM_DATE: date,
-              CRS: 'EPSG:3857',
-              BBOX: 'bbox-epsg-3857',
-            }}
-          />
-        )}
+        <RLayerWMS
+          ref={layerLeftRef}
+          properties={{ label: gs_name, date }}
+          url={gs_base_wms}
+          opacity={opacity}
+          params={{
+            FORMAT: 'image/png',
+            WIDTH: 256,
+            HEIGHT: 256,
+            SERVICE: 'WMS',
+            VERSION: '1.3.0',
+            REQUEST: 'GetMap',
+            TRANSPARENT: true,
+            LAYERS: gs_name,
+            DIM_DATE: date,
+            CRS: 'EPSG:3857',
+            BBOX: 'bbox-epsg-3857',
+          }}
+          visible={!!data && layerId && range?.length > 1}
+        />
 
-        {layerId && range?.length <= 1 && (
-          <RLayerTileWMS
-            ref={layerLeftRef}
-            properties={{ label: gs_name, date }}
-            url={gs_base_wms}
-            opacity={opacity}
-            params={{
-              FORMAT: 'image/png',
-              WIDTH: 256,
-              HEIGHT: 256,
-              SERVICE: 'WMS',
-              VERSION: '1.3.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: gs_name,
-              DIM_DATE: date,
-              CRS: 'EPSG:3857',
-              BBOX: 'bbox-epsg-3857',
-            }}
-          />
-        )}
+        <RLayerTileWMS
+          ref={layerLeftRef}
+          properties={{ label: gs_name, date }}
+          url={gs_base_wms}
+          opacity={opacity}
+          params={{
+            FORMAT: 'image/png',
+            WIDTH: 256,
+            HEIGHT: 256,
+            SERVICE: 'WMS',
+            VERSION: '1.3.0',
+            REQUEST: 'GetMap',
+            TRANSPARENT: true,
+            LAYERS: gs_name,
+            DIM_DATE: date,
+            CRS: 'EPSG:3857',
+            BBOX: 'bbox-epsg-3857',
+          }}
+          visible={!!data && layerId && range?.length <= 1}
+        />
 
-        {isCompareLayerActive && (
-          <RLayerWMS
-            ref={layerRightRef}
-            properties={{ label: compareData.gs_name }}
-            url={compareData.gs_base_wms}
-            opacity={compareOpacity}
-            params={{
-              FORMAT: 'image/png',
-              WIDTH: 256,
-              HEIGHT: 256,
-              SERVICE: 'WMS',
-              VERSION: '1.3.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: compareData.gs_name,
-              CRS: 'EPSG:3857',
-              BBOX: 'bbox-epsg-3857',
-            }}
-          />
-        )}
+        <RLayerWMS
+          ref={layerRightRef}
+          properties={{ label: compareData?.gs_name }}
+          url={compareData?.gs_base_wms}
+          opacity={compareOpacity}
+          params={{
+            FORMAT: 'image/png',
+            WIDTH: 256,
+            HEIGHT: 256,
+            SERVICE: 'WMS',
+            VERSION: '1.3.0',
+            REQUEST: 'GetMap',
+            TRANSPARENT: true,
+            LAYERS: compareData?.gs_name,
+            CRS: 'EPSG:3857',
+            BBOX: 'bbox-epsg-3857',
+          }}
+          visible={isCompareLayerActive && !!compareData}
+        />
 
         <RLayerTile
           zIndex={100}
