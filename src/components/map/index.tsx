@@ -105,31 +105,33 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     [setCenter, setZoom]
   );
 
-  const fetchTooltipValue = useCallback(() => {
-    const olMap: ol.Map = mapRef?.current?.map as unknown as ol.Map;
-    const resolution = olMap?.getView()?.getResolution();
-    const url = wmsSource.getFeatureInfoUrl(tooltipCoordinate, resolution, 'EPSG:3857', {
-      INFO_FORMAT: 'application/json',
-      DIM_DATE: date,
-      LAYERS: gs_name,
-    });
-    axios
-      .get<{ features: { properties: Record<string, number> }[] }>(url)
-      .then(({ data }) => {
-        const value = Object.values(data.features[0].properties)?.[0];
-        setTooltipValue(value);
-      })
-      .catch(() => {
-        setTooltipValue(null);
+  const fetchTooltipValue = useCallback(
+    (coordinate: Coordinate) => {
+      const resolution = mapRef?.current?.ol.getView()?.getResolution();
+      const url = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
+        INFO_FORMAT: 'application/json',
+        DIM_DATE: date,
+        LAYERS: gs_name,
       });
-  }, [date, gs_name, tooltipCoordinate, wmsSource]);
+      axios
+        .get<{ features: { properties: Record<string, number> }[] }>(url)
+        .then(({ data }) => {
+          const value = Object.values(data.features[0].properties)?.[0];
+          setTooltipValue(value);
+        })
+        .catch(() => {
+          setTooltipValue(null);
+        });
+    },
+    [date, gs_name, wmsSource]
+  );
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
       setTooltipValue(null);
       setTooltipPosition([e.pixel[0], e.pixel[1]]);
       setTooltipCoordinate(e.coordinate);
-      fetchTooltipValue();
+      fetchTooltipValue(e.coordinate);
     },
     [fetchTooltipValue]
   );
@@ -147,11 +149,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   // Update tooltip value when the layer changes and it's already open
   useEffect(() => {
-    if (tooltipPosition && typeof tooltipValue === 'number') {
-      fetchTooltipValue();
+    if (tooltipPosition) {
+      fetchTooltipValue(tooltipCoordinate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layerId]);
+  }, [layerId, date]);
 
   return (
     <>
@@ -162,7 +164,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         height="100%"
         className="relative"
         initial={initialViewport}
-        view={[initialViewport, null] as [RView, (view: RView) => void]}
         onMoveEnd={handleMapMove}
         onSingleClick={handleSingleClick}
         noDefaultControls
@@ -259,13 +260,15 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
 
         {/* Interactivity */}
-        <MapTooltip
-          onCloseTooltip={handleCloseTooltip}
-          tooltipPosition={tooltipPosition}
-          tooltipValue={tooltipValue}
-          title={title}
-          unit={unit}
-        />
+        {data && (
+          <MapTooltip
+            onCloseTooltip={handleCloseTooltip}
+            tooltipPosition={tooltipPosition}
+            tooltipValue={tooltipValue}
+            title={title}
+            unit={unit}
+          />
+        )}
       </RMap>
     </>
   );
