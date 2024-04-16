@@ -27,7 +27,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   const comparisonLayer = useMemo(() => data?.find(({ position }) => position === 'left'), [data]);
 
   useEffect(() => {
-    if (geostoryLayers && !layers) {
+    if (geostoryLayers?.length && !layers) {
       void setLayers(
         [
           {
