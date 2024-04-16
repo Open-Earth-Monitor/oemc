@@ -216,7 +216,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
               CRS: 'EPSG:3857',
               BBOX: 'bbox-epsg-3857',
             }}
-            visible={layerId && range?.length <= 1}
+            visible={layerId && (!range || range?.length <= 1)}
           />
         )}
 
