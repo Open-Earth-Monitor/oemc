@@ -124,6 +124,21 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     },
     [layerId, opacity, setCompareLayers]
   );
+
+  const handleOpacity = useCallback(
+    (nexOpacity: number) => {
+      void setLayers((prevState) => [{ ...prevState?.[0], opacity: nexOpacity }]);
+    },
+    [setLayers]
+  );
+
+  const handleCompareOpacity = useCallback(
+    (nexOpacity: number) => {
+      void setCompareLayers((prevState) => [{ ...prevState?.[0], opacity: nexOpacity }]);
+    },
+    [setCompareLayers]
+  );
+
   const [legendWidth, setLegendWith] = useState<number>(0);
 
   const titleRef = createRef<HTMLDivElement>();
@@ -168,7 +183,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 data-testid="map-legend-item-toolbar"
               >
                 <div className="flex space-x-2">
-                  <OpacitySetting />
+                  <OpacitySetting defaultValue={opacity} onChange={handleOpacity} />
                   {!isGeostory && <LayerVisibility />}
                 </div>
                 {!isGeostory && <RemoveLayer className="pl-2" />}
@@ -360,7 +375,10 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                     data-testid="map-legend-item-toolbar"
                   >
                     <div className="flex space-x-2">
-                      <OpacitySetting />
+                      <OpacitySetting
+                        defaultValue={compareLayers?.[0].opacity}
+                        onChange={handleCompareOpacity}
+                      />
                       {!isGeostory && <LayerVisibility />}
                     </div>
                     {!isGeostory && <RemoveLayer className="pl-2" />}

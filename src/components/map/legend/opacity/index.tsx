@@ -5,19 +5,16 @@ import { useDebounceCallback } from 'usehooks-ts';
 
 import { cn } from '@/lib/classnames';
 
-import { useSyncLayersSettings } from '@/hooks/sync-query';
-
 import { Slider } from '@/components/slider';
 import { Popover, PopoverArrow, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-export const OpacitySetting: FC = () => {
-  const [layers, setLayers] = useSyncLayersSettings();
-  // const [opacityContent, setOpacityContent] = useState<'info' | 'slider'>('info');
+export const OpacitySetting: FC<{
+  defaultValue?: number;
+  onChange?: (opacityValue: number) => void;
+}> = ({ defaultValue = 1, onChange = () => null }) => {
   const [isOpacityPopoverOpen, setOpacityPopoverOpen] = useState<boolean>(false);
-
-  const layerOpacity = layers?.[0]?.opacity;
   const [opacity, setOpacity] = useState<number>(
-    !layerOpacity && layerOpacity !== 0 ? 1 : layerOpacity
+    !defaultValue && defaultValue !== 0 ? 1 : defaultValue
   );
 
   const handleOpacityVisibility = useCallback(() => {
@@ -25,21 +22,8 @@ export const OpacitySetting: FC = () => {
   }, [isOpacityPopoverOpen]);
 
   const debouncedChange = useDebounceCallback((nexOpacity: number) => {
-    void setLayers((prevState) => [{ ...prevState?.[0], opacity: nexOpacity }]);
+    onChange(nexOpacity);
   }, 200);
-
-  // const handleChange = (e: number[]) => {
-  //   setOpacity(e[0]);
-  //   debouncedSetOpacity(e[0]);
-  // };
-
-  // const handleMouseLeave = useCallback(() => {
-  //   setOpacityContent('slider');
-  // }, []);
-
-  // const handleMouseEnter = useCallback(() => {
-  //   setOpacityContent('info');
-  // }, []);
 
   return (
     <Popover onOpenChange={handleOpacityVisibility}>
@@ -52,13 +36,11 @@ export const OpacitySetting: FC = () => {
         />
       </PopoverTrigger>
       <PopoverContent
-        // onClick={handleMouseLeave}
         sideOffset={0}
         alignOffset={0}
         align="center"
         className={cn({
           'z-[60] w-[189px] rounded-3xl border border-secondary-900 px-3 py-3.5': true,
-          // 'p2 w-fit py-1': opacityContent === 'info',
         })}
       >
         <div className="flex w-full flex-col space-y-2">
@@ -72,7 +54,7 @@ export const OpacitySetting: FC = () => {
             <Slider
               onValueChange={(e) => setOpacity(e[0])}
               onValueCommit={(e) => debouncedChange(e[0])}
-              value={[opacity]}
+              defaultValue={[defaultValue]}
               min={0}
               max={1}
               step={0.01}
@@ -80,7 +62,6 @@ export const OpacitySetting: FC = () => {
             />
           </div>
         </div>
-        {/* {opacityContent === 'info' && <div className="font-medium text-secondary-500">Opacity</div>} */}
         <PopoverArrow className="text-brand-50" />
       </PopoverContent>
     </Popover>
