@@ -70,7 +70,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   /**
    * Get the layer source from the API
    */
-  const { data, isFetched } = useLayerParsedSource(
+  const { data, isLoading } = useLayerParsedSource(
     {
       layer_id: layerId,
     },
@@ -153,8 +153,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layerId]);
 
-  if (!data && !isFetched) return null;
-
   return (
     <>
       <RMap
@@ -175,68 +173,74 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           attributions="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
         />
 
-        <RLayerWMS
-          ref={layerLeftRef}
-          properties={{ label: gs_name, date }}
-          url={gs_base_wms}
-          opacity={opacity}
-          params={{
-            FORMAT: 'image/png',
-            WIDTH: 256,
-            HEIGHT: 256,
-            SERVICE: 'WMS',
-            VERSION: '1.3.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: gs_name,
-            DIM_DATE: date,
-            CRS: 'EPSG:3857',
-            BBOX: 'bbox-epsg-3857',
-          }}
-          visible={layerId && range?.length > 1}
-        />
+        {data && !isLoading && (
+          <RLayerWMS
+            ref={layerLeftRef}
+            properties={{ label: gs_name, date }}
+            url={gs_base_wms}
+            opacity={opacity}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 256,
+              HEIGHT: 256,
+              SERVICE: 'WMS',
+              VERSION: '1.3.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: gs_name,
+              DIM_DATE: date,
+              CRS: 'EPSG:3857',
+              BBOX: 'bbox-epsg-3857',
+            }}
+            visible={layerId && range?.length > 1}
+          />
+        )}
 
-        <RLayerTileWMS
-          ref={layerTileRef}
-          properties={{ label: gs_name, date }}
-          url={gs_base_wms}
-          opacity={opacity}
-          params={{
-            FORMAT: 'image/png',
-            WIDTH: 256,
-            HEIGHT: 256,
-            SERVICE: 'WMS',
-            VERSION: '1.3.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: gs_name,
-            DIM_DATE: date,
-            CRS: 'EPSG:3857',
-            BBOX: 'bbox-epsg-3857',
-          }}
-          visible={layerId && range?.length <= 1}
-        />
+        {data && !isLoading && (
+          <RLayerTileWMS
+            ref={layerTileRef}
+            properties={{ label: gs_name, date }}
+            url={gs_base_wms}
+            opacity={opacity}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 256,
+              HEIGHT: 256,
+              SERVICE: 'WMS',
+              VERSION: '1.3.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: gs_name,
+              DIM_DATE: date,
+              CRS: 'EPSG:3857',
+              BBOX: 'bbox-epsg-3857',
+            }}
+            visible={layerId && range?.length <= 1}
+          />
+        )}
 
-        <RLayerWMS
-          ref={layerRightRef}
-          properties={{ label: gs_name, date: compareDate }}
-          url={gs_base_wms}
-          opacity={opacity}
-          params={{
-            FORMAT: 'image/png',
-            WIDTH: 256,
-            HEIGHT: 256,
-            SERVICE: 'WMS',
-            VERSION: '1.3.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: gs_name,
-            DIM_DATE: compareDate,
-            CRS: 'EPSG:3857',
-            BBOX: 'bbox-epsg-3857',
-          }}
-          visible={isCompareLayerActive}
-        />
+        {compareDate && data && !isLoading && (
+          <RLayerWMS
+            ref={layerRightRef}
+            properties={{ label: gs_name, date: compareDate }}
+            url={gs_base_wms}
+            opacity={opacity}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 256,
+              HEIGHT: 256,
+              SERVICE: 'WMS',
+              VERSION: '1.3.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: gs_name,
+              DIM_DATE: compareDate,
+              CRS: 'EPSG:3857',
+              BBOX: 'bbox-epsg-3857',
+            }}
+            visible={isCompareLayerActive}
+          />
+        )}
 
         <RLayerTile
           zIndex={100}
@@ -247,19 +251,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           <RControl.RZoom zoomOutLabel="-" zoomInLabel="+" />
           <BookmarkControl />
           <ShareControl />
-          {isCompareLayerActive &&
-            layerLeftRef?.current &&
-            layerRightRef?.current &&
-            range?.length > 1 && (
-              <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
-            )}
-          {isCompareLayerActive &&
-            layerTileRef?.current &&
-            layerRightRef?.current &&
-            layerId &&
-            range?.length <= 1 && (
-              <SwipeControl layerLeft={layerTileRef} layerRight={layerRightRef} />
-            )}
+          {isCompareLayerActive && data && !isLoading && (
+            <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
+          )}
         </Controls>
         {isLayerActive && <Legend />}
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
