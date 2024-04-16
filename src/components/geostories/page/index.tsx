@@ -81,7 +81,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
             <div>
               {isLayersLoading && <Loading />}
 
-              {layersData?.length && !isLayersLoading && (
+              {!!layersData?.length && !isLayersLoading && (
                 <ul className="space-y-6" data-testid="datasets-list">
                   {geostoryLayers.map((dataset) => (
                     <li key={dataset.layer_id}>
