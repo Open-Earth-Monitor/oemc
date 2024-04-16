@@ -123,7 +123,7 @@ const Map: FC<GeostoryMapProps> = ({
           setTooltipValue(null);
         });
     },
-    [date, layerData.gs_name, wmsSource]
+    [date, layerData?.gs_name, wmsSource]
   );
 
   const handleSingleClick = useCallback(
