@@ -2,8 +2,6 @@
 
 import React, { useMemo, FC, useCallback, useEffect, useRef, useState } from 'react';
 
-import { useParams } from 'next/navigation';
-
 import axios from 'axios';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
@@ -12,8 +10,9 @@ import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
-import { useGeostory } from '@/hooks/geostories';
-import { useLayerParsedSource } from '@/hooks/layers';
+import type { GeostoryParsed } from '@/types/geostories';
+import type { LayerParsed } from '@/types/layers';
+
 import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
@@ -32,7 +31,19 @@ import Legend from './legend';
 import MapTooltip from './tooltip';
 import type { CustomMapProps } from './types';
 
-const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
+type GeostoryMapProps = CustomMapProps & {
+  geostoryData: GeostoryParsed;
+  layerData: LayerParsed;
+  compareLayerData: LayerParsed;
+};
+
+const Map: FC<GeostoryMapProps> = ({
+  initialViewState = DEFAULT_VIEWPORT,
+  geostoryData,
+  layerData,
+  compareLayerData,
+}) => {
+  // const { map: mapRef } = useOL();
   const mapRef: React.MutableRefObject<{
     map: ol.Map;
     ol: {
@@ -48,10 +59,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
-  const { geostory_id } = useParams();
-  const { data: geostory, isLoading: isLoadingGeostory } = useGeostory({
-    geostory_id: geostory_id as string,
-  });
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -73,37 +80,15 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     zoom: zoom ? Number(zoom) : initialViewState.zoom,
   } satisfies RView;
 
-  /**
-   * Get the layer source from the API
-   */
-  const { data, isLoading } = useLayerParsedSource(
-    {
-      layer_id: layerId,
-    },
-    {
-      enabled: !!layerId,
-    }
-  );
-  const { gs_base_wms, gs_name, title, unit } = data || {};
-
-  const { data: compareData, isLoading: compareIsLoading } = useLayerParsedSource(
-    {
-      layer_id: compareLayerId,
-    },
-    {
-      enabled: !!compareLayerId,
-    }
-  );
-
   /* Interactivity */
   const wmsSource = useMemo(() => {
     return new TileWMS({
       url: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
-      params: { LAYERS: gs_name, TILED: true },
+      params: { LAYERS: layerData?.gs_name, TILED: true },
       serverType: 'geoserver',
       crossOrigin: 'anonymous',
     });
-  }, [gs_name]);
+  }, [layerData?.gs_name]);
 
   /**
    * Update the URL when the user stops moving the map
@@ -120,31 +105,33 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     [setCenter, setZoom]
   );
 
-  const fetchTooltipValue = useCallback(() => {
-    const olMap: ol.Map = mapRef?.current?.map as unknown as ol.Map;
-    const resolution = olMap?.getView()?.getResolution();
-    const url = wmsSource.getFeatureInfoUrl(tooltipCoordinate, resolution, 'EPSG:3857', {
-      INFO_FORMAT: 'application/json',
-      DIM_DATE: date,
-      LAYERS: gs_name,
-    });
-    axios
-      .get<{ features: { properties: Record<string, number> }[] }>(url)
-      .then(({ data }) => {
-        const value = Object.values(data.features[0].properties)?.[0];
-        setTooltipValue(value);
-      })
-      .catch(() => {
-        setTooltipValue(null);
+  const fetchTooltipValue = useCallback(
+    (coordinate: Coordinate) => {
+      const resolution = mapRef.current.ol.getView()?.getResolution();
+      const url = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
+        INFO_FORMAT: 'application/json',
+        DIM_DATE: date,
+        LAYERS: layerData.gs_name,
       });
-  }, [date, gs_name, tooltipCoordinate, wmsSource]);
+      axios
+        .get<{ features: { properties: Record<string, number> }[] }>(url)
+        .then(({ data }) => {
+          const value = Object.values(data.features[0].properties)?.[0];
+          setTooltipValue(value);
+        })
+        .catch(() => {
+          setTooltipValue(null);
+        });
+    },
+    [date, layerData.gs_name, wmsSource]
+  );
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
       setTooltipValue(null);
       setTooltipPosition([e.pixel[0], e.pixel[1]]);
       setTooltipCoordinate(e.coordinate);
-      fetchTooltipValue();
+      fetchTooltipValue(e.coordinate);
     },
     [fetchTooltipValue]
   );
@@ -154,14 +141,16 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     setTooltipPosition(null);
   }, []);
 
+  // Center to the geostory bbox
   useEffect(() => {
-    if (geostory && !isLoadingGeostory && geostory?.geostory_bbox && mapRef?.current) {
+    if (geostoryData?.geostory_bbox && mapRef && !center) {
       // TO-DO: remove split once the API is fixed
       mapRef?.current?.ol
         ?.getView()
-        ?.fit((geostory?.geostory_bbox as unknown as string).split(',').map(Number));
+        ?.fit((geostoryData?.geostory_bbox as unknown as string).split(',').map(Number));
     }
-  }, [geostory, isLoadingGeostory, layers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [geostoryData?.geostory_bbox]);
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
@@ -171,11 +160,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   // Update tooltip value when the layer changes and it's already open
   useEffect(() => {
-    if (tooltipPosition && typeof tooltipValue === 'number') {
-      fetchTooltipValue();
+    if (tooltipPosition) {
+      fetchTooltipValue(tooltipCoordinate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layerId]);
+  }, [date]);
 
   return (
     <>
@@ -186,7 +175,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         height="100%"
         className="relative"
         initial={initialViewport}
-        view={[initialViewport, null] as [RView, (view: RView) => void]}
+        // view={[initialViewport, null] as [RView, (view: RView) => void]}
         onMoveEnd={handleMapMove}
         onSingleClick={handleSingleClick}
         noDefaultControls
@@ -197,11 +186,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           attributions="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
         />
 
-        {data && !isLoading && (
+        {layerData && layerId && (
           <RLayerWMS
             ref={layerLeftRef}
-            properties={{ label: gs_name, date }}
-            url={gs_base_wms}
+            properties={{ label: layerData.gs_name, date }}
+            url={layerData.gs_base_wms}
             opacity={opacity}
             params={{
               FORMAT: 'image/png',
@@ -211,7 +200,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
               VERSION: '1.3.0',
               REQUEST: 'GetMap',
               TRANSPARENT: true,
-              LAYERS: gs_name,
+              LAYERS: layerData.gs_name,
               DIM_DATE: date,
               CRS: 'EPSG:3857',
               BBOX: 'bbox-epsg-3857',
@@ -219,11 +208,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           />
         )}
 
-        {compareData && !compareIsLoading && (
+        {compareLayerData && compareLayerId && (
           <RLayerWMS
             ref={layerRightRef}
-            properties={{ label: compareData.gs_name }}
-            url={compareData.gs_base_wms}
+            properties={{ label: compareLayerData.gs_name }}
+            url={compareLayerData.gs_base_wms}
             opacity={compareOpacity}
             params={{
               FORMAT: 'image/png',
@@ -233,7 +222,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
               VERSION: '1.3.0',
               REQUEST: 'GetMap',
               TRANSPARENT: true,
-              LAYERS: compareData.gs_name,
+              LAYERS: compareLayerData.gs_name,
               CRS: 'EPSG:3857',
               BBOX: 'bbox-epsg-3857',
             }}
@@ -249,7 +238,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           <RControl.RZoom zoomOutLabel="-" zoomInLabel="+" />
           <BookmarkControl />
           <ShareControl />
-          {isCompareLayerActive && data && !isLoading && compareData && !compareIsLoading && (
+          {isCompareLayerActive && layerData && compareLayerData && (
             <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
           )}
         </Controls>
@@ -257,13 +246,15 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
 
         {/* Interactivity */}
-        <MapTooltip
-          onCloseTooltip={handleCloseTooltip}
-          tooltipPosition={tooltipPosition}
-          tooltipValue={tooltipValue}
-          title={title}
-          unit={unit}
-        />
+        {layerData && (
+          <MapTooltip
+            onCloseTooltip={handleCloseTooltip}
+            tooltipPosition={tooltipPosition}
+            tooltipValue={tooltipValue}
+            title={layerData.title}
+            unit={layerData.unit}
+          />
+        )}
       </RMap>
     </>
   );
