@@ -7,7 +7,7 @@ import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import TileWMS from 'ol/source/TileWMS';
-import { RLayerWMS, RLayerTileWMS, RMap, RLayerTile, RControl } from 'rlayers';
+import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
 import { useLayerParsedSource } from '@/hooks/layers';
@@ -39,7 +39,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
-  const layerTileRef = useRef(null);
   const [tooltipPosition, setTooltipPosition] = useState<[number, number]>(null);
   const [tooltipCoordinate, setTooltipCoordinate] = useState<Coordinate>(null);
   const [tooltipValue, setTooltipValue] = useState<number>(null);
@@ -78,7 +77,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       enabled: !!layerId,
     }
   );
-  const { gs_base_wms, gs_name, title, unit, range } = data || {};
+  const { gs_base_wms, gs_name, title, unit } = data || {};
 
   /* Interactivity */
   const wmsSource = useMemo(() => {
@@ -193,30 +192,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
               CRS: 'EPSG:3857',
               BBOX: 'bbox-epsg-3857',
             }}
-            visible={layerId && range?.length > 1}
-          />
-        )}
-
-        {data && !isLoading && (
-          <RLayerTileWMS
-            ref={layerTileRef}
-            properties={{ label: gs_name, date }}
-            url={gs_base_wms}
-            opacity={opacity}
-            params={{
-              FORMAT: 'image/png',
-              WIDTH: 256,
-              HEIGHT: 256,
-              SERVICE: 'WMS',
-              VERSION: '1.3.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: gs_name,
-              DIM_DATE: date,
-              CRS: 'EPSG:3857',
-              BBOX: 'bbox-epsg-3857',
-            }}
-            visible={layerId && (!range || range?.length <= 1)}
           />
         )}
 
