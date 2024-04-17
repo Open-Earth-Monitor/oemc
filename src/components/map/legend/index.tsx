@@ -73,7 +73,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
 
   const handleBaseDate = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
       void setLayers([{ id: layerId, opacity, date: e.currentTarget.value }]);
     },
     [layerId, opacity, setLayers]
@@ -119,7 +118,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
 
   const handleCompareDate = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
       void setCompareLayers([{ id: layerId, opacity, date: e.currentTarget.value }]);
     },
     [layerId, opacity, setCompareLayers]
