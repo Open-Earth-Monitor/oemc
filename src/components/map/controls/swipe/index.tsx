@@ -24,6 +24,7 @@ const SwipeControl: React.FC<{
   useEffect(() => {
     if (layerLeft && layerRight) {
       swipeControl.setProperties({ position });
+      swipeControl.addLayer([layerLeft?.current?.ol], false);
       swipeControl.addLayer([layerRight?.current?.ol], true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
