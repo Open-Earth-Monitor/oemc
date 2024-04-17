@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dropdown in legend styles and inteeractivity [OEMC-231](https://vizzuality.atlassian.net/browse/OEMC-231)
 
 ### Fixed
+- In comparison left layer is also in the right side [OEMC-252](https://vizzuality.atlassian.net/browse/OEMC-252)
 - Warnings related to image sizes
 - Warnings related to ref and dropdowns
 - Tooltip was not updating value when date changes [OEMC-238](https://vizzuality.atlassian.net/browse/OEMC-238)
