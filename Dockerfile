@@ -6,7 +6,7 @@ COPY package.json yarn.lock .yarnrc.yml ./
 RUN yarn install --immutable
 
 # Rebuild the source code only when needed
-FROM node:18.15-bullseye AS builder
+FROM deps AS builder
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
@@ -20,7 +20,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN yarn build
 
 # Production image, copy all the files and run next
-FROM node:18.15-bullseye AS runner
+FROM deps AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
