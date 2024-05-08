@@ -18,6 +18,7 @@ import {
   useSyncCompareLayersSettings,
   useSyncCenterSettings,
   useSyncZoomSettings,
+  useSwipeControlPosition,
 } from '@/hooks/sync-query';
 
 import Attributions from './attributions';
@@ -30,6 +31,13 @@ import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import MapTooltip from './tooltip';
 import type { CustomMapProps } from './types';
+
+type TooltipInfo = {
+  position: [number, number] | null;
+  coordinate: Coordinate;
+  value: number;
+  side: 'left' | 'right';
+};
 
 type GeostoryMapProps = CustomMapProps & {
   geostoryData: GeostoryParsed;
@@ -48,17 +56,22 @@ const Map: FC<GeostoryMapProps> = ({
     map: ol.Map;
     ol: {
       getView: () => ol.View;
+      getSize: () => [number, number];
     };
   }> = useRef<null>(null);
 
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
-  const [tooltipPosition, setTooltipPosition] = useState<[number, number]>(null);
-  const [tooltipCoordinate, setTooltipCoordinate] = useState<Coordinate>(null);
-  const [tooltipValue, setTooltipValue] = useState<number>(null);
+  const [tooltipInfo, setTooltipInfo] = useState<TooltipInfo>({
+    position: null,
+    coordinate: null,
+    value: null,
+    side: null,
+  });
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
+  const [swipeControlPosition] = useSwipeControlPosition();
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -71,6 +84,11 @@ const Map: FC<GeostoryMapProps> = ({
   const compareLayerId = compareLayers?.[0]?.id;
   const compareOpacity = compareLayers?.[0]?.opacity;
   const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
+  const mapSize = mapRef.current?.ol?.getSize();
+
+  const swipeControlPositionInPx = useMemo(() => {
+    return swipeControlPosition * mapSize?.[0];
+  }, [swipeControlPosition, mapSize]);
 
   /**
    * Initial viewport from the URL or the default one
@@ -84,11 +102,30 @@ const Map: FC<GeostoryMapProps> = ({
   const wmsSource = useMemo(() => {
     return new TileWMS({
       url: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
-      params: { LAYERS: layerData?.gs_name, TILED: true },
+      params: {
+        position: layerLeftRef,
+        name: layerData?.gs_name,
+        LAYERS: layerData?.gs_name,
+        TILED: true,
+      },
       serverType: 'geoserver',
       crossOrigin: 'anonymous',
     });
   }, [layerData?.gs_name]);
+
+  const wmsCompareSource = useMemo(() => {
+    return new TileWMS({
+      url: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
+      params: {
+        position: layerRightRef,
+        name: compareLayerData?.gs_name,
+        LAYERS: compareLayerData?.gs_name,
+        TILED: true,
+      },
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous',
+    });
+  }, [compareLayerData?.gs_name]);
 
   /**
    * Update the URL when the user stops moving the map
@@ -108,37 +145,61 @@ const Map: FC<GeostoryMapProps> = ({
   const fetchTooltipValue = useCallback(
     (coordinate: Coordinate) => {
       const resolution = mapRef.current.ol.getView()?.getResolution();
-      const url = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
+
+      const urlLeft = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
         INFO_FORMAT: 'application/json',
         DIM_DATE: date,
         LAYERS: layerData.gs_name,
       });
+      const urlRight = wmsCompareSource?.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
+        INFO_FORMAT: 'application/json',
+        DIM_DATE: date,
+        LAYERS: compareLayerData.gs_name,
+      });
+
+      const url = tooltipInfo.side === 'left' ? urlLeft : urlRight;
       axios
         .get<{ features: { properties: Record<string, number> }[] }>(url)
         .then(({ data }) => {
           const value = Object.values(data.features[0].properties)?.[0];
-          setTooltipValue(value);
+          const newTooltipInfo = { ...tooltipInfo, value };
+          setTooltipInfo(newTooltipInfo);
         })
         .catch(() => {
-          setTooltipValue(null);
+          const newTooltipInfo = { ...tooltipInfo, value: null };
+          setTooltipInfo(newTooltipInfo);
         });
     },
-    [date, layerData?.gs_name, wmsSource]
+    [date, layerData?.gs_name, wmsSource, compareLayerData?.gs_name, wmsCompareSource, tooltipInfo]
   );
+
+  useEffect(() => {
+    if (tooltipInfo.position) {
+      fetchTooltipValue(tooltipInfo.coordinate);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tooltipInfo.position]);
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
-      setTooltipValue(null);
-      setTooltipPosition([e.pixel[0], e.pixel[1]]);
-      setTooltipCoordinate(e.coordinate);
-      fetchTooltipValue(e.coordinate);
+      const newTooltipInfo: TooltipInfo = {
+        ...tooltipInfo,
+        coordinate: e.coordinate,
+        position: [e.pixel[0], e.pixel[1]],
+      };
+      if (!!swipeControlPositionInPx && e.pixel[0] > swipeControlPositionInPx) {
+        setTooltipInfo({ ...newTooltipInfo, side: 'right' });
+      } else if (!!swipeControlPositionInPx && e.pixel[0] <= swipeControlPositionInPx) {
+        setTooltipInfo({ ...newTooltipInfo, side: 'left' });
+      }
     },
-    [fetchTooltipValue]
+    [swipeControlPositionInPx, setTooltipInfo, tooltipInfo]
   );
 
   const handleCloseTooltip = useCallback(() => {
-    setTooltipValue(null);
-    setTooltipPosition(null);
+    const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
+    setTooltipInfo(newTooltipInfo);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Center to the geostory bbox
@@ -154,14 +215,16 @@ const Map: FC<GeostoryMapProps> = ({
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
-    setTooltipValue(null);
-    setTooltipPosition(null);
-  }, [layerId]);
+    const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
+    setTooltipInfo(newTooltipInfo);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [layerId, compareLayerId]);
 
   // Update tooltip value when the layer changes and it's already open
   useEffect(() => {
-    if (tooltipPosition) {
-      fetchTooltipValue(tooltipCoordinate);
+    if (tooltipInfo.position) {
+      fetchTooltipValue(tooltipInfo.coordinate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
@@ -204,6 +267,8 @@ const Map: FC<GeostoryMapProps> = ({
               DIM_DATE: date,
               CRS: 'EPSG:3857',
               BBOX: 'bbox-epsg-3857',
+              NAME: layerData.gs_name,
+              ID: layerId,
             }}
           />
         )}
@@ -225,6 +290,7 @@ const Map: FC<GeostoryMapProps> = ({
               LAYERS: compareLayerData.gs_name,
               CRS: 'EPSG:3857',
               BBOX: 'bbox-epsg-3857',
+              NAME: compareLayerData.gs_name,
             }}
           />
         )}
@@ -249,9 +315,9 @@ const Map: FC<GeostoryMapProps> = ({
         {layerData && (
           <MapTooltip
             onCloseTooltip={handleCloseTooltip}
-            tooltipPosition={tooltipPosition}
-            tooltipValue={tooltipValue}
-            title={layerData.title}
+            tooltipPosition={tooltipInfo.position}
+            tooltipValue={tooltipInfo.value}
+            title={tooltipInfo.side === 'left' ? layerData.title : compareLayerData.title}
             unit={layerData.unit}
           />
         )}
