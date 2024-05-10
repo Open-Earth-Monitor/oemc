@@ -30,14 +30,7 @@ import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import MapTooltip from './tooltip';
-import type { CustomMapProps } from './types';
-
-type TooltipInfo = {
-  position: [number, number] | null;
-  coordinate: Coordinate;
-  value: number;
-  side: 'left' | 'right';
-};
+import type { CustomMapProps, TooltipInfo } from './types';
 
 type GeostoryMapProps = CustomMapProps & {
   geostoryData: GeostoryParsed;
@@ -175,7 +168,8 @@ const Map: FC<GeostoryMapProps> = ({
 
   useEffect(() => {
     if (tooltipInfo.position) {
-      fetchTooltipValue(tooltipInfo.coordinate);
+      const coordinate: Coordinate = tooltipInfo.position;
+      fetchTooltipValue(coordinate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tooltipInfo.position]);
@@ -224,10 +218,28 @@ const Map: FC<GeostoryMapProps> = ({
   // Update tooltip value when the layer changes and it's already open
   useEffect(() => {
     if (tooltipInfo.position) {
-      fetchTooltipValue(tooltipInfo.coordinate);
+      const coordinate: Coordinate = tooltipInfo.position;
+      fetchTooltipValue(coordinate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
+
+  useEffect(() => {
+    if (tooltipInfo.position) {
+      if (!!swipeControlPositionInPx && tooltipInfo.position[0] > swipeControlPositionInPx) {
+        const newTooltipInfo: TooltipInfo = { ...tooltipInfo, side: 'right' };
+        setTooltipInfo(newTooltipInfo);
+      } else if (
+        !!swipeControlPositionInPx &&
+        tooltipInfo.position[0] <= swipeControlPositionInPx
+      ) {
+        const newTooltipInfo: TooltipInfo = { ...tooltipInfo, side: 'left' };
+        setTooltipInfo(newTooltipInfo);
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [swipeControlPositionInPx]);
 
   return (
     <>

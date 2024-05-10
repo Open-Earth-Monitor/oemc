@@ -27,3 +27,10 @@ export interface CustomMapProps extends Omit<RMapProps, 'initial'> {
 }
 
 export type ExplicitViewState = Pick<RView, 'center' | 'zoom'>;
+
+export type TooltipInfo = {
+  position: [number, number] | null;
+  coordinate: Coordinate;
+  value: number;
+  side: 'left' | 'right';
+};

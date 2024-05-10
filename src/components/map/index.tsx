@@ -16,6 +16,7 @@ import {
   useSyncCompareLayersSettings,
   useSyncCenterSettings,
   useSyncZoomSettings,
+  useSwipeControlPosition,
 } from '@/hooks/sync-query';
 
 import Attributions from './attributions';
@@ -27,24 +28,29 @@ import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import MapTooltip from './tooltip';
-import type { CustomMapProps } from './types';
+import type { CustomMapProps, TooltipInfo } from './types';
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const mapRef: React.MutableRefObject<{
     map: ol.Map;
     ol: {
       getView: () => ol.View;
+      getSize: () => [number, number];
     };
   }> = useRef<null>(null);
 
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
-  const [tooltipPosition, setTooltipPosition] = useState<[number, number]>(null);
-  const [tooltipCoordinate, setTooltipCoordinate] = useState<Coordinate>(null);
-  const [tooltipValue, setTooltipValue] = useState<number>(null);
+  const [tooltipInfo, setTooltipInfo] = useState<TooltipInfo>({
+    position: null,
+    coordinate: null,
+    value: null,
+    side: null,
+  });
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
+  const [swipeControlPosition] = useSwipeControlPosition();
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -57,6 +63,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const compareLayerId = compareLayers?.[0]?.id;
   const compareDate = compareLayers?.[0]?.date;
   const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
+  const mapSize = mapRef.current?.ol?.getSize();
+
+  const swipeControlPositionInPx = useMemo(() => {
+    return swipeControlPosition * mapSize?.[0];
+  }, [swipeControlPosition, mapSize]);
 
   /**
    * Initial viewport from the URL or the default one
@@ -109,50 +120,88 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       const resolution = mapRef?.current?.ol.getView()?.getResolution();
       const url = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
         INFO_FORMAT: 'application/json',
-        DIM_DATE: date,
+        DIM_DATE: tooltipInfo.side === 'right' && isCompareLayerActive ? compareDate : date,
         LAYERS: gs_name,
       });
       axios
         .get<{ features: { properties: Record<string, number> }[] }>(url)
         .then(({ data }) => {
           const value = Object.values(data.features[0].properties)?.[0];
-          setTooltipValue(value);
+          const newTooltipInfo: TooltipInfo = { ...tooltipInfo, value };
+          setTooltipInfo(newTooltipInfo);
         })
         .catch(() => {
-          setTooltipValue(null);
+          const newTooltipInfo: TooltipInfo = { ...tooltipInfo, value: null };
+          setTooltipInfo(newTooltipInfo);
         });
     },
-    [date, gs_name, wmsSource]
+    [date, gs_name, wmsSource, tooltipInfo, compareDate, isCompareLayerActive, setTooltipInfo]
   );
+
+  useEffect(() => {
+    if (tooltipInfo.position) {
+      const coordinate: Coordinate = tooltipInfo.position;
+      fetchTooltipValue(coordinate);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tooltipInfo.position]);
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
-      setTooltipValue(null);
-      setTooltipPosition([e.pixel[0], e.pixel[1]]);
-      setTooltipCoordinate(e.coordinate);
-      fetchTooltipValue(e.coordinate);
+      const newTooltipInfo: TooltipInfo = {
+        ...tooltipInfo,
+        coordinate: e.coordinate,
+        position: [e.pixel[0], e.pixel[1]],
+      };
+      if (!!swipeControlPositionInPx && e.pixel[0] > swipeControlPositionInPx) {
+        setTooltipInfo({ ...newTooltipInfo, side: 'right' });
+      } else if (!!swipeControlPositionInPx && e.pixel[0] <= swipeControlPositionInPx) {
+        setTooltipInfo({ ...newTooltipInfo, side: 'left' });
+      }
     },
-    [fetchTooltipValue]
+    [swipeControlPositionInPx, setTooltipInfo, tooltipInfo]
   );
 
   const handleCloseTooltip = useCallback(() => {
-    setTooltipValue(null);
-    setTooltipPosition(null);
+    const newTooltipInfo: TooltipInfo = { ...tooltipInfo, value: null, position: null };
+    setTooltipInfo(newTooltipInfo);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    // Reset tooltip value whenever layerId changes
-    setTooltipValue(null);
-    setTooltipPosition(null);
-  }, [layerId]);
 
   // Update tooltip value when the layer changes and it's already open
   useEffect(() => {
-    if (tooltipPosition) {
-      fetchTooltipValue(tooltipCoordinate);
+    // Reset tooltip value whenever layerId changes
+    const newTooltipInfo: TooltipInfo = { ...tooltipInfo, value: null, position: null };
+    setTooltipInfo(newTooltipInfo);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [layerId, compareLayerId]);
+
+  useEffect(() => {
+    if (tooltipInfo.position) {
+      if (!!swipeControlPositionInPx && tooltipInfo.position[0] > swipeControlPositionInPx) {
+        const newTooltipInfo: TooltipInfo = { ...tooltipInfo, side: 'right' };
+        setTooltipInfo(newTooltipInfo);
+      } else if (
+        !!swipeControlPositionInPx &&
+        tooltipInfo.position[0] <= swipeControlPositionInPx
+      ) {
+        const newTooltipInfo: TooltipInfo = { ...tooltipInfo, side: 'left' };
+        setTooltipInfo(newTooltipInfo);
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [swipeControlPositionInPx]);
+
+  // Update tooltip value when the layer changes and it's already open
+  useEffect(() => {
+    if (tooltipInfo.position) {
+      const coordinate: Coordinate = tooltipInfo.position;
+      fetchTooltipValue(coordinate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layerId, date]);
+  }, [date, compareDate, swipeControlPositionInPx]);
 
   return (
     <>
@@ -238,8 +287,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         {data && (
           <MapTooltip
             onCloseTooltip={handleCloseTooltip}
-            tooltipPosition={tooltipPosition}
-            tooltipValue={tooltipValue}
+            tooltipPosition={tooltipInfo.position}
+            tooltipValue={tooltipInfo.value}
             title={title}
             unit={unit}
           />
