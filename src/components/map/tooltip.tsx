@@ -36,9 +36,15 @@ const MapTooltip: FC<TooltipProps> = ({
         <XIcon size={10} className="text-brand-500" />
       </button>
       <div className="space-y-2 font-satoshi font-bold text-brand-500">
-        <h3 className="text-sm">{title}</h3>
+        <h3 className="text-sm">{title.left}</h3>
         <div className="text-xl">
-          {numberFormat(tooltipValue)}
+          {numberFormat(tooltipValue.left)}
+          {!!unit && unit}
+        </div>
+        <h3 className="text-sm">{title.right}</h3>
+
+        <div className="text-xl">
+          {numberFormat(tooltipValue.right)}
           {!!unit && unit}
         </div>
       </div>

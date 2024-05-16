@@ -32,10 +32,27 @@ import Legend from './legend';
 import MapTooltip from './tooltip';
 import type { CustomMapProps } from './types';
 
+type Coordinate = [number, number];
+
+interface FeatureProperties {
+  [key: string]: number;
+}
+
+interface Feature {
+  properties: FeatureProperties;
+}
+
+interface FeatureInfoResponse {
+  features: Feature[];
+}
+
 type TooltipInfo = {
   position: [number, number] | null;
   coordinate: Coordinate;
-  value: number;
+  value: {
+    left: number;
+    right: number;
+  };
   side: 'left' | 'right';
 };
 
@@ -65,7 +82,10 @@ const Map: FC<GeostoryMapProps> = ({
   const [tooltipInfo, setTooltipInfo] = useState<TooltipInfo>({
     position: null,
     coordinate: null,
-    value: null,
+    value: {
+      left: null,
+      right: null,
+    },
     side: null,
   });
   const [layers] = useSyncLayersSettings();
@@ -142,27 +162,38 @@ const Map: FC<GeostoryMapProps> = ({
     [setCenter, setZoom]
   );
 
+  
   const fetchTooltipValue = useCallback(
     (coordinate: Coordinate) => {
-      const resolution = mapRef.current.ol.getView()?.getResolution();
-
+      const resolution = mapRef.current?.ol.getView()?.getResolution();
+  
       const urlLeft = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
         INFO_FORMAT: 'application/json',
         DIM_DATE: date,
         LAYERS: layerData.gs_name,
       });
+  
       const urlRight = wmsCompareSource?.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
         INFO_FORMAT: 'application/json',
         DIM_DATE: date,
         LAYERS: compareLayerData.gs_name,
       });
-
-      const url = tooltipInfo.side === 'left' ? urlLeft : urlRight;
-      axios
-        .get<{ features: { properties: Record<string, number> }[] }>(url)
-        .then(({ data }) => {
-          const value = Object.values(data.features[0].properties)?.[0];
-          const newTooltipInfo = { ...tooltipInfo, value };
+  
+      const fetchLeft = axios.get<FeatureInfoResponse>(urlLeft);
+      const fetchRight = urlRight ? axios.get<FeatureInfoResponse>(urlRight) : Promise.resolve({ data: { features: [] } });
+  
+      Promise.all([fetchLeft, fetchRight])
+        .then(([responseLeft, responseRight]) => {
+          const valueLeft = responseLeft.data.features[0]?.properties ? Object.values(responseLeft.data.features[0].properties)[0] : null;
+          const valueRight = responseRight.data.features[0]?.properties ? Object.values(responseRight.data.features[0].properties)[0] : null;
+  
+          const newTooltipInfo = { 
+            ...tooltipInfo, 
+            value: { 
+              left: valueLeft, 
+              right: valueRight 
+            } 
+          };
           setTooltipInfo(newTooltipInfo);
         })
         .catch(() => {
@@ -172,6 +203,7 @@ const Map: FC<GeostoryMapProps> = ({
     },
     [date, layerData?.gs_name, wmsSource, compareLayerData?.gs_name, wmsCompareSource, tooltipInfo]
   );
+  
 
   useEffect(() => {
     if (tooltipInfo.position) {
@@ -317,7 +349,7 @@ const Map: FC<GeostoryMapProps> = ({
             onCloseTooltip={handleCloseTooltip}
             tooltipPosition={tooltipInfo.position}
             tooltipValue={tooltipInfo.value}
-            title={tooltipInfo.side === 'left' ? layerData.title : compareLayerData.title}
+            title={{ left: layerData.title, right: compareLayerData.title}}
             unit={layerData.unit}
           />
         )}
