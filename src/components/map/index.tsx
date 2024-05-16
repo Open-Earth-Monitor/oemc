@@ -28,6 +28,36 @@ import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import MapTooltip from './tooltip';
 import type { CustomMapProps } from './types';
+import { LayerDateRange } from '@/types/layers';
+
+interface FeatureProperties {
+  [key: string]: number;
+}
+
+interface Feature {
+  properties: FeatureProperties;
+}
+
+interface FeatureInfoResponse {
+  features: Feature[];
+}
+
+type TooltipInfo = {
+  position: [number, number] | null;
+  coordinate: Coordinate;
+  leftData: {
+    title: string;
+    date: string;
+    value: number;
+    range: LayerDateRange[];
+    rangeLabels: string[];
+  };
+  rightData: {
+    title: string;
+    date: string;
+    value: number;
+  };
+};
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const mapRef: React.MutableRefObject<{
@@ -39,9 +69,22 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
-  const [tooltipPosition, setTooltipPosition] = useState<[number, number]>(null);
-  const [tooltipCoordinate, setTooltipCoordinate] = useState<Coordinate>(null);
-  const [tooltipValue, setTooltipValue] = useState<number>(null);
+  const [tooltipInfo, setTooltipInfo] = useState<TooltipInfo>({
+    position: null,
+    coordinate: null,
+    leftData: {
+      date: null,
+      title: null,
+      value: null,
+      range: [],
+      rangeLabels: [],
+    },
+    rightData: {
+      date: null,
+      title: null,
+      value: null,
+    },
+  });
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
@@ -77,7 +120,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       enabled: !!layerId,
     }
   );
-  const { gs_base_wms, gs_name, title, unit } = data || {};
+  const { gs_base_wms, gs_name, title, unit, range, range_labels } = data || {};
 
   /* Interactivity */
   const wmsSource = useMemo(() => {
@@ -105,54 +148,89 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   );
 
   const fetchTooltipValue = useCallback(
-    (coordinate: Coordinate) => {
-      const resolution = mapRef?.current?.ol.getView()?.getResolution();
-      const url = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
+    async (coordinate: Coordinate) => {
+      const resolution = mapRef.current?.ol.getView()?.getResolution();
+      if (!resolution) return;
+
+      const urlLeft = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
         INFO_FORMAT: 'application/json',
         DIM_DATE: date,
         LAYERS: gs_name,
       });
-      axios
-        .get<{ features: { properties: Record<string, number> }[] }>(url)
-        .then(({ data }) => {
-          const value = Object.values(data.features[0].properties)?.[0];
-          setTooltipValue(value);
-        })
-        .catch(() => {
-          setTooltipValue(null);
-        });
+
+      let valueLeft: number | null = null;
+      let valueRight: number | null = null;
+
+      try {
+        const responseLeft = await axios.get<FeatureInfoResponse>(urlLeft);
+        valueLeft = responseLeft.data.features[0]?.properties
+          ? Object.values(responseLeft.data.features[0].properties)[0]
+          : null;
+
+        if (compareDate) {
+          const urlRight = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
+            INFO_FORMAT: 'application/json',
+            DIM_DATE: compareDate,
+            LAYERS: gs_name,
+          });
+          const responseRight = await axios.get<FeatureInfoResponse>(urlRight);
+          valueRight = responseRight.data.features[0]?.properties
+            ? Object.values(responseRight.data.features[0].properties)[0]
+            : null;
+        }
+
+        setTooltipInfo((prev) => ({
+          ...prev,
+          leftData: {
+            title,
+            date,
+            value: valueLeft,
+            unit,
+            range,
+            rangeLabels: range_labels,
+          },
+          rightData: { title, date: compareDate, value: valueRight, unit },
+        }));
+      } catch {
+        setTooltipInfo((prev) => ({ ...prev, value: null }));
+      }
     },
-    [date, gs_name, wmsSource]
+    [date, compareDate, gs_name, title, wmsSource, unit, range, range_labels]
   );
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
-      setTooltipValue(null);
-      setTooltipPosition([e.pixel[0], e.pixel[1]]);
-      setTooltipCoordinate(e.coordinate);
-      fetchTooltipValue(e.coordinate);
+      const newTooltipInfo: TooltipInfo = {
+        ...tooltipInfo,
+        coordinate: e.coordinate,
+        position: [e.pixel[0], e.pixel[1]],
+      };
+      setTooltipInfo({ ...newTooltipInfo });
     },
-    [fetchTooltipValue]
+    [setTooltipInfo, tooltipInfo]
   );
 
   const handleCloseTooltip = useCallback(() => {
-    setTooltipValue(null);
-    setTooltipPosition(null);
+    const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
+    setTooltipInfo(newTooltipInfo);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
-    setTooltipValue(null);
-    setTooltipPosition(null);
-  }, [layerId]);
+    const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
+    setTooltipInfo(newTooltipInfo);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [layerId, compareLayerId]);
 
   // Update tooltip value when the layer changes and it's already open
   useEffect(() => {
-    if (tooltipPosition) {
-      fetchTooltipValue(tooltipCoordinate);
+    if (tooltipInfo.position) {
+      void fetchTooltipValue(tooltipInfo.coordinate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layerId, date]);
+  }, [date, tooltipInfo.position, compareDate]);
 
   return (
     <>
@@ -235,15 +313,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
 
         {/* Interactivity */}
-        {data && (
-          <MapTooltip
-            onCloseTooltip={handleCloseTooltip}
-            tooltipPosition={tooltipPosition}
-            tooltipValue={tooltipValue}
-            title={title}
-            unit={unit}
-          />
-        )}
+        {data && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}
       </RMap>
     </>
   );
