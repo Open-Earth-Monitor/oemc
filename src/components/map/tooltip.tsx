@@ -6,7 +6,6 @@ import { format } from 'd3-format';
 import { XIcon } from 'lucide-react';
 
 import { LayerDateRange } from '@/types/layers';
-import cn from '@/lib/classnames';
 
 const numberFormat = format(',.2f');
 
@@ -43,11 +42,11 @@ const MapTooltip: FC<TooltipProps> = ({
         top: `${position[1] - 10}px`,
       }}
     >
-      <button className="absolute right-1 top-1" onClick={onCloseTooltip}>
-        <XIcon size={10} />
+      <button className="absolute right-4 top-4" onClick={onCloseTooltip}>
+        <XIcon size={14} />
       </button>
-      <div className="space-y-4">
-        <h3 className="text-sm font-bold">{leftData.title}</h3>
+      <div className="relative space-y-4">
+        <h3 className="mr-16 text-sm font-bold">{leftData.title}</h3>
 
         <div className="flex items-end space-x-2">
           <div className="space-x-2 text-xl">
@@ -63,6 +62,7 @@ const MapTooltip: FC<TooltipProps> = ({
             <span className="text-sm">({compareDateLabel})</span>
           </div>
         )}
+        <div className="arrow absolute -bottom-5 left-1/2 -translate-x-1/2 rotate-45" />
       </div>
     </div>
   );
