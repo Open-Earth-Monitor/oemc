@@ -213,3 +213,10 @@
   transform: rotate(-45deg) !important;
   left: 2px !important;
 }
+
+
+.arrow{
+  height: 15px;
+  width: 15px;
+  background-color: hsl(60, 100%, 95%);
+}

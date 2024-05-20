@@ -30,11 +30,11 @@ const MapTooltip: FC<TooltipProps> = ({
         top: `${position[1] - 10}px`,
       }}
     >
-      <button className="absolute right-1 top-1" onClick={onCloseTooltip}>
-        <XIcon size={10} className="text-brand-500" />
+      <button className="absolute right-4 top-4" onClick={onCloseTooltip}>
+        <XIcon size={14} className="text-brand-500" />
       </button>
-      <div className="space-y-2">
-        <div className="font-satoshi font-bold text-brand-500">
+      <div className="relative space-y-2">
+        <div className="mr-16 font-satoshi font-bold text-brand-500">
           <h3 className="text-sm">{leftData.title}</h3>
           <div className="text-xl">
             {numberFormat(leftData.value)}
@@ -48,6 +48,7 @@ const MapTooltip: FC<TooltipProps> = ({
             {!!rightData.unit && rightData.unit}
           </div>
         </div>
+        <div className="arrow absolute -bottom-5 left-1/2 -translate-x-1/2 rotate-45" />
       </div>
     </div>
   );
