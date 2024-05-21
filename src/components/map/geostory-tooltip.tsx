@@ -30,7 +30,7 @@ const MapTooltip: FC<TooltipProps> = ({
         top: `${position[1] - 10}px`,
       }}
     >
-      <button className="absolute right-4 top-4" onClick={onCloseTooltip}>
+      <button className="absolute right-4 top-4 z-50" onClick={onCloseTooltip}>
         <XIcon size={14} className="text-brand-500" />
       </button>
       <div className="relative space-y-2">
