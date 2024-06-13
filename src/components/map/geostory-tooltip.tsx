@@ -21,7 +21,6 @@ const MapTooltip: FC<TooltipProps> = ({
   rightData,
 }: TooltipProps) => {
   if (!position || !leftData.value) return null;
-
   return (
     <div
       className="max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md"
@@ -36,18 +35,26 @@ const MapTooltip: FC<TooltipProps> = ({
       <div className="relative space-y-2">
         <div className="mr-16 font-satoshi font-bold text-brand-500">
           <h3 className="text-sm">{leftData.title}</h3>
-          <div className="text-xl">
-            {numberFormat(leftData.value)}
-            {!!leftData.unit && leftData.unit}
-          </div>
+          {leftData.value !== 0 ? (
+            <div className="flex items-end space-x-2">
+              <div className="space-x-2 text-xl">
+                {numberFormat(leftData.value)}
+                {!!leftData.unit && leftData.unit}
+              </div>
+            </div>
+          ) : (
+            <span>No data is available at this specific point.</span>
+          )}
         </div>
-        <div className="border-brand-800 border-t pt-2.5 font-satoshi font-bold text-brand-500">
-          <h3 className="text-sm">{rightData.title}</h3>
-          <div className="text-xl">
-            {numberFormat(rightData.value)}
-            {!!rightData.unit && rightData.unit}
+        {rightData.date && rightData.value !== 0 && (
+          <div className="border-brand-800 border-t pt-2.5 font-satoshi font-bold text-brand-500">
+            <h3 className="text-sm">{rightData.title}</h3>
+            <div className="text-xl">
+              {numberFormat(rightData.value)}
+              {!!rightData.unit && rightData.unit}
+            </div>
           </div>
-        </div>
+        )}
         <div className="arrow absolute -bottom-5 left-1/2 -translate-x-1/2 rotate-45" />
       </div>
     </div>

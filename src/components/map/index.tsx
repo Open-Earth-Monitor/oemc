@@ -166,7 +166,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         valueLeft = responseLeft.data.features[0]?.properties
           ? Object.values(responseLeft.data.features[0].properties)[0]
           : null;
-
         if (compareDate) {
           const urlRight = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
             INFO_FORMAT: 'application/json',
