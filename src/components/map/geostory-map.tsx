@@ -173,9 +173,13 @@ const Map: FC<GeostoryMapProps> = ({
         LAYERS: layerData.gs_name,
       });
 
-      let valueLeft: number | null = null;
-      let valueRight: number | null = null;
+      const urlRight = wmsCompareSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
+        INFO_FORMAT: 'application/json',
+        LAYERS: compareLayerData?.gs_name,
+      });
 
+      let valueLeft: number | null;
+      let valueRight: number | null;
       try {
         const responseLeft = await axios.get<FeatureInfoResponse>(urlLeft);
         if (responseLeft.data.features.length > 0 && responseLeft.data.features[0].properties) {
@@ -183,14 +187,12 @@ const Map: FC<GeostoryMapProps> = ({
           valueLeft = Object.values(properties)[0];
         }
 
-        const urlRight = wmsCompareSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
-          INFO_FORMAT: 'application/json',
-          LAYERS: compareLayerData.gs_name,
-        });
-        const responseRight = await axios.get<FeatureInfoResponse>(urlRight);
-        if (responseRight.data.features.length > 0 && responseRight.data.features[0].properties) {
-          const properties = responseRight.data.features[0].properties;
-          valueRight = Object.values(properties)[0];
+        if (compareLayerData) {
+          const responseRight = await axios.get<FeatureInfoResponse>(urlRight);
+          if (responseRight.data.features.length > 0 && responseRight.data.features[0].properties) {
+            const properties = responseRight.data.features[0].properties;
+            valueRight = Object.values(properties)[0];
+          }
         }
 
         setTooltipInfo((prev) => ({
@@ -201,7 +203,7 @@ const Map: FC<GeostoryMapProps> = ({
             value: valueLeft,
           },
           rightData: {
-            title: compareLayerData.title,
+            title: compareLayerData?.title,
             date: compareDate || '',
             value: valueRight,
           },
@@ -222,15 +224,7 @@ const Map: FC<GeostoryMapProps> = ({
         }));
       }
     },
-    [
-      date,
-      compareDate,
-      wmsSource,
-      wmsCompareSource,
-      compareLayerData,
-      isCompareLayerActive,
-      layerData,
-    ]
+    [date, compareDate, wmsSource, wmsCompareSource, compareLayerData, layerData]
   );
 
   useEffect(() => {
@@ -238,7 +232,7 @@ const Map: FC<GeostoryMapProps> = ({
       void fetchTooltipValue(tooltipInfo.coordinate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tooltipInfo.position]);
+  }, [tooltipInfo.position, tooltipInfo.coordinate]);
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
