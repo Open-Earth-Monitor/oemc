@@ -29,7 +29,7 @@ import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
-import type { CustomMapProps } from './types';
+import type { CustomMapProps, GeostoryTooltipInfo } from './types';
 
 interface FeatureProperties {
   [key: string]: number;
@@ -42,21 +42,6 @@ interface Feature {
 interface FeatureInfoResponse {
   features: Feature[];
 }
-
-type TooltipInfo = {
-  position: [number, number] | null;
-  coordinate: Coordinate;
-  leftData: {
-    title: string;
-    date: string;
-    value: number;
-  };
-  rightData: {
-    title: string;
-    date: string;
-    value: number;
-  };
-};
 
 type GeostoryMapProps = CustomMapProps & {
   geostoryData: GeostoryParsed;
@@ -80,7 +65,8 @@ const Map: FC<GeostoryMapProps> = ({
 
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
-  const [tooltipInfo, setTooltipInfo] = useState<TooltipInfo>({
+
+  const TooltipInitialState = {
     position: null,
     coordinate: null,
     leftData: {
@@ -93,7 +79,9 @@ const Map: FC<GeostoryMapProps> = ({
       title: null,
       value: null,
     },
-  });
+  };
+
+  const [tooltipInfo, setTooltipInfo] = useState<GeostoryTooltipInfo>(TooltipInitialState);
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
@@ -163,20 +151,30 @@ const Map: FC<GeostoryMapProps> = ({
   );
 
   const fetchTooltipValue = useCallback(
-    async (coordinate: Coordinate) => {
+    async (coordinate) => {
       const resolution = mapRef.current?.ol.getView()?.getResolution();
       if (!resolution) return;
 
-      const urlLeft = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
-        INFO_FORMAT: 'application/json',
-        DIM_DATE: date,
-        LAYERS: layerData.gs_name,
-      });
+      const urlLeft = wmsSource.getFeatureInfoUrl(
+        coordinate as Coordinate,
+        resolution,
+        'EPSG:3857',
+        {
+          INFO_FORMAT: 'application/json',
+          DIM_DATE: date,
+          LAYERS: layerData.gs_name,
+        }
+      );
 
-      const urlRight = wmsCompareSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
-        INFO_FORMAT: 'application/json',
-        LAYERS: compareLayerData?.gs_name,
-      });
+      const urlRight = wmsCompareSource.getFeatureInfoUrl(
+        coordinate as Coordinate,
+        resolution,
+        'EPSG:3857',
+        {
+          INFO_FORMAT: 'application/json',
+          LAYERS: compareLayerData?.gs_name,
+        }
+      );
 
       let valueLeft: number | null;
       let valueRight: number | null;
@@ -201,6 +199,7 @@ const Map: FC<GeostoryMapProps> = ({
             title: layerData.title,
             date,
             value: valueLeft,
+            isComparable: layerData.range.length > 1,
           },
           rightData: {
             title: compareLayerData?.title,
@@ -236,8 +235,12 @@ const Map: FC<GeostoryMapProps> = ({
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
-      const newTooltipInfo: TooltipInfo = {
+      const newTooltipInfo: GeostoryTooltipInfo = {
         ...tooltipInfo,
+        leftData: {
+          ...tooltipInfo.leftData,
+          value: null,
+        },
         coordinate: e.coordinate,
         position: [e.pixel[0], e.pixel[1]],
       };

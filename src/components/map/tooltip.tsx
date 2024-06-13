@@ -5,23 +5,13 @@ import React, { FC } from 'react';
 import { format } from 'd3-format';
 import { XIcon } from 'lucide-react';
 
-import { LayerDateRange } from '@/types/layers';
+import type { MonitorTooltipInfo } from './types';
 
 const numberFormat = format(',.2f');
 
-type TooltipProps = {
-  position: [number, number];
+interface TooltipProps extends MonitorTooltipInfo {
   onCloseTooltip: () => void;
-  leftData: {
-    title: string;
-    date?: string;
-    unit?: string;
-    value: number;
-    range: LayerDateRange[];
-    rangeLabels: string[];
-  };
-  rightData: { title: string; date?: string; unit?: string; value: number };
-};
+}
 
 const MapTooltip: FC<TooltipProps> = ({
   position,
@@ -29,7 +19,8 @@ const MapTooltip: FC<TooltipProps> = ({
   leftData,
   rightData,
 }: TooltipProps) => {
-  if (!position || !leftData?.value) return null;
+  if (!position || (!leftData?.value && leftData?.value !== 0)) return null;
+
   const dateLabel = leftData.range.find(({ value }) => value === leftData.date)?.label;
   const compareDateLabel =
     rightData.date && leftData.range.find(({ value }) => value === rightData.date)?.label;
@@ -54,7 +45,7 @@ const MapTooltip: FC<TooltipProps> = ({
               {numberFormat(leftData.value)}
               {!!leftData.unit && leftData.unit}
             </div>
-            <span className="text-sm">({dateLabel})</span>
+            {leftData.isComparable && <span className="text-sm">({dateLabel})</span>}
           </div>
         ) : (
           <span className="pt-2 text-sm font-light">
