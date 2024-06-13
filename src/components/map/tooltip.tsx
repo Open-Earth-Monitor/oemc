@@ -29,7 +29,7 @@ const MapTooltip: FC<TooltipProps> = ({
   leftData,
   rightData,
 }: TooltipProps) => {
-  if (!position || !leftData.value) return null;
+  if (!position) return null;
   const dateLabel = leftData.range.find(({ value }) => value === leftData.date)?.label;
   const compareDateLabel =
     rightData.date && leftData.range.find(({ value }) => value === rightData.date)?.label;
@@ -48,18 +48,24 @@ const MapTooltip: FC<TooltipProps> = ({
       <div className="relative space-y-4">
         <h3 className="mr-16 text-sm font-bold">{leftData.title}</h3>
 
-        <div className="flex items-end space-x-2">
-          <div className="space-x-2 text-xl">
-            {numberFormat(leftData.value)}
-            {!!leftData.unit && leftData.unit}
+        {leftData.value !== 0 ? (
+          <div className="flex items-center space-x-2">
+            <div className="space-x-2 text-xl">
+              {numberFormat(leftData.value)}
+              {!!leftData.unit && leftData.unit}
+            </div>
+            <span className="text-sm">({dateLabel})</span>
           </div>
-          <span className="text-sm">({dateLabel})</span>
-        </div>
-        {rightData.date && (
-          <div className="border-brand-800 border-t pt-2 text-xl">
+        ) : (
+          <span className="pt-2 text-sm font-light">
+            No data is available at this specific point for the selected date ({dateLabel}).
+          </span>
+        )}
+        {rightData.date && rightData.value !== 0 && (
+          <div className="border-brand-800 mt-4 border-t pt-4 text-xl">
             {numberFormat(rightData.value)}
             {!!rightData.unit && rightData.unit}{' '}
-            <span className="text-sm">({compareDateLabel})</span>
+            <span className="pt-4 text-sm">({compareDateLabel})</span>
           </div>
         )}
         <div className="arrow absolute -bottom-5 left-1/2 -translate-x-1/2 rotate-45" />
