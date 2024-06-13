@@ -20,7 +20,7 @@ const MapTooltip: FC<TooltipProps> = ({
   leftData,
   rightData,
 }: TooltipProps) => {
-  if (!position || !leftData.value) return null;
+  if (!position || !leftData?.value) return null;
   return (
     <div
       className="max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md"

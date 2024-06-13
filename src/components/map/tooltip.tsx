@@ -29,7 +29,7 @@ const MapTooltip: FC<TooltipProps> = ({
   leftData,
   rightData,
 }: TooltipProps) => {
-  if (!position) return null;
+  if (!position || !leftData?.value) return null;
   const dateLabel = leftData.range.find(({ value }) => value === leftData.date)?.label;
   const compareDateLabel =
     rightData.date && leftData.range.find(({ value }) => value === rightData.date)?.label;
@@ -58,7 +58,7 @@ const MapTooltip: FC<TooltipProps> = ({
           </div>
         ) : (
           <span className="pt-2 text-sm font-light">
-            No data is available at this specific point for the selected date ({dateLabel}).
+            No data is available at this specific point for the selected date ({dateLabel} dsfsdfh).
           </span>
         )}
         {rightData.date && rightData.value !== 0 && (

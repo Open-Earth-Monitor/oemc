@@ -11,6 +11,7 @@ import { MonitorParsed } from '@/types/monitors';
 
 import { TableCell } from '@/components/ui/table';
 const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
+  const [borderColor, setBorderColor] = useState<string>(null);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const controls = useAnimationControls();
   const { id, title, geostories, color, colorOpacity } = (data ?? {}) as MonitorParsed;
@@ -62,19 +63,21 @@ const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
             })}
           />
           <div>Show </div>
-          <div
+          <button
             data-testid="geostories-container"
-            className="rounded-3xl bg-opacity-80 px-2 hover:border"
+            className="rounded-3xl border border-transparent bg-opacity-80 px-2"
             style={{
               backgroundColor: isExpanded ? color : colorOpacity,
               color: isExpanded ? 'hsl(210, 53%, 7%)' : color,
-              borderColor: color,
+              borderColor: borderColor,
             }}
+            onMouseEnter={() => setBorderColor(color)}
+            onMouseLeave={() => setBorderColor(null)}
           >
             {geostoriesLength > 1
               ? `${geostoriesLength} Geostories`
               : `${geostoriesLength} Geostory`}
-          </div>
+          </button>
         </button>
         <AnimatePresence>
           <motion.ul
