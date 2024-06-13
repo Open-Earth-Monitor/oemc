@@ -1,5 +1,8 @@
 import type { RMapProps } from 'rlayers/RMap';
 import type { RView } from 'rlayers/RMap';
+
+import type { LayerDateRange } from '@/types/layers';
+
 export type Bbox = [number, number, number, number];
 
 export interface CustomMapProps extends Omit<RMapProps, 'initial'> {
@@ -27,3 +30,40 @@ export interface CustomMapProps extends Omit<RMapProps, 'initial'> {
 }
 
 export type ExplicitViewState = Pick<RView, 'center' | 'zoom'>;
+
+export type GeostoryTooltipInfo = {
+  position: [number, number] | null;
+  coordinate: Coordinate;
+  leftData: {
+    title: string;
+    date: string;
+    value: number;
+    unit?: string;
+  };
+  rightData: {
+    title: string;
+    date: string;
+    value: number;
+    unit?: string;
+  };
+};
+
+export type MonitorTooltipInfo = {
+  position: [number, number] | null;
+  coordinate: Coordinate;
+  leftData: {
+    title: string;
+    date?: string;
+    unit?: string;
+    value: number | null;
+    range: LayerDateRange[];
+    rangeLabels: string[];
+    isComparable?: boolean;
+  };
+  rightData: {
+    title: string;
+    date?: string;
+    value: number;
+    unit?: string;
+  };
+};

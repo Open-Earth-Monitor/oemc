@@ -5,14 +5,13 @@ import React, { FC } from 'react';
 import { format } from 'd3-format';
 import { XIcon } from 'lucide-react';
 
+import type { GeostoryTooltipInfo } from './types';
+
 const numberFormat = format(',.2f');
 
-type TooltipProps = {
-  position: [number, number];
+interface TooltipProps extends GeostoryTooltipInfo {
   onCloseTooltip: () => void;
-  leftData: { title: string; date?: string; unit?: string; value: number };
-  rightData: { title: string; date?: string; unit?: string; value: number };
-};
+}
 
 const MapTooltip: FC<TooltipProps> = ({
   position,
