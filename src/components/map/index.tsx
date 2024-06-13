@@ -27,8 +27,7 @@ import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import MapTooltip from './tooltip';
-import type { CustomMapProps } from './types';
-import { LayerDateRange } from '@/types/layers';
+import type { CustomMapProps, MonitorTooltipInfo } from './types';
 
 interface FeatureProperties {
   [key: string]: number;
@@ -42,21 +41,22 @@ interface FeatureInfoResponse {
   features: Feature[];
 }
 
-type TooltipInfo = {
-  position: [number, number] | null;
-  coordinate: Coordinate;
+const TooltipInitialState = {
+  position: null,
+  coordinate: null,
   leftData: {
-    title: string;
-    date: string;
-    value: number;
-    range: LayerDateRange[];
-    rangeLabels: string[];
-  };
+    date: null,
+    title: null,
+    value: null,
+    range: [],
+    rangeLabels: [],
+    isComparable: false,
+  },
   rightData: {
-    title: string;
-    date: string;
-    value: number;
-  };
+    date: null,
+    title: null,
+    value: null,
+  },
 };
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
@@ -69,22 +69,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
-  const [tooltipInfo, setTooltipInfo] = useState<TooltipInfo>({
-    position: null,
-    coordinate: null,
-    leftData: {
-      date: null,
-      title: null,
-      value: null,
-      range: [],
-      rangeLabels: [],
-    },
-    rightData: {
-      date: null,
-      title: null,
-      value: null,
-    },
-  });
+  const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TooltipInitialState);
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
@@ -148,15 +133,20 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   );
 
   const fetchTooltipValue = useCallback(
-    async (coordinate: Coordinate) => {
+    async (coordinate) => {
+      setTooltipInfo((prev) => ({ ...prev, value: null }));
       const resolution = mapRef.current?.ol.getView()?.getResolution();
       if (!resolution) return;
-
-      const urlLeft = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
-        INFO_FORMAT: 'application/json',
-        DIM_DATE: date,
-        LAYERS: gs_name,
-      });
+      const urlLeft = wmsSource.getFeatureInfoUrl(
+        coordinate as Coordinate,
+        resolution,
+        'EPSG:3857',
+        {
+          INFO_FORMAT: 'application/json',
+          DIM_DATE: date,
+          LAYERS: gs_name,
+        }
+      );
 
       let valueLeft: number | null = null;
       let valueRight: number | null = null;
@@ -167,11 +157,16 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           ? Object.values(responseLeft.data.features[0].properties)[0]
           : null;
         if (compareDate) {
-          const urlRight = wmsSource.getFeatureInfoUrl(coordinate, resolution, 'EPSG:3857', {
-            INFO_FORMAT: 'application/json',
-            DIM_DATE: compareDate,
-            LAYERS: gs_name,
-          });
+          const urlRight = wmsSource.getFeatureInfoUrl(
+            coordinate as Coordinate,
+            resolution,
+            'EPSG:3857',
+            {
+              INFO_FORMAT: 'application/json',
+              DIM_DATE: compareDate,
+              LAYERS: gs_name,
+            }
+          );
           const responseRight = await axios.get<FeatureInfoResponse>(urlRight);
           valueRight = responseRight.data.features[0]?.properties
             ? Object.values(responseRight.data.features[0].properties)[0]
@@ -187,6 +182,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             unit,
             range,
             rangeLabels: range_labels,
+            isComparable: range.length > 1 && !!compareDate,
           },
           rightData: { title, date: compareDate, value: valueRight, unit },
         }));
@@ -199,8 +195,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
-      const newTooltipInfo: TooltipInfo = {
+      const newTooltipInfo: MonitorTooltipInfo = {
         ...tooltipInfo,
+        leftData: {
+          ...tooltipInfo.leftData,
+          value: null,
+        },
         coordinate: e.coordinate,
         position: [e.pixel[0], e.pixel[1]],
       };
