@@ -49,7 +49,7 @@ const MapTooltip: FC<TooltipProps> = ({
           </div>
         ) : (
           <span className="pt-2 text-sm font-light">
-            No data is available at this specific point for the selected date ({dateLabel} dsfsdfh).
+            No data is available at this specific point for the selected date ({dateLabel}).
           </span>
         )}
         {rightData.date && rightData.value !== 0 && (
