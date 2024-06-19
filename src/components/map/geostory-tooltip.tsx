@@ -34,18 +34,19 @@ const MapTooltip: FC<TooltipProps> = ({
       <div className="relative space-y-2">
         <div className="mr-16 font-satoshi font-bold text-brand-500">
           <h3 className="text-sm">{leftData.title}</h3>
-          {leftData.value !== 0 ? (
+          {leftData.value !== 0 && (
             <div className="flex items-end space-x-2">
               <div className="space-x-2 text-xl">
                 {numberFormat(leftData.value)}
                 {!!leftData.unit && leftData.unit}
               </div>
             </div>
-          ) : (
+          )}
+          {!leftData.value && (!!rightData.value || !rightData.date) && (
             <span>No data is available at this specific point.</span>
           )}
         </div>
-        {rightData.date && rightData.value !== 0 && (
+        {!!rightData.value && (
           <div className="border-brand-800 border-t pt-2.5 font-satoshi font-bold text-brand-500">
             <h3 className="text-sm">{rightData.title}</h3>
             <div className="text-xl">
@@ -53,6 +54,11 @@ const MapTooltip: FC<TooltipProps> = ({
               {!!rightData.unit && rightData.unit}
             </div>
           </div>
+        )}
+        {!rightData.value && !leftData.value && (
+          <span className="pt-4 text-sm font-light">
+            No data is available at this specific point for any of the layers.
+          </span>
         )}
         <div className="arrow absolute -bottom-5 left-1/2 -translate-x-1/2 rotate-45" />
       </div>
