@@ -202,7 +202,7 @@ const Map: FC<GeostoryMapProps> = ({
             title: layerData.title,
             date,
             value: valueLeft,
-            isComparable: layerData.range.length > 1,
+            isComparable: layerData?.range?.length > 1,
           },
           rightData: {
             title: compareLayerData?.title,
