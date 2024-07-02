@@ -180,14 +180,17 @@ const Map: FC<GeostoryMapProps> = ({
       let valueRight: number | null;
       try {
         const responseLeft = await axios.get<FeatureInfoResponse>(urlLeft);
-        if (responseLeft.data.features.length > 0 && responseLeft.data.features[0].properties) {
+        if (responseLeft.data.features?.length > 0 && responseLeft.data.features[0].properties) {
           const properties = responseLeft.data.features[0].properties;
           valueLeft = Object.values(properties)[0];
         }
 
         if (compareLayerData) {
           const responseRight = await axios.get<FeatureInfoResponse>(urlRight);
-          if (responseRight.data.features.length > 0 && responseRight.data.features[0].properties) {
+          if (
+            responseRight.data.features?.length > 0 &&
+            responseRight.data.features[0].properties
+          ) {
             const properties = responseRight.data.features[0].properties;
             valueRight = Object.values(properties)[0];
           }

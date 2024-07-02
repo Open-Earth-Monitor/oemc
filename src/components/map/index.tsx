@@ -182,7 +182,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             unit,
             range,
             rangeLabels: range_labels,
-            isComparable: range.length > 1 && !!compareDate,
+            isComparable: range?.length > 1 && !!compareDate,
           },
           rightData: { title, date: compareDate, value: valueRight, unit },
         }));

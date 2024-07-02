@@ -21,9 +21,9 @@ const MapTooltip: FC<TooltipProps> = ({
 }: TooltipProps) => {
   if (!position || (!leftData?.value && leftData?.value !== 0)) return null;
 
-  const dateLabel = leftData.range.find(({ value }) => value === leftData.date)?.label;
+  const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
   const compareDateLabel =
-    rightData.date && leftData.range.find(({ value }) => value === rightData.date)?.label;
+    rightData.date && leftData.range?.find(({ value }) => value === rightData.date)?.label;
 
   return (
     <div
@@ -39,7 +39,7 @@ const MapTooltip: FC<TooltipProps> = ({
       <div className="relative space-y-4">
         <h3 className="mr-16 text-sm font-bold">{leftData.title}</h3>
 
-        {leftData.value !== 0 ? (
+        {!!leftData.value && (
           <div className="flex items-center space-x-2">
             <div className="space-x-2 text-xl">
               {numberFormat(leftData.value)}
@@ -47,9 +47,11 @@ const MapTooltip: FC<TooltipProps> = ({
             </div>
             {leftData.isComparable && <span className="text-sm">({dateLabel})</span>}
           </div>
-        ) : (
+        )}
+        {!leftData.value && (!!rightData.value || !rightData.date) && (
           <span className="pt-2 text-sm font-light">
-            No data is available at this specific point for the selected date ({dateLabel}).
+            No data is available at this specific point
+            {dateLabel && ` for the selected date (${dateLabel})`}.
           </span>
         )}
         {rightData.date && rightData.value !== 0 && (
@@ -58,6 +60,12 @@ const MapTooltip: FC<TooltipProps> = ({
             {!!rightData.unit && rightData.unit}{' '}
             <span className="pt-4 text-sm">({compareDateLabel})</span>
           </div>
+        )}
+        {rightData.date && !rightData.value && !leftData.value && (
+          <span className="pt-4 text-sm font-light">
+            No data is available at this specific point for the selected dates ({dateLabel} and{' '}
+            {compareDateLabel}).
+          </span>
         )}
         <div className="arrow absolute -bottom-5 left-1/2 -translate-x-1/2 rotate-45" />
       </div>
