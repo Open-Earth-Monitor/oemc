@@ -1,11 +1,18 @@
 import { FC, PropsWithChildren } from 'react';
 
+import { useMediaQuery } from 'react-responsive';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
-import MainMenu from '@/components/main-menu';
+import { mobile } from '@/lib/media-queries';
+
+import MainMenuDesktop from '@/components/main-menu/desktop';
+import MainMenuMobile from '@/components/main-menu/mobile';
 
 const MapLayout: FC<PropsWithChildren> = ({ children }) => {
+  // const isMobile = useMediaQuery(mobile);
+
   return (
     <div className="absolute left-0 top-0 h-full w-full">
       <div className="h-[70px] w-full items-center border-b border-b-secondary-900 bg-brand-500/80">
@@ -28,7 +35,8 @@ const MapLayout: FC<PropsWithChildren> = ({ children }) => {
               Alpha version
             </div>
           </div>
-          <MainMenu />
+          {/* {!isMobile && <MainMenuDesktop />}
+          {isMobile && <MainMenuMobile />} */}
         </div>
       </div>
       <div className="relative h-[calc(100%-4.375rem)]">{children}</div>
