@@ -16,9 +16,9 @@ const Hub: NextPage = () => (
   <>
     <Hero />
     <LandingDatasets />
+    <SocialMedia />
     <PreFooter />
     <Footer />
-    <SocialMedia />
   </>
 );
 

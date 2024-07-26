@@ -52,8 +52,14 @@ function useCarousel() {
   return context;
 }
 
-const Carousel = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & CarouselProps>(
-  ({ orientation = 'horizontal', opts, setApi, plugins, className, children, ...props }, ref) => {
+const Carousel = forwardRef<
+  HTMLDivElement,
+  HTMLAttributes<HTMLDivElement> & CarouselProps & { prevNext: boolean }
+>(
+  (
+    { orientation = 'horizontal', opts, setApi, plugins, className, children, prevNext, ...props },
+    ref
+  ) => {
     const [carouselRef, api] = useEmblaCarousel(
       {
         ...opts,
@@ -138,10 +144,12 @@ const Carousel = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & Car
           {...props}
         >
           {children}
-          <div className="bottom-50 absolute left-1/2 flex -translate-x-1/2 transform space-x-4 pb-4">
-            <CarouselPrevious />
-            <CarouselNext />
-          </div>
+          {prevNext && (
+            <div className="absolute -bottom-14 left-1/2 flex -translate-x-1/2 transform space-x-4 pb-4">
+              <CarouselPrevious />
+              <CarouselNext />
+            </div>
+          )}
         </div>
       </CarouselContext.Provider>
     );
