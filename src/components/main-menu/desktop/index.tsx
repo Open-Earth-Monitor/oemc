@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/classnames';
 
-import { navLinks } from './constants';
+import { navLinks } from '@/components/main-menu/constants';
 
-const MainMenu = () => {
+const MainMenuDesktop = () => {
   const pathname = usePathname();
 
   return (
@@ -33,4 +33,4 @@ const MainMenu = () => {
   );
 };
 
-export default MainMenu;
+export default MainMenuDesktop;

@@ -19,4 +19,9 @@ API.interceptors.response.use(
   }
 );
 
+export const APISocialMedia = axios.create({
+  baseURL: 'https://fosstodon.org/api/v1',
+  headers: {},
+});
+
 export default API;
