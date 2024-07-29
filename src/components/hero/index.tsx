@@ -38,8 +38,8 @@ const Hero = () => {
     });
   }, []);
 
-  const isMobile = useMediaQuery(mobile);
-  const isTablet = useMediaQuery(tablet);
+  // const isMobile = useMediaQuery(mobile);
+  // const isTablet = useMediaQuery(tablet);
 
   return (
     <div className="relative h-[739px] w-full bg-[url('/images/landing/hero.webp')] bg-cover bg-top">
@@ -63,8 +63,10 @@ const Hero = () => {
               Alpha version
             </div>
           </div>
-          {!isMobile && <MainMenuDesktop />}
-          {isMobile && <MainMenuMobile />}
+          <MainMenuDesktop />
+          <MainMenuDesktop />
+          {/* {!isMobile && <MainMenuDesktop />}
+          {isMobile && <MainMenuMobile />} */}
         </div>
       </div>
       <div className="m-auto ">

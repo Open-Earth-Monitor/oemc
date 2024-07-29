@@ -11,7 +11,7 @@ import MainMenuDesktop from '@/components/main-menu/desktop';
 import MainMenuMobile from '@/components/main-menu/mobile';
 
 const MapLayout: FC<PropsWithChildren> = ({ children }) => {
-  const isMobile = useMediaQuery(mobile);
+  // const isMobile = useMediaQuery(mobile);
 
   return (
     <div className="absolute left-0 top-0 h-full w-full">
@@ -35,8 +35,8 @@ const MapLayout: FC<PropsWithChildren> = ({ children }) => {
               Alpha version
             </div>
           </div>
-          {!isMobile && <MainMenuDesktop />}
-          {isMobile && <MainMenuMobile />}
+          {/* {!isMobile && <MainMenuDesktop />}
+          {isMobile && <MainMenuMobile />} */}
         </div>
       </div>
       <div className="relative h-[calc(100%-4.375rem)]">{children}</div>
