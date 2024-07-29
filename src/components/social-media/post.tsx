@@ -79,7 +79,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
         )}
         <div className="relative mt-5">
           {!!data?.media_attachments.length && (
-            <Carousel className="w-full" prevNext={data?.media_attachments?.length > 1}>
+            <Carousel className="w-full" hasLength={data?.media_attachments?.length > 1}>
               <CarouselContent>
                 {data?.media_attachments?.map((_, index) => (
                   <CarouselItem key={index}>
