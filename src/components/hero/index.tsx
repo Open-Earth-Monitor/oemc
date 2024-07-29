@@ -64,7 +64,6 @@ const Hero = () => {
             </div>
           </div>
           <MainMenuDesktop />
-          <MainMenuDesktop />
           {/* {!isMobile && <MainMenuDesktop />}
           {isMobile && <MainMenuMobile />} */}
         </div>
