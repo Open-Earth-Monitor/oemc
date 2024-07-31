@@ -42,7 +42,7 @@ const SocialMedia = () => {
     },
   };
   return (
-    <section className="m-auto w-full max-w-7xl space-y-5 px-5 font-satoshi md:px-0">
+    <section className="m-auto w-full max-w-[1200px] space-y-10 px-5 font-satoshi md:px-0 md:py-40">
       <h3 className="text-4xl font-bold">Follow our latest news.</h3>
       {isLoading && (
         <div>
