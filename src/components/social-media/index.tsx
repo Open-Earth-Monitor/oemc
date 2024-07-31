@@ -3,6 +3,7 @@
 import { InView } from 'react-intersection-observer';
 
 import { motion } from 'framer-motion';
+import { orderBy } from 'lodash-es';
 
 import { useSocialMedia } from '@/hooks/social-media';
 
@@ -10,7 +11,15 @@ import Loading from '@/components/loading';
 import { Post } from '@/components/social-media/post';
 
 const SocialMedia = () => {
-  const { data, isLoading, isFetched } = useSocialMedia();
+  const { data, isLoading, isFetched } = useSocialMedia(null, {
+    select: (data) => {
+      const orderedData = orderBy(data, 'created_at', 'desc');
+      const postsIds = orderedData.map((post) => post.id);
+      const filteredData = orderedData.filter((post) => !postsIds.includes(post.reblog?.id));
+      return filteredData.slice(0, 4);
+    },
+  });
+
   const container = {
     hidden: { opacity: 0 },
     show: {

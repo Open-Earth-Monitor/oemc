@@ -1,6 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-import { orderBy } from 'lodash-es';
 
 import { APISocialMedia } from 'services/api';
 
@@ -26,6 +25,7 @@ export type Card = {
 };
 
 export type Reblog = {
+  id: string;
   card: Card;
   url: string;
   content: string;
@@ -51,7 +51,7 @@ const DEFAULT_QUERY_OPTIONS = {
   retry: false,
   staleTime: Infinity,
 };
-export function useSocialMedia(params?: unknown) {
+export function useSocialMedia(params?: unknown, queryOptions?: UseQueryOptions<Post[], Error>) {
   const fetchFosstodonPosts = () =>
     APISocialMedia.request({
       method: 'GET',
@@ -60,6 +60,6 @@ export function useSocialMedia(params?: unknown) {
     }).then((response: AxiosResponse<Post[]>) => response.data);
   return useQuery(['social-media', params], fetchFosstodonPosts, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => orderBy(data, 'created_at', 'desc').slice(0, 4),
+    ...queryOptions,
   });
 }
