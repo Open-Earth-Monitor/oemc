@@ -68,8 +68,8 @@ const Hero = () => {
           {isMobile && <MainMenuMobile />} */}
         </div>
       </div>
-      <div className="m-auto ">
-        <h1 className="whitespace-wrap m-auto px-48 pb-16 pt-[295px] text-center font-satoshi text-[80px] font-black leading-[96px]">
+      <div className="m-auto max-w-[1200px]">
+        <h1 className="whitespace-wrap m-auto pb-16 pt-[295px] text-center font-satoshi text-[80px] font-black leading-[96px]">
           {' '}
           Discover and empower with monitoring solutions.
         </h1>

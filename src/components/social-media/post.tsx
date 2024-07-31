@@ -28,7 +28,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
 
   const data = post?.reblog || post;
   return (
-    <div className="h-full border border-secondary-500 p-5" key={post.id}>
+    <div className="h-full border border-brand-50 p-5" key={post.id}>
       <div className="flex items-center space-x-3">
         <Image
           src={data?.account.avatar_static}
