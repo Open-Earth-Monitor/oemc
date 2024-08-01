@@ -10,32 +10,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v1.0.0-alpha.6
 
 ### Added
-- Tooltip update value when the user change date of the layer and the tooltip is already open
+
+- Tooltip update value when the user change date of the layer and the tooltip is already open [OEMC-240](https://vizzuality.atlassian.net/browse/OEMC-240)
+- Social media feed from "fosstodon" [OEMC-257](https://vizzuality.atlassian.net/browse/OEMC-257)
 
 ### Changed
+
 - Upgrade to Next.js 14.1.4
 - Upgrade to Node.js 18.17 required by Next 14.1.4
-- Dropdown in legend styles and inteeractivity [OEMC-231](https://vizzuality.atlassian.net/browse/OEMC-231)
+- Dropdown in legend styles and interactivity [OEMC-231](https://vizzuality.atlassian.net/browse/OEMC-231)
 
 ### Fixed
+
 - In comparison left layer is also in the right side [OEMC-252](https://vizzuality.atlassian.net/browse/OEMC-252)
 - Warnings related to image sizes
 - Warnings related to ref and dropdowns
 - Tooltip was not updating value when date changes [OEMC-238](https://vizzuality.atlassian.net/browse/OEMC-238)
 - Better performance for opacity slider [OEMC-235](https://vizzuality.atlassian.net/browse/OEMC-235)
-- Geolocation position on page loading [OEMC-236](https://vizzuality.atlassian.net/browse/OEMC-236)
+- Geo-location position on page loading [OEMC-236](https://vizzuality.atlassian.net/browse/OEMC-236)
 - Loading layer from URL
 
 ## v1.0.0-alpha.5
 
 ### Added
+
 - Titles in monitor and geostories pages
 - Tooltip update value when the user change date of the layer and the tooltip is already open
 
 ### Changed
+
 - Using monitors attribute instead of layers to show monitor details [OEMC-225](https://vizzuality.atlassian.net/browse/OEMC-225)
 
 ### Fixed
+
 - Fixed default layer was not showed in the map navigating monitors [OEMC-216](https://vizzuality.atlassian.net/browse/OEMC-216)
 - In homepage the geostories card are displaying the wrong monitor name [OEMC-221](https://vizzuality.atlassian.net/browse/OEMC-221)
 - Compare layer should show the correct title in the legend [OEMC-222](https://vizzuality.atlassian.net/browse/OEMC-222)
@@ -45,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v1.0.0-alpha.4
 
 ### Added
+
 - Added a default env variable for the API_URL
 - BaseMap boundaries [OEMC-185](https://vizzuality.atlassian.net/browse/OEMC-185)
 - BaseMap labels [OEMC-185](https://vizzuality.atlassian.net/browse/OEMC-185)
@@ -54,11 +62,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v1.0.0-alpha.3
 
 ### Added
+
 - Filter by theme in monitors and geostories [OEMC-26](https://vizzuality.atlassian.net/browse/OEMC-26)
 - Icons and colors by theme in monitors and geostories on the landing page
 - Added partner link to monitors on the dialog [OEMC-68](https://vizzuality.atlassian.net/browse/OEMC-68)
 
 ### Changed
+
 - Removed info button at datasets level [OEMC-69](https://vizzuality.atlassian.net/browse/OEMC-69)
 - Geostory info moved from sidebar to geostory dialog [OEMC-163](https://vizzuality.atlassian.net/browse/OEMC-163)
 - Ability to filter by multiple categories (themes) in Hub page [OEMC-165](https://vizzuality.atlassian.net/browse/OEMC-165)
@@ -67,6 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Images in landing page [OEMC-194](https://vizzuality.atlassian.net/browse/OEMC-194)
 
 ### Fixed
+
 - Wrong link in geostory card on the landing page
 - Fixed pagination
 - Removed author from monitor dialog
@@ -74,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v1.0.0-alpha.2
 
 ### Added
+
 - Use case links, publications and computational notebooks in geostories [OEMC-43](https://vizzuality.atlassian.net/browse/OEMC-43) [OEMC-34](https://vizzuality.atlassian.net/browse/OEMC-34)
 - Geostories enables comparison by default when a left layer exists [OEMC-113](https://vizzuality.atlassian.net/browse/OEMC-113)
 - Added metadata link to active geostory on the map page [OEMC-41](https://vizzuality.atlassian.net/browse/OEMC-41)
@@ -96,11 +108,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show monitors under development [OEMC-149](https://vizzuality.atlassian.net/browse/OEMC-149)
 
 ### Changed
+
 - Metadata info in monitors and geostories [OEMC-41](https://vizzuality.atlassian.net/browse/OEMC-41) [OEMC-32](https://vizzuality.atlassian.net/browse/OEMC-32) [OEMC-30](https://vizzuality.atlassian.net/browse/OEMC-30)
 
 ## v1.0.0-alpha.1
 
 ### Added
+
 - Satoshi Font, main navigation, and test for navigation functionality [OEMC-18](https://vizzuality.atlassian.net/browse/OEMC-18)
 - Map set up and layers display [OEMC-23](https://vizzuality.atlassian.net/browse/OEMC-23)
 - Map controls to move around the map (zoom in, out, fit bounds)[OEMC-44](https://vizzuality.atlassian.net/browse/OEMC-44)
@@ -114,11 +128,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stadiamaps basemap [OEMC-78](https://vizzuality.atlassian.net/browse/OEMC-78)
 - Map view added to URL [OEMC-75](https://vizzuality.atlassian.net/browse/OEMC-75)
 
-
 ### Changed
+
 - Migration from react-map-gl to [openlayers](https://openlayers.org/) [OEMC-85](https://vizzuality.atlassian.net/browse/OEMC-85)
 
-
 ### Fixed
+
 - Layer animation should keep visibility [OEMC-90](https://vizzuality.atlassian.net/browse/OEMC-90)
 - Visibility toggle should keep previous opacity value in the layer [OEMC-89](https://vizzuality.atlassian.net/browse/OEMC-89)
