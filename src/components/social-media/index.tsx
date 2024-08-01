@@ -16,7 +16,7 @@ const SocialMedia = () => {
       const orderedData = orderBy(data, 'created_at', 'desc');
       const postsIds = orderedData.map((post) => post.id);
       const filteredData = orderedData.filter((post) => !postsIds.includes(post.reblog?.id));
-      return filteredData.slice(0, 4);
+      return filteredData.slice(0, 3);
     },
   });
 
@@ -54,7 +54,7 @@ const SocialMedia = () => {
           {({ ref }) => (
             <motion.div
               ref={ref}
-              className="xs:grid-cols-1 relative m-auto grid gap-5 lg:grid-cols-2 xl:grid-cols-4"
+              className="xs:grid-cols-1 relative m-auto grid gap-5 lg:grid-cols-2 xl:grid-cols-3"
               variants={container}
               initial="hidden"
               animate="show"
