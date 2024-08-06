@@ -34,10 +34,10 @@ const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
           data-testid={`monitor-item-${id}`}
           key={id}
           href={`/map/${id}/datasets`}
-          className={`flex items-center border-l-4 px-4 font-bold`}
+          className={`flex items-center border-l-4 px-2 font-bold sm:px-4`}
           style={{ borderLeftColor: color }}
         >
-          <motion.h2 initial="initial" whileHover="hover" className="text-2xl font-bold">
+          <motion.h2 initial="initial" whileHover="hover" className="text-xl font-bold sm:text-2xl">
             <span className="block">{title}.</span>
             <motion.div
               className="h-0.5 w-0 bg-secondary-500"
@@ -96,7 +96,7 @@ const MonitorsItem = ({ data }: { data: MonitorParsed }) => {
                   whileHover="hover"
                 >
                   <Link href={`/map/geostories/${geostoryId}`} className="block">
-                    <div>
+                    <div className="text-left">
                       <span>{title}</span>
                       <motion.div
                         className="h-0.5 w-0 bg-secondary-500"

@@ -16,11 +16,11 @@ const MapLayout: NextPage = () => (
     <div className="absolute left-1/2 top-[70px] z-10 flex max-h-[85vh] w-full max-w-3xl -translate-x-1/2 flex-col bg-brand-400">
       <ScrollArea className="grow p-12">
         <section className="space-y-6">
-          <header className="divide-x divide-secondary-500">
-            <h1 className="inline-block pr-6 font-satoshi text-4xl font-bold">
+          <header className="sm:divide-x-secondary-500 sm:divide-x">
+            <h1 className="font-satoshi text-4xl font-bold leading-tight text-secondary-500 sm:inline-block sm:pr-6">
               Monitors directory
             </h1>
-            <span className="inline-block pl-6">Select one to discover</span>
+            <span className="inline-block sm:pl-6">Select one to discover</span>
           </header>
           <div>
             <MonitorsTable />
