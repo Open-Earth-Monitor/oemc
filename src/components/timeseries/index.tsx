@@ -75,7 +75,7 @@ const TimeSeries: FC<{
   return (
     <div className="space-y-4 border-secondary-900 pt-2.5">
       <div className="flex justify-between">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 text-secondary-500">
           <span className="text-[10px]">DATE:</span>
           {currentRange && (
             <Select
@@ -132,11 +132,11 @@ const TimeSeries: FC<{
               })}
             />
           ) : (
-            <HiPlay className="h-4 w-4" />
+            <HiPlay className="h-4 w-4 text-secondary-500" />
           )}
         </button>
-        <div className="flex w-full flex-col space-y-2">
-          <div className="max-w flex w-full max-w-[218px] overflow-hidden">
+        <div className="flex w-full max-w-[218px] flex-col space-y-2">
+          <div className="max-w flex w-full  overflow-hidden">
             {range.map((r) => (
               <div key={r.value} className="flex w-full items-center justify-center">
                 <div
@@ -147,7 +147,7 @@ const TimeSeries: FC<{
               </div>
             ))}
           </div>
-          <div className="flex justify-between text-[10px] tracking-tight">
+          <div className="flex justify-between text-[10px] tracking-tight text-secondary-500">
             <div>{startRangelabel}</div>
             <div>{endRangelabel}</div>
           </div>

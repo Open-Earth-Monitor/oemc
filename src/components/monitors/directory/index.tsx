@@ -16,25 +16,29 @@ const MonitorsDirectoryDialog: FC = () => {
   return (
     <Dialog>
       <DialogTrigger className="w-full" asChild>
-        <Button variant="dark" data-testid="monitors-directory-trigger">
+        <Button
+          variant="dark"
+          data-testid="monitors-directory-trigger"
+          className="text-secondary-500"
+        >
           Monitors Directory
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[85vh]">
+      <DialogContent className="z-[55] sm:max-h-[85vh]">
         <div className="p-2">
           <DialogHeader>
             <DialogTitle asChild>
-              <header className="divide-x-secondary-500 divide-x">
-                <h1 className="inline-block pr-6 font-satoshi text-4xl font-bold">
+              <header className="sm:divide-x-secondary-500 text-left sm:divide-x">
+                <h1 className="font-satoshi text-4xl font-bold leading-tight text-secondary-500 sm:inline-block sm:pr-6">
                   Monitors directory
                 </h1>
-                <span className="inline-block pl-6">Select one to discover</span>
+                <span className="inline-block sm:pl-6">Select one to discover</span>
               </header>
             </DialogTitle>
             <DialogDescription asChild>
               <div>
                 <MonitorsTable />
-                <DialogClose className="absolute right-10 top-6 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground" />
+                <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground sm:right-10 sm:top-6" />
               </div>
             </DialogDescription>
           </DialogHeader>

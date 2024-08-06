@@ -62,12 +62,14 @@ const SheetContent = React.forwardRef<
   SheetContentProps
 >(({ side = 'left', className, children, ...props }, ref) => (
   <SheetPortal>
-    {/* <SheetOverlay className="bg-transparent" /> */}
+    <SheetOverlay className="bg-transparent backdrop-blur-none" />
     <SheetPrimitive.Content
       ref={ref}
-      className={cn(sheetVariants({ side }), className, {
-        'absolute bottom-0 top-[70px] max-h-[calc(100vh-70px)] backdrop-blur-sm': true,
-      })}
+      className={cn(
+        sheetVariants({ side }),
+        'absolute bottom-0 top-[70px] max-h-[calc(100vh-70px)] backdrop-blur-sm',
+        className
+      )}
       {...props}
     >
       {children}
