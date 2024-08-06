@@ -38,7 +38,7 @@ const DatasetsPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
     <div>
       {isLoading && <Loading />}
       {!!data?.length && !isError && (
-        <ul className="space-y-6" data-testid="datasets-list">
+        <ul className="space-y-4 sm:space-y-6" data-testid="datasets-list">
           {data.map((dataset) => {
             return (
               <li key={dataset.layer_id}>

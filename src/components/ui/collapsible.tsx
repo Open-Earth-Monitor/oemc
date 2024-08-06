@@ -13,7 +13,7 @@ const CollapsibleTrigger = forwardRef<
   ElementRef<typeof CollapsiblePrimitive.Trigger>,
   ComponentPropsWithoutRef<typeof CollapsiblePrimitive.Trigger> & {
     inset?: boolean;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     className?: string;
   }
 >(({ className, children, ...props }, ref) => (

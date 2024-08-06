@@ -25,7 +25,7 @@ const MonitorHeader: FC = () => {
   );
 
   return (
-    <div className="space-y-6 px-6 py-5" style={{ backgroundColor: data?.color }}>
+    <div className="m-1 space-y-6 px-6 py-5" style={{ backgroundColor: data?.color }}>
       {isLoading && !isFetched && <Loading />}
       {!isLoading && isFetched && !isError && (
         <>
@@ -35,11 +35,18 @@ const MonitorHeader: FC = () => {
               <div data-testid="monitor-tag" className={TAG_STYLE}>
                 monitor
               </div>
-              <h1 data-testid="monitor-title" className="font-satoshi text-5xl font-bold">
+              <h1
+                data-testid="monitor-title"
+                className="font-satoshi text-3xl font-bold sm:text-5xl"
+              >
                 {data.title}
               </h1>
             </div>
-            {data.description && <p data-testid="monitor-description">{data.description}</p>}
+            {data.description && (
+              <p className="hidden sm:block" data-testid="monitor-description">
+                {data.description}
+              </p>
+            )}
             <div className="flex items-center">
               <MonitorDialog {...data} />
             </div>

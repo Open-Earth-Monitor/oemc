@@ -62,9 +62,12 @@ const DatasetCard: FC<DatasetCardProps> = ({
   }, [id, isActive, isCompareActive, isGeostory, layers, range, setCompareLayers, setLayers]);
 
   return (
-    <div className="space-y-6 bg-brand-300 p-6" data-testid={`dataset-item-${id}`}>
+    <div className="space-y-4 bg-brand-300 p-6 sm:space-y-6" data-testid={`dataset-item-${id}`}>
       <div className="flex items-start justify-between space-x-4">
-        <h2 data-testid="dataset-title" className="font-satoshi text-2xl font-bold">
+        <h2
+          data-testid="dataset-title"
+          className="font-satoshi text-2xl font-bold text-secondary-500"
+        >
           {title}
         </h2>
         <div className="mt-1.5 flex items-baseline space-x-2">
@@ -76,20 +79,22 @@ const DatasetCard: FC<DatasetCardProps> = ({
               data-testid="dataset-download-button"
               title="Go to download dataset site"
             >
-              <HiOutlineExternalLink className="h-6 w-6" />
+              <HiOutlineExternalLink className="h-6 w-6 text-secondary-500" />
             </a>
           )}
         </div>
       </div>
 
-      <p data-testid="dataset-description">{description}</p>
+      <p data-testid="dataset-description" className="text-secondary-500">
+        {description}
+      </p>
 
       {!isGeostory && (
         <button
           data-testid="dataset-layer-toggle-button"
           type="button"
           className={cn(
-            'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-secondary-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20',
+            'flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-secondary-500 px-6 py-2 text-xs font-bold text-secondary-500 transition-colors  hover:bg-secondary-500/20',
             {
               'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
             }

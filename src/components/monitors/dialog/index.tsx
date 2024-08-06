@@ -43,7 +43,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
       </DialogTrigger>
       <DialogContent
         data-testid={`monitor-card-${id}`}
-        className="w-[665px] bg-secondary-500 text-brand-500"
+        className="w-full bg-secondary-500 text-brand-500 sm:w-[665px]"
       >
         <DialogHeader className="space-y-6">
           <DialogTitle asChild>
@@ -99,7 +99,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
                   Launch monitor
                 </Link>
               )}
-              <DialogClose className="right-10 top-10 flex h-4 items-center space-x-2 text-xs font-medium uppercase tracking-[0.96px] text-brand-500">
+              <DialogClose className="right-4 top-4 flex h-4 items-center space-x-2 text-xs font-medium uppercase tracking-[0.96px] text-brand-500 sm:right-10 sm:top-10">
                 Close
               </DialogClose>
             </div>
