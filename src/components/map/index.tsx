@@ -10,12 +10,15 @@ import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
+import cn from '@/lib/classnames';
+
 import { useLayerParsedSource } from '@/hooks/layers';
 import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
   useSyncCenterSettings,
   useSyncZoomSettings,
+  useSyncSidebarState,
 } from '@/hooks/sync-query';
 
 import Attributions from './attributions';
@@ -73,6 +76,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
+  const [open] = useSyncSidebarState();
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -300,8 +304,21 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
         />
 
-        <Controls className="absolute bottom-3 left-[554px] z-50 flex flex-col">
-          <RControl.RZoom zoomOutLabel="-" zoomInLabel="+" />
+        <Controls
+          className={cn(
+            'absolute bottom-3 right-5 top-5 z-40 flex flex-col sm:right-auto sm:top-auto',
+            {
+              'duration-500 sm:left-[408px] lg:left-[554px]': open,
+              'duration-300 sm:left-4 lg:left-4': !open,
+            }
+          )}
+        >
+          <RControl.RZoom
+            className={open ? 'ol-zoom-open' : 'ol-zoom'}
+            key={open ? 'ol-zoom-open' : 'ol-zoom'}
+            zoomOutLabel="-"
+            zoomInLabel="+"
+          />
           <BookmarkControl />
           <ShareControl />
           {isCompareLayerActive && data && !isLoading && (
@@ -309,7 +326,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           )}
         </Controls>
         {isLayerActive && <Legend />}
-        <Attributions className="absolute bottom-3 left-[620px] z-50" />
+        <Attributions className="absolute bottom-3 left-0 z-40 lg:left-[620px]" />
 
         {/* Interactivity */}
         {data && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}

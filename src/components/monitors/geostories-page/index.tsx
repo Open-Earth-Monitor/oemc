@@ -23,9 +23,12 @@ const GeostoriesPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
     <div>
       {isLoading && <Loading />}
       {isFetched && !isError && (
-        <ul className="space-y-6 text-brand-500" data-testid="geostories-list">
+        <ul
+          className="border-t border-brand-50 text-brand-500 sm:space-y-6"
+          data-testid="geostories-list"
+        >
           {data.map((geostory) => (
-            <li key={geostory.id}>
+            <li className="p-5 sm:p-0" key={geostory.id}>
               <GeostoryItem {...geostory} color={color} />
             </li>
           ))}
