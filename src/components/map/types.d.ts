@@ -1,7 +1,8 @@
 import type { RMapProps } from 'rlayers/RMap';
 import type { RView } from 'rlayers/RMap';
 
-import type { LayerDateRange } from '@/types/layers';
+import type { GeostoryParsed } from '@/types/geostories';
+import type { LayerDateRange, LayerParsed } from '@/types/layers';
 
 export type Bbox = [number, number, number, number];
 
@@ -66,4 +67,22 @@ export type MonitorTooltipInfo = {
     value: number;
     unit?: string;
   };
+};
+
+interface FeatureProperties {
+  [key: string]: number;
+}
+
+interface Feature {
+  properties: FeatureProperties;
+}
+
+export interface FeatureInfoResponse {
+  features: Feature[];
+}
+
+export type GeostoryMapProps = CustomMapProps & {
+  geostoryData: GeostoryParsed;
+  layerData: LayerParsed;
+  compareLayerData: LayerParsed;
 };

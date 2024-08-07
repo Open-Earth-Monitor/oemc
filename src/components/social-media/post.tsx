@@ -45,13 +45,13 @@ export const Post = ({ post }: { post: PostTypes }) => {
 
       <div className="py-5">
         <div className="space-y-4">
-          {/* <Link
+          <Link
             title={data?.card?.title}
             className="flex w-full flex-wrap py-5 font-bold"
             href={data?.url}
           >
             {data?.card?.title}
-          </Link> */}
+          </Link>
           <div
             ref={contentRef}
             className={`relative  text-secondary-500 ${
