@@ -24,4 +24,9 @@ export const APISocialMedia = axios.create({
   headers: {},
 });
 
+export const APIOpenStreetMapLocation = axios.create({
+  baseURL: 'https://nominatim.openstreetmap.org',
+  headers: {},
+});
+
 export default API;

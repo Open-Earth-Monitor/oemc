@@ -1,18 +1,24 @@
 'use client';
 
-import React, { useMemo, FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { useMemo, FC, useCallback, useEffect, useRef, useState, ChangeEvent } from 'react';
+
+import { useMediaQuery } from 'react-responsive';
 
 import axios from 'axios';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
+import { fromLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
 import cn from '@/lib/classnames';
 
+import { mobile, tablet } from '@/lib/media-queries';
+
 import { useLayerParsedSource } from '@/hooks/layers';
+import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
 import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
@@ -20,6 +26,8 @@ import {
   useSyncZoomSettings,
   useSyncSidebarState,
 } from '@/hooks/sync-query';
+
+import LocationSearchComponent from '@/components/location-search';
 
 import Attributions from './attributions';
 import { DEFAULT_VIEWPORT } from './constants';
@@ -30,7 +38,7 @@ import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import MapTooltip from './tooltip';
-import type { CustomMapProps, MonitorTooltipInfo } from './types';
+import type { CustomMapProps, MonitorTooltipInfo, Bbox } from './types';
 
 interface FeatureProperties {
   [key: string]: number;
@@ -42,6 +50,10 @@ interface Feature {
 
 interface FeatureInfoResponse {
   features: Feature[];
+}
+
+interface ClickEvent {
+  bbox?: Bbox;
 }
 
 const TooltipInitialState = {
@@ -63,6 +75,10 @@ const TooltipInitialState = {
 };
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
+  const [locationSearch, setLocationSearch] = useState('');
+  const isMobile = useMediaQuery(mobile);
+  const isTablet = useMediaQuery(tablet);
+  const isDesktop = !isMobile && !isTablet;
   const mapRef: React.MutableRefObject<{
     map: ol.Map;
     ol: {
@@ -235,6 +251,55 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date, tooltipInfo.position, compareDate]);
 
+  const handleLocationSearchChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setLocationSearch(e.target.value);
+    },
+    [setLocationSearch]
+  );
+
+  const {
+    data: locationData = [],
+    isLoading: isLoadingLocationData = false,
+    isFetching: isFetchingLocationData = false,
+  } = useOpenStreetMapsLocations(
+    {
+      q: locationSearch,
+      format: 'json',
+    },
+    {
+      enabled: locationSearch !== '',
+      select: (data) => data,
+    }
+  );
+
+  const OPTIONS = useMemo(() => {
+    if (!Array.isArray(locationData)) return [];
+    return locationData.map((d) => ({
+      value: d.place_id ?? undefined,
+      label: d.display_name ?? '',
+      // transforming bbox from "nominatim" to "overpass" and to "ESPG:3857 projection"
+      bbox: [
+        ...fromLonLat([+d.boundingbox[2], +d.boundingbox[0]]),
+        ...fromLonLat([+d.boundingbox[3], +d.boundingbox[1]]),
+      ] as Bbox,
+    }));
+  }, [locationData]);
+
+  const handleClick = useCallback(
+    (e: ClickEvent) => {
+      if (mapRef?.current) {
+        const view = mapRef.current.ol.getView();
+        const padding = isDesktop ? [150, 0, 0, 300] : [150, 0, 0, 50];
+        view?.fit(e.bbox, {
+          duration: 2000,
+          ...(!isMobile && { padding }),
+        });
+      }
+    },
+    [isDesktop, isMobile]
+  );
+
   return (
     <>
       <RMap
@@ -327,7 +392,15 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         </Controls>
         {isLayerActive && <Legend />}
         <Attributions className="absolute bottom-3 left-0 z-40 lg:left-[620px]" />
-
+        {/* Location search */}
+        <LocationSearchComponent
+          locationSearch={locationSearch}
+          OPTIONS={OPTIONS}
+          handleLocationSearchChange={handleLocationSearchChange}
+          handleClick={handleClick}
+          isLoading={isLoadingLocationData}
+          isFetching={isFetchingLocationData}
+        />
         {/* Interactivity */}
         {data && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}
       </RMap>
