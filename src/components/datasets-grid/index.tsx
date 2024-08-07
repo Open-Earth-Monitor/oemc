@@ -4,9 +4,12 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { Element, scroller } from 'react-scroll';
 
+import { PopoverClose } from '@radix-ui/react-popover';
 import { motion } from 'framer-motion';
-import { BiCheck } from 'react-icons/bi';
+import { XIcon } from 'lucide-react';
 import { RxCross2 } from 'react-icons/rx';
+
+import cn from '@/lib/classnames';
 
 import { useMonitorsAndGeostoriesPaginated } from '@/hooks/datasets';
 
@@ -17,13 +20,12 @@ import Loading from '@/components/loading';
 import MonitorCard from '@/components/monitors/card';
 import Pagination from '@/components/pagination';
 import Search from '@/components/search';
-import { Checkbox, CheckboxIndicator } from '@/components/ui/checkbox';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { TAG_STYLE } from '@/styles/constants';
 
-import { SORTING } from './constants';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+import { PopoverContent, PopoverTrigger, Popover } from '../ui/popover';
+
+import { FilterByCategories, FilterByFormat, SortBy } from './filters';
 import type { SortingCriteria, Dataset } from './types';
 
 const LandingDatasets = () => {
@@ -90,7 +92,7 @@ const LandingDatasets = () => {
 
   return (
     <Element className="to-bg-brand-500 w-full bg-gradient-to-t from-[#09131D]" name="datasetsGrid">
-      <div className="m-auto max-w-[1200px]">
+      <div className="container mx-auto">
         <div className="flex h-14">
           <Search
             placeholder="Search by name, type of dataset..."
@@ -98,54 +100,36 @@ const LandingDatasets = () => {
             setValue={setSearchValue}
             className="flex h-full flex-1 border-[0.5px] border-secondary-900"
           />
-          <DropdownMenu modal={false}>
-            <DropdownMenuTrigger
-              className="flex h-full min-w-[258px] items-center border-[0.5px] border-l-0 font-inter"
-              data-testid="themes-filter"
-            >
-              <div className="w-full">
-                {filteredThemes.length === activeThemes.length && 'All categories selected'}
-                {activeThemes.length === 0 && 'Filter by categories'}
-                {activeThemes.length === 1 && activeThemes[0]}
-                {activeThemes.length > 1 &&
-                  filteredThemes.length > activeThemes.length &&
-                  `${activeThemes[0]} +${activeThemes.length - 1}`}
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="align-left flex w-full flex-1 flex-col bg-brand-500 font-inter"
-              sideOffset={-1}
-            >
-              {filteredThemes.map((theme) => (
-                <div
-                  key={`menu-item-${theme}`}
-                  className="flex w-full flex-1 items-center space-x-4 p-2 text-secondary-500"
-                >
-                  <Checkbox
-                    id={theme}
-                    data-testid={`${theme}-checkbox`}
-                    onClick={handleThemes}
-                    defaultChecked
-                    checked={activeThemes.includes(theme)}
-                    className="h-5 w-5 border border-secondary-500 bg-transparent text-brand-500 outline-none ring-0 hover:bg-secondary-900 data-[state=checked]:border-none"
-                  >
-                    <CheckboxIndicator className="h-full w-full border-none bg-secondary-500 text-brand-500 outline-0 ring-0 hover:bg-secondary-900">
-                      <BiCheck className="h-4 w-4 fill-current" />
-                    </CheckboxIndicator>
-                  </Checkbox>
-                  <Label
-                    htmlFor={theme}
-                    className="flex w-full flex-1"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {theme}
-                  </Label>
+          <div className="hidden sm:block">
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger
+                className="flex h-14 min-w-[258px] items-center border-[0.5px] border-l-0 border-secondary-900 font-inter"
+                data-testid="themes-filter"
+              >
+                <div className="w-full">
+                  {filteredThemes.length === activeThemes.length && 'All categories selected'}
+                  {activeThemes.length === 0 && 'Filter by categories'}
+                  {activeThemes.length === 1 && activeThemes[0]}
+                  {activeThemes.length > 1 &&
+                    filteredThemes.length > activeThemes.length &&
+                    `${activeThemes[0]} +${activeThemes.length - 1}`}
                 </div>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="align-left flex w-full flex-1 flex-col bg-brand-500 font-inter"
+                sideOffset={-1}
+              >
+                <FilterByCategories activeThemes={activeThemes} handleThemes={handleThemes} />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-        <ul className="mb-12 mt-3 flex space-x-3 text-secondary-500">
+        <ul
+          className={cn(
+            'mb-10 flex flex-wrap gap-3 text-secondary-500',
+            activeThemes.length && 'mt-3'
+          )}
+        >
           {activeThemes.map((theme) => (
             <li key={theme} className="rounded-sm bg-secondary-900 px-2 py-0.5">
               <button
@@ -162,81 +146,66 @@ const LandingDatasets = () => {
             </li>
           ))}
         </ul>
-        <div className="flex items-center justify-between">
+        <div className="flex justify-between sm:hidden">
           <div>
-            <RadioGroup
-              defaultValue={active}
-              className="flex items-center space-x-10 py-3 font-inter font-medium"
-              onValueChange={handleCategoriesFilter}
-            >
-              <div className="flex items-center space-x-2.5" data-testid="monitors-button-checkbox">
-                <RadioGroupItem value="monitors" id="monitors" />
-                <Label htmlFor="monitors" className={TAG_STYLE}>
-                  monitors
-                </Label>
+            <SortBy
+              sortingCriteria={sortingCriteria}
+              handleSortingCriteria={handleSortingCriteria}
+            />
+          </div>
+          <Popover modal={false}>
+            <PopoverTrigger className="border-none py-2.5 underline" data-testid="themes-filter">
+              Filters
+            </PopoverTrigger>
+            <PopoverContent className="min-w-fit bg-brand-500 px-0 py-0 font-inter" sideOffset={-1}>
+              <div className="flex justify-end p-5">
+                <PopoverClose>
+                  <XIcon className="h-4 w-4 text-secondary-500" />
+                </PopoverClose>
               </div>
-              <div
-                className="flex items-center space-x-2.5"
-                data-testid="geostories-button-checkbox"
-              >
-                <RadioGroupItem value="geostories" id="geostories" />
-                <Label htmlFor="geostories" className={TAG_STYLE}>
-                  Geostories
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2.5" data-testid="all-button">
-                <RadioGroupItem value="all" id="all" />
-                <Label htmlFor="all" className={TAG_STYLE}>
-                  All
-                </Label>
-              </div>
-            </RadioGroup>
+              <Collapsible className="border-y-[0.5px] border-secondary-900">
+                <CollapsibleTrigger className="bg-brand-500 py-2 text-secondary-500 hover:bg-brand-500">
+                  Filter by categories
+                </CollapsibleTrigger>
+                <CollapsibleContent className="px-2 pb-2">
+                  <FilterByCategories activeThemes={activeThemes} handleThemes={handleThemes} />
+                </CollapsibleContent>
+              </Collapsible>
+              <Collapsible>
+                <CollapsibleTrigger className="bg-brand-500 py-2 text-secondary-500 hover:bg-brand-500">
+                  Filter by format
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <FilterByFormat active={active} handleCategoriesFilter={handleCategoriesFilter} />
+                </CollapsibleContent>
+              </Collapsible>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div className="hidden items-center justify-between sm:flex">
+          <div>
+            <FilterByFormat active={active} handleCategoriesFilter={handleCategoriesFilter} />
           </div>
           <div>
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger className="flex h-full items-center border-[0.5px] border-secondary-900 px-3 py-2.5 font-inter">
-                <div>
-                  <span className="w-full">Sort by:</span>{' '}
-                  <span className="font-bold capitalize">{sortingCriteria}</span>
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="p-4" sideOffset={-1} alignOffset={0} align="start">
-                <RadioGroup
-                  defaultValue="title"
-                  value={sortingCriteria}
-                  className="flex w-full flex-1 font-inter font-medium"
-                  onValueChange={handleSortingCriteria}
-                >
-                  <div className="align-left flex flex-col justify-start space-y-4">
-                    {SORTING.map((sort) => (
-                      <div
-                        key={sort}
-                        className="flex items-center space-x-3"
-                        data-testid={`${sort}-button`}
-                      >
-                        <RadioGroupItem value={sort} id={sort} />
-                        <Label htmlFor={sort} className="capitalize">
-                          {sort}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </RadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="hidden sm:block">
+              <SortBy
+                sortingCriteria={sortingCriteria}
+                handleSortingCriteria={handleSortingCriteria}
+              />
+            </div>
           </div>
         </div>
-        {!!data?.data?.length && (
+        {!!data?.total_items && (
           <div data-testid="datasets-result" className="py-5 font-inter text-secondary-700">
-            <span data-testid="result-number">{data?.data?.length}</span>{' '}
-            {data?.data?.length === 1 ? 'result' : 'results'}
+            <span data-testid="result-number">{data?.total_items}</span>{' '}
+            {data?.total_items === 1 ? 'result' : 'results'}
           </div>
         )}
         <div className="min-h-[380px]">
           {!isLoading && !isError && (
             <ul
               id="explore-section"
-              className="grid max-w-7xl grid-cols-3 gap-6"
+              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
               data-testid="datasets-list"
             >
               {data?.data?.map(({ id, ...d }) => (

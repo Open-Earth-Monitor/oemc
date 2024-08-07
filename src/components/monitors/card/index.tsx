@@ -18,7 +18,7 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
   const { id, description, title, color, ready, theme } = monitor;
   return (
     <div
-      className="flex h-[468px] flex-col justify-between px-8 py-6 text-brand-500"
+      className="flex min-h-[260px] flex-col justify-between px-8 py-6 text-brand-500 sm:h-[468px]"
       style={{ backgroundColor: color, color: ready && '#000' }}
       data-testid={`card-${id}`}
     >
@@ -32,7 +32,11 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
           </h2>
         </div>
 
-        {description && <p data-testid={`card-description-${id}`}>{description}</p>}
+        {description && (
+          <p className="hidden sm:block" data-testid={`card-description-${id}`}>
+            {description}
+          </p>
+        )}
 
         {ready ? (
           <div className="flex items-center space-x-8">
@@ -41,7 +45,7 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
               href={`/map/${id}/datasets`}
               data-testid={`card-link-${id}`}
               className={cn(
-                'flex items-center space-x-2.5 py-2 text-xs font-bold transition-colors hover:underline'
+                'flex items-center space-x-2.5 py-2 font-bold transition-colors hover:underline sm:text-xs'
               )}
             >
               <HiOutlineArrowTopRightOnSquare className="h-5 w-5" />
@@ -59,7 +63,7 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
       </div>
 
       <div className="flex justify-end">
-        <div className="relative h-[60px] w-[60px]">
+        <div className="relative h-[40px] w-[40px] sm:h-[60px] sm:w-[60px]">
           <Image src={`/svgs/theme-icons/${theme?.toLowerCase()}.svg`} fill alt={theme} />
         </div>
       </div>

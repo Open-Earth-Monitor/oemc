@@ -20,9 +20,9 @@ import SocialMedia from './social-media';
 
 export const Footer: FC = () => {
   return (
-    <footer className="relative m-auto flex w-full max-w-[1200px] bg-gradient-to-b from-[#09131D] to-brand-500 font-inter outline-none">
-      <div className="m-auto flex w-full max-w-[1200px] flex-col items-center divide-y divide-secondary-900">
-        <div className="flex w-full flex-1 justify-between py-7">
+    <footer className="flex w-full space-y-7 bg-gradient-to-b from-[#09131D] to-brand-500 py-7 font-inter outline-none">
+      <div className="container flex flex-col items-center">
+        <div className="flex  w-full flex-1 flex-col flex-wrap justify-between gap-4 border-b border-secondary-900 pb-7 sm:flex-row">
           <div className="flex items-center space-x-3">
             <span className="text-xs text-secondary-700">Powered by</span>
             <Image
@@ -34,7 +34,7 @@ export const Footer: FC = () => {
               priority
             />
           </div>
-          <div className="flex flex-1 cursor-pointer items-center justify-center space-x-10 text-sm font-medium text-secondary-500">
+          <div className="mt-10 flex flex-1 cursor-pointer items-center justify-between text-sm font-medium text-secondary-500 sm:mt-0 sm:justify-center sm:space-x-10">
             <Dialog>
               <DialogTrigger asChild data-testid="disclaimer">
                 <motion.div initial="initial" whileHover="hover" className="w-fit">
@@ -128,12 +128,14 @@ export const Footer: FC = () => {
               />
             </motion.a>
           </div>
-          <SocialMedia />
+          <div className="hidden sm:block">
+            <SocialMedia />
+          </div>
         </div>
-        <div className="flex w-full items-center space-x-2">
+        <div className="flex w-full items-center space-x-2 ">
           <Image src="/images/landing/EU.svg" width={53} height={35} alt="European Union Logo" />
 
-          <span className="block max-w-[376px] flex-1 flex-wrap space-x-2 py-7 text-[10px] leading-3">
+          <span className="block flex-1 flex-wrap space-x-2 py-7 font-inter text-xs leading-tight text-secondary-700 sm:max-w-[434px]">
             This project has received funding from the European Union&apos;s Horizon Europe research
             and innovation programme under{' '}
             <a
@@ -146,6 +148,9 @@ export const Footer: FC = () => {
               grant agreement No. 101059548.
             </a>
           </span>
+        </div>
+        <div className="block w-full sm:hidden">
+          <SocialMedia />
         </div>
       </div>
     </footer>

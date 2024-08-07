@@ -1,7 +1,12 @@
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 
+import Header from '@/components/header';
 import Providers from '@/utils/providers';
+
+// Styles
+import '@/styles/globals.css';
+import 'ol/ol.css';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -33,17 +38,16 @@ const satoshi = localFont({
   fallback: ['system-ui', 'Helvetica Neue', 'Helvetica', 'Arial'],
 });
 
-// Styles
-import '@/styles/globals.css';
-import 'ol/ol.css';
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.className} ${satoshi.className} h-full min-h-screen`}>
-      <body className="mx-auto h-full min-h-screen bg-brand-500 font-inter">
+      <body className="mx-auto h-full min-h-screen w-screen overflow-x-hidden bg-brand-500 font-inter">
         <div className="flex h-full flex-col">
           <main className="relative h-full flex-1">
-            <Providers>{children}</Providers>
+            <Providers>
+              <Header />
+              {children}
+            </Providers>
           </main>
         </div>
       </body>
