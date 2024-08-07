@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 };
 
 const MapLayout: NextPage = () => (
-  <>
-    <div className="absolute left-1/2 top-0 z-10 flex max-h-[85vh] w-full max-w-3xl -translate-x-1/2 flex-col bg-brand-400">
+  <div className="h-screen">
+    <div className="absolute left-1/2 top-[70px] z-10 flex max-h-[85vh] w-full max-w-3xl -translate-x-1/2 flex-col bg-brand-400">
       <ScrollArea className="grow p-12">
         <section className="space-y-6">
           <header className="divide-x divide-secondary-500">
@@ -29,7 +29,7 @@ const MapLayout: NextPage = () => (
       </ScrollArea>
     </div>
     <StaticMap />
-  </>
+  </div>
 );
 
 export default MapLayout;

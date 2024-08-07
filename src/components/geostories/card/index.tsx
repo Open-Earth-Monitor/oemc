@@ -26,7 +26,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
     >
       <div>
         <div
-          className="flex min-h-[235px] grow-0 flex-col justify-between space-y-4 px-8 py-6"
+          className="flex min-h-[235px] grow-0 flex-col justify-between space-y-6 p-7 sm:space-y-4 sm:px-8 sm:py-6"
           style={{ backgroundColor: colorHead, color: ready ? 'inherit' : '#000' }}
         >
           <div className="space-y-2">
@@ -44,11 +44,11 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
                 href={`/map/geostories/${id}`}
                 data-testid={`card-link-${id}`}
                 className={cn(
-                  'flex items-center space-x-2.5 py-2 text-xs font-bold transition-colors hover:underline'
+                  'flex items-center space-x-2.5 py-2 font-bold transition-colors hover:underline sm:text-xs'
                 )}
               >
                 <HiOutlineArrowTopRightOnSquare className="h-5 w-5" />
-                <span className="hover:underline ">Go to geostory</span>
+                <span className="hover:underline">Go to geostory</span>
               </Link>
             </div>
           ) : (
@@ -61,7 +61,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
           )}
         </div>
         {!!monitors?.length && (
-          <div className="px-10 py-4 text-brand-500">
+          <div className="p-7 text-brand-500 sm:px-10 sm:py-4">
             <span className={TAG_STYLE}>monitor</span>
             <div className="space-y-4">
               {monitors.map((monitor) => (
@@ -114,7 +114,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
       </div>
 
       <div className="flex justify-end px-6 pb-6">
-        <div className="relative h-[40px] w-[40px]">
+        <div className="relative  h-[40px] w-[40px] sm:h-[60px] sm:w-[60px]">
           <Image src={`/svgs/theme-icons/${theme?.toLowerCase()}.svg`} fill alt={theme} />
         </div>
       </div>
