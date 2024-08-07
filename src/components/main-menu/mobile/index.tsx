@@ -4,12 +4,13 @@ import { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { DialogContent } from '@radix-ui/react-dialog';
+
 import cn from '@/lib/classnames';
 
 import MonitorsDirectory from '@/components/monitors/table';
 import {
   Dialog,
-  DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
@@ -56,7 +57,7 @@ const MainMenuMobile = () => {
             />
           </button>
         </DialogTrigger>
-        <DialogContent className="fixed bottom-0 left-0 right-0 top-0 translate-x-0 transform bg-brand-500 p-0 text-secondary-500">
+        <DialogContent className="fixed bottom-0 left-0 right-0 top-0 w-screen translate-x-0 transform bg-brand-500 px-0 py-0 text-secondary-500">
           <DialogHeader className="items-end">
             <DialogTitle asChild>
               <div className="flex w-full justify-end p-4">
@@ -123,7 +124,7 @@ const MainMenuMobile = () => {
                 </Link>
                 <Link
                   href="https://earthmonitor.org/"
-                  className="flex h-full min-w-[180px] items-center justify-center p-4 text-center font-satoshi font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500"
+                  className="flex h-full min-w-[180px] items-center justify-center border-y border-secondary-900 p-4 text-center font-satoshi font-bold text-secondary-500 transition-colors hover:bg-secondary-500 hover:text-brand-500"
                   data-testid="project-site-link"
                   target="_blank"
                 >

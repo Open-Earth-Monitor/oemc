@@ -41,8 +41,9 @@ const SocialMedia = () => {
       },
     },
   };
+
   return (
-    <section className="m-auto w-full max-w-[1200px] space-y-10 px-5 font-satoshi md:px-0 md:py-40">
+    <section className="container mt-40 space-y-10 font-satoshi">
       <h3 className="text-4xl font-bold">Follow our latest news.</h3>
       {isLoading && (
         <div>
@@ -54,7 +55,7 @@ const SocialMedia = () => {
           {({ ref }) => (
             <motion.div
               ref={ref}
-              className="xs:grid-cols-1 relative m-auto grid gap-5 lg:grid-cols-2 xl:grid-cols-3"
+              className="xs:grid-cols-1 relative m-auto grid auto-cols-fr gap-5 sm:grid-cols-2 lg:grid-cols-4"
               variants={container}
               initial="hidden"
               animate="show"

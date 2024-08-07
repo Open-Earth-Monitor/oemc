@@ -2,19 +2,10 @@
 
 import { useCallback } from 'react';
 
-import { useMediaQuery } from 'react-responsive';
 import { scroller } from 'react-scroll';
-
-import Image from 'next/image';
-import Link from 'next/link';
 
 import { motion, useAnimation } from 'framer-motion';
 import { HiOutlineArrowCircleRight } from 'react-icons/hi';
-
-import { mobile, tablet } from '@/lib/media-queries';
-
-import MainMenuDesktop from '@/components/main-menu/desktop';
-import MainMenuMobile from '@/components/main-menu/mobile';
 
 const Hero = () => {
   const controls = useAnimation();
@@ -38,39 +29,10 @@ const Hero = () => {
     });
   }, []);
 
-  // const isMobile = useMediaQuery(mobile);
-  // const isTablet = useMediaQuery(tablet);
-
   return (
-    <div className="relative h-[739px] w-full bg-[url('/images/landing/hero.webp')] bg-cover bg-top">
-      <div className="h-[70px] w-full items-center border-b border-b-secondary-900 bg-brand-500 bg-opacity-20">
-        <div className="m-auto flex h-full max-w-[1200px] items-center justify-between">
-          <div className="mx-2 flex items-center space-x-4">
-            <Link href="/">
-              <Image
-                alt="Open-earth-monitor"
-                src="/images/OEM-logo.svg"
-                width={147}
-                height={40}
-                className="block"
-                priority
-              />
-            </Link>
-            <div
-              data-testid="alpha-site"
-              className="rounded-sm border border-alert px-[6px] py-1 font-inter text-xs text-alert"
-            >
-              Alpha version
-            </div>
-          </div>
-          <MainMenuDesktop />
-          {/* {!isMobile && <MainMenuDesktop />}
-          {isMobile && <MainMenuMobile />} */}
-        </div>
-      </div>
-      <div className="m-auto max-w-[1200px]">
-        <h1 className="whitespace-wrap m-auto pb-16 pt-[295px] text-center font-satoshi text-[80px] font-black leading-[96px]">
-          {' '}
+    <div className="container relative mx-auto w-full bg-[url('/images/landing/hero.webp')] bg-cover bg-top pb-[60px] pt-[70px] lg:h-[739px]">
+      <div className="m-auto pt-[80px] sm:pt-[274px] lg:pt-[295px]">
+        <h1 className="whitespace-wrap m-auto pb-16 text-center font-satoshi text-5xl font-black leading-tight lg:text-[80px] lg:leading-[96px]">
           Discover and empower with monitoring solutions.
         </h1>
       </div>
@@ -79,7 +41,7 @@ const Hero = () => {
         whileHover="hover"
         onHoverStart={startBounce}
         onHoverEnd={stopBounce}
-        className="flex w-full cursor-pointer items-center justify-center space-x-2 uppercase"
+        className="hidden w-full cursor-pointer items-center justify-center space-x-2 uppercase sm:flex"
         onClick={handleScroll}
       >
         <span className="font-inter text-xs font-medium">scroll to explore</span>
