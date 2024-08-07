@@ -59,7 +59,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
             }`}
           >
             <div
-              className={`prose:font-normal prose text-secondary-500 prose-a:font-bold prose-a:text-secondary-600 prose-a:underline ${
+              className={`prose:font-normal prose break-words text-secondary-500 prose-a:font-bold prose-a:text-secondary-600 prose-a:underline ${
                 isExpanded ? '' : 'line-clamp-3'
               }`}
               dangerouslySetInnerHTML={{ __html: data?.content }}
@@ -88,6 +88,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
                       alt={_.description}
                       width={_.meta.small.width}
                       height={_.meta.small.height}
+                      // className="max-w-full"
                     />
                   </CarouselItem>
                 ))}
