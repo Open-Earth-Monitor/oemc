@@ -9,7 +9,7 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import type { LoadingProps } from './types';
 
 const Loading: FC<LoadingProps> = ({
-  className = 'relative flex justify-center items-end w-full h-[100px]',
+  className = 'relative flex justify-center items-end w-full h-[100px] py-6',
   iconClassName = 'w-5 h-5 animate-spin',
 }: LoadingProps) => {
   return (

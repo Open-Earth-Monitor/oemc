@@ -1,9 +1,10 @@
 import range from 'lodash/range';
 import { GoTriangleLeft } from 'react-icons/go';
+import { HiEllipsisHorizontal } from 'react-icons/hi2';
 
 import { cn } from '@/lib/classnames';
+
 import PaginationItem from './item';
-import { HiEllipsisHorizontal } from 'react-icons/hi2';
 
 type PaginationProps = {
   page: number;

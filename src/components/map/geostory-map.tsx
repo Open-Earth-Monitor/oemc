@@ -1,24 +1,29 @@
 'use client';
 
-import React, { useMemo, FC, useCallback, useEffect, useRef, useState } from 'react';
+import { useMemo, FC, useCallback, useEffect, useRef, useState, ChangeEvent } from 'react';
+
+import { useMediaQuery } from 'react-responsive';
 
 import axios from 'axios';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
+import { fromLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
-import type { GeostoryParsed } from '@/types/geostories';
-import type { LayerParsed } from '@/types/layers';
+import { mobile, tablet } from '@/lib/media-queries';
 
+import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
 import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
   useSyncCenterSettings,
   useSyncZoomSettings,
 } from '@/hooks/sync-query';
+
+import LocationSearchComponent from '@/components/location-search';
 
 import Attributions from './attributions';
 import { DEFAULT_VIEWPORT } from './constants';
@@ -29,25 +34,11 @@ import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
-import type { CustomMapProps, GeostoryTooltipInfo } from './types';
+import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox } from './types';
 
-interface FeatureProperties {
-  [key: string]: number;
+interface ClickEvent {
+  bbox?: Bbox;
 }
-
-interface Feature {
-  properties: FeatureProperties;
-}
-
-interface FeatureInfoResponse {
-  features: Feature[];
-}
-
-type GeostoryMapProps = CustomMapProps & {
-  geostoryData: GeostoryParsed;
-  layerData: LayerParsed;
-  compareLayerData: LayerParsed;
-};
 
 const Map: FC<GeostoryMapProps> = ({
   initialViewState = DEFAULT_VIEWPORT,
@@ -55,6 +46,11 @@ const Map: FC<GeostoryMapProps> = ({
   layerData,
   compareLayerData,
 }) => {
+  const [locationSearch, setLocationSearch] = useState('');
+  const isMobile = useMediaQuery(mobile);
+  const isTablet = useMediaQuery(tablet);
+  const isDesktop = !isMobile && !isTablet;
+
   // const { map: mapRef } = useOL();
   const mapRef: React.MutableRefObject<{
     map: ol.Map;
@@ -80,7 +76,6 @@ const Map: FC<GeostoryMapProps> = ({
       value: null,
     },
   };
-
   const [tooltipInfo, setTooltipInfo] = useState<GeostoryTooltipInfo>(TooltipInitialState);
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
@@ -285,6 +280,55 @@ const Map: FC<GeostoryMapProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
 
+  const handleLocationSearchChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setLocationSearch(e.target.value);
+    },
+    [setLocationSearch]
+  );
+
+  const {
+    data = [],
+    isLoading = false,
+    isFetching = false,
+  } = useOpenStreetMapsLocations(
+    {
+      q: locationSearch,
+      format: 'json',
+    },
+    {
+      enabled: locationSearch !== '',
+      select: (data) => data,
+    }
+  );
+
+  const OPTIONS = useMemo(() => {
+    if (!Array.isArray(data)) return [];
+    return data.map((d) => ({
+      value: d.place_id ?? undefined,
+      label: d.display_name ?? '',
+      // transforming bbox from "nominatim" to "overpass" and to "ESPG:3857 projection"
+      bbox: [
+        ...fromLonLat([+d.boundingbox[2], +d.boundingbox[0]]),
+        ...fromLonLat([+d.boundingbox[3], +d.boundingbox[1]]),
+      ] as Bbox,
+    }));
+  }, [data]);
+
+  const handleClick = useCallback(
+    (e: ClickEvent) => {
+      if (mapRef?.current) {
+        const view = mapRef.current.ol.getView();
+        const padding = isDesktop ? [150, 0, 0, 300] : [150, 0, 0, 50];
+        view?.fit(e.bbox, {
+          duration: 2000,
+          ...(!isMobile && { padding }),
+        });
+      }
+    },
+    [isDesktop, isMobile]
+  );
+
   return (
     <>
       <RMap
@@ -366,7 +410,15 @@ const Map: FC<GeostoryMapProps> = ({
         </Controls>
         {isLayerActive && <Legend isGeostory />}
         <Attributions className="absolute bottom-3 left-[620px] z-50" />
-
+        {/* Location search */}
+        <LocationSearchComponent
+          locationSearch={locationSearch}
+          OPTIONS={OPTIONS}
+          handleLocationSearchChange={handleLocationSearchChange}
+          handleClick={handleClick}
+          isLoading={isLoading}
+          isFetching={isFetching}
+        />
         {/* Interactivity */}
         {layerData && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}
       </RMap>

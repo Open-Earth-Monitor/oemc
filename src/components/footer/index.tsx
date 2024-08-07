@@ -5,9 +5,6 @@ import { FC } from 'react';
 import Image from 'next/image';
 
 import { motion } from 'framer-motion';
-import { useMediaQuery } from 'usehooks-ts';
-
-import { mobile } from '@/lib/media-queries';
 
 import {
   Dialog,
@@ -22,8 +19,6 @@ import {
 import SocialMedia from './social-media';
 
 export const Footer: FC = () => {
-  const isMobile = useMediaQuery(mobile.query);
-
   return (
     <footer className="flex w-full space-y-7 bg-gradient-to-b from-[#09131D] to-brand-500 py-7 font-inter outline-none">
       <div className="container flex flex-col items-center">
