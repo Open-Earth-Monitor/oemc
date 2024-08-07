@@ -154,7 +154,10 @@ const LandingDatasets = () => {
             />
           </div>
           <Popover modal={false}>
-            <PopoverTrigger className="border-none py-2.5 underline" data-testid="themes-filter">
+            <PopoverTrigger
+              className="border-none py-2.5 underline"
+              data-testid="themes-filter-mobile"
+            >
               Filters
             </PopoverTrigger>
             <PopoverContent className="min-w-fit bg-brand-500 px-0 py-0 font-inter" sideOffset={-1}>
