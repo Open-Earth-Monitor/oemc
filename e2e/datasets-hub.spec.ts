@@ -14,14 +14,16 @@ test('geostories and monitors display', async ({ page }) => {
   );
 
   const datasetsData = (await datasetsResponse.json()) as MonitorsAndGeostoriesPaginated;
-  const dataLength = datasetsData['monitors and geostories'].length;
+
+  const pageLength = datasetsData['monitors and geostories'].length;
 
   const datasetCard = page.getByTestId('datasets-list').locator('li');
-  const maxResultShown = dataLength >= 6 ? 6 : dataLength;
+  const maxResultShown = pageLength;
   const datasetCardCount = await datasetCard.count();
 
   expect(datasetCardCount).toBe(maxResultShown);
 
+  const dataLength = datasetsData.total_items;
   const resultNumber = page.getByTestId('result-number');
   const result = dataLength.toString();
   await expect(resultNumber).toHaveText(result);
