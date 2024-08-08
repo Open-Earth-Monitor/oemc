@@ -17,13 +17,13 @@ test('geostories and monitors display', async ({ page }) => {
   const dataLength = datasetsData['monitors and geostories'].length;
 
   const datasetCard = page.getByTestId('datasets-list').locator('li');
-  const resultsLength = dataLength >= 6 ? 6 : dataLength;
+  const maxResultShown = dataLength >= 6 ? 6 : dataLength;
   const datasetCardCount = await datasetCard.count();
 
-  expect(datasetCardCount).toBe(resultsLength);
+  expect(datasetCardCount).toBe(maxResultShown);
 
   const resultNumber = page.getByTestId('result-number');
-  const result = resultsLength.toString();
+  const result = dataLength.toString();
   await expect(resultNumber).toHaveText(result);
 });
 
