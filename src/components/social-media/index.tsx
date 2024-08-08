@@ -43,7 +43,7 @@ const SocialMedia = () => {
   };
 
   return (
-    <section className="container mt-40 space-y-10 font-satoshi">
+    <section className="container space-y-10 py-40 font-satoshi ">
       <h3 className="text-4xl font-bold">Follow our latest news.</h3>
       {isLoading && (
         <div>
@@ -55,13 +55,13 @@ const SocialMedia = () => {
           {({ ref }) => (
             <motion.div
               ref={ref}
-              className="xs:grid-cols-1 relative m-auto grid auto-cols-fr gap-5 sm:grid-cols-2 lg:grid-cols-4"
+              className="xs:grid-cols-1 grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
               variants={container}
               initial="hidden"
               animate="show"
             >
               {data?.map((post) => (
-                <motion.div key={post.id} variants={item} className="h-full">
+                <motion.div key={post.id} variants={item} className="flex h-full w-full flex-col">
                   <Post post={post} />
                 </motion.div>
               ))}
