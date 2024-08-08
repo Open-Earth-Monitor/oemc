@@ -18,7 +18,7 @@ const MainMenuDesktop = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="flex h-full w-full justify-between" data-testid="main-navigation">
+    <nav className="flex h-full w-full justify-between" data-testid="main-navigation-tablet">
       {navLinks.slice(0, 2).map(({ name, ...props }) => {
         const isActive = `/${pathname.split('/')[1]}` === props.href;
         return (
