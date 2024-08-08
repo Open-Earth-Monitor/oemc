@@ -5,6 +5,9 @@ import { FC } from 'react';
 import Image from 'next/image';
 
 import { motion } from 'framer-motion';
+import { useMediaQuery } from 'usehooks-ts';
+
+import { mobile } from '@/lib/media-queries';
 
 import {
   Dialog,
@@ -19,6 +22,8 @@ import {
 import SocialMedia from './social-media';
 
 export const Footer: FC = () => {
+  const isMobile = useMediaQuery(mobile.query);
+
   return (
     <footer className="flex w-full space-y-7 bg-gradient-to-b from-[#09131D] to-brand-500 py-7 font-inter outline-none">
       <div className="container flex flex-col items-center">
@@ -36,7 +41,7 @@ export const Footer: FC = () => {
           </div>
           <div className="mt-10 flex flex-1 cursor-pointer items-center justify-between text-sm font-medium text-secondary-500 sm:mt-0 sm:justify-center sm:space-x-10">
             <Dialog>
-              <DialogTrigger asChild data-testid="disclaimer">
+              <DialogTrigger asChild data-testid="disclaimer-footer">
                 <motion.div initial="initial" whileHover="hover" className="w-fit">
                   <span>Disclaimer</span>
 
@@ -129,7 +134,7 @@ export const Footer: FC = () => {
             </motion.a>
           </div>
           <div className="hidden sm:block">
-            <SocialMedia />
+            <SocialMedia isMobile />
           </div>
         </div>
         <div className="flex w-full items-center space-x-2 ">

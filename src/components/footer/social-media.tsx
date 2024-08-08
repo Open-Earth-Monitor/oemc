@@ -27,10 +27,11 @@ const SIZE = {
   },
 };
 
-export const SocialMedia: FC<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' }> = ({
-  theme = 'light',
-  size = 'md',
-}) => {
+export const SocialMedia: FC<{
+  theme?: 'light' | 'dark';
+  size?: 'sm' | 'md';
+  isMobile?: boolean; // The testid must be different for mobile and desktop
+}> = ({ theme = 'light', size = 'md', isMobile = false }) => {
   return (
     <div className="flex items-center space-x-5">
       <a
@@ -40,7 +41,7 @@ export const SocialMedia: FC<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' }> =
         title="Open-Earth-Monitor project"
         className="flex h-full items-center justify-center"
         aria-label="Open-Earth-Monitor project twitter"
-        data-testid="twitter-link"
+        data-testid={!isMobile ? 'twitter-link' : 'twitter-link-mobile'}
       >
         <div
           className={cn({
@@ -61,7 +62,7 @@ export const SocialMedia: FC<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' }> =
         title="OpenGeoHub Linkedin"
         className="flex h-full items-center justify-center"
         aria-label="OpenGeoHub Foundation Linkedin"
-        data-testid="linkedin-link"
+        data-testid={!isMobile ? 'linkedin-link' : 'linkedin-link-mobile'}
       >
         <div
           className={cn({
@@ -70,7 +71,6 @@ export const SocialMedia: FC<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' }> =
             [SIZE[size].button]: true,
           })}
         >
-          {' '}
           <RiLinkedinFill
             className={cn({ [CONTROL_ICON_STYLES]: true, [SIZE[size].icon]: true })}
           />
@@ -85,7 +85,7 @@ export const SocialMedia: FC<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' }> =
       title="Open Earth Monitor Cyberinfrastructure project"
       className="align-baseline"
       aria-label="OpenGeoHub in Mastodon"
-      data-testid="mastodon-link"
+      data-testid={!isMobile ?  "mastodon-link"
     >
       <div className={cn(CONTROL_BUTTON_STYLES, 'h-[28px] w-[28px]')}>
         <IoLogoMastodon className={CONTROL_ICON_STYLES} />
@@ -98,7 +98,7 @@ export const SocialMedia: FC<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' }> =
         title="Open Earth Monitor Cyberinfrastructure project"
         className="flex h-full items-center justify-center"
         aria-label="Open Earth Monitor Cyberinfrastructure in GitHub"
-        data-testid="github-link"
+        data-testid={!isMobile ? 'github-link' : 'github-link-mobile'}
       >
         <div
           className={cn({
@@ -118,7 +118,7 @@ export const SocialMedia: FC<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' }> =
         title="OpenGeoHub Foundation"
         className="flex h-full items-center justify-center"
         aria-label="OpenGeoHub Foundation TIB"
-        data-testid="tib-link"
+        data-testid={!isMobile ? 'tib-link' : 'tib-link-mobile'}
       >
         <motion.div
           className={cn(
