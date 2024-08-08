@@ -34,7 +34,7 @@ const MainMenuMobile = () => {
   return (
     <div>
       <Dialog open={isOpen}>
-        <DialogTrigger asChild data-testid="disclaimer">
+        <DialogTrigger asChild data-testid="disclaimer-menu-mobile">
           <button
             onClick={handleClick}
             type="button"
@@ -87,7 +87,7 @@ const MainMenuMobile = () => {
             <DialogDescription asChild>
               <div
                 className="flex h-full w-full flex-col divide-y divide-secondary-900"
-                data-testid="main-navigation"
+                data-testid="main-navigation-mobile"
               >
                 <Link
                   href="/"

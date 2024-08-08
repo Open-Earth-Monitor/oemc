@@ -56,7 +56,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
 
   return (
     <>
-      <section className="md:[30vw] absolute bottom-3 left-3 top-3 z-40 w-[526px] overflow-hidden bg-brand-500">
+      <section className="md:[30vw] absolute bottom-3 left-3 top-[82px] z-40 w-[526px] overflow-hidden bg-brand-500">
         <ScrollArea className="h-full w-full p-7.5" type="auto">
           <div className="space-y-6">
             <div className="divide-y divide-secondary-900">

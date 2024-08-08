@@ -24,7 +24,7 @@ test.describe('external links', () => {
   });
 
   test('OEMC disclaimer', async ({ page }) => {
-    const disclaimerButton = page.getByTestId('disclaimer');
+    const disclaimerButton = page.getByTestId('disclaimer-footer');
     await disclaimerButton.click();
     // ensure a dialog is opened
     await page.waitForSelector('div[role="dialog"]');
