@@ -38,7 +38,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
           className="shrink-0 rounded-full"
         />
         <div className="font-medium">
-          <h4 className="">{post?.reblog?.account.display_name || post?.account.display_name}</h4>
+          <h4>{post?.reblog?.account.display_name || post?.account.display_name}</h4>
           <span className="text-gray-400">@{data?.account.username}</span>
         </div>
       </div>
@@ -47,7 +47,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
         <div className="space-y-4">
           <Link
             title={data?.card?.title}
-            className="block max-h-6 truncate py-5 font-bold"
+            className="flex w-full flex-wrap py-5 font-bold"
             href={data?.url}
           >
             {data?.card?.title}
