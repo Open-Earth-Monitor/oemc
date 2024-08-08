@@ -55,13 +55,17 @@ const SocialMedia = () => {
           {({ ref }) => (
             <motion.div
               ref={ref}
-              className="xs:grid-cols-1 grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
+              className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"
               variants={container}
               initial="hidden"
               animate="show"
             >
               {data?.map((post) => (
-                <motion.div key={post.id} variants={item} className="flex h-full w-full flex-col">
+                <motion.div
+                  key={post.id}
+                  variants={item}
+                  className="flex h-full w-full max-w-full flex-col"
+                >
                   <Post post={post} />
                 </motion.div>
               ))}
