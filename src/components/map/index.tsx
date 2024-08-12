@@ -306,7 +306,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
         <Controls
           className={cn(
-            'absolute bottom-3 right-5 top-5 z-40 flex flex-col sm:right-auto sm:top-auto',
+            'absolute bottom-3 right-5 top-[78px] z-40 flex flex-col sm:right-auto sm:top-auto',
             {
               'duration-500 sm:left-[408px] lg:left-[554px]': open,
               'duration-300 sm:left-4 lg:left-4': !open,
