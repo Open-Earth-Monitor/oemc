@@ -38,10 +38,10 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <section className="monitors absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:bottom-auto sm:left-4 sm:top-4 sm:w-fit sm:border-0 sm:p-0">
+    <section className="monitors absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:bottom-auto sm:left-4 sm:top-[82px] sm:w-fit sm:border-0 sm:p-0">
       {/* Desktop */}
-      <div className="bottom-3 left-4 z-[60] hidden h-[calc(100vh-28px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block">
-        <ScrollArea className="h-full max-h-[calc(100vh-28px-70px)] w-[526px] p-7.5" type="auto">
+      <div className="bottom-3 left-4 z-[60] hidden h-[calc(100vh-24px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block">
+        <ScrollArea className="h-full w-[526px] p-7.5" type="auto">
           <div className="w-full space-y-1 sm:space-y-6">
             <MonitorHeader />
             <TabsNav />
@@ -57,9 +57,9 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="bottom-3 left-4 top-auto z-[60] hidden h-[60vh] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-28px-70px)] lg:hidden"
+          className="bottom-3 left-4 top-auto z-[60] hidden w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)] lg:hidden"
         >
-          <ScrollArea className="h-full max-h-[calc(100vh-28px-70px)] w-[370px] p-7.5" type="auto">
+          <ScrollArea className="h-full  w-[370px] p-7.5" type="auto">
             <div className="w-full space-y-1 sm:space-y-6">
               <MonitorHeader />
               <TabsNav />
