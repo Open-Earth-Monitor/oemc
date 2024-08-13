@@ -40,26 +40,39 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
   return (
     <section className="monitors absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:bottom-auto sm:left-4 sm:top-[82px] sm:w-fit sm:border-0 sm:p-0">
       {/* Desktop */}
-      <div className="bottom-3 left-4 z-[60] hidden h-[calc(100vh-24px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block">
-        <ScrollArea className="h-full w-[526px] p-7.5" type="auto">
-          <div className="w-full space-y-1 sm:space-y-6">
-            <MonitorHeader />
-            <TabsNav />
+      <Sheet onOpenChange={onOpenChange} open={defaultOpen && open}>
+        <SheetTrigger className="hidden h-[60px] w-12 border-none bg-brand-500 sm:block">
+          <ChevronRight className="mx-auto h-6 w-6 text-secondary-500" />
+        </SheetTrigger>
+        <SheetContent
+          side="left"
+          className="bottom-3 left-4 top-auto z-[60] hidden w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)]"
+        >
+          <div className="bottom-3 left-4 z-[60] hidden h-[calc(100vh-24px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block">
+            <ScrollArea className="h-full w-[526px] p-7.5" type="auto">
+              <div className="w-full space-y-1 sm:space-y-6">
+                <MonitorHeader />
+                <TabsNav />
+              </div>
+              {children}
+            </ScrollArea>
           </div>
-          {children}
-        </ScrollArea>
-      </div>
+          <SheetClose className="absolute left-auto right-0 top-0 h-[60px] w-12 translate-x-full border-none bg-brand-500">
+            <ChevronDown className="mx-auto h-6 w-6 rotate-90 text-secondary-500" />
+          </SheetClose>
+        </SheetContent>
+      </Sheet>
 
       {/* Tablet */}
       <Sheet onOpenChange={onOpenChange} open={isTablet && defaultOpen && open}>
-        <SheetTrigger className="hidden h-[60px] w-12 border-none bg-brand-500 sm:block lg:hidden">
+        <SheetTrigger className="hidden h-[60px] w-12 border-none bg-brand-500 sm:block md:hidden">
           <ChevronRight className="mx-auto h-6 w-6 text-secondary-500" />
         </SheetTrigger>
         <SheetContent
           side="left"
           className="bottom-3 left-4 top-auto z-[60] hidden w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)] lg:hidden"
         >
-          <ScrollArea className="h-full  w-[370px] p-7.5" type="auto">
+          <ScrollArea className="h-full w-[370px] p-7.5" type="auto">
             <div className="w-full space-y-1 sm:space-y-6">
               <MonitorHeader />
               <TabsNav />

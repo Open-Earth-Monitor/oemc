@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -30,6 +30,13 @@ const MainMenuMobile = () => {
   const handleMapMenu = useCallback(() => {
     setMenuVisibility(!menuVisibility);
   }, [setMenuVisibility, menuVisibility]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsOpen(false);
+    }
+    //eslint-disable-next-line
+  }, [pathname]);
 
   return (
     <div>
@@ -110,7 +117,7 @@ const MainMenuMobile = () => {
                   Map
                 </button>
                 {menuVisibility && (
-                  <div className="h-80 bg-red-500">
+                  <div className="h-full sm:h-80">
                     <MonitorsDirectory />
                   </div>
                 )}

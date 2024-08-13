@@ -1,9 +1,6 @@
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 @layer base {
   :root {
@@ -76,10 +73,9 @@
     @apply border-border;
   }
   body {
-    @apply bg-background antialiased text-base text-secondary-500;
+    @apply bg-background text-base text-secondary-500 antialiased;
   }
 }
-
 
 /* SEARCH */
 @layer base {
@@ -132,7 +128,8 @@
 }
 
 /* zoom control ropenlayers */
-.ol-zoom, .ol-zoom-open {
+.ol-zoom,
+.ol-zoom-open {
   display: none;
   flex-direction: column !important;
   /* position: relative; */
@@ -164,19 +161,21 @@
   .ol-zoom {
     bottom: 94px !important;
     display: flex;
-    left: 554px !important;
-    animation: none;
+    left: 1rem !important;
+    /* animation: slideOut 200ms ease 0s 1 normal forwards; */
   }
   .ol-zoom-open {
     bottom: 94px !important;
     display: flex;
     left: 554px !important;
-    animation: none;
+    /* animation: slideIn 400ms ease 0s 1 normal forwards; */
   }
 }
 
-
-.ol-zoom-in, .ol-zoom-out, .ol-zoom-open-in, .ol-zoom-open-out {
+.ol-zoom-in,
+.ol-zoom-out,
+.ol-zoom-open-in,
+.ol-zoom-open-out {
   color: hsl(60, 100%, 95%) !important;
   background-color: hsl(210, 54%, 9%) !important;
   outline-offset: 0px !important;
@@ -185,20 +184,24 @@
   overflow: hidden !important;
 }
 
-.ol-zoom-in:hover, .ol-zoom-out:hover, .ol-zoom-open-in:hover, .ol-zoom-open-out:hover {
+.ol-zoom-in:hover,
+.ol-zoom-out:hover,
+.ol-zoom-open-in:hover,
+.ol-zoom-open-out:hover {
   background-color: hsl(60, 100%, 95%) !important;
   color: hsl(210, 54%, 9%) !important;
 }
 
-.ol-zoom-out, .ol-zoom-open-out {
+.ol-zoom-out,
+.ol-zoom-open-out {
   font-size: 32px !important;
   padding-bottom: 4px !important;
 }
 
-.ol-zoom-in, .ol-zoom-open-in {
+.ol-zoom-in,
+.ol-zoom-open-in {
   font-size: 24px !important;
 }
-
 
 .ol-swipe::before {
   background-color: hsla(210, 9%, 22%, 1) !important;
@@ -222,7 +225,7 @@
 
 .ol-swipe button::before,
 .ol-swipe button::after {
-  content: "" !important;
+  content: '' !important;
   border: solid hsla(60, 100%, 95%, 1) !important;
   border-width: 0 2px 2px 0 !important;
   display: inline-block !important;
@@ -243,30 +246,27 @@
   left: 2px;
 }
 
-
-.arrow{
+.arrow {
   height: 15px;
   width: 15px;
   background-color: hsl(60, 100%, 95%);
 }
 
 @keyframes slideIn {
-	0% {
-		opacity: 0;
+  0% {
     left: 16px;
-	}
+  }
 
-	100% {
-		opacity: 1;
-		left: 408px;
-	}
+  100% {
+    left: 408px;
+  }
 }
 
 @keyframes slideOut {
-	0% {
+  0% {
     left: 408px;
-	}
-	100% {
+  }
+  100% {
     left: 16px;
-	}
+  }
 }

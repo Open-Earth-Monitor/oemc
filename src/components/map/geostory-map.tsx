@@ -14,6 +14,10 @@ import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
 import { mobile, tablet } from '@/lib/media-queries';
+import cn from '@/lib/classnames';
+
+import type { GeostoryParsed } from '@/types/geostories';
+import type { LayerParsed } from '@/types/layers';
 
 import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
 import {
@@ -21,6 +25,7 @@ import {
   useSyncCompareLayersSettings,
   useSyncCenterSettings,
   useSyncZoomSettings,
+  useSyncSidebarState,
 } from '@/hooks/sync-query';
 
 import LocationSearchComponent from '@/components/location-search';
@@ -83,6 +88,7 @@ const Map: FC<GeostoryMapProps> = ({
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
+  const [open] = useSyncSidebarState();
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -403,8 +409,21 @@ const Map: FC<GeostoryMapProps> = ({
           url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
         />
 
-        <Controls className="absolute bottom-3 left-[554px] z-50 flex flex-col">
-          <RControl.RZoom zoomOutLabel="-" zoomInLabel="+" />
+        <Controls
+          className={cn(
+            'absolute bottom-3 right-5 top-[78px] z-40 flex flex-col sm:right-auto sm:top-auto',
+            {
+              'duration-500 sm:left-[408px] lg:left-[554px]': open,
+              'duration-300 sm:left-4 lg:left-4': !open,
+            }
+          )}
+        >
+          <RControl.RZoom
+            className={open ? 'ol-zoom-open' : 'ol-zoom'}
+            key={open ? 'ol-zoom-open' : 'ol-zoom'}
+            zoomOutLabel="-"
+            zoomInLabel="+"
+          />
           <BookmarkControl />
           <ShareControl />
           {isCompareLayerActive && layerData && compareLayerData && (
@@ -412,7 +431,7 @@ const Map: FC<GeostoryMapProps> = ({
           )}
         </Controls>
         {isLayerActive && <Legend isGeostory />}
-        <Attributions className="absolute bottom-3 left-[620px] z-50" />
+
         {/* Location search */}
         <LocationSearchComponent
           locationSearch={locationSearch}
@@ -422,6 +441,8 @@ const Map: FC<GeostoryMapProps> = ({
           isLoading={isLoading}
           isFetching={isFetching}
         />
+        <Attributions className="absolute bottom-3 left-0 z-40 lg:left-[620px]" />
+
         {/* Interactivity */}
         {layerData && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}
       </RMap>
