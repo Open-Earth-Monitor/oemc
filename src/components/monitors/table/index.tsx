@@ -17,7 +17,7 @@ const MonitorsDirectory = () => {
     <>
       {isLoading && !isFetched && <Loading />}
       {isFetched && !isError && (
-        <Table>
+        <Table className="h-full overflow-y-auto">
           <TableHeader>
             <TableRow>
               <TableHead className="w-1/2">Monitors</TableHead>

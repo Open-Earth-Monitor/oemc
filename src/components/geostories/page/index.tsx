@@ -1,6 +1,15 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
+import { useMediaQuery } from 'react-responsive';
+
+import { PopoverClose } from '@radix-ui/react-popover';
+import { ChevronDown, ChevronRight } from 'lucide-react';
+
+import { mobile, tablet } from '@/lib/media-queries';
+
+import { useSyncSidebarState } from '@/hooks/sync-query';
 
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -14,10 +23,33 @@ import DatasetCard from '@/components/datasets/card';
 import GeostoryHeader from '@/components/geostories/header';
 import Loading from '@/components/loading';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import GeostoryContent from '../content';
 
 const Map = dynamic(() => import('@/components/map/geostory-map'), { ssr: false });
 
 const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
+  const isMobile = useMediaQuery(mobile);
+  const isTablet = useMediaQuery(tablet);
+  const isDesktop = !isMobile && !isTablet;
+  const [open, setOpen] = useSyncSidebarState();
+  const [defaultOpen, setDefaultOpen] = useState(false);
+  console.log({ geostory_id }, 'geostory page');
+  useEffect(() => {
+    void setDefaultOpen(true);
+  }, []);
+
+  useEffect(() => {
+    if (isDesktop) {
+      void setOpen(true);
+    }
+  }, [isDesktop, setOpen]);
+
+  const onOpenChange = () => {
+    void setOpen((prev) => !prev);
+  };
+
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
@@ -33,7 +65,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
     () => layersData?.find(({ position }) => position === 'left'),
     [layersData]
   );
-
+  console.log({ geostoryData, isGeostoryLoading, geostoryLayers, geostory_id });
   useEffect(() => {
     if (geostoryLayers?.length && !layers) {
       void setLayers(
@@ -56,44 +88,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
 
   return (
     <>
-      <section className="md:[30vw] absolute bottom-3 left-3 top-[82px] z-40 w-[526px] overflow-hidden bg-brand-500">
-        <ScrollArea className="h-full w-full p-7.5" type="auto">
-          <div className="space-y-6">
-            <div className="divide-y divide-secondary-900">
-              {geostoryData?.monitors?.[0].id && (
-                <Link
-                  href={`/map/${geostoryData.monitors[0].id}/geostories`}
-                  className="sticky top-0 z-10 block space-x-3 bg-brand-500 pb-8 font-bold"
-                  data-testid="back-to-monitor"
-                  style={{ color: geostoryData.color }}
-                >
-                  <HiArrowLeft className="inline-block h-6 w-6" />
-                  <span data-testid="monitor-title-back-btn">
-                    Back to {geostoryData.monitors[0].title}.
-                  </span>
-                </Link>
-              )}
-              {isGeostoryLoading && <Loading />}
-              {geostoryData && !isGeostoryLoading && (
-                <GeostoryHeader {...geostoryData} color={geostoryData.color} />
-              )}
-            </div>
-            <div>
-              {isLayersLoading && <Loading />}
-
-              {!!layersData?.length && !isLayersLoading && (
-                <ul className="space-y-6" data-testid="datasets-list">
-                  {geostoryLayers.map((dataset) => (
-                    <li key={dataset.layer_id}>
-                      <DatasetCard {...dataset} type="geostory" id={dataset.layer_id} isGeostory />
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </ScrollArea>
-      </section>
+      <GeostoryContent />
       {geostoryData && !isGeostoryLoading && (
         <Map
           geostoryData={geostoryData}
