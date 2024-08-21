@@ -14,7 +14,6 @@ import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
 import cn from '@/lib/classnames';
-
 import { mobile, tablet } from '@/lib/media-queries';
 
 import { useLayerParsedSource } from '@/hooks/layers';
@@ -39,6 +38,7 @@ import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import MapTooltip from './tooltip';
 import type { CustomMapProps, MonitorTooltipInfo, Bbox } from './types';
+import { useDebounce } from '@/hooks/datasets';
 
 interface FeatureProperties {
   [key: string]: number;
@@ -79,6 +79,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
   const isDesktop = !isMobile && !isTablet;
+
+  const debouncedSearchValue = useDebounce(locationSearch, 500);
+
   const mapRef: React.MutableRefObject<{
     map: ol.Map;
     ol: {
@@ -264,11 +267,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     isFetching: isFetchingLocationData = false,
   } = useOpenStreetMapsLocations(
     {
-      q: locationSearch,
+      q: debouncedSearchValue,
       format: 'json',
     },
     {
-      enabled: locationSearch !== '',
+      enabled: debouncedSearchValue !== '' && debouncedSearchValue.length >= 2,
       select: (data) => data,
     }
   );
