@@ -9,7 +9,7 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import { mobile, tablet } from '@/lib/media-queries';
 
 import { useSyncSidebarState } from '@/hooks/sync-query';
-
+import { cn } from '@/lib/classnames';
 import MonitorHeader from '@/components/monitors/header';
 import TabsNav from '@/components/tabs-nav';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -41,14 +41,20 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
     <section className="monitors absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:bottom-auto sm:left-4 sm:top-[82px] sm:w-fit sm:border-0 sm:p-0">
       {/* Desktop */}
       <Sheet onOpenChange={onOpenChange} open={defaultOpen && open}>
-        <SheetTrigger className="hidden h-[60px] w-12 border-none bg-brand-500 sm:block">
+        <SheetTrigger
+          className={cn({
+            'hidden h-[60px] w-12 border-none bg-brand-500': true,
+            'sm:block': !open,
+            hidden: open,
+          })}
+        >
           <ChevronRight className="mx-auto h-6 w-6 text-secondary-500" />
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="bottom-3 left-4 top-auto z-[60] hidden w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)]"
+          className="bottom-3 left-4 top-auto  hidden w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)]"
         >
-          <div className="bottom-3 left-4 z-[60] hidden h-[calc(100vh-24px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block">
+          <div className="bottom-3 left-4  hidden h-[calc(100vh-24px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block">
             <ScrollArea className="h-full w-[526px] p-7.5" type="auto">
               <div className="w-full space-y-1 sm:space-y-6">
                 <MonitorHeader />
@@ -65,12 +71,12 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
 
       {/* Tablet */}
       <Sheet onOpenChange={onOpenChange} open={isTablet && defaultOpen && open}>
-        <SheetTrigger className="hidden h-[60px] w-12 border-none bg-brand-500 sm:block md:hidden">
+        <SheetTrigger className="z-[60] hidden w-12 border-none bg-brand-500 sm:block md:hidden">
           <ChevronRight className="mx-auto h-6 w-6 text-secondary-500" />
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="bottom-3 left-4 top-auto z-[60] hidden w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)] lg:hidden"
+          className="bottom-3 left-4 top-auto hidden w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)] lg:hidden"
         >
           <ScrollArea className="h-full w-[370px] p-7.5" type="auto">
             <div className="w-full space-y-1 sm:space-y-6">
