@@ -297,7 +297,7 @@ const Map: FC<GeostoryMapProps> = ({
   );
 
   const {
-    data = [],
+    data: locationData = [],
     isLoading = false,
     isFetching = false,
   } = useOpenStreetMapsLocations(
@@ -307,13 +307,15 @@ const Map: FC<GeostoryMapProps> = ({
     },
     {
       enabled: debouncedSearchValue !== '' && debouncedSearchValue.length >= 2,
-      select: (data) => data,
+      select: (data) => {
+        return data;
+      },
     }
   );
 
   const OPTIONS = useMemo(() => {
-    if (!Array.isArray(data)) return [];
-    return data.map((d) => ({
+    if (!Array.isArray(locationData)) return [];
+    return locationData.map((d) => ({
       value: d.place_id ?? undefined,
       label: d.display_name ?? '',
       // transforming bbox from "nominatim" to "overpass" and to "ESPG:3857 projection"
@@ -322,7 +324,7 @@ const Map: FC<GeostoryMapProps> = ({
         ...fromLonLat([+d.boundingbox[3], +d.boundingbox[1]]),
       ] as Bbox,
     }));
-  }, [data]);
+  }, [locationData]);
 
   const handleClick = useCallback(
     (e: ClickEvent) => {

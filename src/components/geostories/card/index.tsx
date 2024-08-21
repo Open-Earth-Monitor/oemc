@@ -38,7 +38,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
             </h2>
           </div>
           {ready ? (
-            <div className="flex items-center space-x-8">
+            <div className="z-[1000px] flex items-center space-x-8">
               <GeostoryDialog {...geostory} />
               <Link
                 href={`/map/geostories/${id}`}

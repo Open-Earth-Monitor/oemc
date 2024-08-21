@@ -35,7 +35,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   const isDesktop = !isMobile && !isTablet;
   const [open, setOpen] = useSyncSidebarState();
   const [defaultOpen, setDefaultOpen] = useState(false);
-  console.log({ geostory_id }, 'geostory page');
+
   useEffect(() => {
     void setDefaultOpen(true);
   }, []);
@@ -65,7 +65,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
     () => layersData?.find(({ position }) => position === 'left'),
     [layersData]
   );
-  console.log({ geostoryData, isGeostoryLoading, geostoryLayers, geostory_id });
+
   useEffect(() => {
     if (geostoryLayers?.length && !layers) {
       void setLayers(
