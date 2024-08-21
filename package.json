@@ -82,7 +82,7 @@
     "webpack": "^5.88.2"
   },
   "devDependencies": {
-    "@playwright/test": "1.37.1",
+    "@playwright/test": "1.46.1",
     "@types/google.analytics": "0.0.42",
     "@types/lodash-es": "4.17.10",
     "@types/node": "20.5.7",
