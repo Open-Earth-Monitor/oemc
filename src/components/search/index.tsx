@@ -16,12 +16,6 @@ const Search: FC<SearchProps> = ({
 }: SearchProps) => {
   const { placeholder } = rest;
   const ref = useRef<HTMLInputElement>();
-  const onInput = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setValue(e?.target?.value);
-    },
-    [setValue]
-  );
 
   return (
     <div
@@ -46,7 +40,6 @@ const Search: FC<SearchProps> = ({
         type="search"
         id="search"
         aria-label={label}
-        // onInput={onInput}
         onChange={(e) => setValue(e.target.value)}
         value={value}
         data-testid="search-input"

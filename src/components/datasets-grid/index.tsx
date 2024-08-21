@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { Element, scroller } from 'react-scroll';
 
@@ -41,7 +41,7 @@ const LandingDatasets = () => {
     {
       ...(active !== 'all' && { type: active }),
       ...(debouncedSearchValue !== '' &&
-        debouncedSearchValue.length >= 3 && { title: debouncedSearchValue }),
+        debouncedSearchValue.length >= 2 && { title: debouncedSearchValue }),
       ...(activeThemes.length > 0 && { theme: activeThemes }),
       sort_by: sortingCriteria,
       pagination: true,
