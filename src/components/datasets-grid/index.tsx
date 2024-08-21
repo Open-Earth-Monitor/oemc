@@ -11,7 +11,7 @@ import { RxCross2 } from 'react-icons/rx';
 
 import cn from '@/lib/classnames';
 
-import { useMonitorsAndGeostoriesPaginated } from '@/hooks/datasets';
+import { useMonitorsAndGeostoriesPaginated, useDebounce } from '@/hooks/datasets';
 
 import { THEMES, type Theme } from '@/constants/themes';
 
@@ -36,10 +36,12 @@ const LandingDatasets = () => {
   const [active, setActive] = useState<Dataset>('all');
   const [activeThemes, setActiveThemes] = useState<Theme[]>([]);
 
+  const debouncedSearchValue = useDebounce(searchValue, 500);
   const { data, isError, isLoading, isFetching } = useMonitorsAndGeostoriesPaginated(
     {
       ...(active !== 'all' && { type: active }),
-      ...(searchValue !== '' && { title: searchValue }),
+      ...(debouncedSearchValue !== '' &&
+        debouncedSearchValue.length >= 2 && { title: debouncedSearchValue }),
       ...(activeThemes.length > 0 && { theme: activeThemes }),
       sort_by: sortingCriteria,
       pagination: true,

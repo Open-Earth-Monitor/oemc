@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 import type {
@@ -95,3 +97,18 @@ export function useMonitorsAndGeostoriesPaginated(
     }),
   });
 }
+
+export const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(id);
+    };
+  }, [value, delay]);
+  return debouncedValue;
+};
