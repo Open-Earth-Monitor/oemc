@@ -1,4 +1,4 @@
-import { FC, useRef, ChangeEvent, useCallback, useState } from 'react';
+import { FC, useRef, ChangeEvent, useCallback } from 'react';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
@@ -7,53 +7,21 @@ import { cn } from '@/lib/classnames';
 
 import type { SearchProps } from './types';
 
-// Debounce function using useState and useCallback
-const useDebouncedValue = (callback: (value: string) => void, delay: number) => {
-  const [value, setValue] = useState('');
-  const callbackRef = useRef(callback);
-  const timeoutRef = useRef<number | null>(null);
-
-  const debounce = useCallback(
-    (val: string) => {
-      if (timeoutRef?.current) {
-        clearTimeout(timeoutRef?.current);
-      }
-      if (callbackRef?.current) {
-        timeoutRef.current = window.setTimeout(() => {
-          callbackRef?.current(val);
-          timeoutRef.current = null;
-        }, delay);
-      }
-    },
-    [delay]
-  );
-
-  const setDebouncedValue = useCallback(
-    (val: string) => {
-      if (value) {
-        setValue(val);
-        debounce(val);
-      }
-    },
-    [debounce, value]
-  );
-
-  return [value, setDebouncedValue] as const;
-};
-
 const Search: FC<SearchProps> = ({
+  value,
   setValue,
   label = 'Search',
   className,
   ...rest
 }: SearchProps) => {
   const { placeholder } = rest;
-  const ref = useRef<HTMLInputElement>(null);
-  const [inputValue, setInputValue] = useDebouncedValue(setValue, 300);
-
-  const onInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
+  const ref = useRef<HTMLInputElement>();
+  const onInput = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(e?.target?.value);
+    },
+    [setValue]
+  );
 
   return (
     <div
@@ -79,18 +47,16 @@ const Search: FC<SearchProps> = ({
         id="search"
         aria-label={label}
         onInput={onInput}
-        value={inputValue}
+        value={value}
         data-testid="search-input"
         className="flex-1 truncate border-none bg-transparent px-10 font-inter leading-4 text-secondary-700 placeholder-secondary-700 outline-none focus:border-secondary-500"
-        {...rest}
       />
-      {inputValue !== '' && (
+      {value !== '' && (
         <button
           tabIndex={0}
           className="absolute right-3 z-10 flex items-center justify-center self-center p-0 text-secondary-700 hover:text-secondary-500"
           type="button"
           onClick={() => {
-            setInputValue('');
             setValue('');
             if (ref.current) {
               ref.current.focus();
