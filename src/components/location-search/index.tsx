@@ -44,10 +44,10 @@ function LocationSearchComponent({
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full bg-red-800">
       <div
         className={cn({
-          'absolute left-[554px] right-3 top-20 z-40 flex h-12 items-center rounded-t-[4px] border border-secondary-500 bg-brand-50 px-4 font-inter leading-4':
+          'absolute left-[554px] top-20 z-40 flex h-12 w-40 items-center rounded-t-[4px] border border-secondary-500 bg-brand-50 px-4 font-inter leading-4 md:w-96 lg:w-[620px]':
             true,
           'rounded-[4px]': !locationSearch,
           'rounded-t-[4px]': locationSearch,
@@ -74,7 +74,7 @@ function LocationSearchComponent({
       {(isLoading && isFetching) ||
         (dropdownVisible && locationSearch && !!OPTIONS.length && (
           <div className="relative">
-            <div className="absolute left-[554px] right-3 top-32 z-50 flex-1 rounded-b-[4px] border-b border-l border-r border-secondary-500 bg-brand-50 px-10 font-inter leading-4 text-secondary-700 shadow-lg">
+            <div className="absolute left-[554px] top-32 z-50 w-40 flex-1 rounded-b-[4px] border-b border-l border-r border-secondary-500 bg-brand-50 px-10 font-inter leading-4 text-secondary-700 shadow-lg md:w-96 lg:w-[620px]">
               {isLoading && isFetching && <Loading />}
               {locationSearch && OPTIONS.length > 0 && (
                 <ul id="location-options" role="listbox" className="space-y-2 py-2">

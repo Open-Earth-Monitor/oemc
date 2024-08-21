@@ -35,6 +35,7 @@ import SwipeControl from './controls/swipe';
 import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
 import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox } from './types';
+import { useDebounce } from '@/hooks/datasets';
 
 interface ClickEvent {
   bbox?: Bbox;
@@ -50,6 +51,8 @@ const Map: FC<GeostoryMapProps> = ({
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
   const isDesktop = !isMobile && !isTablet;
+
+  const debouncedSearchValue = useDebounce(locationSearch, 500);
 
   // const { map: mapRef } = useOL();
   const mapRef: React.MutableRefObject<{
@@ -293,11 +296,11 @@ const Map: FC<GeostoryMapProps> = ({
     isFetching = false,
   } = useOpenStreetMapsLocations(
     {
-      q: locationSearch,
+      q: debouncedSearchValue,
       format: 'json',
     },
     {
-      enabled: locationSearch !== '',
+      enabled: debouncedSearchValue !== '' && debouncedSearchValue.length >= 2,
       select: (data) => data,
     }
   );
