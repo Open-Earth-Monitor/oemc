@@ -1,8 +1,11 @@
 import React, { useCallback, useState } from 'react';
 
+import { useMediaQuery } from 'react-responsive';
+
 import { LuSearch, LuX } from 'react-icons/lu';
 
 import { cn } from '@/lib/classnames';
+import { mobile } from '@/lib/media-queries';
 
 import Loading from '@/components/loading';
 import type { Bbox } from '@/components/map/types';
@@ -24,6 +27,7 @@ function LocationSearchComponent({
   isFetching: boolean;
 }) {
   const [dropdownVisible, setDropdownVisible] = useState(true);
+  const isMobile = useMediaQuery(mobile);
 
   const handleReset = useCallback(() => {
     handleLocationSearchChange({
@@ -44,13 +48,19 @@ function LocationSearchComponent({
   };
 
   return (
-    <div className="absolute right-3 top-[86px] z-50">
+    <div
+      className={cn({
+        'absolute right-3 top-[86px] z-50': true,
+        'left-3 right-3 w-full': isMobile,
+      })}
+    >
       <div
         className={cn({
           'z-40 flex h-14 w-40 items-center rounded-t-[4px] border border-secondary-500 bg-brand-50 px-4 font-inter leading-4 md:w-96 lg:w-[620px]':
             true,
           'rounded-[4px]': !locationSearch,
           'rounded-t-[4px]': locationSearch,
+          'w-[calc(100vw-34px-40px)]': isMobile,
         })}
       >
         <div className="flex items-center space-x-4">
