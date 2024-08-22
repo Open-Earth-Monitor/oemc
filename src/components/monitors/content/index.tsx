@@ -44,7 +44,6 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
         <SheetTrigger
           className={cn({
             'hidden h-[60px] w-12 border-none bg-brand-500': true,
-            'sm:block': !open,
             hidden: open,
           })}
         >
@@ -71,7 +70,12 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
 
       {/* Tablet */}
       <Sheet onOpenChange={onOpenChange} open={isTablet && defaultOpen && open}>
-        <SheetTrigger className="z-[60] hidden w-12 border-none bg-brand-500 sm:block md:hidden">
+        <SheetTrigger
+          className={cn({
+            'z-[60] hidden w-12 border-none bg-brand-500 sm:block md:hidden': true,
+            hidden: open,
+          })}
+        >
           <ChevronRight className="mx-auto h-6 w-6 text-secondary-500" />
         </SheetTrigger>
         <SheetContent

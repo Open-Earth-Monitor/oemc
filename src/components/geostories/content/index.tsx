@@ -2,7 +2,7 @@
 import { PropsWithChildren, useEffect, useState, useMemo } from 'react';
 
 import { useMediaQuery } from 'react-responsive';
-import { cn } from '@/lib/classnames';
+
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
@@ -10,6 +10,7 @@ import { PopoverClose } from '@radix-ui/react-popover';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { HiArrowLeft } from 'react-icons/hi';
 
+import { cn } from '@/lib/classnames';
 import { mobile, tablet } from '@/lib/media-queries';
 
 import { useGeostoryParsed, useGeostoryLayers } from '@/hooks/geostories';
@@ -25,7 +26,6 @@ import Loading from '@/components/loading';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { h } from 'next-usequerystate/dist/parsers-fd455cd5';
 
 const GeostoryContent = ({ children }: PropsWithChildren) => {
   const isMobile = useMediaQuery(mobile);
