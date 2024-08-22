@@ -88,7 +88,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
 
   return (
     <>
-      <GeostoryContent />
+      {!isMobile && <GeostoryContent />}
       {geostoryData && !isGeostoryLoading && (
         <Map
           geostoryData={geostoryData}

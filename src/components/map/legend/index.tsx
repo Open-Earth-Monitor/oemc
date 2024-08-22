@@ -9,7 +9,7 @@ import LegendComponent from './component';
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
   return (
     <div
-      className="absolute bottom-0 right-0 z-[55] flex w-1/2 justify-end border-t border-secondary-900 bg-brand-500 p-1 font-inter text-xs sm:bottom-3 sm:right-3 sm:block sm:w-fit sm:max-w-[294px] sm:space-y-1 sm:border-0 sm:bg-transparent sm:p-0"
+      className="absolute bottom-0 right-0 z-[600] flex w-1/2 justify-end border-t border-secondary-900 bg-brand-500 p-1 font-inter text-xs sm:bottom-3 sm:right-3 sm:block sm:w-fit sm:max-w-[294px] sm:space-y-1 sm:border-0 sm:bg-transparent sm:p-0"
       data-testid="map-legend"
     >
       {/* DESKTOP  */}

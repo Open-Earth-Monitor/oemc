@@ -7,7 +7,7 @@ import MainMenuTablet from '../main-menu/tablet';
 
 const Header = () => {
   return (
-    <div className="absolute z-50 h-[70px] w-screen items-center border-b border-b-secondary-900 bg-[#09131DCC]">
+    <div className="absolute z-[1000] h-[70px] w-screen items-center border-b border-b-secondary-900 bg-[#09131DCC]">
       <div className="container m-auto flex h-full items-center justify-between">
         <div className="mr-2 flex items-center space-x-4">
           <Link href="/">

@@ -45,7 +45,7 @@ const MainMenuMobile = () => {
           <button
             onClick={handleClick}
             type="button"
-            className={`z-50 flex h-8 w-8 cursor-pointer flex-col flex-wrap justify-around`}
+            className={`z-[1000] flex h-8 w-8 cursor-pointer flex-col flex-wrap justify-around`}
           >
             <div
               className={`block h-0.5 w-8 origin-[1px] rounded bg-secondary-500 transition-all ${
@@ -71,7 +71,7 @@ const MainMenuMobile = () => {
                 <button
                   onClick={handleClick}
                   type="button"
-                  className={`z-50 flex h-5 w-5 cursor-pointer flex-col flex-wrap justify-around`}
+                  className={`flex h-5 w-5 cursor-pointer flex-col flex-wrap justify-around`}
                 >
                   <div
                     className={`block h-0.5 w-5 origin-[0.5px] rounded bg-secondary-500 transition-all ${

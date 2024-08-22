@@ -41,6 +41,7 @@ import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
 import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox } from './types';
 import { useDebounce } from '@/hooks/datasets';
+import GeostoryContent from '../geostories/content';
 
 interface ClickEvent {
   bbox?: Bbox;
@@ -432,6 +433,8 @@ const Map: FC<GeostoryMapProps> = ({
             <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
           )}
         </Controls>
+
+        <GeostoryContent />
         {isLayerActive && <Legend isGeostory />}
 
         {/* Location search */}
