@@ -56,18 +56,18 @@ function LocationSearchComponent({
     >
       <div
         className={cn({
-          'z-40 flex h-14 w-40 items-center rounded-t-[4px] border border-secondary-500 bg-brand-50 px-4 font-inter leading-4 md:w-96 lg:w-[620px]':
+          'z-40 flex h-14 w-40 items-center rounded-t-[4px] border border-secondary-500 bg-brand-50 px-4 font-inter leading-4 sm:w-72 lg:w-96 xl:w-[620px]':
             true,
           'rounded-[4px]': !locationSearch,
           'rounded-t-[4px]': locationSearch,
           'w-[calc(100vw-34px-40px)]': isMobile,
         })}
       >
-        <div className="flex items-center space-x-4">
+        <div className="flex w-full items-center space-x-4">
           <LuSearch className="h-5 w-5 text-secondary-500" />
           <Input
             type="text"
-            className="inset-0 z-50 flex h-full w-full flex-1 grow border-none bg-transparent caret-secondary-700 outline-none"
+            className="inset-0 z-50 flex h-full w-full flex-1 grow border-none bg-red-700 bg-transparent caret-secondary-700 outline-none"
             placeholder="Search"
             aria-label="Search locations"
             aria-controls="location-options"
