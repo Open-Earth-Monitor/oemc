@@ -16,7 +16,7 @@ const SocialMedia = () => {
       const orderedData = orderBy(data, 'created_at', 'desc');
       const postsIds = orderedData.map((post) => post.id);
       const filteredData = orderedData.filter((post) => !postsIds.includes(post.reblog?.id));
-      return filteredData.slice(0, 3);
+      return filteredData.slice(0, 4);
     },
   });
 
