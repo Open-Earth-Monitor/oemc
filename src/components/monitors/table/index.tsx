@@ -5,9 +5,14 @@ import { useMonitors } from '@/hooks/monitors';
 import Loading from '@/components/loading';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-import MonitorsItem from './item';
+import Item from './item';
+import MonitorLink from './item/monitor';
+import GeostoriesLink from './item/geostory';
+import { useMediaQuery } from 'react-responsive';
+import { mobile } from '@/lib/media-queries';
 
 const MonitorsDirectory = () => {
+  const isMobile = useMediaQuery(mobile);
   const { data, isLoading, isFetched, isError } = useMonitors();
 
   // Filtering monitors ready (not under development)
@@ -16,7 +21,7 @@ const MonitorsDirectory = () => {
   return (
     <>
       {isLoading && !isFetched && <Loading />}
-      {isFetched && !isError && (
+      {isFetched && !isError && !isMobile && (
         <Table className="h-full overflow-y-auto">
           <TableHeader>
             <TableRow>
@@ -27,12 +32,24 @@ const MonitorsDirectory = () => {
           <TableBody data-testid="monitors-list">
             {dataFiltered?.map((d) => (
               <TableRow key={d.id}>
-                <MonitorsItem data={d} />
+                <Item data={d} />
               </TableRow>
             ))}
           </TableBody>
         </Table>
       )}
+      {isFetched &&
+        !isError &&
+        isMobile &&
+        dataFiltered?.map((d) => (
+          <div
+            key={d.id}
+            className="space-y-3 border-b border-t border-dashed border-b-secondary-500 border-t-secondary-500 border-opacity-[0.2] p-5 first:border-t-0 last:border-b-0"
+          >
+            <MonitorLink {...d} />
+            <GeostoriesLink {...d} />
+          </div>
+        ))}
     </>
   );
 };
