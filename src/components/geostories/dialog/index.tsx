@@ -48,8 +48,11 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
       >
         <DialogHeader className="space-y-6">
           <DialogTitle asChild>
-            <header className="space-y-6">
-              <h2 data-testid="monitor-title" className="inline-block pr-6 text-6xl font-bold">
+            <header className="space-y-6 py-6 sm:py-0">
+              <h2
+                data-testid="monitor-title"
+                className="inline-block pr-6 text-2xl font-bold sm:text-6xl"
+              >
                 {title}
               </h2>
               <div data-testid="monitor-description" className="font-inter leading-[25px]">
