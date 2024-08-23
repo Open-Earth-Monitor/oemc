@@ -51,12 +51,6 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
     void setOpen((prev) => !prev);
   };
 
-  const onOpenChangeMobile = () => {
-    if (open) {
-      void setOpen(false);
-    }
-  };
-
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
@@ -224,8 +218,8 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
         </section>
       </div>
       {isMobile && (
-        <div className="absolute bottom-0 left-0 right-0 z-[500] h-[58px] bg-brand-500 px-1 py-2">
-          <Popover onOpenChange={onOpenChange} open={isMobile && defaultOpen && open}>
+        <div className="absolute bottom-0 left-0 right-0 z-[500] h-[58px] bg-brand-500 px-1 py-2 sm:hidden">
+          <Popover onOpenChange={onOpenChange} open={defaultOpen && open}>
             <PopoverTrigger className="absolute bottom-1 h-12 w-1/2 bg-secondary-500 font-inter text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
               Geostory
             </PopoverTrigger>

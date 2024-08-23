@@ -32,7 +32,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
       <div className="flex items-center space-x-3">
         <Image
           src={data?.account.avatar_static}
-          alt={data?.account.display_name}
+          alt={data?.account.display_name || data.id}
           width={44}
           height={44}
           className="shrink-0 rounded-full"
@@ -85,7 +85,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
                   <CarouselItem key={index}>
                     <Image
                       src={_.preview_url}
-                      alt={_.description}
+                      alt={_.description || data?.card?.title}
                       width={_.meta.small.width}
                       height={_.meta.small.height}
                     />

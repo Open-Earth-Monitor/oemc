@@ -117,7 +117,7 @@ const MainMenuMobile = () => {
                   Map
                 </button>
                 {menuVisibility && (
-                  <div className="h-full sm:h-80">
+                  <div className="h-full max-h-[calc(100vh-300px)] overflow-y-auto sm:h-80">
                     <MonitorsDirectory />
                   </div>
                 )}
