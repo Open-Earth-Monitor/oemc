@@ -25,7 +25,8 @@ import GeostoryHeader from '@/components/geostories/header';
 import Loading from '@/components/loading';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+
+import { motion } from 'framer-motion';
 
 const GeostoryContent = ({ children }: PropsWithChildren) => {
   const isMobile = useMediaQuery(mobile);
@@ -90,24 +91,52 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
   return (
     <>
       <div className="relative">
-        <section className="absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:bottom-auto sm:left-4 sm:top-[82px] sm:w-fit sm:border-0 sm:p-0">
+        <motion.section
+          animate={{
+            x: open ? 0 : '-100%',
+          }}
+          transition={{ duration: 0.3 }}
+          className="absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:bottom-auto sm:left-4 sm:top-[82px] sm:w-fit sm:border-0 sm:p-0"
+        >
           {/* Desktop */}
-          <Sheet onOpenChange={onOpenChange} open={defaultOpen && open}>
-            <SheetTrigger
-              className={cn({
-                'hidden h-[60px] w-12 border-none bg-brand-500': true,
-                'sm:block': !open,
-                hidden: open,
-              })}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={onOpenChange}
+              className="absolute -right-12 top-0 h-[60px] w-12 border-none bg-brand-500"
             >
-              <ChevronRight className="mx-auto h-6 w-6 text-secondary-500" />
-            </SheetTrigger>
-            <SheetContent
-              side="left"
-              className="bottom-3 left-4 top-auto hidden w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)]"
+              <ChevronRight
+                className={cn({
+                  'mx-auto h-6 w-6 rotate-180 text-secondary-500': true,
+                  'rotate-0': !open,
+                })}
+              />
+            </button>
+            <motion.div
+              initial={{ opacity: 1, x: 0 }}
+              animate={{
+                opacity: open ? 1 : 0,
+                x: open ? 0 : '-100%',
+                transitionEnd: {
+                  display: open ? 'block' : 'none',
+                },
+              }}
+              transition={{ duration: 0.3 }}
+              className="bottom-3 left-4 top-auto w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)]"
             >
-              <div className="bottom-3 left-4 hidden h-[calc(100vh-24px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block">
-                <ScrollArea className="h-full w-[526px] p-7.5" type="auto">
+              <motion.div
+                initial={{ opacity: 1, x: 0 }}
+                animate={{
+                  opacity: open ? 1 : 0,
+                  x: open ? 0 : '-100%',
+                  transitionEnd: {
+                    display: open ? 'block' : 'none',
+                  },
+                }}
+                transition={{ duration: 0.3 }}
+                className="bottom-3 left-4 h-[calc(100vh-24px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block"
+              >
+                <ScrollArea className="h-full p-7.5 md:w-[370px] lg:w-[526px]" type="auto">
                   <div className="space-y-6">
                     <div className="divide-y divide-secondary-900">
                       {geostoryData?.monitors?.[0].id && (
@@ -148,74 +177,10 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                   </div>
                   {children}
                 </ScrollArea>
-              </div>
-              <SheetClose className="absolute left-auto right-0 top-0 h-[60px] w-12 translate-x-full border-none bg-brand-500">
-                <ChevronDown className="mx-auto h-6 w-6 rotate-90 text-secondary-500" />
-              </SheetClose>
-            </SheetContent>
-          </Sheet>
-
-          {/* Tablet */}
-          <Sheet onOpenChange={onOpenChange} open={isTablet && defaultOpen && open}>
-            <SheetTrigger
-              className={cn({
-                'hidden h-[60px] w-12 border-none bg-brand-500': true,
-                hidden: open,
-              })}
-            >
-              <ChevronRight className="mx-auto h-6 w-6 text-secondary-500" />
-            </SheetTrigger>
-            <SheetContent
-              side="left"
-              className="bottom-3 left-4 top-auto z-[60] hidden w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)] lg:hidden"
-            >
-              <ScrollArea className="h-full w-[370px] p-7.5" type="auto">
-                <div className="space-y-6">
-                  <div className="divide-y divide-secondary-900">
-                    {geostoryData?.monitors?.[0].id && (
-                      <Link
-                        href={`/map/${geostoryData.monitors[0].id}/geostories`}
-                        className="sticky top-0 z-10 block space-x-3 bg-brand-500 pb-8 font-bold"
-                        data-testid="back-to-monitor"
-                        style={{ color: geostoryData.color }}
-                      >
-                        <HiArrowLeft className="inline-block h-6 w-6" />
-                        <span data-testid="monitor-title-back-btn">
-                          Back to {geostoryData.monitors[0].title}.
-                        </span>
-                      </Link>
-                    )}
-                    {isGeostoryLoading && <Loading />}
-                    {geostoryData && !isGeostoryLoading && (
-                      <GeostoryHeader {...geostoryData} color={geostoryData.color} />
-                    )}
-                  </div>
-                  <div>
-                    {isLayersLoading && <Loading />}-
-                    {!!layersData?.length && !isLayersLoading && (
-                      <ul className="space-y-6" data-testid="datasets-list">
-                        {geostoryLayers.map((dataset) => (
-                          <li key={dataset.layer_id}>
-                            <DatasetCard
-                              {...dataset}
-                              type="geostory"
-                              id={dataset.layer_id}
-                              isGeostory
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-                {children}
-              </ScrollArea>
-              <SheetClose className="absolute left-auto right-0 top-0 h-[60px] w-12 translate-x-full border-none bg-brand-500">
-                <ChevronDown className="mx-auto h-6 w-6 rotate-90 text-secondary-500" />
-              </SheetClose>
-            </SheetContent>
-          </Sheet>
-        </section>
+              </motion.div>
+            </motion.div>
+          </div>
+        </motion.section>
       </div>
       {isMobile && (
         <div className="absolute bottom-0 left-0 right-0 z-[500] h-[58px] bg-brand-500 px-1 py-2 sm:hidden">
@@ -272,7 +237,6 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                     </div>
                   </div>
                 </div>
-                {/* {children} */}
               </ScrollArea>
             </PopoverContent>
           </Popover>
