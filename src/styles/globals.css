@@ -133,7 +133,7 @@
   display: none;
   flex-direction: column !important;
   /* position: relative; */
-  /* left: 16px !important; */
+  left: 408px !important;
   width: 34px !important;
   height: 68px !important;
   align-items: center;
@@ -142,13 +142,14 @@
   background-color: hsl(210, 54%, 9%) !important;
   top: unset !important;
   bottom: 96px !important;
+  animation: slideIn 500ms ease 0s 1 normal forwards;
 }
 
 @media (min-width: theme('screens.sm')) {
   .ol-zoom {
     bottom: 94px !important;
     display: flex;
-    animation: slideOut 300ms ease 0s 1 normal forwards;
+    animation: slideOut 500ms ease 0s 1 normal forwards;
   }
   .ol-zoom-open {
     bottom: 94px !important;
@@ -161,14 +162,14 @@
   .ol-zoom {
     bottom: 94px !important;
     display: flex;
-    left: 1rem !important;
-    /* animation: slideOut 200ms ease 0s 1 normal forwards; */
+    left: 51px !important;
+    animation: slideOut 500ms ease 0s 1 normal forwards;
   }
   .ol-zoom-open {
     bottom: 94px !important;
     display: flex;
     left: 554px !important;
-    /* animation: slideIn 400ms ease 0s 1 normal forwards; */
+    animation: slideIn 400ms ease 0s 1 normal forwards;
   }
 }
 
@@ -253,20 +254,19 @@
 }
 
 @keyframes slideIn {
-  0% {
-    left: 16px;
+  from {
+    transform: translateX(-100%);
   }
-
-  100% {
-    left: 408px;
+  to {
+    transform: translateX(0);
   }
 }
 
 @keyframes slideOut {
-  0% {
-    left: 408px;
+  from {
+    transform: translateX(0);
   }
-  100% {
-    left: 16px;
+  to {
+    transform: translateX(-100%);
   }
 }
