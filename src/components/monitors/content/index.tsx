@@ -104,10 +104,10 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
           side="top"
           className="w-screen rounded-none border-none px-0 py-0"
         >
-          <PopoverClose className="absolute left-0 top-0 block h-12 w-[60px] -translate-y-full border-none bg-brand-500 focus:text-secondary-500">
+          <PopoverClose className="absolute left-0 top-0 z-[60] block h-12 w-[60px] -translate-y-full border-none bg-brand-500 focus:text-secondary-500">
             <ChevronDown className="mx-auto h-6 w-6 text-secondary-500" />
           </PopoverClose>
-          <ScrollArea className="h-full max-h-[60vh] w-full" type="auto">
+          <ScrollArea className="z-[60] h-full max-h-[60vh] w-full" type="auto">
             <div className="w-full space-y-1 sm:space-y-6">
               <MonitorHeader />
               <TabsNav />
