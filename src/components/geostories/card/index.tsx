@@ -38,16 +38,16 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
             </h2>
           </div>
           {ready ? (
-            <div className="z-[1000px] flex items-center space-x-8">
+            <div className="z-[1000px] flex items-center space-x-2 sm:space-x-8">
               <GeostoryDialog {...geostory} />
               <Link
                 href={`/map/geostories/${id}`}
                 data-testid={`card-link-${id}`}
                 className={cn(
-                  'flex items-center space-x-2.5 py-2 font-bold transition-colors hover:underline sm:text-xs'
+                  'sm:tno-underline flex items-center space-x-2.5 py-2 font-bold underline transition-colors hover:underline sm:text-xs'
                 )}
               >
-                <HiOutlineArrowTopRightOnSquare className="h-5 w-5" />
+                <HiOutlineArrowTopRightOnSquare className="hidden h-5 w-5 sm:flex" />
                 <span className="hover:underline">Go to geostory</span>
               </Link>
             </div>
