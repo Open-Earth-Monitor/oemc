@@ -371,13 +371,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           zIndex={100}
           url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
         />
-
         <Controls
           className={cn(
-            'absolute bottom-3 right-5 top-[78px] z-40 flex flex-col sm:right-auto sm:top-auto',
+            'absolute bottom-3 right-5 top-[78px] z-40 flex flex-col transition-all duration-500 sm:right-auto sm:top-auto', // Ensure transition and duration are set
             {
-              'duration-500 sm:left-[408px] lg:left-[554px]': open,
-              'duration-300 sm:left-4 lg:left-4': !open,
+              'sm:left-[408px] lg:left-[554px]': open, // Control's position when sidebar is open
+              'sm:left-4 lg:left-4': !open, // Control's position when sidebar is closed
             }
           )}
         >

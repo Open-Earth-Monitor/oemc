@@ -90,12 +90,14 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
 
   return (
     <>
+      {/* Desktop and tablet */}
       <div className="relative">
         <motion.section
+          initial={{ x: '-100%' }} // Start hidden and off-screen
           animate={{
-            x: open ? 0 : '-100%',
+            x: open ? 0 : '-100%', // Slide in and out
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }} // Smooth easing
           className="absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:bottom-auto sm:left-4 sm:top-[82px] sm:w-fit sm:border-0 sm:p-0"
         >
           {/* Desktop */}
@@ -105,12 +107,14 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
               onClick={onOpenChange}
               className="absolute -right-12 top-0 h-[60px] w-12 border-none bg-brand-500"
             >
-              <ChevronRight
-                className={cn({
-                  'mx-auto h-6 w-6 rotate-180 text-secondary-500': true,
-                  'rotate-0': !open,
-                })}
-              />
+              <motion.div
+                animate={{
+                  rotate: open ? 180 : 0,
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronRight className="mx-auto h-6 w-6 text-secondary-500" />
+              </motion.div>
             </button>
             <motion.div
               initial={{ opacity: 1, x: 0 }}
@@ -182,6 +186,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
           </div>
         </motion.section>
       </div>
+
       {isMobile && (
         <div className="absolute bottom-0 left-0 right-0 z-[500] h-[58px] bg-brand-500 px-1 py-2 sm:hidden">
           <Popover onOpenChange={onOpenChange} open={defaultOpen && open}>
