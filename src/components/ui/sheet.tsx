@@ -65,11 +65,9 @@ const SheetContent = React.forwardRef<
     <SheetOverlay className="bg-transparent backdrop-blur-none" />
     <SheetPrimitive.Content
       ref={ref}
-      className={cn(
-        sheetVariants({ side }),
-        'absolute bottom-0 top-[70px] max-h-[calc(100vh-70px)] backdrop-blur-sm',
-        className
-      )}
+      className={cn(sheetVariants({ side }), className, {
+        'absolute bottom-0 top-[70px] max-h-[calc(100vh-70px)] backdrop-blur-sm': true,
+      })}
       {...props}
     >
       {children}
