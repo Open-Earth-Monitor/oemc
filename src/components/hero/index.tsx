@@ -32,7 +32,7 @@ const Hero = () => {
   return (
     <div className="container relative mx-auto w-full bg-[url('/images/landing/hero.webp')] bg-cover bg-top pb-[60px] pt-[70px] lg:h-[739px]">
       <div className="m-auto pt-[80px] sm:pt-[274px] lg:pt-[295px]">
-        <h1 className="whitespace-wrap m-auto pb-16 text-center font-satoshi text-5xl font-black leading-tight lg:text-[80px] lg:leading-[96px]">
+        <h1 className="whitespace-wrap m-auto pb-16 text-center font-satoshi text-5xl font-black leading-tight lg:text-6xl lg:leading-[96px] xl:text-[80px]">
           Discover and empower with monitoring solutions.
         </h1>
       </div>
