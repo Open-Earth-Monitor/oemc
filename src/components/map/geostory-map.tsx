@@ -438,14 +438,16 @@ const Map: FC<GeostoryMapProps> = ({
         {isLayerActive && <Legend isGeostory />}
 
         {/* Location search */}
-        <LocationSearchComponent
-          locationSearch={locationSearch}
-          OPTIONS={OPTIONS}
-          handleLocationSearchChange={handleLocationSearchChange}
-          handleClick={handleClick}
-          isLoading={isLoading}
-          isFetching={isFetching}
-        />
+        <div className="relative">
+          <LocationSearchComponent
+            locationSearch={locationSearch}
+            OPTIONS={OPTIONS}
+            handleLocationSearchChange={handleLocationSearchChange}
+            handleClick={handleClick}
+            isLoading={isLoading}
+            isFetching={isFetching}
+          />
+        </div>
         <Attributions className="absolute bottom-3 left-0 z-40 lg:left-[620px]" />
 
         {/* Interactivity */}

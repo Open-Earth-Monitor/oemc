@@ -53,7 +53,7 @@ function LocationSearchComponent({
     <div
       className={cn({
         'absolute right-3 top-[86px] z-50': true,
-        'left-3 right-3 w-full': isMobile,
+        'left-3 w-full': isMobile,
       })}
     >
       <div
