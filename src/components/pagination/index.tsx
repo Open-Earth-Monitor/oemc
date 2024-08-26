@@ -42,41 +42,46 @@ const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <div className="spce-x-3 m-auto flex w-full items-center justify-center pt-[50px] sm:space-x-5 sm:pt-20">
-      <button
-        type="button"
-        onClick={handlePreviousClick}
-        disabled={!previousPage}
-        className={cn({ 'cursor-not-allowed opacity-50': !previousPage })}
-      >
-        <GoTriangleLeft className="h-5 w-5" />
-      </button>
-      <ol className="flex items-center space-x-3 sm:space-x-8" data-testid="pages-list">
-        {/* First page */}
-        <PaginationItem key={1} item={1} page={page} handleCurrentPage={handleCurrentPage} />
-        {page - 1 > 1 && <HiEllipsisHorizontal />}
-        {/* Other pages */}
-        {pagesToShow.map((d) => (
-          <PaginationItem key={d} item={d} page={page} handleCurrentPage={handleCurrentPage} />
-        ))}
-        {page + 2 < lastElement && <HiEllipsisHorizontal />}
-        {/* Last page */}
-        <PaginationItem
-          key={lastElement}
-          item={lastElement}
-          page={page}
-          handleCurrentPage={handleCurrentPage}
-        />
-      </ol>
-      <button
-        type="button"
-        onClick={handleNextClick}
-        disabled={!nextPage}
-        className={cn({ 'cursor-not-allowed opacity-50': !nextPage })}
-      >
-        <GoTriangleLeft className="h-5 w-5 rotate-180" />
-      </button>
-    </div>
+    <>
+      {' '}
+      {pagesToShow.length > 0 && (
+        <div className="spce-x-3 m-auto flex w-full items-center justify-center pt-[50px] sm:space-x-5 sm:pt-20">
+          <button
+            type="button"
+            onClick={handlePreviousClick}
+            disabled={!previousPage}
+            className={cn({ 'cursor-not-allowed opacity-50': !previousPage })}
+          >
+            <GoTriangleLeft className="h-5 w-5" />
+          </button>
+          <ol className="flex items-center space-x-3 sm:space-x-8" data-testid="pages-list">
+            {/* First page */}
+            <PaginationItem key={1} item={1} page={page} handleCurrentPage={handleCurrentPage} />
+            {page - 1 > 1 && <HiEllipsisHorizontal />}
+            {/* Other pages */}
+            {pagesToShow.map((d) => (
+              <PaginationItem key={d} item={d} page={page} handleCurrentPage={handleCurrentPage} />
+            ))}
+            {page + 2 < lastElement && <HiEllipsisHorizontal />}
+            {/* Last page */}
+            <PaginationItem
+              key={lastElement}
+              item={lastElement}
+              page={page}
+              handleCurrentPage={handleCurrentPage}
+            />
+          </ol>
+          <button
+            type="button"
+            onClick={handleNextClick}
+            disabled={!nextPage}
+            className={cn({ 'cursor-not-allowed opacity-50': !nextPage })}
+          >
+            <GoTriangleLeft className="h-5 w-5 rotate-180" />
+          </button>
+        </div>
+      )}
+    </>
   );
 };
 
