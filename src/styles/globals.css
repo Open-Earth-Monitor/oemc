@@ -239,12 +239,12 @@
 
 .ol-swipe button::before {
   transform: rotate(135deg) !important;
-  left: -2px;
+  left: -2px !important;
 }
 
 .ol-swipe button::after {
   transform: rotate(-45deg) !important;
-  left: 2px;
+  left: 2px !important;
 }
 
 .arrow {
