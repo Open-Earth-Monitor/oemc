@@ -56,7 +56,7 @@ export const BookmarkControl: FC = () => {
       <SheetTrigger className={CONTROL_BUTTON_STYLES.default}>
         <AiFillStar className={CONTROL_ICON_STYLES.default} />
       </SheetTrigger>
-      <SheetContent className="relative z-[55] flex h-full flex-col space-y-6 bg-brand-500 bg-opacity-90 sm:pl-10">
+      <SheetContent className="relative z-[100] flex h-full max-w-sm flex-col space-y-6 bg-brand-500 bg-opacity-90 sm:pl-10">
         <SheetHeader className="space-y-6">
           <SheetTitle className="text-2xl font-bold text-secondary-500">Bookmarks</SheetTitle>
           <div className="scroll-y-auto">
