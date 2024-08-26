@@ -395,14 +395,16 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         {isLayerActive && <Legend />}
         <Attributions className="absolute bottom-3 left-0 z-40 lg:left-[620px]" />
         {/* Location search */}
-        <LocationSearchComponent
-          locationSearch={locationSearch}
-          OPTIONS={OPTIONS}
-          handleLocationSearchChange={handleLocationSearchChange}
-          handleClick={handleClick}
-          isLoading={isLoadingLocationData}
-          isFetching={isFetchingLocationData}
-        />
+        <div className="relative">
+          <LocationSearchComponent
+            locationSearch={locationSearch}
+            OPTIONS={OPTIONS}
+            handleLocationSearchChange={handleLocationSearchChange}
+            handleClick={handleClick}
+            isLoading={isLoadingLocationData}
+            isFetching={isFetchingLocationData}
+          />
+        </div>
         {/* Interactivity */}
         {data && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}
       </RMap>
