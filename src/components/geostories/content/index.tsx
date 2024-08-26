@@ -162,7 +162,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                       )}
                     </div>
                     <div>
-                      {isLayersLoading && <Loading />}-
+                      {isLayersLoading && <Loading />}
                       {!!layersData?.length && !isLayersLoading && (
                         <ul className="space-y-6" data-testid="datasets-list">
                           {geostoryLayers.map((dataset) => (

@@ -10,7 +10,7 @@ import { useSyncLayersSettings } from '@/hooks/sync-query';
 import DatasetCard from '@/components/datasets/card';
 import Loading from '@/components/loading';
 
-const DatasetsPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
+const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   const { data, error, isLoading, isError } = useMonitorLayers({ monitor_id });
   const [layers, setLayers] = useSyncLayersSettings();
 
@@ -52,4 +52,4 @@ const DatasetsPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   );
 };
 
-export default DatasetsPage;
+export default DatasetPageComponent;

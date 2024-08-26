@@ -9,12 +9,10 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import { mobile, tablet } from '@/lib/media-queries';
 
 import { useSyncSidebarState } from '@/hooks/sync-query';
-import { cn } from '@/lib/classnames';
 import MonitorHeader from '@/components/monitors/header';
 import TabsNav from '@/components/tabs-nav';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { motion } from 'framer-motion';
 
 const MonitorContent = ({ children }: PropsWithChildren) => {
@@ -94,34 +92,35 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
                   <TabsNav />
                 </div>
                 {children}
-                {children}
               </ScrollArea>
             </motion.div>
           </motion.div>
         </div>
       </motion.section>
 
-      <Popover onOpenChange={onOpenChange} open={isMobile && defaultOpen && open}>
-        <PopoverTrigger className="z-[60] h-12 w-1/2 bg-secondary-500 font-inter text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
-          Monitor
-        </PopoverTrigger>
-        <PopoverContent
-          sideOffset={0}
-          side="top"
-          className="w-screen rounded-none border-none px-0 py-0"
-        >
-          <PopoverClose className="absolute left-0 top-0 z-[60] block h-12 w-[60px] -translate-y-full border-none bg-brand-500 focus:text-secondary-500">
-            <ChevronDown className="mx-auto h-6 w-6 text-secondary-500" />
-          </PopoverClose>
-          <ScrollArea className="z-[60] h-full max-h-[60vh] w-full" type="auto">
-            <div className="w-full space-y-1 sm:space-y-6">
-              <MonitorHeader />
-              <TabsNav />
-            </div>
-            {children}
-          </ScrollArea>
-        </PopoverContent>
-      </Popover>
+      {isMobile && (
+        <Popover onOpenChange={onOpenChange} open={isMobile && defaultOpen && open}>
+          <PopoverTrigger className="z-[60] h-12 w-1/2 bg-secondary-500 font-inter text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
+            Monitor
+          </PopoverTrigger>
+          <PopoverContent
+            sideOffset={0}
+            side="top"
+            className="w-screen rounded-none border-none px-0 py-0"
+          >
+            <PopoverClose className="absolute left-0 top-0 z-[60] block h-12 w-[60px] -translate-y-full border-none bg-brand-500 focus:text-secondary-500">
+              <ChevronDown className="mx-auto h-6 w-6 text-secondary-500" />
+            </PopoverClose>
+            <ScrollArea className="z-[60] h-full max-h-[60vh] w-full" type="auto">
+              <div className="w-full space-y-1 sm:space-y-6">
+                <MonitorHeader />
+                <TabsNav />
+              </div>
+              {children}
+            </ScrollArea>
+          </PopoverContent>
+        </Popover>
+      )}
     </section>
   );
 };
