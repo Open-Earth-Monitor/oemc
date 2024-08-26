@@ -16,12 +16,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useMediaQuery } from 'react-responsive';
+import { mobile } from '@/lib/media-queries';
 
 const MainMenuMobile = () => {
   const pathname = usePathname();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
+  const isMobile = useMediaQuery(mobile);
 
   const handleClick = () => {
     setIsOpen((prev) => !prev);
@@ -117,7 +120,12 @@ const MainMenuMobile = () => {
                   Map
                 </button>
                 {menuVisibility && (
-                  <div className="h-full max-h-[calc(100vh-300px)] overflow-y-auto sm:h-80">
+                  <div
+                    className={cn({
+                      'h-full max-h-[calc(100vh-300px)] overflow-y-auto sm:h-80': true,
+                      'w-full': isMobile,
+                    })}
+                  >
                     <MonitorsDirectory />
                   </div>
                 )}

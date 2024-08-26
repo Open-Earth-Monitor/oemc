@@ -1,5 +1,9 @@
 import type { FC } from 'react';
 
+import { useMediaQuery } from 'react-responsive';
+import { mobile } from '@/lib/media-queries';
+import cn from '@/lib/classnames';
+
 import MonitorsTable from '@/components/monitors/table';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 
 const MonitorsDirectoryDialog: FC = () => {
+  const isMobile = useMediaQuery(mobile);
   return (
     <Dialog>
       <DialogTrigger className="w-full" asChild>
@@ -24,7 +29,12 @@ const MonitorsDirectoryDialog: FC = () => {
           Monitors Directory
         </Button>
       </DialogTrigger>
-      <DialogContent className="z-[55] sm:max-h-[85vh]">
+      <DialogContent
+        className={cn({
+          'z-[1000] sm:max-h-[85vh]': true,
+          'h-[calc(100vh-60px)] w-screen max-w-lg': isMobile,
+        })}
+      >
         <div className="p-2">
           <DialogHeader>
             <DialogTitle asChild>
