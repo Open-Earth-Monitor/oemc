@@ -130,7 +130,7 @@ const MainMenuMobile = () => {
                   </div>
                 )}
                 <Link
-                  href="/"
+                  href="https://zenodo.org/communities/oemc-project/"
                   className="flex h-full min-w-[180px] items-center justify-center p-4 text-center font-satoshi font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500"
                   data-testid="data-catalogue-link"
                   target="_blank"
