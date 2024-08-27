@@ -2,14 +2,21 @@ import Link from 'next/link';
 
 import { motion } from 'framer-motion';
 
+import { cn } from '@/lib/classnames';
+
 import { MonitorParsed } from '@/types/monitors';
 
-export const MonitorLink = ({ id, color, title }: MonitorParsed) => (
+export const MonitorLink = ({
+  id,
+  color,
+  title,
+  isMobile,
+}: MonitorParsed & { isMobile?: boolean }) => (
   <Link
     data-testid={`monitor-item-${id}`}
     key={id}
     href={`/map/${id}/datasets`}
-    className={`flex items-center border-l-4 px-2 font-bold sm:px-4`}
+    className={cn({ 'flex items-center  px-2 font-bold sm:px-4': true, 'border-l-4': !isMobile })}
     style={{ borderLeftColor: color }}
   >
     <motion.h2 initial="initial" whileHover="hover" className="text-xl font-bold sm:text-2xl">
