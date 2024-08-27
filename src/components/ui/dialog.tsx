@@ -64,10 +64,11 @@ const DialogContent = forwardRef<
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
-      className={cn(
-        'fixed bottom-14 left-[50%] top-14 z-50 flex max-h-full w-full max-w-[90%] translate-x-[-50%] flex-col overflow-y-scroll bg-brand-400 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:bottom-auto sm:top-[70px] sm:max-h-[80%] sm:max-w-lg md:max-w-2xl lg:max-w-3xl',
-        className
-      )}
+      className={cn({
+        'fixed bottom-14 left-[50%] top-14 z-50 flex max-h-full w-full max-w-[90%] translate-x-[-50%] flex-col overflow-y-scroll bg-brand-400 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:bottom-auto sm:top-[70px] sm:max-h-[80%] sm:max-w-lg md:max-w-2xl lg:max-w-3xl':
+          true,
+        [className]: !!className,
+      })}
       {...props}
     >
       <ScrollArea className="grow px-4 py-10 sm:px-10">{children}</ScrollArea>
