@@ -2,8 +2,8 @@ import { MonitorParsed } from '@/types/monitors';
 
 import { TableCell } from '@/components/ui/table';
 
-import { MonitorLink } from './monitor';
 import { GeostoriesLink } from './geostory';
+import { MonitorLink } from './monitor';
 
 const Item = ({ data }: { data: MonitorParsed }) => {
   return (
