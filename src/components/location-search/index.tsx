@@ -18,6 +18,7 @@ function LocationSearchComponent({
   handleClick,
   isLoading,
   isFetching,
+  className,
 }: {
   locationSearch: string;
   OPTIONS: { label: string; value: number | undefined; bbox: Bbox }[];
@@ -25,6 +26,7 @@ function LocationSearchComponent({
   handleClick: (option: { label: string; value: number | undefined; bbox: Bbox }) => void;
   isLoading: boolean;
   isFetching: boolean;
+  className?: string;
 }) {
   const [dropdownVisible, setDropdownVisible] = useState(true);
   const isMobile = useMediaQuery(mobile);
@@ -64,13 +66,14 @@ function LocationSearchComponent({
           'rounded-[4px]': !locationSearch,
           'rounded-t-[4px]': locationSearch,
           'w-[calc(100vw-34px-40px)]': isMobile,
+          [className]: !!className,
         })}
       >
         <div className="flex w-full items-center space-x-4">
           <LuSearch className="h-5 w-5 text-secondary-500" />
           <Input
             type="text"
-            className="inset-0 z-50 flex h-full w-full flex-1 grow border-none bg-red-700 bg-transparent caret-secondary-700 outline-none"
+            className="inset-0 z-50 flex h-full w-full flex-1 grow border-none bg-transparent caret-secondary-700 outline-none"
             placeholder="Search"
             aria-label="Search locations"
             aria-controls="location-options"
@@ -93,6 +96,7 @@ function LocationSearchComponent({
                   true,
                 [width]: true,
                 'left-0 right-3 w-[calc(100vw-34px-40px)]': isMobile,
+                [className]: !!className,
               })}
             >
               {isLoading && isFetching && <Loading />}

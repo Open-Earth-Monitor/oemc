@@ -376,12 +376,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             'absolute bottom-3 right-5 top-[78px] z-[100] flex flex-col transition-all duration-500 sm:right-auto sm:top-auto', // Ensure transition and duration are set
             {
               'sm:left-[408px] lg:left-[554px]': open, // Control's position when sidebar is open
-              'sm:left-4 lg:left-4': !open, // Control's position when sidebar is closed
+              'left-4': !open, // Control's position when sidebar is closed
             }
           )}
         >
           <RControl.RZoom
-            className={open ? 'ol-zoom-open' : 'ol-zoom'}
+            className={open ? 'ol-zoom-open' : 'sidebar-closed ol-zoom'}
             key={open ? 'ol-zoom-open' : 'ol-zoom'}
             zoomOutLabel="-"
             zoomInLabel="+"
@@ -403,6 +403,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             handleClick={handleClick}
             isLoading={isLoadingLocationData}
             isFetching={isFetchingLocationData}
+            className={cn('transition-[width] duration-700 ease-in-out', {
+              'sm:w-[37rem]': !open, // Width when sidebar is closed
+              'sm:w-[20rem]': open, // Width when sidebar is open
+            })}
           />
         </div>
         {/* Interactivity */}
