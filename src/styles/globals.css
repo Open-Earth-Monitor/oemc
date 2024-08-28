@@ -133,7 +133,7 @@
   display: none;
   flex-direction: column !important;
   /* position: relative; */
-  left: 408px !important;
+  left: 408px;
   width: 34px !important;
   height: 68px !important;
   align-items: center;
@@ -143,6 +143,12 @@
   top: unset !important;
   bottom: 96px !important;
   animation: slideIn 500ms ease 0s 1 normal forwards;
+}
+
+.ol-zoom {
+  &.sidebar-closed {
+    left: 50px !important;
+  }
 }
 
 @media (min-width: theme('screens.sm')) {

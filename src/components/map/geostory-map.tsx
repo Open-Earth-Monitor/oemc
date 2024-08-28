@@ -422,7 +422,7 @@ const Map: FC<GeostoryMapProps> = ({
           )}
         >
           <RControl.RZoom
-            className={open ? 'ol-zoom-open' : 'ol-zoom'}
+            className={open ? 'ol-zoom-open' : 'sidebar-closed ol-zoom'}
             key={open ? 'ol-zoom-open' : 'ol-zoom'}
             zoomOutLabel="-"
             zoomInLabel="+"
@@ -446,6 +446,10 @@ const Map: FC<GeostoryMapProps> = ({
             handleClick={handleClick}
             isLoading={isLoading}
             isFetching={isFetching}
+            className={cn('transition-[width] duration-700 ease-in-out', {
+              'sm:w-[37rem]': !open, // Width when sidebar is closed
+              'sm:w-[20rem]': open, // Width when sidebar is open
+            })}
           />
         </div>
         <Attributions className="absolute bottom-3 left-0 z-40 lg:left-[620px]" />
