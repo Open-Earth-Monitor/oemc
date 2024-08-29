@@ -189,7 +189,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                     backgroundColor: color,
                   }}
                 />
-                <div className="text-left text-xs opacity-50">{label}</div>
+                <div className="text-left text-xs text-secondary-500 opacity-50">{label}</div>
               </div>
             ))}
             <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />

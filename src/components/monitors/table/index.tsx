@@ -44,7 +44,7 @@ const MonitorsDirectory = () => {
         dataFiltered?.map((d) => (
           <div
             key={d.id}
-            className="space-y-3 border-b border-l-8 border-t border-dashed border-b-secondary-500 border-t-secondary-500 border-opacity-[0.2] p-5 first:border-t-0 last:border-b-0"
+            className="space-y-3 border-b border-l-8 border-t border-dashed border-b-secondary-500 border-t-secondary-500 border-opacity-[0.2] p-5 text-left first:border-t-0 last:border-b-0"
             style={{
               borderLeftColor: d.color,
               borderLeftStyle: 'solid',

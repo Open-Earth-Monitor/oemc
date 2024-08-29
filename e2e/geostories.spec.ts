@@ -147,7 +147,7 @@ test.describe('geostories tab', () => {
 
     // TO - DO : check if the datasets are the same as the ones in the geostory
     // const layersResponse = await page.waitForResponse(
-    //   `https://api.earthmonitor.org/geostories/${geostoriesData[0].id}/layers`
+    //   `https://api.earthmonitor.org/geostories/${geostoriesData[0].id}`
     // );
 
     // const layersData = (await layersResponse.json()) as Layer[];
