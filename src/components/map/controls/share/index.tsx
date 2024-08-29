@@ -14,9 +14,11 @@ import { cn } from '@/lib/classnames';
 import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
+import type { MobileProps } from '../types';
+
 const TIMEOUT_RESET_COPY_STATE = 3000;
 
-const ShareControl: FC = () => {
+const ShareControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
   const [hasCopiedText, setHasCopiedText] = useState(false);
   const [, copyToClipboard] = useCopyToClipboard();
   const urlCopy = window.location.href;
@@ -39,15 +41,22 @@ const ShareControl: FC = () => {
   return (
     <Popover>
       <PopoverTrigger data-testid="share-tool-trigger" asChild>
-        <button type="button" aria-label="share tool" className={CONTROL_BUTTON_STYLES.default}>
+        <button
+          type="button"
+          aria-label="share tool"
+          className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
+        >
           <HiOutlineShare className={CONTROL_ICON_STYLES.default} />
         </button>
       </PopoverTrigger>
       <PopoverContent
-        sideOffset={-34}
-        alignOffset={34}
-        align="start"
-        className="ml-1.5 flex h-[34px] w-fit items-center border border-brand-50 p-0.5"
+        sideOffset={isMobile ? -48 : -34}
+        alignOffset={isMobile ? 0 : 34}
+        align={isMobile ? 'end' : 'start'}
+        className={cn({
+          'ml-1.5 flex h-[34px] w-fit items-center border border-brand-50 p-0.5': true,
+          'z-[600] ml-0 h-[48px] rounded-none': isMobile,
+        })}
         hideWhenDetached={true}
       >
         {hasCopiedText && (
@@ -61,7 +70,11 @@ const ShareControl: FC = () => {
               type="button"
               data-testid="copy-url-link"
               aria-label="copy url link"
-              className={cn(CONTROL_BUTTON_STYLES.default, 'flex h-[28px] w-auto space-x-2 px-2')}
+              className={cn({
+                [CONTROL_BUTTON_STYLES.mobile]: isMobile,
+                [CONTROL_BUTTON_STYLES.default]: !isMobile,
+                'flex h-[28px] w-auto space-x-2 px-2': true,
+              })}
               onClick={handleCopy}
             >
               <PiLinkSimpleBold className={CONTROL_ICON_STYLES.default} />
@@ -73,7 +86,7 @@ const ShareControl: FC = () => {
               <TwitterShareButton
                 url={urlCopy}
                 title="Open Earth Monitor Cyberinfrastructure"
-                aria-label="share twitter"
+                aria-label="share in twitter"
                 data-testid="share-twitter-button"
               >
                 <div className={cn(CONTROL_BUTTON_STYLES.default, 'h-[28px] w-[28px]')}>

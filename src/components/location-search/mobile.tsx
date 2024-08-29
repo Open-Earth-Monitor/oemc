@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from 'react';
 
-import { LuSearch, LuX } from 'react-icons/lu';
+import { motion } from 'framer-motion';
+import { LuSearch, LuX, LuChevronRight } from 'react-icons/lu';
 
 import { cn } from '@/lib/classnames';
 
 import Loading from '@/components/loading';
+import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import type { Bbox } from '@/components/map/types';
 import { Input } from '@/components/ui/input';
 
@@ -26,6 +28,7 @@ function LocationSearchComponent({
   className?: string;
 }) {
   const [dropdownVisible, setDropdownVisible] = useState(true);
+  const [inputExpanded, setInputExpanded] = useState(false); // State for input expansion on mobile
 
   const handleReset = useCallback(() => {
     handleLocationSearchChange({
@@ -42,48 +45,76 @@ function LocationSearchComponent({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleLocationSearchChange(e);
-    setDropdownVisible(true);
+    if (!dropdownVisible) {
+      setDropdownVisible(true);
+    }
   };
 
-  const width = 'w-40 sm:w-72 lg:w-96 xl:w-[620px]';
+  const handleExpanded = () => {
+    if (!inputExpanded) {
+      setInputExpanded(true);
+    }
+  };
+
+  const handleCollapsed = () => {
+    setInputExpanded(false);
+  };
+
   return (
-    <div className="absolute right-3 top-[86px] z-50">
-      <div
-        className={cn({
-          'relative z-40 flex h-14 items-center rounded-t-[4px] border border-secondary-500 bg-brand-50 px-4 font-inter leading-4':
-            true,
-          [width]: true,
-          'rounded-[4px]': !locationSearch,
-          'rounded-t-[4px]': locationSearch,
+    <div
+      className={cn('relative z-50 flex w-full items-center', {
+        'w-[300px]': inputExpanded,
+      })}
+    >
+      <motion.div
+        className={cn(CONTROL_BUTTON_STYLES.mobile, {
           [className]: !!className,
+          'flex justify-center p-4': !inputExpanded, // Center the input when not expanded
+          'w-[300px] justify-start px-4 hover:bg-brand-500 hover:text-secondary-500': inputExpanded, // Expand to full width when input is expanded
         })}
+        onClick={handleExpanded} // Handle click to expand/collapse input
       >
-        <div className="flex w-full items-center space-x-4">
+        <div
+          className={cn({
+            'flex h-full w-full items-center  space-x-2': true,
+            'w-[240px] justify-start': inputExpanded,
+          })}
+        >
           <LuSearch className="h-5 w-5 text-secondary-500" />
-          <Input
-            type="text"
-            className="inset-0 z-50 flex h-full w-full flex-1 grow border-none bg-transparent caret-secondary-700 outline-none"
-            placeholder="Search"
-            aria-label="Search locations"
-            aria-controls="location-options"
-            onChange={handleInputChange}
-            value={locationSearch}
-          />
+          {inputExpanded && (
+            <Input
+              type="text"
+              className={cn({
+                'z-50 flex h-full w-full flex-1 grow border-none bg-transparent caret-secondary-700 outline-none':
+                  true,
+              })}
+              placeholder="Search"
+              aria-label="Search locations"
+              aria-controls="location-options"
+              onChange={handleInputChange}
+              value={locationSearch}
+            />
+          )}
         </div>
-        {locationSearch && (
-          <button onClick={handleReset} className="absolute right-3 text-secondary-500">
+        {locationSearch && inputExpanded && (
+          <button onClick={handleReset} className="absolute right-6 text-secondary-500">
             <LuX className="h-5 w-5" />
           </button>
         )}
-      </div>
+        {inputExpanded && (
+          <button onClick={handleCollapsed} className="absolute right-1 text-secondary-500">
+            <LuChevronRight className="h-5 w-5" />
+          </button>
+        )}
+      </motion.div>
+
       {(isLoading && isFetching) ||
-        (dropdownVisible && locationSearch && !!OPTIONS.length && (
+        (dropdownVisible && locationSearch && !!OPTIONS.length && inputExpanded && (
           <div className="relative">
             <div
               className={cn({
-                'absolute right-0 top-0 z-50 flex-1 rounded-b-[4px] border-b border-l border-r border-secondary-500 bg-brand-50 px-10 font-inter leading-4 text-secondary-700 shadow-lg':
+                'absolute right-0 top-[17px] z-50 w-[300px] flex-1 rounded-b-[4px] bg-brand-400 px-10 font-inter leading-4 text-secondary-700 shadow-lg':
                   true,
-                [width]: true,
                 [className]: !!className,
               })}
             >

@@ -4,16 +4,17 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
 import { PopoverClose } from '@radix-ui/react-popover';
+import { motion } from 'framer-motion';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 import { mobile, tablet } from '@/lib/media-queries';
 
 import { useSyncSidebarState } from '@/hooks/sync-query';
+
 import MonitorHeader from '@/components/monitors/header';
 import TabsNav from '@/components/tabs-nav';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { motion } from 'framer-motion';
 
 const MonitorContent = ({ children }: PropsWithChildren) => {
   const isMobile = useMediaQuery(mobile);

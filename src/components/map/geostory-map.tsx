@@ -13,12 +13,10 @@ import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
-import { mobile, tablet } from '@/lib/media-queries';
 import cn from '@/lib/classnames';
+import { mobile, tablet } from '@/lib/media-queries';
 
-import type { GeostoryParsed } from '@/types/geostories';
-import type { LayerParsed } from '@/types/layers';
-
+import { useDebounce } from '@/hooks/datasets';
 import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
 import {
   useSyncLayersSettings,
@@ -29,6 +27,9 @@ import {
 } from '@/hooks/sync-query';
 
 import LocationSearchComponent from '@/components/location-search';
+import LocationSearchMobileComponent from '@/components/location-search/mobile';
+
+import GeostoryContent from '../geostories/content';
 
 import Attributions from './attributions';
 import { DEFAULT_VIEWPORT } from './constants';
@@ -40,8 +41,6 @@ import SwipeControl from './controls/swipe';
 import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
 import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox } from './types';
-import { useDebounce } from '@/hooks/datasets';
-import GeostoryContent from '../geostories/content';
 
 interface ClickEvent {
   bbox?: Bbox;
@@ -412,46 +411,79 @@ const Map: FC<GeostoryMapProps> = ({
           url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
         />
 
-        <Controls
-          className={cn(
-            'absolute bottom-3 right-5 top-[78px] z-40 flex flex-col sm:right-auto sm:top-auto',
-            {
-              'duration-500 sm:left-[408px] lg:left-[554px]': open,
-              'duration-300 sm:left-4 lg:left-4': !open,
-            }
-          )}
-        >
-          <RControl.RZoom
-            className={open ? 'ol-zoom-open' : 'sidebar-closed ol-zoom'}
-            key={open ? 'ol-zoom-open' : 'ol-zoom'}
-            zoomOutLabel="-"
-            zoomInLabel="+"
-          />
-          <BookmarkControl />
-          <ShareControl />
-          {isCompareLayerActive && layerData && compareLayerData && (
-            <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
-          )}
-        </Controls>
+        {!isMobile && (
+          <Controls
+            className={cn(
+              'absolute bottom-3 right-5 top-[78px] z-40 flex flex-col sm:right-auto sm:top-auto',
+              {
+                'duration-500 sm:left-[408px] lg:left-[554px]': open,
+                'duration-300 sm:left-4 lg:left-4': !open,
+              }
+            )}
+          >
+            <RControl.RZoom
+              className={open ? 'ol-zoom-open' : 'sidebar-closed ol-zoom'}
+              key={open ? 'ol-zoom-open' : 'ol-zoom'}
+              zoomOutLabel="-"
+              zoomInLabel="+"
+            />
+            <BookmarkControl />
+            <ShareControl />
+            {isCompareLayerActive && layerData && compareLayerData && (
+              <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
+            )}
+          </Controls>
+        )}
 
         <GeostoryContent />
         {isLayerActive && <Legend isGeostory />}
 
         {/* Location search */}
-        <div className="relative">
-          <LocationSearchComponent
-            locationSearch={locationSearch}
-            OPTIONS={OPTIONS}
-            handleLocationSearchChange={handleLocationSearchChange}
-            handleClick={handleClick}
-            isLoading={isLoading}
-            isFetching={isFetching}
-            className={cn('transition-[width] duration-700 ease-in-out', {
-              'sm:w-[37rem]': !open, // Width when sidebar is closed
-              'sm:w-[20rem]': open, // Width when sidebar is open
+        {!isMobile && (
+          <div className="relative">
+            <LocationSearchComponent
+              locationSearch={locationSearch}
+              OPTIONS={OPTIONS}
+              handleLocationSearchChange={handleLocationSearchChange}
+              handleClick={handleClick}
+              isLoading={isLoading}
+              isFetching={isFetching}
+              className={cn('transition-[width] duration-700 ease-in-out', {
+                'sm:w-[37rem]': !open, // Width when sidebar is closed
+                'sm:w-[20rem]': open, // Width when sidebar is open
+              })}
+            />
+          </div>
+        )}
+
+        {isMobile && (
+          <Controls
+            className={cn({
+              'absolute right-2.5 top-[79px] z-10 flex flex-col items-end justify-end transition-all duration-500 sm:right-auto sm:top-auto':
+                true,
             })}
-          />
-        </div>
+          >
+            <LocationSearchMobileComponent
+              locationSearch={locationSearch}
+              OPTIONS={OPTIONS}
+              handleLocationSearchChange={handleLocationSearchChange}
+              handleClick={handleClick}
+              isLoading={isLoading}
+              isFetching={isFetching}
+            />
+            <RControl.RZoom
+              className={'ol-zoom-open'}
+              key={'ol-zoom-open'}
+              zoomOutLabel="-"
+              zoomInLabel="+"
+            />
+            <BookmarkControl isMobile={isMobile} />
+            <ShareControl isMobile={isMobile} />
+            {isCompareLayerActive && layerData && compareLayerData && (
+              <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
+            )}
+          </Controls>
+        )}
         <Attributions className="absolute bottom-3 left-0 z-40 lg:left-[620px]" />
 
         {/* Interactivity */}

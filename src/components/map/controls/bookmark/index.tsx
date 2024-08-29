@@ -12,9 +12,11 @@ import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/con
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
+import type { MobileProps } from '../types';
+
 const PREFIX = 'OEMC';
 
-export const BookmarkControl: FC = () => {
+export const BookmarkControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
   const [bookmarkName, setBookmarkName] = useState('');
   const [bookmarks, setBookmarks] = useLocalStorage<{ name: string; value: string }[]>(
     `${PREFIX}-bookmarks`,
@@ -53,7 +55,9 @@ export const BookmarkControl: FC = () => {
 
   return (
     <Sheet>
-      <SheetTrigger className={CONTROL_BUTTON_STYLES.default}>
+      <SheetTrigger
+        className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
+      >
         <AiFillStar className={CONTROL_ICON_STYLES.default} />
       </SheetTrigger>
       <SheetContent className="relative z-[100] flex h-full max-w-sm flex-col space-y-6 bg-brand-500 bg-opacity-90 sm:pl-10">

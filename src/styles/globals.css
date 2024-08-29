@@ -133,7 +133,7 @@
   display: none;
   flex-direction: column !important;
   /* position: relative; */
-  left: 408px;
+  left: 408px !important;
   width: 34px !important;
   height: 68px !important;
   align-items: center;

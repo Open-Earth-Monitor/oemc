@@ -12,6 +12,7 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('user should be able to copy and share current url', () => {
   test('copy link to clipboard', async ({ page }) => {
+    // Proceed with the test if sidebar is closed or explicitly set to false
     await expect(page.getByTestId('share-tool-trigger')).toBeVisible();
     await page.getByTestId('share-tool-trigger').click();
 

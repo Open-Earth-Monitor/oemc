@@ -6,6 +6,7 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { LuLayers } from 'react-icons/lu';
 
 import cn from '@/lib/classnames';
+import { isValidUrl } from '@/lib/url';
 
 import type { LayerParsed } from '@/types/layers';
 
@@ -61,6 +62,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
     }
   }, [id, isActive, isCompareActive, isGeostory, layers, range, setCompareLayers, setLayers]);
 
+  const isValidUrlDownload = isValidUrl(download_url);
   return (
     <div className="space-y-4 bg-brand-300 p-6 sm:space-y-6" data-testid={`dataset-item-${id}`}>
       <div className="flex items-start justify-between space-x-4">
@@ -71,7 +73,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
           {title}
         </h2>
         <div className="mt-1.5 flex items-baseline space-x-2">
-          {!!download_url && (
+          {!!download_url && isValidUrlDownload && (
             <a
               href={download_url}
               target="_blank"
