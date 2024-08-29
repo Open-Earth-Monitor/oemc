@@ -135,7 +135,7 @@ const TimeSeries: FC<{
             <HiPlay className="h-4 w-4 text-secondary-500" />
           )}
         </button>
-        <div className="flex w-full max-w-[218px] flex-col space-y-2">
+        <div className="flex w-full flex-col space-y-2 sm:max-w-[218px]">
           <div className="max-w flex w-full  overflow-hidden">
             {range.map((r) => (
               <div key={r.value} className="flex w-full items-center justify-center">
