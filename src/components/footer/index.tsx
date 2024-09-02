@@ -49,7 +49,7 @@ export const Footer: FC = () => {
                   />
                 </motion.div>
               </DialogTrigger>
-              <DialogContent className=" w-[665px]transform bg-secondary-500 text-brand-500">
+              <DialogContent className="w-[665px] bg-secondary-500 text-brand-500">
                 <DialogHeader className="space-y-5">
                   <DialogTitle asChild>
                     <header className="flex items-center justify-between">

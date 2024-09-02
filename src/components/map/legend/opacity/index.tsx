@@ -40,7 +40,7 @@ export const OpacitySetting: FC<{
         alignOffset={0}
         align="center"
         className={cn({
-          'z-[60] w-[189px] rounded-3xl border border-secondary-900 px-3 py-3.5': true,
+          'z-[1000] w-[189px] rounded-3xl border border-secondary-900 px-3 py-3.5': true,
         })}
       >
         <div className="flex w-full flex-col space-y-2">
