@@ -1,12 +1,15 @@
 'use client';
 import { useCallback, useState, useEffect } from 'react';
 
+import { useMediaQuery } from 'react-responsive';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { DialogContent } from '@radix-ui/react-dialog';
 
 import cn from '@/lib/classnames';
+import { mobile } from '@/lib/media-queries';
 
 import MonitorsDirectory from '@/components/monitors/table';
 import {
@@ -16,8 +19,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useMediaQuery } from 'react-responsive';
-import { mobile } from '@/lib/media-queries';
 
 const MainMenuMobile = () => {
   const pathname = usePathname();
