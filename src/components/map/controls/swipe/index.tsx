@@ -40,7 +40,7 @@ const SwipeControl: React.FC<{
   }, [layersUrl, layersUrlCompare]);
 
   useEffect(() => {
-    map.addControl(swipeControl);
+    map?.addControl(swipeControl);
     swipeControl.addEventListener('moving', handleMoving);
 
     return () => {

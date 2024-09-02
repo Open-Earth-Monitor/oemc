@@ -33,6 +33,8 @@ const MonitorsDirectoryDialog: FC = () => {
       <DialogContent
         className={cn({
           'sm:max-h-[85vh]': true,
+          'left-1/2 top-0 z-[2000] flex max-h-[85vh] w-full -translate-x-1/2 md:translate-y-0':
+            !isMobile,
           'h-[calc(100vh-60px)] w-screen max-w-lg': isMobile,
         })}
       >

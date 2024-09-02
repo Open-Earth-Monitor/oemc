@@ -155,7 +155,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
       style={{ minWidth: legendWidth }}
     >
       <div
-        className="relative flex flex-wrap items-center justify-between space-x-4 text-secondary-500"
+        className="relative flex items-start justify-between space-x-4 text-secondary-500"
         data-testid="map-legend-item"
       >
         <div data-testid="map-legend-item-title" className="text-xs font-bold" ref={titleRef}>

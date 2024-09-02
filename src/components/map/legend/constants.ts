@@ -1,7 +1,7 @@
 export const DROPDOWN_TRIGGER_STYLES = 'w-full border-none px-1 py-2.5';
 export const DROPDOWN_TRIGGER_CONTENT_STYLES =
   'flex w-full items-center space-x-1 whitespace-nowrap';
-export const DROPDOWN_CONTENT_STYLES = 'dropdown-menu-content z-[60] w-full bg-brand-500 px-0';
+export const DROPDOWN_CONTENT_STYLES = 'dropdown-menu-content z-[1000] w-full bg-brand-500 px-0';
 export const DROPDOWN_ITEM_STYLES =
   'm-auto flex w-full flex-1 justify-center whitespace-nowrap py-0 px-2 text-center text-secondary-500 ';
 
