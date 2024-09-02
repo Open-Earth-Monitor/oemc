@@ -7,10 +7,10 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import { PopoverClose } from '@radix-ui/react-popover';
+import { motion } from 'framer-motion';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { HiArrowLeft } from 'react-icons/hi';
 
-import { cn } from '@/lib/classnames';
 import { mobile, tablet } from '@/lib/media-queries';
 
 import { useGeostoryParsed, useGeostoryLayers } from '@/hooks/geostories';
@@ -25,8 +25,6 @@ import GeostoryHeader from '@/components/geostories/header';
 import Loading from '@/components/loading';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
-import { motion } from 'framer-motion';
 
 const GeostoryContent = ({ children }: PropsWithChildren) => {
   const isMobile = useMediaQuery(mobile);

@@ -10,7 +10,7 @@ import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import type { Bbox } from '@/components/map/types';
 import { Input } from '@/components/ui/input';
 
-function LocationSearchComponent({
+function LocationSearchMobileComponent({
   locationSearch,
   OPTIONS,
   handleLocationSearchChange,
@@ -80,7 +80,7 @@ function LocationSearchComponent({
             'w-[240px] justify-start': inputExpanded,
           })}
         >
-          <LuSearch className="h-5 w-5 text-secondary-500" />
+          <LuSearch className="h-5 w-5 text-secondary-500 hover:bg-secondary-500 hover:text-brand-500" />
           {inputExpanded && (
             <Input
               type="text"
@@ -150,4 +150,4 @@ function LocationSearchComponent({
   );
 }
 
-export default LocationSearchComponent;
+export default LocationSearchMobileComponent;

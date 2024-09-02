@@ -1,4 +1,4 @@
-import { FC, useRef, ChangeEvent, useCallback } from 'react';
+import { FC, useRef } from 'react';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
