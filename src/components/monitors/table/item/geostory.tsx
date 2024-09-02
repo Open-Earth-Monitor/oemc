@@ -1,9 +1,12 @@
 import { useState } from 'react';
+
 import Link from 'next/link';
+
 import { motion, AnimatePresence, useAnimationControls } from 'framer-motion';
 import { HiOutlineChevronUp } from 'react-icons/hi';
 
 import { cn } from '@/lib/classnames';
+
 import { MonitorParsed } from '@/types/monitors';
 
 export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: MonitorParsed) => {

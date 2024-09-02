@@ -1,15 +1,17 @@
 'use client';
 
+import { useMediaQuery } from 'react-responsive';
+
+import { mobile } from '@/lib/media-queries';
+
 import { useMonitors } from '@/hooks/monitors';
 
 import Loading from '@/components/loading';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 import Item from './item';
-import MonitorLink from './item/monitor';
 import GeostoriesLink from './item/geostory';
-import { useMediaQuery } from 'react-responsive';
-import { mobile } from '@/lib/media-queries';
+import MonitorLink from './item/monitor';
 
 const MonitorsDirectory = () => {
   const isMobile = useMediaQuery(mobile);
