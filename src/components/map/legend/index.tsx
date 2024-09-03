@@ -29,7 +29,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
 
       {/* MOBILE */}
       <Popover>
-        <PopoverTrigger className="z-[60] h-12 w-full bg-secondary-500 font-inter text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
+        <PopoverTrigger className="z-[600] h-12 w-full bg-secondary-500 font-inter text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
           Legend
         </PopoverTrigger>
         <PopoverContent
