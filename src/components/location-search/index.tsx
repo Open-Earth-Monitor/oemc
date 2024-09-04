@@ -47,14 +47,15 @@ function LocationSearchComponent({
 
   const width = 'w-40 sm:w-72 lg:w-96 xl:w-[620px]';
   return (
-    <div className="absolute right-3 top-[86px] z-50">
+    <div className="absolute right-3 top-[86px] z-[600]">
       <div
         className={cn({
-          'relative z-40 flex h-14 items-center rounded-t-[4px] border border-secondary-500 bg-brand-50 px-4 font-inter leading-4':
+          'relative z-40 flex h-14 items-center rounded-t-[4px] bg-[#09131DCC] px-4 font-inter leading-4 ':
             true,
           [width]: true,
-          'rounded-[4px]': !locationSearch,
-          'rounded-t-[4px]': locationSearch,
+          'rounded-[4px]': !OPTIONS.length,
+          'rounded-t-[4px]': OPTIONS.length > 0,
+          'border-2 border-secondary-500': locationSearch,
           [className]: !!className,
         })}
       >
@@ -62,7 +63,7 @@ function LocationSearchComponent({
           <LuSearch className="h-5 w-5 text-secondary-500" />
           <Input
             type="text"
-            className="inset-0 z-50 flex h-full w-full flex-1 grow border-none bg-transparent caret-secondary-700 outline-none"
+            className="inset-0 z-50 flex h-full w-full max-w-[80%] flex-1 grow border-none bg-transparent caret-secondary-700 outline-none xl:max-w-[90%]"
             placeholder="Search"
             aria-label="Search locations"
             aria-controls="location-options"
@@ -71,7 +72,7 @@ function LocationSearchComponent({
           />
         </div>
         {locationSearch && (
-          <button onClick={handleReset} className="absolute right-3 text-secondary-500">
+          <button onClick={handleReset} className="absolute right-1 text-secondary-500 md:right-3">
             <LuX className="h-5 w-5" />
           </button>
         )}
@@ -81,7 +82,7 @@ function LocationSearchComponent({
           <div className="relative">
             <div
               className={cn({
-                'absolute right-0 top-0 z-50 flex-1 rounded-b-[4px] border-b border-l border-r border-secondary-500 bg-brand-50 px-10 font-inter leading-4 text-secondary-700 shadow-lg':
+                'absolute right-0 top-0 z-50 max-h-96 flex-1 rounded-b-[4px] border-b-2 border-l-2 border-r-2 border-secondary-500 bg-brand-50 px-10 font-inter leading-4 text-secondary-700 shadow-lg':
                   true,
                 [width]: true,
                 [className]: !!className,

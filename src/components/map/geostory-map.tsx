@@ -495,7 +495,7 @@ const Map: FC<GeostoryMapProps> = ({
             )}
           </Controls>
         )}
-        <Attributions className="absolute bottom-3 left-0 z-40 lg:left-[620px]" />
+        <Attributions className="absolute z-40 sm:bottom-0 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
 
         {/* Interactivity */}
         {layerData && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}
