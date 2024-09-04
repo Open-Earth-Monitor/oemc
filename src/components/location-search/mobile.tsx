@@ -70,7 +70,8 @@ function LocationSearchMobileComponent({
         className={cn(CONTROL_BUTTON_STYLES.mobile, {
           [className]: !!className,
           'flex justify-center p-4': !inputExpanded, // Center the input when not expanded
-          'w-[300px] justify-start px-4 hover:bg-brand-500 hover:text-secondary-500': inputExpanded, // Expand to full width when input is expanded
+          'w-[300px] justify-start bg-[#09131DCC] px-4 hover:bg-brand-500 hover:text-secondary-500':
+            inputExpanded, // Expand to full width when input is expanded
         })}
         onClick={handleExpanded} // Handle click to expand/collapse input
       >
