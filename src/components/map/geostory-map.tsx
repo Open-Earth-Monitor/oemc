@@ -102,6 +102,7 @@ const Map: FC<GeostoryMapProps> = ({
   const compareOpacity = compareLayers?.[0]?.opacity;
   const compareDate = compareLayers?.[0]?.date;
   const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
+
   /**
    * Initial viewport from the URL or the default one
    */
@@ -349,7 +350,7 @@ const Map: FC<GeostoryMapProps> = ({
         height="100%"
         className="relative"
         initial={initialViewport}
-        // view={[initialViewport, null] as [RView, (view: RView) => void]}
+        view={[initialViewport, null] as [RView, (view: RView) => void]}
         onMoveEnd={handleMapMove}
         onSingleClick={handleSingleClick}
         noDefaultControls
