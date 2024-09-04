@@ -434,10 +434,19 @@ const Map: FC<GeostoryMapProps> = ({
             )}
           </Controls>
         )}
-        <div className="absolute bottom-0 left-0 right-0 z-[700] h-[58px] bg-brand-500 px-1 py-2 sm:hidden">
-          <GeostoryContent />
-          {isLayerActive && <Legend isGeostory />}
-        </div>
+        {isMobile && (
+          <div className="absolute bottom-0 left-0 right-0 z-[700] h-[58px] bg-brand-500 px-1 py-2 sm:hidden">
+            <GeostoryContent />
+            {isLayerActive && <Legend isGeostory />}
+          </div>
+        )}
+
+        {!isMobile && (
+          <div>
+            <GeostoryContent />
+            {isLayerActive && <Legend isGeostory />}
+          </div>
+        )}
 
         {/* Location search */}
         {!isMobile && (
