@@ -425,7 +425,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           </Controls>
         )}
         {isLayerActive && <Legend />}
-        <Attributions className="absolute bottom-3 left-0 z-40 lg:left-[620px]" />
+        <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
         {/* Location search */}
         {!isMobile && (
           <div className="relative">
