@@ -188,62 +188,64 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
       )}
 
       {isMobile && (
-        <Popover onOpenChange={onOpenChange} open={defaultOpen && open}>
-          <PopoverTrigger className="absolute bottom-1 h-12 w-1/2 bg-secondary-500 font-inter text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
-            Geostory
-          </PopoverTrigger>
-          <PopoverContent
-            sideOffset={0}
-            side="top"
-            className="w-screen rounded-none border-none px-0 py-0"
-          >
-            <PopoverClose className="absolute left-0 top-0 block h-12 w-[60px] -translate-y-full border-none bg-brand-500 focus:text-secondary-500">
-              <ChevronDown className="mx-auto h-6 w-6 text-secondary-500" />
-            </PopoverClose>
-            <ScrollArea className="h-full max-h-[60vh] w-full" type="auto">
-              <div className="w-full space-y-1 sm:space-y-6">
-                <div className="space-y-6">
-                  <div className="divide-y divide-secondary-900">
-                    {geostoryData?.monitors?.[0].id && (
-                      <Link
-                        href={`/map/${geostoryData.monitors[0].id}/geostories`}
-                        className="sticky top-0 z-10 block space-x-3 bg-brand-500 p-6 pb-2  font-bold"
-                        data-testid="back-to-monitor"
-                        style={{ color: geostoryData.color }}
-                      >
-                        <HiArrowLeft className="inline-block h-6 w-6" />
-                        <span data-testid="monitor-title-back-btn">
-                          Back to {geostoryData.monitors[0].title}.
-                        </span>
-                      </Link>
-                    )}
-                    {isGeostoryLoading && <Loading />}
-                    {geostoryData && !isGeostoryLoading && (
-                      <GeostoryHeader {...geostoryData} color={geostoryData.color} />
-                    )}
-                  </div>
-                  <div>
-                    {isLayersLoading && <Loading />}-
-                    {!!layersData?.length && !isLayersLoading && (
-                      <ul className="space-y-6" data-testid="datasets-list">
-                        {geostoryLayers.map((dataset) => (
-                          <li key={dataset.layer_id}>
-                            <DatasetCard
-                              {...dataset}
-                              type="geostory"
-                              id={dataset.layer_id}
-                              isGeostory
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+        <div className="absolute bottom-0 left-0 right-0 z-[700] h-[58px] bg-brand-500 px-1 py-2 sm:hidden">
+          <Popover onOpenChange={onOpenChange} open={defaultOpen && open}>
+            <PopoverTrigger className="absolute bottom-1 h-12 w-1/2 bg-secondary-500 font-inter text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
+              Geostory
+            </PopoverTrigger>
+            <PopoverContent
+              sideOffset={0}
+              side="top"
+              className="w-screen rounded-none border-none px-0 py-0"
+            >
+              <PopoverClose className="absolute left-0 top-0 block h-12 w-[60px] -translate-y-full border-none bg-brand-500 focus:text-secondary-500">
+                <ChevronDown className="mx-auto h-6 w-6 text-secondary-500" />
+              </PopoverClose>
+              <ScrollArea className="h-full max-h-[60vh] w-full" type="auto">
+                <div className="w-full space-y-1 sm:space-y-6">
+                  <div className="space-y-6">
+                    <div className="divide-y divide-secondary-900">
+                      {geostoryData?.monitors?.[0].id && (
+                        <Link
+                          href={`/map/${geostoryData.monitors[0].id}/geostories`}
+                          className="sticky top-0 z-10 block space-x-3 bg-brand-500 p-6 pb-2  font-bold"
+                          data-testid="back-to-monitor"
+                          style={{ color: geostoryData.color }}
+                        >
+                          <HiArrowLeft className="inline-block h-6 w-6" />
+                          <span data-testid="monitor-title-back-btn">
+                            Back to {geostoryData.monitors[0].title}.
+                          </span>
+                        </Link>
+                      )}
+                      {isGeostoryLoading && <Loading />}
+                      {geostoryData && !isGeostoryLoading && (
+                        <GeostoryHeader {...geostoryData} color={geostoryData.color} />
+                      )}
+                    </div>
+                    <div>
+                      {isLayersLoading && <Loading />}-
+                      {!!layersData?.length && !isLayersLoading && (
+                        <ul className="space-y-6" data-testid="datasets-list">
+                          {geostoryLayers.map((dataset) => (
+                            <li key={dataset.layer_id}>
+                              <DatasetCard
+                                {...dataset}
+                                type="geostory"
+                                id={dataset.layer_id}
+                                isGeostory
+                              />
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </ScrollArea>
-          </PopoverContent>
-        </Popover>
+              </ScrollArea>
+            </PopoverContent>
+          </Popover>
+        </div>
       )}
     </>
   );
