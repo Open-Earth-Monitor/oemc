@@ -44,7 +44,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
       </DialogTrigger>
       <DialogContent
         data-testid={`monitor-card-${id}`}
-        className="w-[665px] bg-secondary-500 text-brand-500"
+        className="w-full bg-secondary-500 text-brand-500 sm:w-[665px]"
       >
         <DialogHeader className="space-y-6">
           <DialogTitle asChild>
