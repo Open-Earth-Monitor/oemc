@@ -4,8 +4,6 @@ import localFont from 'next/font/local';
 import Header from '@/components/header';
 import Providers from '@/utils/providers';
 
-import Script from 'next/script';
-
 // Styles
 import '@/styles/globals.css';
 import 'ol/ol.css';
@@ -50,11 +48,6 @@ export default function RootLayout({ children }) {
               <Header />
               {children}
             </Providers>
-            <Script
-              src="//rf.revolvermaps.com/0/0/8.js?i=55ky0c1lddb&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33"
-              strategy="lazyOnload" // This attribute ensures the script loads without blocking page load
-              async
-            />
           </main>
         </div>
       </body>
