@@ -7,6 +7,7 @@ import { cn } from '@/lib/classnames';
 
 import CommunityDropdown from '@/components/main-menu//community-dropdown';
 import { navLinks } from '@/components/main-menu/constants';
+import WebTraffic from '@/components/web-traffic';
 
 const MainMenuDesktop = () => {
   const pathname = usePathname();
@@ -31,6 +32,7 @@ const MainMenuDesktop = () => {
         );
       })}
       <CommunityDropdown />
+      <WebTraffic />
     </nav>
   );
 };
