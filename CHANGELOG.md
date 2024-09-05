@@ -13,13 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Tooltip update value when the user change date of the layer and the tooltip is already open [OEMC-240](https://vizzuality.atlassian.net/browse/OEMC-240)
 - Social media feed from "fosstodon" [OEMC-257](https://vizzuality.atlassian.net/browse/OEMC-257)
+- Map sidebar collapsible [OEMC-266](https://vizzuality.atlassian.net/browse/OEMC-266)
 - Responsive version for tablet and mobile [OEMC-261](https://vizzuality.atlassian.net/browse/OEMC-261) to [OEMC-264](https://vizzuality.atlassian.net/browse/OEMC-264)
+- Location search in map [OEMC-45](https://vizzuality.atlassian.net/browse/OEMC-45)
 
 ### Changed
 
 - Upgrade to Next.js 14.1.4
 - Upgrade to Node.js 18.17 required by Next 14.1.4
 - Dropdown in legend styles and interactivity [OEMC-231](https://vizzuality.atlassian.net/browse/OEMC-231)
+- Improve FE calls to API in search [OEMC-272](https://vizzuality.atlassian.net/browse/OEMC-272)
 
 ### Fixed
 
