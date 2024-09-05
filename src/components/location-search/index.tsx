@@ -53,7 +53,7 @@ function LocationSearchComponent({
           'relative z-40 flex h-14 items-center rounded-t-[4px] bg-[#09131DCC] px-4 font-inter leading-4 ':
             true,
           [width]: true,
-          'rounded-[4px]': !OPTIONS.length,
+          'rounded-[4px]': !OPTIONS.length && !locationSearch,
           'rounded-t-[4px]': OPTIONS.length > 0,
           'border-2 border-secondary-500': locationSearch,
           [className]: !!className,
@@ -78,11 +78,11 @@ function LocationSearchComponent({
         )}
       </div>
       {(isLoading && isFetching) ||
-        (dropdownVisible && locationSearch && !!OPTIONS.length && (
+        (dropdownVisible && locationSearch && (
           <div className="relative">
             <div
               className={cn({
-                'absolute right-0 top-0 z-50 max-h-96 flex-1 rounded-b-[4px] border-b-2 border-l-2 border-r-2 border-secondary-500 bg-brand-50 px-10 font-inter leading-4 text-secondary-700 shadow-lg':
+                'absolute right-0 top-0 z-50 h-fit max-h-96 flex-1 overflow-y-auto rounded-b-[4px] border-b-2 border-l-2 border-r-2 border-secondary-500 bg-[#09131DCC] px-10 font-inter leading-4 text-secondary-600 shadow-lg':
                   true,
                 [width]: true,
                 [className]: !!className,
@@ -90,14 +90,18 @@ function LocationSearchComponent({
             >
               {isLoading && isFetching && <Loading />}
               {locationSearch && OPTIONS.length > 0 && (
-                <ul id="location-options" role="listbox" className="space-y-2 py-2">
+                <ul
+                  id="location-options"
+                  role="listbox"
+                  className="pointer-events-auto  h-full space-y-2 overflow-y-auto py-2"
+                >
                   {OPTIONS.map((option) => (
                     <li
                       key={option.value}
                       role="option"
                       aria-selected="false"
                       tabIndex={0}
-                      className="cursor-pointer rounded p-2 hover:text-secondary-500"
+                      className="z-[60] cursor-pointer rounded p-2 hover:text-secondary-500"
                       onClick={() => handleOptionClick(option)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
@@ -111,7 +115,9 @@ function LocationSearchComponent({
                 </ul>
               )}
               {locationSearch && OPTIONS.length === 0 && !isFetching && !isLoading && (
-                <p className="py-6 text-secondary-500">No results found.</p>
+                <p className="pointer-events-auto z-[60] h-full space-y-2  overflow-y-auto py-6 text-secondary-500">
+                  No results found.
+                </p>
               )}
             </div>
           </div>
