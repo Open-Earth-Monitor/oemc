@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Tooltip update value when the user change date of the layer and the tooltip is already open [OEMC-240](https://vizzuality.atlassian.net/browse/OEMC-240)
 - Social media feed from "fosstodon" [OEMC-257](https://vizzuality.atlassian.net/browse/OEMC-257)
-- Responsive version for tablet and mobile
+- Responsive version for tablet and mobile [OEMC-261](https://vizzuality.atlassian.net/browse/OEMC-261) to [OEMC-264](https://vizzuality.atlassian.net/browse/OEMC-264)
 
 ### Changed
 
