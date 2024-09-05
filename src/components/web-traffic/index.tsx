@@ -60,14 +60,28 @@ const WebTraffic = () => (
                   <DialogDescription asChild>
                     <div className="space-y-3" data-testid="disclaimer-content">
                       {/* <iframe className="h-screen w-screen"> */}
-                      <div className="relative h-full flex-1">
+                      {/* <div className="relative h-full flex-1">
                         <Script
                           src="//rf.revolvermaps.com/0/0/8.js?i=55ky0c1lddb&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33"
                           strategy="lazyOnload" // This attribute ensures the script loads without blocking page load
                           async
                         />
-                      </div>
+                      </div> */}
                       {/* </iframe> */}
+                      <iframe
+                        style={{
+                          background: 'transparent !important',
+                          position: 'absolute',
+                          left: 0,
+                          top: 0,
+                        }}
+                        scrolling={false}
+                        frameBorder={0}
+                        allowtransparency="true"
+                        width="100%"
+                        height="100%"
+                        src="//rf.revolvermaps.com/w/8/a/a2.php?i=55ky0c1lddb&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33"
+                      ></iframe>
                       <DialogClose className="right-10 flex items-center border-none text-xs font-medium uppercase tracking-[0.96px]">
                         Close
                       </DialogClose>
