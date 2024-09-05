@@ -19,6 +19,7 @@ export type Monitor = {
   use_case_link: { title: string; url: string }[];
   responsible_partner_name?: string;
   responsible_partner_url?: string;
+  monitor_bbox?: number[] | null;
 };
 
 export type MonitorParsed = Monitor & { color: string; colorOpacity?: string; colorHead?: string };

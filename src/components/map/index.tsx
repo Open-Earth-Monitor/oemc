@@ -239,6 +239,16 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // useEffect(() => {
+  //   if (data?.monitor_bbox && mapRef && !center) {
+  //     // TO-DO: remove split once the API is fixed
+  //     mapRef?.current?.ol
+  //       ?.getView()
+  //       ?.fit((data?.monitor_bbox as unknown as string).split(',').map(Number));
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [data?.monitor_bbox]);
+
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
     const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
