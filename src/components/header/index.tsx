@@ -37,9 +37,9 @@ const Header = () => {
         <div className="hidden h-full lg:block">
           <MainMenuDesktop />
         </div>
-        {/* <div className="hidden h-full lg:block">
+        <div className="hidden h-full lg:block">
           <WebTraffic />
-        </div> */}
+        </div>
       </div>
     </div>
   );
