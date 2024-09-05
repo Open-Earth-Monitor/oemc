@@ -4,6 +4,8 @@ import localFont from 'next/font/local';
 import Header from '@/components/header';
 import Providers from '@/utils/providers';
 
+import Script from 'next/script';
+
 // Styles
 import '@/styles/globals.css';
 import 'ol/ol.css';
