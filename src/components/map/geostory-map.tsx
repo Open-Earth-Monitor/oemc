@@ -92,7 +92,7 @@ const Map: FC<GeostoryMapProps> = ({
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
-  const opacity = layers?.[0]?.opacity; // shared with the compare layer
+  const opacity = layers?.[0]?.opacity || 1; // shared with the compare layer
   const date = layers?.[0]?.date;
   const isLayerActive = useMemo(() => !!layerId, [layerId]);
 
