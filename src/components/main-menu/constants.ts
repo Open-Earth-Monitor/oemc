@@ -9,6 +9,9 @@ export const navLinks = [
     href: '/map',
     'data-testid': 'map-link',
   },
+];
+
+export const navSubLinksCommunity = [
   {
     name: 'Data Catalogue',
     href: 'https://zenodo.org/communities/oemc-project/',
@@ -16,9 +19,15 @@ export const navLinks = [
     'data-testid': 'data-catalogue-link',
   },
   {
-    name: 'Project site',
+    name: 'Project Website',
     href: 'https://earthmonitor.org/',
     target: '_blank',
     'data-testid': 'project-site-link',
+  },
+  {
+    name: 'Tier 3',
+    href: 'https://github.com/Open-Earth-Monitor',
+    target: '_blank',
+    'data-testid': 'tier3-link',
   },
 ];

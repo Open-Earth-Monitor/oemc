@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/classnames';
 
+import CommunityDropdown from '@/components/main-menu//community-dropdown';
 import { navLinks } from '@/components/main-menu/constants';
 
 const MainMenuDesktop = () => {
@@ -29,6 +30,7 @@ const MainMenuDesktop = () => {
           </Link>
         );
       })}
+      <CommunityDropdown />
     </nav>
   );
 };
