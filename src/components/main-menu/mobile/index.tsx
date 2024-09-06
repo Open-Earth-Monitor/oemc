@@ -11,6 +11,7 @@ import { DialogContent } from '@radix-ui/react-dialog';
 import cn from '@/lib/classnames';
 import { mobile } from '@/lib/media-queries';
 
+import CommunityDropdown from '@/components/main-menu/community-dropdown';
 import MonitorsDirectory from '@/components/monitors/table';
 import {
   Dialog,
@@ -123,29 +124,14 @@ const MainMenuMobile = () => {
                 {menuVisibility && (
                   <div
                     className={cn({
-                      'h-full max-h-[calc(100vh-300px)] overflow-y-auto sm:h-80': true,
+                      'h-full max-h-[calc(100vh-231px)] overflow-y-auto sm:h-80': true,
                       'w-full': isMobile,
                     })}
                   >
                     <MonitorsDirectory />
                   </div>
                 )}
-                <Link
-                  href="https://zenodo.org/communities/oemc-project/"
-                  className="flex h-full min-w-[180px] items-center justify-center p-4 text-center font-satoshi font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500"
-                  data-testid="data-catalogue-link"
-                  target="_blank"
-                >
-                  Data Catalogue
-                </Link>
-                <Link
-                  href="https://earthmonitor.org/"
-                  className="flex h-full min-w-[180px] items-center justify-center border-y border-secondary-900 p-4 text-center font-satoshi font-bold text-secondary-500 transition-colors hover:bg-secondary-500 hover:text-brand-500"
-                  data-testid="project-site-link"
-                  target="_blank"
-                >
-                  Project site
-                </Link>
+                <CommunityDropdown isMobile={true} />
               </div>
             </DialogDescription>
           </DialogHeader>
