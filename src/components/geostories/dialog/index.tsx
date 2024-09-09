@@ -55,7 +55,10 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
               >
                 {title}
               </h2>
-              <div data-testid="monitor-description" className="font-inter leading-[25px]">
+              <div
+                data-testid="monitor-description"
+                className="flex flex-wrap font-inter leading-[25px]"
+              >
                 {description}
               </div>
             </header>

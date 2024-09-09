@@ -20,7 +20,7 @@ const CollapsibleTrigger = forwardRef<
   <CollapsiblePrimitive.Trigger
     ref={ref}
     className={cn({
-      'group w-full min-w-[294px] rounded-sm bg-secondary-500 text-brand-500 hover:bg-secondary-600 data-[state=open]:rounded-b-none':
+      'group w-full min-w-[294px] rounded-sm bg-secondary-500 text-brand-500 hover:bg-secondary-600 data-[state=open]:rounded-b-none data-[state=active]:bg-secondary-500':
         true,
       [className]: !!className,
     })}
