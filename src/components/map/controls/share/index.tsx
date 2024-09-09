@@ -73,7 +73,7 @@ const ShareControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
               className={cn({
                 [CONTROL_BUTTON_STYLES.mobile]: isMobile,
                 [CONTROL_BUTTON_STYLES.default]: !isMobile,
-                'flex h-[28px] w-auto space-x-2 px-2': true,
+                'z-[1000] flex h-[28px] w-auto space-x-2 px-2': true,
               })}
               onClick={handleCopy}
             >

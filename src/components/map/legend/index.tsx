@@ -1,5 +1,10 @@
+import { useMediaQuery } from 'react-responsive';
+
 import { PopoverClose } from '@radix-ui/react-popover';
 import { ChevronDown } from 'lucide-react';
+
+import { cn } from '@/lib/classnames';
+import { mobile } from '@/lib/media-queries';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -7,9 +12,15 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import LegendComponent from './component';
 
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
+  const isMobile = useMediaQuery(mobile);
   return (
     <div
-      className="absolute bottom-0 right-0 z-[700] flex w-1/2 justify-end border-t border-secondary-900 bg-brand-500 p-1 font-inter text-xs sm:bottom-3 sm:right-3 sm:block sm:w-fit sm:max-w-[294px] sm:space-y-1 sm:border-0 sm:bg-transparent sm:p-0"
+      className={cn({
+        'absolute bottom-0 right-0 flex w-1/2 justify-end border-t border-secondary-900 bg-brand-500 p-1 font-inter text-xs sm:bottom-3 sm:right-3 sm:block sm:w-fit sm:max-w-[294px] sm:space-y-1 sm:border-0 sm:bg-transparent sm:p-0':
+          true,
+        'z-[700]': isMobile,
+        'z-[50]': !isMobile,
+      })}
       data-testid="map-legend"
     >
       {/* DESKTOP  */}

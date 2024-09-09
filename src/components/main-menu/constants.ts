@@ -25,9 +25,9 @@ export const navSubLinksCommunity = [
     'data-testid': 'project-site-link',
   },
   {
-    name: 'Tier 3',
+    name: 'Developers',
     href: 'https://github.com/Open-Earth-Monitor',
     target: '_blank',
-    'data-testid': 'tier3-link',
+    'data-testid': 'developers-link',
   },
 ];

@@ -38,7 +38,7 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <section className="monitors absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:bottom-auto sm:left-4 sm:top-[82px] sm:w-fit sm:border-0 sm:p-0">
+    <section className="monitors absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:left-4 sm:top-[82px] sm:w-fit sm:border-0 sm:p-0">
       {/* Desktop and tablet */}
       {!isMobile && (
         <motion.section
@@ -47,13 +47,13 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
             x: open ? 0 : '-100%', // Slide in and out
           }}
           transition={{ duration: 0.5, ease: 'easeInOut' }} // Smooth easing
-          className="absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:bottom-auto sm:top-0 sm:w-fit sm:border-0 sm:p-0"
+          className="absolute bottom-3 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:w-fit sm:border-0 sm:p-0"
         >
           <div className="relative">
             <button
               type="button"
               onClick={onOpenChange}
-              className="absolute -right-12 top-0 h-[60px] w-12 border-none bg-brand-500"
+              className="absolute -right-12 bottom-0 h-[60px] w-12 border-none bg-brand-500"
             >
               <motion.div
                 animate={{
