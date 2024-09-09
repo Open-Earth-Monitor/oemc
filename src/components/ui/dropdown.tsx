@@ -33,19 +33,25 @@ const DropdownMenuTrigger = forwardRef<
     inset?: boolean;
     children: React.ReactNode;
     className?: string;
+    classNameContent?: string;
   }
->(({ className, inset, children, ...props }, ref) => (
+>(({ className, classNameContent, inset, children, ...props }, ref) => (
   <DropdownMenuPrimitive.Trigger
     ref={ref}
     className={cn({
-      'group h-full rounded-none border border-secondary-900 px-8 text-secondary-500 hover:bg-secondary-900 hover:text-secondary-500':
+      'group h-full justify-center rounded-none border border-secondary-900 px-8 text-secondary-500 hover:bg-secondary-900 hover:text-secondary-500':
         true,
       'pl-8': inset,
       [className]: !!className,
     })}
     {...props}
   >
-    <div className="flex w-full items-center space-x-4">
+    <div
+      className={cn({
+        'flex w-full items-center justify-center space-x-4': true,
+        [classNameContent]: !!classNameContent,
+      })}
+    >
       {children}
       <HiChevronDown className="h-5 w-5 group-data-[state=open]:rotate-180" />
     </div>
