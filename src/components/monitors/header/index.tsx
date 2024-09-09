@@ -37,13 +37,13 @@ const MonitorHeader: FC = () => {
               </div>
               <h1
                 data-testid="monitor-title"
-                className="font-satoshi text-3xl font-bold sm:text-5xl"
+                className="font-satoshi text-3xl font-bold sm:text-4xl"
               >
                 {data.title}
               </h1>
             </div>
             {data.description && (
-              <p className="hidden sm:block" data-testid="monitor-description">
+              <p className="hidden w-full flex-wrap sm:flex" data-testid="monitor-description">
                 {data.description}
               </p>
             )}
