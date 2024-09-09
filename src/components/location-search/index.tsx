@@ -1,14 +1,17 @@
 import React, { useCallback, useState } from 'react';
 
-import { LuSearch, LuX } from 'react-icons/lu';
+import { motion } from 'framer-motion';
+import { LuSearch, LuX, LuChevronRight } from 'react-icons/lu';
 
 import { cn } from '@/lib/classnames';
 
 import Loading from '@/components/loading';
+import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import type { Bbox } from '@/components/map/types';
 import { Input } from '@/components/ui/input';
 
 function LocationSearchComponent({
+  isMobile,
   locationSearch,
   OPTIONS,
   handleLocationSearchChange,
@@ -17,6 +20,7 @@ function LocationSearchComponent({
   isFetching,
   className,
 }: {
+  isMobile?: boolean;
   locationSearch: string;
   OPTIONS: { label: string; value: number | undefined; bbox: Bbox }[];
   handleLocationSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -26,6 +30,7 @@ function LocationSearchComponent({
   className?: string;
 }) {
   const [dropdownVisible, setDropdownVisible] = useState(true);
+  const [inputExpanded, setInputExpanded] = useState(false); // State for input expansion on mobile
 
   const handleReset = useCallback(() => {
     handleLocationSearchChange({
@@ -42,66 +47,98 @@ function LocationSearchComponent({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleLocationSearchChange(e);
-    setDropdownVisible(true);
+    if (!dropdownVisible) {
+      setDropdownVisible(true);
+    }
   };
 
-  const width = 'w-40 sm:w-72 lg:w-96 xl:w-[620px]';
+  const handleExpanded = () => {
+    if (!inputExpanded) {
+      setInputExpanded(true);
+    }
+  };
+
+  const handleCollapsed = () => {
+    setInputExpanded(false);
+  };
+
   return (
-    <div className="absolute right-3 top-[86px] z-[600]">
-      <div
+    <div
+      className={cn('relative z-50 flex items-center', {
+        'w-[300px]': inputExpanded,
+      })}
+    >
+      <motion.div
         className={cn({
-          'relative z-40 flex h-14 items-center rounded-t-[4px] bg-[#09131DCC] px-4 font-inter leading-4 ':
-            true,
-          [width]: true,
-          'rounded-[4px]': !OPTIONS.length && !locationSearch,
-          'rounded-t-[4px]': OPTIONS.length > 0,
-          'border-2 border-secondary-500': locationSearch,
+          [CONTROL_BUTTON_STYLES.mobile]: isMobile,
+          [CONTROL_BUTTON_STYLES.default]: !isMobile,
           [className]: !!className,
+          'flex items-center': !inputExpanded, // Center the input when not expanded
+          'w-[300px] justify-start bg-[#09131DCC] px-4 hover:bg-brand-500 hover:text-secondary-500':
+            inputExpanded, // Expand to full width when input is expanded
         })}
+        onClick={handleExpanded} // Handle click to expand/collapse input
       >
-        <div className="flex w-full items-center space-x-4">
-          <LuSearch className="h-5 w-5 text-secondary-500" />
-          <Input
-            type="text"
-            className="inset-0 z-50 flex h-full w-full max-w-[80%] flex-1 grow border-none bg-transparent caret-secondary-700 outline-none xl:max-w-[90%]"
-            placeholder="Search"
-            aria-label="Search locations"
-            aria-controls="location-options"
-            onChange={handleInputChange}
-            value={locationSearch}
+        <div
+          className={cn({
+            'flex h-full w-full items-center justify-center space-x-2': true,
+            'w-[240px] justify-start': inputExpanded,
+          })}
+        >
+          <LuSearch
+            className={cn({
+              'h-5 w-5 justify-center text-secondary-500 hover:bg-secondary-500 hover:text-brand-500':
+                true,
+              'hover:bg-transparent hover:text-secondary-500': inputExpanded,
+            })}
           />
+          {inputExpanded && (
+            <Input
+              type="text"
+              className={cn({
+                'z-50 flex h-full w-full flex-1 grow border-none bg-transparent caret-secondary-700 outline-none':
+                  true,
+              })}
+              placeholder="Search"
+              aria-label="Search locations"
+              aria-controls="location-options"
+              onChange={handleInputChange}
+              value={locationSearch}
+            />
+          )}
         </div>
-        {locationSearch && (
-          <button onClick={handleReset} className="absolute right-1 text-secondary-500 md:right-3">
+        {locationSearch && inputExpanded && (
+          <button onClick={handleReset} className="absolute right-6 text-secondary-500">
             <LuX className="h-5 w-5" />
           </button>
         )}
-      </div>
+        {inputExpanded && (
+          <button onClick={handleCollapsed} className="absolute right-1 text-secondary-500">
+            <LuChevronRight className="h-5 w-5" />
+          </button>
+        )}
+      </motion.div>
+
       {(isLoading && isFetching) ||
-        (dropdownVisible && locationSearch && (
+        (dropdownVisible && locationSearch && !!OPTIONS.length && inputExpanded && (
           <div className="relative">
             <div
               className={cn({
-                'absolute right-0 top-0 z-50 h-fit max-h-96 flex-1 overflow-y-auto rounded-b-[4px] border-b-2 border-l-2 border-r-2 border-secondary-500 bg-[#09131DCC] px-10 font-inter leading-4 text-secondary-600 shadow-lg':
+                'absolute right-0 top-[17px] z-50 w-[300px] flex-1 rounded-b-[4px] bg-brand-400 px-10 font-inter leading-4 text-secondary-700 shadow-lg':
                   true,
-                [width]: true,
                 [className]: !!className,
               })}
             >
               {isLoading && isFetching && <Loading />}
               {locationSearch && OPTIONS.length > 0 && (
-                <ul
-                  id="location-options"
-                  role="listbox"
-                  className="pointer-events-auto  h-full space-y-2 overflow-y-auto py-2"
-                >
+                <ul id="location-options" role="listbox" className="space-y-2 py-2">
                   {OPTIONS.map((option) => (
                     <li
                       key={option.value}
                       role="option"
                       aria-selected="false"
                       tabIndex={0}
-                      className="z-[60] cursor-pointer rounded p-2 hover:text-secondary-500"
+                      className="cursor-pointer rounded p-2 hover:text-secondary-500"
                       onClick={() => handleOptionClick(option)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
@@ -115,9 +152,7 @@ function LocationSearchComponent({
                 </ul>
               )}
               {locationSearch && OPTIONS.length === 0 && !isFetching && !isLoading && (
-                <p className="pointer-events-auto z-[60] h-full space-y-2  overflow-y-auto py-6 text-secondary-500">
-                  No results found.
-                </p>
+                <p className="py-6 text-secondary-500">No results found.</p>
               )}
             </div>
           </div>

@@ -23,7 +23,6 @@ const CommunityDropdown = ({ isMobile }: { isMobile?: boolean }) => (
     <DropdownMenuContent
       className="z-[1000] flex w-full min-w-fit flex-col py-2 hover:text-secondary-700"
       sideOffset={-1}
-      alignOffset={-30}
       align="start"
     >
       {navSubLinksCommunity.map(({ name, ...props }) => {

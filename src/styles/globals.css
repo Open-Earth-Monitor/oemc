@@ -128,61 +128,27 @@
 }
 
 /* zoom control ropenlayers */
-.ol-zoom,
-.ol-zoom-open {
-  display: none;
-  flex-direction: column !important;
-  /* position: relative; */
-  left: 408px !important;
-  width: 34px !important;
-  height: 68px !important;
-  align-items: center;
-  justify-content: center;
-  border-radius: calc(var(--radius) - 4px) !important;
-  background-color: hsl(210, 54%, 9%) !important;
-  top: unset !important;
-  bottom: 96px !important;
-  animation: slideIn 500ms ease 0s 1 normal forwards;
+.ol-control button {
+  margin: 0 !important;
 }
 
 .ol-zoom {
-  &.sidebar-closed {
-    left: 50px !important;
-  }
-}
-
-@media (min-width: theme('screens.sm')) {
-  .ol-zoom {
-    bottom: 94px !important;
-    display: flex;
-    animation: slideOut 500ms ease 0s 1 normal forwards;
-  }
-  .ol-zoom-open {
-    bottom: 94px !important;
-    display: flex;
-    animation: slideIn 500ms ease 0s 1 normal forwards;
-  }
-}
-
-@media (min-width: theme('screens.lg')) {
-  .ol-zoom {
-    bottom: 94px !important;
-    display: flex;
-    left: 51px !important;
-    animation: slideOut 500ms ease 0s 1 normal forwards;
-  }
-  .ol-zoom-open {
-    bottom: 94px !important;
-    display: flex;
-    left: 554px !important;
-    animation: slideIn 400ms ease 0s 1 normal forwards;
-  }
+  display: block !important;
+  flex-direction: column !important;
+  position: absolute !important;
+  right: 10px !important;
+  width: 34px !important;
+  height: 34px !important;
+  align-items: center;
+  justify-content: center;
+  background-color: hsl(210, 54%, 9%) !important;
+  top: 121px !important;
+  left: unset !important;
+  margin: 0 !important;
 }
 
 .ol-zoom-in,
-.ol-zoom-out,
-.ol-zoom-open-in,
-.ol-zoom-open-out {
+.ol-zoom-out {
   color: hsl(60, 100%, 95%) !important;
   background-color: hsl(210, 54%, 9%) !important;
   outline-offset: 0px !important;
@@ -192,22 +158,20 @@
 }
 
 .ol-zoom-in:hover,
-.ol-zoom-out:hover,
-.ol-zoom-open-in:hover,
-.ol-zoom-open-out:hover {
+.ol-zoom-out:hover {
   background-color: hsl(60, 100%, 95%) !important;
   color: hsl(210, 54%, 9%) !important;
 }
 
-.ol-zoom-out,
-.ol-zoom-open-out {
+.ol-zoom-out {
   font-size: 32px !important;
   padding-bottom: 4px !important;
+  border-radius: 0 0 calc(var(--radius) - 4px) calc(var(--radius) - 4px) !important;
 }
 
-.ol-zoom-in,
-.ol-zoom-open-in {
+.ol-zoom-in {
   font-size: 24px !important;
+  border-radius: calc(var(--radius) - 4px) calc(var(--radius) - 4px) 0 0 !important;
 }
 
 .ol-swipe::before {
@@ -257,22 +221,4 @@
   height: 15px;
   width: 15px;
   background-color: hsl(60, 100%, 95%);
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideOut {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
 }

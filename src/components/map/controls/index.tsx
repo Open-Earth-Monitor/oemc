@@ -7,12 +7,12 @@ import type { ControlsProps } from './types';
 type ControlsPropsWithChildren = PropsWithChildren<ControlsProps>;
 
 export const Controls: FC<ControlsPropsWithChildren> = ({
-  className = 'absolute bottom-3 left-3',
+  className,
   children,
 }: ControlsPropsWithChildren) => (
   <div
     className={cn({
-      'flex flex-col space-y-1.5': true,
+      'absolute right-2.5 top-[81px] z-40 flex flex-col space-y-1.5': true,
       [className]: !!className,
     })}
   >

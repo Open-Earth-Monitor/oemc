@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { set } from 'ol/transform';
 
 const MainMenuMobile = () => {
   const pathname = usePathname();
@@ -30,6 +31,7 @@ const MainMenuMobile = () => {
 
   const handleClick = () => {
     setIsOpen((prev) => !prev);
+    setMenuVisibility(false);
   };
 
   const handleMapMenu = useCallback(() => {
