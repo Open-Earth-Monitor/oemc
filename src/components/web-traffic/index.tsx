@@ -1,8 +1,3 @@
-import Script from 'next/script';
-
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-
 import {
   Dialog,
   DialogTrigger,
@@ -12,73 +7,123 @@ import {
   DialogDescription,
   DialogClose,
 } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
-const WebTraffic = () => (
-  <Dialog>
-    <DialogTrigger asChild data-testid="disclaimer-footer">
-      <motion.div initial="initial" whileHover="hover" className="w-fit">
-        <span>Disclaimer</span>
+const mostVisitedMonitors = [
+  {
+    tag: '#Agriculture',
+    title: 'Tropical monitor.',
+    color: '',
+  },
+  {
+    tag: '#Soil',
+    title: 'EU-soil monitor.',
+    color: '',
+  },
+  {
+    tag: '#Biodiversity',
+    title: 'EU-reforestation planner tool.',
+    color: '',
+  },
+  {
+    tag: '',
+    title: '',
+    color: '',
+  },
+  {
+    tag: '',
+    title: '',
+    color: '',
+  },
+];
 
-        <motion.div
-          className="h-0.5 w-0 bg-secondary-500"
-          variants={{
-            initial: { width: 0 },
-            hover: { width: '100%' },
-          }}
-        />
-      </motion.div>
-    </DialogTrigger>
-    <DialogContent className="h-full w-full bg-secondary-500 text-brand-500">
-      <DialogHeader className="space-y-5">
-        <DialogTitle asChild>
-          <header className="flex items-center justify-between">
-            <h2 className="text-5xl font-bold">Disclaimer</h2>
-          </header>
-        </DialogTitle>
-        <DialogDescription asChild>
-          <div className="space-y-3" data-testid="disclaimer-content">
-            <DialogClose className="right-10 flex items-center border-none text-xs font-medium uppercase tracking-[0.96px]">
-              Close
-            </DialogClose>
-          </div>
-        </DialogDescription>
-      </DialogHeader>
-      {/* <iframe
-        className="h-full w-full flex-1"
-        src="//rf.revolvermaps.com/w/8/a/a2.php?i=55ky0c1lddb&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33"
-        style={{
-          background: 'transparent !important',
-          position: 'absolute',
-          left: 0,
-          top: 0,
-        }}
-        width="100%"
-        height="100%"
-      /> */}
-      <div className="f-full grid w-full grid-cols-2 gap-2">
-        <a href="https://www.revolvermaps.com/livestats/5n2of9g4jjg/">
-          <Image
-            src="//rf.revolvermaps.com/h/m/a/0/ff0000/128/0/5n2of9g4jjg.png"
-            // fill
-            alt="web traffic map"
-            // style={{ border: 0 }}
-            // objectFit="content"
-            // set the dimension (affected by layout)
-            width={400}
-            height={400 / (16 / 9)}
-            priority={true}
-            layout="fixed" // you can use "responsive", "fill" or the default "intrinsic"
-            // onLoadingComplete={({ naturalWidth, naturalHeight }) =>
-            //   setRatio(naturalWidth / naturalHeight)
-            // }
-          />
-        </a>
-        <ul>
-          <li>holi</li>
-        </ul>
-      </div>
-    </DialogContent>
-  </Dialog>
-);
+const mostVisitedGeostories = [
+  'Soil bare-fraction dynamics',
+  'Air Quality during COVID-19 (Europe)',
+  'Vegetation trait diversity',
+  'Trait-based reforestation monitoring',
+  'Climate change (Europe)',
+];
+
+const WebTraffic = () => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild data-testid="disclaimer-footer">
+        <div className="flex h-full items-center justify-center space-x-2">
+          <span className="h-2 w-2 rounded-full" />
+          <p className="text-xs font-medium uppercase tracking-widest underline">usage stats</p>
+        </div>
+      </DialogTrigger>
+
+      <DialogContent className="flex h-full w-full border border-secondary-500/10 bg-brand-400 p-5 text-brand-500 sm:min-w-[95vw] md:p-8 lg:p-12">
+        <DialogHeader className="space-y-5">
+          <DialogTitle asChild>
+            <header className="divide-y-secondary-500/10 flex items-center space-x-5 divide-x text-secondary-500">
+              <h2 className="text-4xl font-bold">Live Usage Statistics</h2>
+              <span className="pl-4">Switch between the two different tabs</span>
+            </header>
+          </DialogTitle>
+          <DialogDescription asChild>
+            <div className="space-y-3" data-testid="disclaimer-content">
+              <DialogClose className="right-10 flex items-center border-none text-xs font-medium uppercase tracking-[0.96px]">
+                Close
+              </DialogClose>
+            </div>
+          </DialogDescription>
+        </DialogHeader>
+
+        <Tabs defaultValue="web-graphic" className="flex h-full w-full flex-1 flex-col">
+          <TabsList className="border-none">
+            <TabsTrigger
+              value="web"
+              className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=active]:border-b-0 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
+            >
+              <div className="text-xs font-medium uppercase tracking-widest">
+                Web Geographic Activity
+              </div>
+            </TabsTrigger>
+            <TabsTrigger
+              value="list"
+              className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=active]:border-b-0 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
+            >
+              <div className="text-xs font-medium uppercase tracking-widest">
+                Monitors and Geostories
+              </div>
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Map Tab Content */}
+          <TabsContent value="web-graphic" className="relative flex h-full w-full flex-1">
+            <iframe
+              style={{
+                background: 'transparent',
+                position: 'relative',
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                height: '100%',
+                width: '100%',
+              }}
+              scrolling="no"
+              allowTransparency
+              src="//rf.revolvermaps.com/w/7/a/a2.php?i=5ys2ccrnfty&m=0c&c=2becbf&cr1=2becbf&sx=0&cw=0b1825&cb=28333d"
+            />
+          </TabsContent>
+
+          <TabsContent value="list" className="relative flex h-full w-full flex-1">
+            <div className="flex h-full w-full">Other Content</div>
+            <ul>
+              {mostVisitedMonitors.map((monitor) => (
+                <li>Item 1</li>
+              ))}
+            </ul>
+          </TabsContent>
+        </Tabs>
+        <div className="relative h-full w-full"></div>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export default WebTraffic;

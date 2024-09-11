@@ -26,6 +26,7 @@ import {
 } from '@/hooks/sync-query';
 
 import LocationSearchComponent from '@/components/location-search';
+import WebTraffic from '@/components/web-traffic';
 
 import GeostoryContent from '../geostories/content';
 
@@ -164,7 +165,7 @@ const Map: FC<GeostoryMapProps> = ({
         {
           INFO_FORMAT: 'application/json',
           DIM_DATE: date,
-          LAYERS: layerData.gs_name,
+          LAYERS: layerData?.gs_name,
         }
       );
 
@@ -361,7 +362,7 @@ const Map: FC<GeostoryMapProps> = ({
         {layerData && layerId && (
           <RLayerWMS
             ref={layerLeftRef}
-            properties={{ label: layerData.gs_name, date }}
+            properties={{ label: layerData?.gs_name, date }}
             url={layerData.gs_base_wms}
             opacity={opacity}
             params={{
@@ -372,11 +373,11 @@ const Map: FC<GeostoryMapProps> = ({
               VERSION: '1.3.0',
               REQUEST: 'GetMap',
               TRANSPARENT: true,
-              LAYERS: layerData.gs_name,
+              LAYERS: layerData?.gs_name,
               DIM_DATE: date,
               CRS: 'EPSG:3857',
               BBOX: 'bbox-epsg-3857',
-              NAME: layerData.gs_name,
+              NAME: layerData?.gs_name,
               ID: layerId,
             }}
           />
@@ -430,6 +431,7 @@ const Map: FC<GeostoryMapProps> = ({
               'top-[108px]': !isMobile,
             })}
           >
+            {/* <WebTraffic isMobile={isMobile} /> */}
             <BookmarkControl isMobile={isMobile} />
             <ShareControl isMobile={isMobile} />
           </div>
