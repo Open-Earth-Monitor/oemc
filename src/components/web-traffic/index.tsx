@@ -55,38 +55,38 @@ const WebTraffic = () => {
         </div>
       </DialogTrigger>
 
-      <DialogContent className="flex h-full w-full grow border border-secondary-500/10 bg-brand-400 p-5 text-brand-500 sm:min-w-[95vw] md:p-8 lg:p-12">
-        <DialogHeader className="space-y-5">
+      <DialogContent className="flex h-full w-full border border-secondary-500/10 bg-brand-400 p-5 text-brand-500 sm:min-w-[95vw] md:p-8 lg:p-12">
+        <DialogHeader className="pb-5">
           <DialogTitle asChild>
-            <header className="divide-y-secondary-500/10 flex items-center space-x-5 divide-x text-secondary-500">
-              <h2 className="text-4xl font-bold">Live Usage Statistics</h2>
-              <span className="pl-4">Switch between the two different tabs</span>
-            </header>
-          </DialogTitle>
-          <DialogDescription asChild>
-            <div className="space-y-3" data-testid="disclaimer-content">
-              <DialogClose className="right-10 flex items-center border-none text-xs font-medium uppercase tracking-[0.96px]">
-                Close
-              </DialogClose>
+            <div className="flex items-center justify-between">
+              <header className="divide-y-secondary-500/10 flex items-center space-x-5 divide-x text-secondary-500">
+                <h2 className="text-4xl font-bold">Live Usage Statistics</h2>
+                <span className="pl-4">Switch between the two different tabs</span>
+              </header>
+              <div className="space-y-3" data-testid="disclaimer-content">
+                <DialogClose className="relative left-auto right-0 top-0 flex items-center border-none text-xs font-medium uppercase tracking-[0.96px] text-secondary-500">
+                  Close
+                </DialogClose>
+              </div>
             </div>
-          </DialogDescription>
+          </DialogTitle>
         </DialogHeader>
-        <div className="flex h-full min-h-[600px] w-full grow">
+        <div className="flex h-full min-h-[600px] w-full">
           <Tabs defaultValue="web-graphic" className="flex h-full w-full flex-1 grow flex-col">
             <TabsList className="border-none">
               <TabsTrigger
                 value="web-graphic"
-                className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=active]:border-b-2 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-b-brand-500 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
+                className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=inactive]:border-y-0 data-[state=active]:border-b-2 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-b-brand-500 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
               >
-                <div className="text-xs font-medium uppercase tracking-widest">
+                <div className="font-inter text-xs font-medium uppercase tracking-widest">
                   Web Geographic Activity
                 </div>
               </TabsTrigger>
               <TabsTrigger
                 value="list"
-                className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=active]:border-b-2 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-b-brand-500 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
+                className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=inactive]:border-y-0 data-[state=active]:border-b-2 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-b-brand-500 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
               >
-                <div className="text-xs font-medium uppercase tracking-widest">
+                <div className="font-inter text-xs font-medium uppercase tracking-widest">
                   Monitors and Geostories
                 </div>
               </TabsTrigger>
@@ -95,11 +95,12 @@ const WebTraffic = () => {
             {/* Map Tab Content */}
             <TabsContent
               value="web-graphic"
-              className="relative -mt-[0.5px] h-full min-h-[350px] w-full flex-1 grow border border-brand-50"
+              className="relative mt-0 box-content flex h-full min-h-[370px] w-full flex-1 grow rounded-none "
             >
               <iframe
                 className="absolute bottom-0 left-0 right-0 top-0"
                 style={{
+                  justifySelf: 'center',
                   border: 'none',
                   position: 'absolute',
                   top: 0,
@@ -108,6 +109,7 @@ const WebTraffic = () => {
                   bottom: 0,
                   width: '100%',
                   height: '100%',
+                  maxWidth: '700px',
                 }}
                 allowTransparency
                 src="//rf.revolvermaps.com/w/7/a/a2.php?i=5ys2ccrnfty&m=0c&c=2becbf&cr1=2becbf&sx=0&cw=0b1825&cb=28333d"
@@ -116,10 +118,10 @@ const WebTraffic = () => {
 
             <TabsContent
               value="list"
-              className="relative -mt-[0.5px] grid h-full w-fit flex-1 grid-cols-2 border border-brand-50"
+              className="relative -mt-[0.5px] grid h-full w-full flex-1 grow grid-cols-2 border border-brand-50"
             >
               <div className="h-full w-full grid-cols-2 space-y-4  p-6 text-secondary-500">
-                <h5 className="text-xs uppercase tracking-widest text-alert">
+                <h5 className="text-xs font-medium uppercase tracking-widest text-alert">
                   top 5 most visited monitors
                 </h5>
                 <ul className="space-y-5">
@@ -136,7 +138,7 @@ const WebTraffic = () => {
                 </ul>
               </div>
               <div className="h-full w-full grid-cols-2 space-y-4 p-6 text-secondary-500">
-                <h5 className="text-xs uppercase tracking-widest text-alert">
+                <h5 className="text-xs font-medium uppercase tracking-widest text-alert">
                   top 5 most visited geostories
                 </h5>
                 <ul className="space-y-5">
