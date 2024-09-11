@@ -26,6 +26,11 @@ const satoshi = localFont({
     },
     {
       path: '../fonts/Satoshi-Bold.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../fonts/Satoshi-Bold.woff2',
       weight: '700',
       style: 'normal',
     },
@@ -40,8 +45,8 @@ const satoshi = localFont({
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.className} ${satoshi.className} h-full min-h-screen`}>
-      <body className="mx-auto h-full min-h-screen w-screen overflow-x-hidden bg-brand-500 font-inter">
+    <html lang="en" className={`${satoshi.className} ${inter.className} h-full min-h-screen`}>
+      <body className="font-inter mx-auto h-full min-h-screen w-screen overflow-x-hidden bg-brand-500">
         <div className="flex h-full flex-col">
           <main className="relative h-full flex-1">
             <Providers>
