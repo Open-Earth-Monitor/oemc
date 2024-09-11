@@ -4,6 +4,7 @@ import Link from 'next/link';
 import MainMenuDesktop from '../main-menu/desktop';
 import MainMenuMobile from '../main-menu/mobile';
 import MainMenuTablet from '../main-menu/tablet';
+import WebTraffic from '@/components/web-traffic';
 
 const Header = () => {
   return (
@@ -36,6 +37,9 @@ const Header = () => {
         <div className="hidden h-full lg:block">
           <MainMenuDesktop />
         </div>
+        {/* <div className="hidden h-full lg:block">
+          <WebTraffic />
+        </div> */}
       </div>
     </div>
   );

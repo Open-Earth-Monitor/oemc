@@ -21,7 +21,7 @@ const CommunityDropdown = ({ isMobile }: { isMobile?: boolean }) => (
       <span>Communities</span>
     </DropdownMenuTrigger>
     <DropdownMenuContent
-      className="z-[1000] flex w-full min-w-fit flex-col py-2 hover:text-secondary-700"
+      className="z-[1000] flex w-full min-w-fit flex-col py-2 hover:text-secondary-700 "
       sideOffset={-1}
       align="start"
     >
