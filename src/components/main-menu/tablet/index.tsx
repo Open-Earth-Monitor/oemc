@@ -7,7 +7,7 @@ import { DropdownMenu, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu
 
 import { cn } from '@/lib/classnames';
 
-import { navLinks } from '@/components/main-menu/constants';
+import { navLinks, navSubLinksCommunity } from '@/components/main-menu/constants';
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -16,7 +16,6 @@ import {
 
 const MainMenuDesktop = () => {
   const pathname = usePathname();
-
   return (
     <nav className="flex h-full w-full justify-between" data-testid="main-navigation-tablet">
       {navLinks.slice(0, 2).map(({ name, ...props }) => {
@@ -50,7 +49,7 @@ const MainMenuDesktop = () => {
             style={{ width: 'fit-content' }}
           >
             <div>
-              {navLinks.slice(2).map(({ name, ...props }) => {
+              {navSubLinksCommunity.map(({ name, ...props }) => {
                 const isActive = `/${pathname.split('/')[1]}` === props.href;
                 return (
                   <DropdownMenuItem
