@@ -27,6 +27,7 @@ import {
 } from '@/hooks/sync-query';
 
 import LocationSearchComponent from '@/components/location-search';
+import WebTraffic from '@/components/web-traffic';
 
 import Attributions from './attributions';
 import { DEFAULT_VIEWPORT } from './constants';
@@ -391,6 +392,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
               'top-[108px]': !isMobile,
             })}
           >
+            {/* <WebTraffic isMobile={isMobile} /> */}
             <BookmarkControl isMobile={isMobile} />
             <ShareControl isMobile={isMobile} />
           </div>
