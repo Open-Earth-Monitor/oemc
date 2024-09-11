@@ -13,27 +13,27 @@ const mostVisitedMonitors = [
   {
     tag: '#Agriculture',
     title: 'Tropical monitor.',
-    color: '',
+    color: '#FF9383',
   },
   {
     tag: '#Soil',
     title: 'EU-soil monitor.',
-    color: '',
+    color: '#F2C69C',
   },
   {
     tag: '#Biodiversity',
     title: 'EU-reforestation planner tool.',
-    color: '',
+    color: '#FBFBB1',
   },
   {
-    tag: '',
-    title: '',
-    color: '',
+    tag: '#Water',
+    title: 'EU-flood monitor.',
+    color: '#BDDEFD',
   },
   {
-    tag: '',
-    title: '',
-    color: '',
+    tag: '#Forest',
+    title: 'EU-in-situ-data tool.',
+    color: '#B5FEC5',
   },
 ];
 
@@ -50,7 +50,7 @@ const WebTraffic = () => {
     <Dialog>
       <DialogTrigger asChild data-testid="disclaimer-footer">
         <div className="flex h-full items-center justify-center space-x-2">
-          <span className="h-2 w-2 rounded-full" />
+          <span className="h-2 w-2 rounded-full bg-red-600" />
           <p className="text-xs font-medium uppercase tracking-widest underline">usage stats</p>
         </div>
       </DialogTrigger>
@@ -111,13 +111,39 @@ const WebTraffic = () => {
             />
           </TabsContent>
 
-          <TabsContent value="list" className="relative flex h-full w-full flex-1">
-            <div className="flex h-full w-full">Other Content</div>
-            <ul>
-              {mostVisitedMonitors.map((monitor) => (
-                <li>Item 1</li>
-              ))}
-            </ul>
+          <TabsContent
+            value="list"
+            className="relative grid h-full w-fit flex-1 grid-cols-2 border border-brand-50"
+          >
+            <div className="h-full w-full grid-cols-2 space-y-4  p-6 text-secondary-500">
+              <h5 className="text-xs uppercase tracking-widest text-alert">
+                top 5 most visited monitors
+              </h5>
+              <ul className="space-y-5">
+                {mostVisitedMonitors.map(({ title, tag, color }) => (
+                  <li key={title} className="flex h-full space-x-4">
+                    <span style={{ backgroundColor: color }} className="flex w-1 flex-shrink-0" />
+
+                    <div className="flex flex-col space-y-2.5">
+                      <span className="text-xs">{tag}</span>
+                      <p className="text-2xl font-bold">{title}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="h-full w-full grid-cols-2 space-y-4 p-6 text-secondary-500">
+              <h5 className="text-xs uppercase tracking-widest text-alert">
+                top 5 most visited geostories
+              </h5>
+              <ul className="space-y-5">
+                {mostVisitedGeostories.map((geostory) => (
+                  <li key={geostory} className="text-2xl font-bold">
+                    {geostory}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </TabsContent>
         </Tabs>
         <div className="relative h-full w-full"></div>
