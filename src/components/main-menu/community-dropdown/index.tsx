@@ -8,7 +8,7 @@ import { navSubLinksCommunity } from '@/components/main-menu/constants';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown';
 
 const CommunityDropdown = ({ isMobile }: { isMobile?: boolean }) => (
-  <DropdownMenu modal={false}>
+  <DropdownMenu>
     <DropdownMenuTrigger
       className={cn({
         'flex h-full items-center justify-center space-x-4 border-l border-r border-secondary-900  text-center font-satoshi font-bold transition-colors hover:bg-secondary-900 data-[state=open]:bg-secondary-500 data-[state=open]:text-brand-500 lg:min-w-[180px]':
