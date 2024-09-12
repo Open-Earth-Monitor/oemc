@@ -4,58 +4,40 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogClose,
 } from '@/components/ui/dialog';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
-const mostVisitedMonitors = [
-  {
-    tag: '#Agriculture',
-    title: 'Tropical monitor.',
-    color: '#FF9383',
-  },
-  {
-    tag: '#Soil',
-    title: 'EU-soil monitor.',
-    color: '#F2C69C',
-  },
-  {
-    tag: '#Biodiversity',
-    title: 'EU-reforestation planner tool.',
-    color: '#FBFBB1',
-  },
-  {
-    tag: '#Water',
-    title: 'EU-flood monitor.',
-    color: '#BDDEFD',
-  },
-  {
-    tag: '#Forest',
-    title: 'EU-in-situ-data tool.',
-    color: '#B5FEC5',
-  },
-];
+import cn from '@/lib/classnames';
 
-const mostVisitedGeostories = [
-  'Soil bare-fraction dynamics',
-  'Air Quality during COVID-19 (Europe)',
-  'Vegetation trait diversity',
-  'Trait-based reforestation monitoring',
-  'Climate change (Europe)',
-];
+import WebTrafficContent from './content';
+import WebTrafficMobileContent from './mobile-content';
 
-const WebTraffic = () => {
+const WebTraffic = ({ tablet = false, mobile = false }: { tablet?: boolean; mobile?: boolean }) => {
   return (
     <Dialog>
       <DialogTrigger asChild data-testid="web-traffic-map">
-        <div className="flex h-full items-center justify-center space-x-2">
+        <div
+          className={cn({
+            'flex h-full items-center justify-center space-x-2 whitespace-nowrap': true,
+            'px-8': tablet,
+          })}
+        >
           <span className="h-2 w-2 rounded-full bg-red-600" />
-          <p className="text-xs font-medium uppercase tracking-widest underline">usage stats</p>
+          <p className="text-xs font-medium uppercase tracking-widest underline">
+            {tablet ? 'stats' : 'usage stats'}
+          </p>
         </div>
       </DialogTrigger>
 
-      <DialogContent className="flex h-full w-full border border-secondary-500/10 bg-brand-400 p-5 text-brand-500 sm:min-w-[95vw] md:p-8 lg:p-12">
+      <DialogContent
+        overlay={!mobile}
+        scrollArea={false}
+        className={cn({
+          '!flex h-full w-full flex-col border border-secondary-500/10 p-5 text-brand-500 sm:max-w-[95vw] md:max-w-[85vw] md:p-8 lg:p-12 xl:max-w-[65vw]':
+            true,
+          'absolute bottom-0 left-0 right-0 top-[60px] translate-x-0 translate-y-0': mobile,
+        })}
+      >
         <DialogHeader className="pb-5">
           <DialogTitle asChild>
             <div className="flex items-center justify-between">
@@ -64,94 +46,15 @@ const WebTraffic = () => {
                 <span className="pl-4">Switch between the two different tabs</span>
               </header>
               <div className="space-y-3" data-testid="disclaimer-content">
-                <DialogClose className="relative left-auto right-0 top-0 flex items-center border-none text-xs font-medium uppercase tracking-[0.96px] text-secondary-500">
+                <DialogClose className="relative left-auto right-0 top-0 flex items-center border-none text-xs font-medium uppercase tracking-[0.96px] text-secondary-500 focus:text-secondary-500">
                   Close
                 </DialogClose>
               </div>
             </div>
           </DialogTitle>
         </DialogHeader>
-        <div className="flex h-full min-h-[600px] w-full">
-          <Tabs defaultValue="web-graphic" className="flex h-full w-full flex-1 grow flex-col">
-            <TabsList className="border-none">
-              <TabsTrigger
-                value="web-graphic"
-                className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=inactive]:border-y-0 data-[state=active]:border-b-2 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-b-brand-500 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
-              >
-                <div className="font-inter text-xs font-medium uppercase tracking-widest">
-                  Web Geographic Activity
-                </div>
-              </TabsTrigger>
-              <TabsTrigger
-                value="list"
-                className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=inactive]:border-y-0 data-[state=active]:border-b-2 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-b-brand-500 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
-              >
-                <div className="font-inter text-xs font-medium uppercase tracking-widest">
-                  Monitors and Geostories
-                </div>
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Map Tab Content */}
-            <TabsContent
-              value="web-graphic"
-              className="relative mt-0 box-content flex h-full min-h-[370px] w-full flex-1 grow rounded-none "
-            >
-              <iframe
-                className="absolute bottom-0 left-0 right-0 top-0"
-                style={{
-                  justifySelf: 'center',
-                  border: 'none',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  width: '100%',
-                  height: '100%',
-                  maxWidth: '700px',
-                }}
-                allowTransparency
-                src="//rf.revolvermaps.com/w/7/a/a2.php?i=5ys2ccrnfty&m=0c&c=2becbf&cr1=2becbf&sx=0&cw=0b1825&cb=28333d"
-              />
-            </TabsContent>
-
-            <TabsContent
-              value="list"
-              className="relative -mt-[0.5px] grid h-full w-full flex-1 grow grid-cols-2 border border-brand-50"
-            >
-              <div className="h-full w-full grid-cols-2 space-y-4  p-6 text-secondary-500">
-                <h5 className="text-xs font-medium uppercase tracking-widest text-alert">
-                  top 5 most visited monitors
-                </h5>
-                <ul className="space-y-5">
-                  {mostVisitedMonitors.map(({ title, tag, color }) => (
-                    <li key={title} className="flex h-full space-x-4">
-                      <span style={{ backgroundColor: color }} className="flex w-1 flex-shrink-0" />
-
-                      <div className="flex flex-col space-y-2.5">
-                        <span className="text-xs">{tag}</span>
-                        <p className="text-2xl font-bold">{title}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="h-full w-full grid-cols-2 space-y-4 p-6 text-secondary-500">
-                <h5 className="text-xs font-medium uppercase tracking-widest text-alert">
-                  top 5 most visited geostories
-                </h5>
-                <ul className="space-y-5">
-                  {mostVisitedGeostories.map((geostory) => (
-                    <li key={geostory} className="text-2xl font-bold">
-                      {geostory}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+        <WebTrafficContent />
+        {mobile && <WebTrafficMobileContent />}
       </DialogContent>
     </Dialog>
   );
