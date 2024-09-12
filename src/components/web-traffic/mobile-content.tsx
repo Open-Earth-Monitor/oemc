@@ -71,14 +71,15 @@ const WebTrafficMobileContent = () => {
             width="100%"
             height="100%"
             src="//rf.revolvermaps.com/w/8/a/a2.php?i=5xq58s1qbtn&amp;m=0c&amp;c=2becbf&amp;cr1=2becbf&amp;l=33&amp;cw=0b1825&amp;cb=28333d"
+            src="//rf.revolvermaps.com/w/8/a/a2.php?i=5pwqg5q4cmu&amp;m=0c&amp;c=2becbf&amp;cr1=2becbf&amp;f=arial&amp;l=33&amp;cw=0b1825&amp;cb=28333d"
           />
         </TabsContent>
 
         <TabsContent
           value="list"
-          className="relative -mt-[0.5px] flex w-full flex-1 flex-col overflow-visible border border-brand-50"
+          className="relative -mt-[0.5px] grid h-full w-full flex-1 grow grid-cols-2 border border-brand-50"
         >
-          <div className="w-full space-y-4  p-6 text-secondary-500">
+          <div className="h-full w-full grid-cols-2 space-y-4  p-6 text-secondary-500">
             <h5 className="text-xs font-medium uppercase tracking-widest text-alert">
               top 5 most visited monitors
             </h5>

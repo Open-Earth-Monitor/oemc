@@ -20,7 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import WebTraffic from '@/components/web-traffic';
+
 import WebTrafficMobileContent from '@/components/web-traffic/mobile-content';
 
 const MainMenuMobile = () => {
@@ -131,7 +131,7 @@ const MainMenuMobile = () => {
                   <Link
                     href="/"
                     className={cn(
-                      'font-satoshi flex h-full min-w-[180px] items-center justify-center p-4 text-center font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500',
+                      'flex h-full min-w-[180px] items-center justify-center p-4 text-center font-satoshi font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500',
                       {
                         'hover:bg-secondary-500  hover:text-brand-500':
                           `/${pathname.split('/')[1]}` === '/',
@@ -143,7 +143,7 @@ const MainMenuMobile = () => {
                   </Link>
                   <button
                     type="button"
-                    className="font-satoshi flex h-full min-w-[180px] items-center justify-center p-4 text-center font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500"
+                    className="flex h-full min-w-[180px] items-center justify-center p-4 text-center font-satoshi font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500"
                     onClick={handleMapMenu}
                   >
                     Map
@@ -182,7 +182,7 @@ const MainMenuMobile = () => {
                     </Link>
                     <div
                       data-testid="alpha-site"
-                      className="font-inter rounded-sm border border-alert px-[6px] py-1 text-xs text-alert"
+                      className="rounded-sm border border-alert px-[6px] py-1 font-inter text-xs text-alert"
                     >
                       Alpha version
                     </div>
