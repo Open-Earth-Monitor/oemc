@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuPortal,
 } from '@/components/ui/dropdown';
+import WebTraffic from '@/components/web-traffic';
 
 const MainMenuDesktop = () => {
   const pathname = usePathname();
@@ -23,7 +24,7 @@ const MainMenuDesktop = () => {
         return (
           <Link
             className={cn(
-              'flex h-full min-w-[100px] items-center justify-center border-l border-r border-secondary-900 text-center font-satoshi font-bold transition-colors hover:bg-secondary-900',
+              'font-satoshi flex h-full min-w-[100px] items-center justify-center border-l border-r border-secondary-900 text-center font-bold transition-colors hover:bg-secondary-900',
               {
                 'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
               }
@@ -36,7 +37,7 @@ const MainMenuDesktop = () => {
         );
       })}
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex h-full min-w-[100px] items-center justify-center border-l border-r border-secondary-900 text-center font-satoshi font-bold transition-colors hover:bg-secondary-900">
+        <DropdownMenuTrigger className="font-satoshi flex h-full min-w-[100px] items-center justify-center border-l border-r border-secondary-900 text-center font-bold transition-colors hover:bg-secondary-900">
           ...
         </DropdownMenuTrigger>
         <DropdownMenuPortal>
@@ -62,7 +63,7 @@ const MainMenuDesktop = () => {
                     )}
                   >
                     <Link
-                      className="flex w-full items-center justify-center text-center font-satoshi font-bold"
+                      className="font-satoshi flex w-full items-center justify-center text-center font-bold"
                       {...props}
                     >
                       {name}
@@ -74,6 +75,7 @@ const MainMenuDesktop = () => {
           </DropdownMenuContent>
         </DropdownMenuPortal>
       </DropdownMenu>
+      <WebTraffic tablet />
     </nav>
   );
 };

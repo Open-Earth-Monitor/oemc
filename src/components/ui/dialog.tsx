@@ -58,10 +58,13 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
-  ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+    scrollArea?: boolean;
+    overlay?: boolean;
+  }
+>(({ className, children, scrollArea = true, overlay = true, ...props }, ref) => (
   <DialogPrimitive.Portal>
-    <DialogOverlay />
+    {overlay && <DialogOverlay />}
     <DialogPrimitive.Content
       ref={ref}
       className={cn({
@@ -71,7 +74,8 @@ const DialogContent = forwardRef<
       })}
       {...props}
     >
-      <ScrollArea className="grow px-4 py-10 sm:px-10">{children}</ScrollArea>
+      {scrollArea && <ScrollArea className="!grow px-4 py-10 sm:px-10">{children}</ScrollArea>}
+      {!scrollArea && children}
     </DialogPrimitive.Content>
   </DialogPrimitive.Portal>
 ));
