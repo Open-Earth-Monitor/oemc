@@ -71,7 +71,6 @@ const WebTrafficMobileContent = () => {
             width="100%"
             height="100%"
             src="//rf.revolvermaps.com/w/8/a/a2.php?i=5xq58s1qbtn&amp;m=0c&amp;c=2becbf&amp;cr1=2becbf&amp;l=33&amp;cw=0b1825&amp;cb=28333d"
-            src="//rf.revolvermaps.com/w/8/a/a2.php?i=5pwqg5q4cmu&amp;m=0c&amp;c=2becbf&amp;cr1=2becbf&amp;f=arial&amp;l=33&amp;cw=0b1825&amp;cb=28333d"
           />
         </TabsContent>
 
