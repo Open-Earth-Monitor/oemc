@@ -51,8 +51,7 @@ const ShareControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
       </PopoverTrigger>
       <PopoverContent
         sideOffset={isMobile ? -48 : -34}
-        alignOffset={isMobile ? 0 : 34}
-        align={isMobile ? 'end' : 'start'}
+        align="end"
         className={cn({
           'ml-1.5 flex h-[34px] w-fit items-center border border-brand-50 p-0.5': true,
           'z-[600] ml-0 h-[48px] rounded-none': isMobile,

@@ -61,7 +61,7 @@ export const BookmarkControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
         <AiFillStar className={CONTROL_ICON_STYLES.default} />
       </SheetTrigger>
       <SheetContent
-        side={isMobile ? 'right' : 'left'}
+        side="right"
         className="relative z-[700] flex h-full max-w-sm flex-col space-y-6 bg-brand-500 bg-opacity-90 sm:pl-10"
       >
         <SheetHeader className="space-y-6">

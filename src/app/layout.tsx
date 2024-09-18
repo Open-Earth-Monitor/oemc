@@ -55,10 +55,6 @@ export default function RootLayout({ children }) {
             </Providers>
           </main>
         </div>
-        <script
-          type="text/javascript"
-          src="//rf.revolvermaps.com/0/0/8.js?i=5pwqg5q4cmu&amp;m=0c&amp;c=2becbf&amp;cr1=2becbf&amp;f=arial&amp;l=33&amp;cw=0b1825&amp;cb=28333d"
-        ></script>
       </body>
     </html>
   );
