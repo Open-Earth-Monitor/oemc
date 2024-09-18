@@ -202,7 +202,7 @@ const Map: FC<GeostoryMapProps> = ({
         setTooltipInfo((prev) => ({
           ...prev,
           leftData: {
-            title: layerData.title,
+            title: layerData?.title,
             date,
             value: valueLeft,
             isComparable: layerData?.range?.length > 1,

@@ -62,7 +62,7 @@ export const BookmarkControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
       </SheetTrigger>
       <SheetContent
         side={isMobile ? 'right' : 'left'}
-        className="relative z-[600] flex h-full max-w-sm flex-col space-y-6 bg-brand-500 bg-opacity-90 sm:pl-10"
+        className="relative z-[700] flex h-full max-w-sm flex-col space-y-6 bg-brand-500 bg-opacity-90 sm:pl-10"
       >
         <SheetHeader className="space-y-6">
           <SheetTitle className="text-2xl font-bold text-secondary-500">Bookmarks</SheetTitle>
