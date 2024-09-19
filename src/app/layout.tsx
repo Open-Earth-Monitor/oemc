@@ -18,6 +18,7 @@ const inter = Inter({
 });
 
 const satoshi = localFont({
+  variable: '--font-satoshi',
   src: [
     {
       path: '../fonts/Satoshi-Regular.woff2',
@@ -45,7 +46,7 @@ const satoshi = localFont({
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`h-full min-h-screen font-satoshi`}>
+    <html lang="en" className={`${satoshi.variable} ${inter.variable} h-full min-h-screen`}>
       <body className="mx-auto h-full min-h-screen w-screen overflow-x-hidden bg-brand-500 font-inter">
         <div className="flex h-full flex-col">
           <main className="relative h-full flex-1">
