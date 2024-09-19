@@ -40,6 +40,8 @@ import SwipeControl from './controls/swipe';
 import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
 import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox } from './types';
+import { useRegionsData } from '@/hooks/regions';
+import { useLayer } from '@/hooks/layers';
 
 interface ClickEvent {
   bbox?: Bbox;
@@ -100,6 +102,12 @@ const Map: FC<GeostoryMapProps> = ({
   const compareOpacity = compareLayers?.[0]?.opacity;
   const compareDate = compareLayers?.[0]?.date;
   const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
+
+  const compareLayerInfo = useLayer(
+    { layer_id: compareLayerId },
+    { enabled: isCompareLayerActive }
+  );
+  const layerInfo = useLayer({ layer_id: layerId }, { enabled: isLayerActive });
 
   /**
    * Initial viewport from the URL or the default one
@@ -241,6 +249,15 @@ const Map: FC<GeostoryMapProps> = ({
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
+      if (isCompareLayerActive) {
+        useLayer({ layer_id: compareLayerId });
+      }
+      const compareLayerPointInfo = useRegionsData({
+        lon: e.coordinate[0],
+        lat: 0,
+        coll: '',
+        regex: '',
+      });
       const newTooltipInfo: GeostoryTooltipInfo = {
         ...tooltipInfo,
         leftData: {
