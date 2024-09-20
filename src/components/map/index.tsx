@@ -98,7 +98,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
-  const opacity = layers?.[0]?.opacity || 1; // shared with the compare layer
+  const opacity = layers?.[0]?.opacity; // shared with the compare layer
   const date = layers?.[0]?.date;
   const isLayerActive = useMemo(() => !!layerId, [layerId]);
 
@@ -301,7 +301,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     },
     [isDesktop, isMobile]
   );
-
   return (
     <>
       <RMap
@@ -326,7 +325,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             ref={layerLeftRef}
             properties={{ label: gs_name, date }}
             url={gs_base_wms}
-            opacity={opacity}
+            opacity={opacity ?? 1}
             params={{
               FORMAT: 'image/png',
               WIDTH: 256,
@@ -348,7 +347,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             ref={layerRightRef}
             properties={{ label: gs_name, date: compareDate }}
             url={gs_base_wms}
-            opacity={opacity}
+            opacity={opacity ?? 1}
             params={{
               FORMAT: 'image/png',
               WIDTH: 256,
