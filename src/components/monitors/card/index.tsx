@@ -16,6 +16,7 @@ import MonitorDialog from '../dialog';
 
 const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
   const { id, description, title, color, ready, theme } = monitor;
+
   return (
     <div
       className="flex min-h-[260px] flex-col justify-between px-6 py-6 text-brand-500 sm:h-[468px] sm:px-8"
