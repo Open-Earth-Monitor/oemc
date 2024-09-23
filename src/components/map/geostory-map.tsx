@@ -280,7 +280,7 @@ const Map: FC<GeostoryMapProps> = ({
 
   // Center to the geostory bbox
   useEffect(() => {
-    if (geostoryData?.geostory_bbox && mapRef && !center) {
+    if (geostoryData?.geostory_bbox && mapRef) {
       // TO-DO: remove split once the API is fixed
       mapRef?.current?.ol
         ?.getView()
@@ -365,7 +365,7 @@ const Map: FC<GeostoryMapProps> = ({
         height="100%"
         className="relative"
         initial={initialViewport}
-        view={[initialViewport, null] as [RView, (view: RView) => void]}
+        // view={[initialViewport, null] as [RView, (view: RView) => void]}
         onMoveEnd={handleMapMove}
         onSingleClick={handleSingleClick}
         noDefaultControls

@@ -18,6 +18,7 @@ import { mobile, tablet } from '@/lib/media-queries';
 
 import { useDebounce } from '@/hooks/datasets';
 import { useLayerParsedSource } from '@/hooks/layers';
+import { useMonitor } from '@/hooks/monitors';
 import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
 import {
   useSyncLayersSettings,
@@ -39,6 +40,7 @@ import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import MapTooltip from './tooltip';
 import type { CustomMapProps, MonitorTooltipInfo, Bbox } from './types';
+import { useParams, usePathname } from 'next/navigation';
 
 interface FeatureProperties {
   [key: string]: number;
@@ -80,6 +82,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const isTablet = useMediaQuery(tablet);
   const isDesktop = !isMobile && !isTablet;
 
+  const params = useParams();
+  const monitorId = params.monitor_id as string;
+
+  const { data: monitorData } = useMonitor({ monitor_id: monitorId });
   const debouncedSearchValue = useDebounce(locationSearch, 500);
 
   const mapRef: React.MutableRefObject<{
@@ -236,6 +242,17 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     setTooltipInfo(newTooltipInfo);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Center to the monitor bbox
+  useEffect(() => {
+    if (monitorData?.monitor_bbox && mapRef) {
+      // TO-DO: remove split once the API is fixed
+      mapRef?.current?.ol
+        ?.getView()
+        ?.fit((monitorData?.monitor_bbox as unknown as string).split(',').map(Number));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [monitorData?.monitor_bbox]);
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes

@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { HiOutlineNewspaper, HiOutlineGlobeAlt } from 'react-icons/hi';
 
 import cn from '@/lib/classnames';
+import { parseAndTransformUseCaseLinks } from '@/lib/format';
 
 import type { Geostory } from '@/types/geostories';
 
@@ -32,6 +33,9 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
 }) => {
   const params = useParams();
   const geostoryId = params.geostory_id;
+
+  const parsedUseCaseLinks = parseAndTransformUseCaseLinks(use_case_link);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -115,9 +119,9 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                   <HiOutlineGlobeAlt className="h-6 w-6" />
                   <span className="text-2xl font-bold">Use cases</span>
                 </h3>
-                {use_case_link?.length > 0 && (
+                {parsedUseCaseLinks?.length > 0 && (
                   <ul className="space-y-2 py-2 pl-8 font-bold">
-                    {use_case_link.map(({ url, title }) => (
+                    {parsedUseCaseLinks.map(({ url, title }) => (
                       <li key={title}>
                         <a href={url} className="underline">
                           {title}
