@@ -16,7 +16,10 @@ export type Monitor = {
   metadata_url: string;
   notebooks_url: string;
   publications: { title: string; url: string }[];
-  use_case_link: { title: string; url: string }[];
+  // TO - DO - fix when the API is updated with the correct type
+  // { title: string; url: string }[]
+  use_case_link: '{ title: string; url: string }[]';
+  monitor_bbox: number[] | null;
   responsible_partner_name?: string;
   responsible_partner_url?: string;
 };
