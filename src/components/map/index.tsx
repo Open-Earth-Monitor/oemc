@@ -17,7 +17,7 @@ import cn from '@/lib/classnames';
 import { mobile, tablet } from '@/lib/media-queries';
 
 import { useDebounce } from '@/hooks/datasets';
-import { useLayerParsedSource } from '@/hooks/layers';
+import { useLayer, useLayerParsedSource } from '@/hooks/layers';
 import { useMonitor } from '@/hooks/monitors';
 import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
 import {
@@ -114,6 +114,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const compareDate = compareLayers?.[0]?.date;
   const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
 
+  const { data: compareData } = useLayer({ layer_id: compareLayerId });
+
   /**
    * Initial viewport from the URL or the default one
    */
@@ -204,6 +206,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         setTooltipInfo((prev) => ({
           ...prev,
           leftData: {
+            // This info is coming from the API instead of the layer, as requested
             title,
             date,
             value: valueLeft,
@@ -212,7 +215,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             rangeLabels: range_labels,
             isComparable: range?.length > 1 && !!compareDate,
           },
-          rightData: { title, date: compareDate, value: valueRight, unit },
+          rightData: { title, date: compareDate, value: valueRight, unit: compareData?.unit },
         }));
       } catch {
         setTooltipInfo((prev) => ({ ...prev, value: null }));
@@ -315,9 +318,18 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           ...(!isMobile && { padding }),
         });
       }
+
+      // Center the map
+      const [minLon, minLat, maxLon, maxLat] = e.bbox;
+      const centerLon = (minLon + maxLon) / 2;
+      const centerLat = (minLat + maxLat) / 2;
+      setCenter([centerLon, centerLat]);
     },
     [isDesktop, isMobile]
   );
+
+  const layerData = useLayer({ layer_id: layerId });
+
   return (
     <>
       <RMap
