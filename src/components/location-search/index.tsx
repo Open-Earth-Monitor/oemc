@@ -76,6 +76,7 @@ function LocationSearchComponent({
           'flex items-center': !inputExpanded, // Center the input when not expanded
           'w-[300px] justify-start bg-[#09131DCC] px-4 hover:bg-brand-500 hover:text-secondary-500':
             inputExpanded, // Expand to full width when input is expanded
+          'rounded-b-none': dropdownVisible && locationSearch && !!OPTIONS.length && inputExpanded,
         })}
         onClick={handleExpanded} // Handle click to expand/collapse input
       >
@@ -124,7 +125,7 @@ function LocationSearchComponent({
           <div className="relative">
             <div
               className={cn({
-                'absolute right-0 top-[17px] z-50 w-[300px] flex-1 rounded-b-[4px] bg-brand-400 px-10 font-inter leading-4 text-secondary-700 shadow-lg':
+                'absolute right-0 top-[17px] z-50 max-h-[40vh] w-[300px] flex-1 overflow-y-auto rounded-b-[4px] bg-[#09131DDF] px-10 font-inter leading-4 text-secondary-700 shadow-lg':
                   true,
                 [className]: !!className,
               })}

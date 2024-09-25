@@ -50,3 +50,16 @@ export function parseAndTransformUseCaseLinks(inputString: string): LinkObject[]
 
   return parsedObjects.filter((obj): obj is LinkObject => obj !== null);
 }
+
+export function metersToDegrees(lat, lon, deltaMetersLat, deltaMetersLon) {
+  const metersPerDegreeLat = 111320; // Approximate meters per degree of latitude
+  const metersPerDegreeLon = 111320 * Math.cos(lat * (Math.PI / 180)); // Meters per degree of longitude at a given latitude
+
+  const deltaLat = deltaMetersLat / metersPerDegreeLat;
+  const deltaLon = deltaMetersLon / metersPerDegreeLon;
+
+  const newLat = lat + deltaLat;
+  const newLon = lon + deltaLon;
+
+  return { lat: newLat, lon: newLon };
+}
