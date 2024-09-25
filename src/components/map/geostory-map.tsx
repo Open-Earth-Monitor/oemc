@@ -40,7 +40,7 @@ import SwipeControl from './controls/swipe';
 import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
 import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox } from './types';
-import { useRegionsData } from '@/hooks/regions';
+// import { useRegionsData } from '@/hooks/regions';
 import { useLayer } from '@/hooks/layers';
 
 interface ClickEvent {
@@ -259,9 +259,9 @@ const Map: FC<GeostoryMapProps> = ({
     coll: 'nightlights_500m', // layerData?.srv_path?.replace(/\/$/, ''), // remove trailing slash
     regex: 'nightlights.average_viirs.v21_m_500m_s_.*_go_epsg4326_v20230823.tif', // layerData?.regex,
   };
-  const compareLayerPointInfo = useRegionsData(layerPointInfoPayload);
+  // const compareLayerPointInfo = useRegionsData(layerPointInfoPayload);
 
-  const data = useRegionsData(layerPointInfoPayload);
+  // const data = useRegionsData(layerPointInfoPayload);
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
       setLonLat(e.coordinate);
