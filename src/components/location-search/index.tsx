@@ -70,6 +70,7 @@ function LocationSearchComponent({
     >
       <motion.div
         className={cn({
+          group: true,
           [CONTROL_BUTTON_STYLES.mobile]: isMobile,
           [CONTROL_BUTTON_STYLES.default]: !isMobile,
           [className]: !!className,
@@ -88,9 +89,9 @@ function LocationSearchComponent({
         >
           <LuSearch
             className={cn({
-              'h-5 w-5 justify-center text-secondary-500 hover:bg-secondary-500 hover:text-brand-500':
+              'h-5 w-5 justify-center text-secondary-500 group-hover:bg-secondary-500 group-hover:text-brand-500':
                 true,
-              'hover:bg-transparent hover:text-secondary-500': inputExpanded,
+              'group-hover:bg-transparent group-hover:text-secondary-500': inputExpanded,
             })}
           />
           {inputExpanded && (
