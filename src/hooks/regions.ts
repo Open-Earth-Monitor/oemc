@@ -16,8 +16,6 @@ type RegionData = {
   [key: string]: number;
 };
 
-const DEFAULT_COLOR = 'hsla(0, 0%, 79%, 1)';
-
 const DEFAULT_QUERY_OPTIONS = {
   refetchOnWindowFocus: false,
   refetchOnMount: false,
@@ -34,11 +32,16 @@ export function useRegionsData(
     API.request({
       method: 'GET',
       url: '/point-query',
+      params,
       ...queryOptions,
-    }).then((response: AxiosResponse<RegionData>) => response.data);
+    }).then((response: AxiosResponse<RegionData>) => {
+      return response.data;
+    });
   return useQuery(['region-data', params], fetchRegionData, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => data,
+    select: (data) => {
+      return data;
+    },
     ...queryOptions,
   });
 }

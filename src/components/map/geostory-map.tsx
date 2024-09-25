@@ -89,6 +89,7 @@ const Map: FC<GeostoryMapProps> = ({
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
+  const [lonLat, setLonLat] = useState<Coordinate | null>(null);
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -210,14 +211,17 @@ const Map: FC<GeostoryMapProps> = ({
         setTooltipInfo((prev) => ({
           ...prev,
           leftData: {
+            // This info is coming from the API instead of the layer, as requested
             title: layerData?.title,
             date,
+            unit: layerData?.unit,
             value: valueLeft,
             isComparable: layerData?.range?.length > 1,
           },
           rightData: {
             title: compareLayerData?.title,
             date: compareDate || '',
+            unit: compareLayerData?.unit,
             value: valueRight,
           },
         }));
@@ -228,11 +232,13 @@ const Map: FC<GeostoryMapProps> = ({
             title: '',
             date: '',
             value: null,
+            unit: null,
           },
           rightData: {
             title: '',
             date: '',
             value: null,
+            unit: null,
           },
         }));
       }
@@ -247,17 +253,19 @@ const Map: FC<GeostoryMapProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tooltipInfo.position, tooltipInfo.coordinate]);
 
+  const layerPointInfoPayload = {
+    lon: lonLat?.[0] || 0,
+    lat: lonLat?.[1] || 0,
+    coll: 'nightlights_500m', // layerData?.srv_path?.replace(/\/$/, ''), // remove trailing slash
+    regex: 'nightlights.average_viirs.v21_m_500m_s_.*_go_epsg4326_v20230823.tif', // layerData?.regex,
+  };
+  const compareLayerPointInfo = useRegionsData(layerPointInfoPayload);
+
+  const data = useRegionsData(layerPointInfoPayload);
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
-      if (isCompareLayerActive) {
-        useLayer({ layer_id: compareLayerId });
-      }
-      const compareLayerPointInfo = useRegionsData({
-        lon: e.coordinate[0],
-        lat: 0,
-        coll: '',
-        regex: '',
-      });
+      setLonLat(e.coordinate);
+
       const newTooltipInfo: GeostoryTooltipInfo = {
         ...tooltipInfo,
         leftData: {
@@ -352,6 +360,12 @@ const Map: FC<GeostoryMapProps> = ({
           ...(!isMobile && { padding }),
         });
       }
+
+      // Center the map
+      const [minLon, minLat, maxLon, maxLat] = e.bbox;
+      const centerLon = (minLon + maxLon) / 2;
+      const centerLat = (minLat + maxLat) / 2;
+      setCenter([centerLon, centerLat]);
     },
     [isDesktop, isMobile]
   );
