@@ -41,6 +41,7 @@ import Legend from './legend';
 import MapTooltip from './tooltip';
 import type { CustomMapProps, MonitorTooltipInfo, Bbox } from './types';
 import { useParams, usePathname } from 'next/navigation';
+import { transformToBBoxArray } from '@/lib/format';
 
 interface FeatureProperties {
   [key: string]: number;
@@ -261,10 +262,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   useEffect(() => {
     if (monitorData?.monitor_bbox && mapRef) {
       // TO-DO: remove split once the API is fixed
-      mapRef?.current?.ol
-        ?.getView()
-        ?.fit((monitorData?.monitor_bbox as unknown as string).split(',').map(Number));
-      setMonitorBbox((monitorData?.monitor_bbox as unknown as string).split(',').map(Number));
+      const bbox = transformToBBoxArray(monitorData?.monitor_bbox);
+      if (bbox) {
+        mapRef?.current?.ol
+          ?.getView()
+          ?.fit((monitorData?.monitor_bbox as unknown as string).split(',').map(Number));
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monitorData?.monitor_bbox]);
