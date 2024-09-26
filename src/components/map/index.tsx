@@ -224,6 +224,17 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     [date, compareDate, gs_name, title, wmsSource, unit, range, range_labels]
   );
 
+  const [monitorBbox, setMonitorBbox] = useState(null);
+
+  const [minLon, minLat, maxLon, maxLat] = monitorBbox || [];
+  const centerLon = (minLon + maxLon) / 2;
+  const centerLat = (minLat + maxLat) / 2;
+
+  const GEOSTORY_VIEWPORT = {
+    center: [centerLon, centerLat] || initialViewState.center,
+    zoom: initialViewState.zoom,
+  };
+
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
       const newTooltipInfo: MonitorTooltipInfo = {
@@ -253,6 +264,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       mapRef?.current?.ol
         ?.getView()
         ?.fit((monitorData?.monitor_bbox as unknown as string).split(',').map(Number));
+      setMonitorBbox((monitorData?.monitor_bbox as unknown as string).split(',').map(Number));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monitorData?.monitor_bbox]);
@@ -339,6 +351,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         height="100%"
         className="relative"
         initial={initialViewport}
+        view={
+          monitorBbox
+            ? ([GEOSTORY_VIEWPORT, null] as [RView, (view: RView) => void])
+            : ([initialViewport, null] as [RView, (view: RView) => void])
+        }
         onMoveEnd={handleMapMove}
         onSingleClick={handleSingleClick}
         noDefaultControls
