@@ -24,3 +24,35 @@ export function metersToDegrees(lat, lon, deltaMetersLat, deltaMetersLon) {
 
   return { lat: newLat, lon: newLon };
 }
+
+export function transformToBBoxArray(str) {
+  const MIN_X = -20026376.39;
+  const MAX_X = 20026376.39;
+  const MIN_Y = -20048966.1;
+  const MAX_Y = 20048966.1;
+
+  try {
+    // Convert the string to an array of numbers
+    const bboxArray = str
+      .split(',')
+      .map((item) => item.trim()) // Trim extra spaces
+      .map(Number); // Convert to numbers
+
+    // Check if all items are valid numbers and we have exactly 4 numbers
+    if (bboxArray.length === 4 && bboxArray.every((num) => !isNaN(num))) {
+      const [xMin, yMin, xMax, yMax] = bboxArray;
+
+      // Validate that the coordinates are within the EPSG:3857 bounds
+      const isValidX = xMin >= MIN_X && xMax <= MAX_X;
+      const isValidY = yMin >= MIN_Y && yMax <= MAX_Y;
+      const isCorrectOrder = xMin < xMax && yMin < yMax; // Make sure the bbox is valid
+
+      if (isValidX && isValidY && isCorrectOrder) {
+        return bboxArray; // Valid bbox
+      }
+    }
+    return false; // Return false if it's not a valid bbox
+  } catch (error) {
+    return false; // Return false if any error occurs
+  }
+}

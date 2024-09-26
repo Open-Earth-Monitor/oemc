@@ -5,9 +5,7 @@ import API from 'services/api';
 
 type TrackingType = 'geostories' | 'monitors' | 'layers';
 
-type TrackingData = {
-  [key: TrackingType]: number;
-};
+type TrackingData = Partial<Record<TrackingType, string | string[]>>;
 
 type TrafficCountData = [string, number];
 
@@ -84,12 +82,13 @@ export function useGetWebTraffic(
   });
 }
 
-export function usePostWebTraffic(data: TrackingData, queryOptions?: UseQueryOptions) {
-  return API.request({
-    method: 'POST',
-    url: '/usage-stats',
-    headers: { 'Content-Type': 'application/json' },
-    data,
-    ...queryOptions,
-  });
+export function usePostWebTraffic(data: TrackingData[], queryOptions?: UseQueryOptions) {
+  console.info(data);
+
+  // return API.request({
+  //   method: 'POST',
+  //   url: '/usage-stats',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   data,
+  // });
 }

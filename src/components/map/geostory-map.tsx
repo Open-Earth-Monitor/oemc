@@ -42,6 +42,8 @@ import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox }
 import { useRegionsData } from '@/hooks/regions';
 import { useLayer } from '@/hooks/layers';
 
+import { transformToBBoxArray } from '@/lib/format';
+
 interface ClickEvent {
   bbox?: Bbox;
 }
@@ -312,11 +314,13 @@ const Map: FC<GeostoryMapProps> = ({
   // Center to the geostory bbox
   useEffect(() => {
     if (geostoryData?.geostory_bbox && mapRef) {
-      // TO-DO: remove split once the API is fixed
-      mapRef?.current?.ol
-        ?.getView()
-        ?.fit((geostoryData?.geostory_bbox as unknown as string).split(',').map(Number));
-      setGeostoryBbox((geostoryData?.geostory_bbox as unknown as string).split(',').map(Number));
+      const bbox = transformToBBoxArray(geostoryData?.geostory_bbox);
+      if (bbox) {
+        console.log(geostoryData?.geostory_bbox);
+        // TO-DO: remove split once the API is fixed
+        mapRef?.current?.ol?.getView()?.fit(bbox);
+        setGeostoryBbox(bbox);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geostoryData?.geostory_bbox]);
