@@ -15,8 +15,7 @@ export type Geostory = {
   metadata_url: string;
   notebooks_url: string;
   publications: { title: string; url: string }[];
-  // TO - DO - change type when API fixes its response { title: string; url: string }[]
-  use_case_link: '{ title: string; url: string }[]';
+  use_case_link: { title: string; url: string }[];
   geostory_bbox: number[] | null;
   monitors: { id: string; title: string }[];
 };

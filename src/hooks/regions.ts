@@ -1,15 +1,12 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 
-import type { Monitor, MonitorParsed } from '@/types/monitors';
-
 import API from 'services/api';
 
 type UseParams = {
   lon: number;
   lat: number;
-  coll: string;
-  regex: string;
+  layer_id: string;
 };
 
 type RegionData = {

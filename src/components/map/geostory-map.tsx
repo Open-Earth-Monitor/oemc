@@ -8,7 +8,7 @@ import axios from 'axios';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
-import { fromLonLat } from 'ol/proj';
+import { fromLonLat, toLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
@@ -27,7 +27,6 @@ import {
 
 import LocationSearchComponent from '@/components/location-search';
 import WebTraffic from '@/components/web-traffic';
-
 import GeostoryContent from '../geostories/content';
 
 import Attributions from './attributions';
@@ -40,7 +39,7 @@ import SwipeControl from './controls/swipe';
 import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
 import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox } from './types';
-// import { useRegionsData } from '@/hooks/regions';
+import { useRegionsData } from '@/hooks/regions';
 import { useLayer } from '@/hooks/layers';
 
 interface ClickEvent {
@@ -256,15 +255,28 @@ const Map: FC<GeostoryMapProps> = ({
   const layerPointInfoPayload = {
     lon: lonLat?.[0] || 0,
     lat: lonLat?.[1] || 0,
-    coll: 'nightlights_500m', // layerData?.srv_path?.replace(/\/$/, ''), // remove trailing slash
-    regex: 'nightlights.average_viirs.v21_m_500m_s_.*_go_epsg4326_v20230823.tif', // layerData?.regex,
+    layer_id: layerId,
   };
-  // const compareLayerPointInfo = useRegionsData(layerPointInfoPayload);
 
-  // const data = useRegionsData(layerPointInfoPayload);
+  const compareLayerPointInfoPayload = {
+    lon: lonLat?.[0] || 0,
+    lat: lonLat?.[1] || 0,
+    layer_id: compareLayerId,
+  };
+
+  const { data: histogramData } = useRegionsData(layerPointInfoPayload, {
+    enabled: isLayerActive && !!lonLat,
+  });
+
+  const { data: compareHistogramData } = useRegionsData(compareLayerPointInfoPayload, {
+    enabled: isCompareLayerActive && !!lonLat,
+  });
+
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
-      setLonLat(e.coordinate);
+      const coordinatedToDegrees = toLonLat(e.coordinate);
+      setLonLat(coordinatedToDegrees);
+      const unit = mapRef?.current.ol.getView().getProjection().getUnits();
 
       const newTooltipInfo: GeostoryTooltipInfo = {
         ...tooltipInfo,
@@ -286,6 +298,17 @@ const Map: FC<GeostoryMapProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [geostoryBbox, setGeostoryBbox] = useState(null);
+
+  const [minLon, minLat, maxLon, maxLat] = geostoryBbox || [];
+  const centerLon = (minLon + maxLon) / 2;
+  const centerLat = (minLat + maxLat) / 2;
+
+  const GEOSTORY_VIEWPORT = {
+    center: [centerLon, centerLat] || initialViewState.center,
+    zoom: initialViewState.zoom,
+  };
+
   // Center to the geostory bbox
   useEffect(() => {
     if (geostoryData?.geostory_bbox && mapRef) {
@@ -293,6 +316,7 @@ const Map: FC<GeostoryMapProps> = ({
       mapRef?.current?.ol
         ?.getView()
         ?.fit((geostoryData?.geostory_bbox as unknown as string).split(',').map(Number));
+      setGeostoryBbox((geostoryData?.geostory_bbox as unknown as string).split(',').map(Number));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geostoryData?.geostory_bbox]);
@@ -379,7 +403,11 @@ const Map: FC<GeostoryMapProps> = ({
         height="100%"
         className="relative"
         initial={initialViewport}
-        // view={[initialViewport, null] as [RView, (view: RView) => void]}
+        view={
+          geostoryBbox
+            ? ([GEOSTORY_VIEWPORT, null] as [RView, (view: RView) => void])
+            : ([initialViewport, null] as [RView, (view: RView) => void])
+        }
         onMoveEnd={handleMapMove}
         onSingleClick={handleSingleClick}
         noDefaultControls

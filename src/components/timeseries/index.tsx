@@ -64,7 +64,7 @@ const TimeSeries: FC<{
   useInterval(
     () => {
       const nextRange = range[(range.indexOf(currentRange) + 1) % range.length];
-      void setLayers([{ ...layers[0], date: nextRange.value }]);
+      void setLayers([{ ...layers?.[0], date: nextRange.value }]);
     },
     isPlaying ? TIMEOUT_STEP_DURATION : null
   );
