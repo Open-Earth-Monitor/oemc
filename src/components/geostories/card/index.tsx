@@ -14,9 +14,19 @@ import { Geostory } from '@/types/geostories';
 import { TAG_STYLE } from '@/styles/constants';
 
 import GeostoryDialog from '../dialog';
+import { usePostWebTraffic } from '@/hooks/web-traffic';
 
 const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string }> = (geostory) => {
   const { id, colorHead, title, color, ready, theme, monitors } = geostory;
+
+  const handleClick = (key) => {
+    usePostWebTraffic([
+      {
+        [key]: id,
+      },
+    ]);
+    console.log('WT1 -', key, id);
+  };
 
   return (
     <div
@@ -42,10 +52,12 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
               <GeostoryDialog {...geostory} />
               <Link
                 href={`/map/geostories/${id}`}
+                data-value="geostories"
                 data-testid={`card-link-${id}`}
                 className={cn(
                   'sm:tno-underline flex items-center space-x-2.5 py-2 font-bold underline transition-colors hover:underline sm:text-xs'
                 )}
+                onClick={handleClick}
               >
                 <HiOutlineArrowTopRightOnSquare className="hidden h-5 w-5 sm:flex" />
                 <span className="hover:underline">Go to geostory</span>
@@ -68,8 +80,10 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
                 <div key={`geostory-card-monitor-link-${monitor.id}`}>
                   <Link
                     href={`/map/${monitor.id}/datasets`}
+                    data-value="monitors"
                     className="w-full font-bold underline"
                     data-testid={`geostory-card-monitor-link-${id}`}
+                    onClick={handleClick}
                   >
                     <motion.div
                       className="opacity-1 relative flex items-start"
