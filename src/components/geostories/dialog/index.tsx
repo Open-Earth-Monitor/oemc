@@ -17,6 +17,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
+import { usePostWebTraffic } from '@/hooks/web-traffic';
 
 type GeostoryDialogProps = Partial<Geostory>;
 
@@ -32,6 +33,15 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
 }) => {
   const params = useParams();
   const geostoryId = params.geostory_id;
+
+  const handleClick = () => {
+    usePostWebTraffic([
+      {
+        geostories: geostoryId,
+      },
+    ]);
+    console.log('WT2 -', 'geostories', id);
+  };
 
   return (
     <Dialog>
@@ -135,6 +145,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                   className={cn(
                     'mt-3 flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
                   )}
+                  onClick={handleClick}
                 >
                   Launch geostory
                 </Link>

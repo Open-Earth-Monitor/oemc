@@ -8,6 +8,7 @@ import { HiOutlineChevronUp } from 'react-icons/hi';
 import { cn } from '@/lib/classnames';
 
 import { MonitorParsed } from '@/types/monitors';
+import { usePostWebTraffic } from '@/hooks/web-traffic';
 
 export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: MonitorParsed) => {
   const [borderColor, setBorderColor] = useState<string | null>(null);
@@ -23,6 +24,15 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
     } else {
       await controls.start({ height: 'auto', opacity: 1 });
     }
+  };
+
+  const handleClick = (id) => {
+    usePostWebTraffic([
+      {
+        geostories: id,
+      },
+    ]);
+    console.log('WT3 -', 'geostories', id);
   };
 
   return (
@@ -72,7 +82,12 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
                 initial="initial"
                 whileHover="hover"
               >
-                <Link href={`/map/geostories/${geostoryId}`} className="block">
+                <Link
+                  href={`/map/geostories/${geostoryId}`}
+                  data-id={geostoryId}
+                  className="block"
+                  onClick={handleClick}
+                >
                   <div className="text-left">
                     <span>{title}</span>
                     <motion.div
