@@ -11,12 +11,10 @@ import { usePostWebTraffic } from '@/hooks/web-traffic';
 
 const GeostoryItem: FC<Geostory & { color: string }> = ({ id, color, title }) => {
   const handleClick = () => {
-    usePostWebTraffic([
-      {
-        geostories: id,
-      },
-    ]);
-    console.log('WT5 -', 'geostories', id);
+    // usePostWebTraffic({
+    //   geostories: id,
+    // });
+    console.info('WT5 -', 'geostories', id);
   };
   return (
     <Link href={`/map/geostories/${id}`} data-testid={`geostory-link-${id}`} onClick={handleClick}>

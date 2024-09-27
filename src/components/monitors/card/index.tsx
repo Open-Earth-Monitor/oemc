@@ -18,12 +18,10 @@ import { usePostWebTraffic } from '@/hooks/web-traffic';
 const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
   const { id, description, title, color, ready, theme } = monitor;
   const handleClick = () => {
-    usePostWebTraffic([
-      {
-        monitors: id,
-      },
-    ]);
-    console.log('WT6 -', 'monitors', id);
+    // usePostWebTraffic({
+    //   monitors: id,
+    // });
+    console.info('WT6 -', 'monitors', id);
   };
   return (
     <div

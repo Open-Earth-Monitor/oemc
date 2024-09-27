@@ -20,12 +20,10 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
   const { id, colorHead, title, color, ready, theme, monitors } = geostory;
 
   const handleClick = (key) => {
-    usePostWebTraffic([
-      {
-        [key]: id,
-      },
-    ]);
-    console.log('WT1 -', key, id);
+    // usePostWebTraffic({
+    //   [key]: id,
+    // });
+    console.info('WT1 -', key, id);
   };
 
   return (
