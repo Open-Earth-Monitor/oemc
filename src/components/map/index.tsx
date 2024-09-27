@@ -268,7 +268,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           ?.getView()
           ?.fit((monitorData?.monitor_bbox as unknown as string).split(',').map(Number));
         setMonitorBbox(monitorBbox);
-        setZoom('0');
+        setZoom('5'); // default viewport
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -356,11 +356,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         height="100%"
         className="relative"
         initial={initialViewport}
-        view={
-          monitorBbox
-            ? ([GEOSTORY_VIEWPORT, null] as [RView, (view: RView) => void])
-            : ([initialViewport, null] as [RView, (view: RView) => void])
-        }
         onMoveEnd={handleMapMove}
         onSingleClick={handleSingleClick}
         noDefaultControls
