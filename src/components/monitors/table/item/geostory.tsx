@@ -27,12 +27,10 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
   };
 
   const handleClick = (id) => {
-    usePostWebTraffic([
-      {
-        geostories: id,
-      },
-    ]);
-    console.log('WT3 -', 'geostories', id);
+    // usePostWebTraffic({
+    //   geostories: id,
+    // });
+    console.info('WT3 -', 'geostories', id);
   };
 
   return (

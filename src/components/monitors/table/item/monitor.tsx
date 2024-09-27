@@ -16,25 +16,18 @@ export const MonitorLink = ({
   isMobile,
 }: MonitorParsed & { isMobile?: boolean }) => {
   const handleClick = () => {
-    usePostWebTraffic([
-      {
-        monitors: id,
-      },
-    ]);
-    console.log('WT4 -', 'monitors', id);
+    // usePostWebTraffic({
+    //   monitors: id,
+    // });
+    console.info('WT4 -', 'monitors', id);
   };
 
-  const { data: monitorsData } = useMonitors();
-
-  const monitorData = monitorsData?.find((monitor) => monitor.id === id);
-
-  // TO - DO - fix when specific monitor has bbox specified byt API
-  // const { data: monitorData, isLoading } = useMonitor(
-  //   { monitor_id: id },
-  //   {
-  //     enabled: !!id,
-  //   }
-  // );
+  const { data: monitorData } = useMonitor(
+    { monitor_id: id },
+    {
+      enabled: !!id,
+    }
+  );
 
   const [minLon, minLat, maxLon, maxLat] = monitorData?.monitor_bbox || [];
   const centerLon = (minLon + maxLon) / 2;
