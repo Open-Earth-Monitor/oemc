@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { FC, FormEvent, MouseEvent } from 'react';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
@@ -12,9 +11,31 @@ import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/con
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
+import { get as getProjection } from 'ol/proj';
+import { getWidth } from 'ol/extent';
+
 import type { MobileProps } from '../types';
 
 const PREFIX = 'OEMC';
+
+const getUrlParameter = (url, name) => {
+  const results = new RegExp('[?&]' + name + '=([^&#]*)').exec(url);
+  return results ? decodeURIComponent(results[1]) : null;
+};
+
+const createBBox = (center, zoom) => {
+  const projection = getProjection('EPSG:3857');
+  const resolution = getWidth(projection.getExtent()) / 256 / Math.pow(2, zoom); // resolution
+  const delta = (resolution * 256) / 2; // We need it to know how much we move in X and Y from that center to get the  Bbox
+
+  const [x, y] = center;
+  const bbox = [
+    [x - delta, y - delta], // bottom left corner
+    [x + delta, y + delta], // top right corner
+  ];
+
+  return bbox;
+};
 
 export const BookmarkControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
   const [bookmarkName, setBookmarkName] = useState('');
@@ -22,6 +43,7 @@ export const BookmarkControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
     `${PREFIX}-bookmarks`,
     []
   );
+
   const [isInputVisible, setInputVisibility] = useState(false);
   const pathname = usePathname();
 
@@ -52,6 +74,21 @@ export const BookmarkControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
   const handleInputChange = useCallback((e: FormEvent<HTMLInputElement>) => {
     setBookmarkName(e.currentTarget?.value);
   }, []);
+
+  // const handleClick = (value) => {
+  //   const urlParams = value.target.getAttribute('data-value');
+
+  //   const center = getUrlParameter(urlParams, 'center');
+  //   const zoom = getUrlParameter(urlParams, 'zoom');
+
+  //   const centerCoords = center ? JSON.parse(center) : null;
+  //   const zoomValue = zoom ? parseFloat(zoom) : null;
+
+  //   if (centerCoords && zoomValue) {
+  //     const bbox = createBBox(centerCoords, zoomValue);
+
+  //   }
+  // };
 
   return (
     <Sheet>
@@ -123,7 +160,9 @@ export const BookmarkControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
                 >
                   <div className="flex items-center space-x-2">
                     <AiFillStar className="h-5 w-5" />
-                    <Link href={value}>{name}</Link>
+                    <a data-value={value} href={value}>
+                      {name}
+                    </a>
                   </div>
                   <button type="button" onClick={() => handleRemoveBookmark(name)}>
                     <Cross2Icon className="h-3 w-3" />
