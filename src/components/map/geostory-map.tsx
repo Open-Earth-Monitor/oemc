@@ -393,6 +393,8 @@ const Map: FC<GeostoryMapProps> = ({
       const centerLon = (minLon + maxLon) / 2;
       const centerLat = (minLat + maxLat) / 2;
       setCenter([centerLon, centerLat]);
+      const zoom = isMobile ? 2 : 5;
+      setZoom(zoom.toString());
     },
     [isDesktop, isMobile]
   );
