@@ -36,7 +36,7 @@ export const MonitorLink = ({
   const urlParams = monitorData?.monitor_bbox ? `/?center=[${centerLon},${centerLat}]&zoom=5` : '';
 
   return (
-    <Link
+    <a
       data-testid={`monitor-item-${id}`}
       key={id}
       href={`/map/${id}/datasets${urlParams}`}
@@ -54,7 +54,7 @@ export const MonitorLink = ({
           }}
         />
       </motion.h2>
-    </Link>
+    </a>
   );
 };
 

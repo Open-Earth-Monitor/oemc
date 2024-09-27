@@ -80,7 +80,7 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
                 initial="initial"
                 whileHover="hover"
               >
-                <Link
+                <a
                   href={`/map/geostories/${geostoryId}`}
                   data-id={geostoryId}
                   className="block"
@@ -96,7 +96,7 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
                       }}
                     />
                   </div>
-                </Link>
+                </a>
               </motion.li>
             ))}
           </motion.ul>
