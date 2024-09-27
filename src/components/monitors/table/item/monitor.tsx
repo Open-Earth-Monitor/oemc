@@ -7,6 +7,7 @@ import { cn } from '@/lib/classnames';
 import { MonitorParsed } from '@/types/monitors';
 
 import { usePostWebTraffic } from '@/hooks/web-traffic';
+import { useMonitor, useMonitors } from '@/hooks/monitors';
 
 export const MonitorLink = ({
   id,
@@ -23,11 +24,29 @@ export const MonitorLink = ({
     console.log('WT4 -', 'monitors', id);
   };
 
+  const { data: monitorsData } = useMonitors();
+
+  const monitorData = monitorsData?.find((monitor) => monitor.id === id);
+
+  // TO - DO - fix when specific monitor has bbox specified byt API
+  // const { data: monitorData, isLoading } = useMonitor(
+  //   { monitor_id: id },
+  //   {
+  //     enabled: !!id,
+  //   }
+  // );
+
+  const [minLon, minLat, maxLon, maxLat] = monitorData?.monitor_bbox || [];
+  const centerLon = (minLon + maxLon) / 2;
+  const centerLat = (minLat + maxLat) / 2;
+
+  const urlParams = monitorData?.monitor_bbox ? `/?center=[${centerLon},${centerLat}]&zoom=5` : '';
+
   return (
     <Link
       data-testid={`monitor-item-${id}`}
       key={id}
-      href={`/map/${id}/datasets`}
+      href={`/map/${id}/datasets${urlParams}`}
       onClick={handleClick}
       className={cn({ 'flex items-center  px-2 font-bold sm:px-4': true, 'border-l-4': !isMobile })}
       style={{ borderLeftColor: color }}
