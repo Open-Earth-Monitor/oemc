@@ -94,13 +94,13 @@ export function useGetWebTraffic(
   });
 }
 
-export function usePostWebTraffic(data: TrackingData[], queryOptions?: UseQueryOptions) {
+export function usePostWebTraffic(data: TrackingData, queryOptions?: UseQueryOptions) {
   console.info(data);
 
-  // return API.request({
-  //   method: 'POST',
-  //   url: '/usage-stats',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   data,
-  // });
+  return API.request({
+    method: 'POST',
+    url: '/usage-stats',
+    headers: { 'Content-Type': 'application/json' },
+    data,
+  });
 }
