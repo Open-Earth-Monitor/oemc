@@ -22,18 +22,15 @@ export const MonitorLink = ({
     console.info('WT4 -', 'monitors', id);
   };
 
-  const { data: monitorData } = useMonitor(
-    { monitor_id: id },
-    {
-      enabled: !!id,
-    }
-  );
+  const { data: monitorsData } = useMonitors();
 
-  const [minLon, minLat, maxLon, maxLat] = monitorData?.monitor_bbox || [];
+  const monitorData = monitorsData?.find((monitor) => monitor.id === id);
+  const monitorBbox = monitorData?.monitor_bbox;
+  const [minLon, minLat, maxLon, maxLat] = monitorBbox || [];
   const centerLon = (minLon + maxLon) / 2;
   const centerLat = (minLat + maxLat) / 2;
 
-  const urlParams = monitorData?.monitor_bbox ? `/?center=[${centerLon},${centerLat}]&zoom=5` : '';
+  const urlParams = monitorBbox ? `/?center=[${centerLon},${centerLat}]&zoom=5` : '';
 
   return (
     <a
