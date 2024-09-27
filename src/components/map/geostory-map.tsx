@@ -318,7 +318,7 @@ const Map: FC<GeostoryMapProps> = ({
         // TO-DO: remove split once the API is fixed
         mapRef?.current?.ol?.getView()?.fit(bbox);
         setGeostoryBbox(bbox);
-        setZoom('0');
+        setZoom('5'); // default zoom
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
