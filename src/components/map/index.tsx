@@ -233,7 +233,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const GEOSTORY_VIEWPORT = {
     center: [centerLon, centerLat] || initialViewState.center,
-    zoom: initialViewState.zoom,
+    zoom: zoom || initialViewState.zoom,
   };
 
   const handleSingleClick = useCallback(
@@ -267,6 +267,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         mapRef?.current?.ol
           ?.getView()
           ?.fit((monitorData?.monitor_bbox as unknown as string).split(',').map(Number));
+        setMonitorBbox(monitorBbox);
+        setZoom('0');
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

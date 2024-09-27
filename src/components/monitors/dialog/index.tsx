@@ -18,6 +18,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { isArray } from 'lodash-es';
+import { usePostWebTraffic } from '@/hooks/web-traffic';
 
 type MonitorDialogProps = Partial<Monitor>;
 
@@ -31,6 +32,14 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
 }) => {
   const params = useParams();
   const monitorId = params?.monitor_id;
+  const handleClick = () => {
+    usePostWebTraffic([
+      {
+        monitors: id,
+      },
+    ]);
+    console.log('WT7 -', 'monitors', id);
+  };
 
   return (
     <Dialog>
@@ -58,7 +67,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
               </h2>
               <div
                 data-testid="monitor-description"
-                className="flex flex-wrap font-inter leading-[25px]"
+                className="font-inter flex flex-wrap leading-[25px]"
               >
                 {description}
               </div>
@@ -103,6 +112,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
                   className={cn(
                     'mt-3 flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
                   )}
+                  onClick={handleClick}
                 >
                   Launch monitor
                 </Link>
