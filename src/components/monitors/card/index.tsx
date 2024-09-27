@@ -13,10 +13,18 @@ import { Monitor } from '@/types/monitors';
 import { TAG_STYLE } from '@/styles/constants';
 
 import MonitorDialog from '../dialog';
+import { usePostWebTraffic } from '@/hooks/web-traffic';
 
 const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
   const { id, description, title, color, ready, theme } = monitor;
-
+  const handleClick = () => {
+    usePostWebTraffic([
+      {
+        monitors: id,
+      },
+    ]);
+    console.log('WT6 -', 'monitors', id);
+  };
   return (
     <div
       className="flex min-h-[260px] flex-col justify-between px-6 py-6 text-brand-500 sm:h-[468px] sm:px-8"
@@ -48,6 +56,7 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
               className={cn(
                 'sm:tno-underline flex items-center space-x-2.5 py-2 font-bold underline transition-colors hover:underline sm:text-xs'
               )}
+              onClick={handleClick}
             >
               <HiOutlineArrowTopRightOnSquare className="hidden h-5 w-5 sm:flex" />
               <span className="hover:underline">Go to monitor</span>

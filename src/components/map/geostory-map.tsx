@@ -156,7 +156,6 @@ const Map: FC<GeostoryMapProps> = ({
   >(
     (e) => {
       const { center, zoom } = e.frameState.viewState;
-
       void setCenter(center);
       void setZoom(zoom.toString());
     },
@@ -308,7 +307,7 @@ const Map: FC<GeostoryMapProps> = ({
 
   const GEOSTORY_VIEWPORT = {
     center: [centerLon, centerLat] || initialViewState.center,
-    zoom: initialViewState.zoom,
+    zoom: zoom || initialViewState.zoom,
   };
 
   // Center to the geostory bbox
@@ -316,10 +315,10 @@ const Map: FC<GeostoryMapProps> = ({
     if (geostoryData?.geostory_bbox && mapRef) {
       const bbox = transformToBBoxArray(geostoryData?.geostory_bbox);
       if (bbox) {
-        console.log(geostoryData?.geostory_bbox);
         // TO-DO: remove split once the API is fixed
         mapRef?.current?.ol?.getView()?.fit(bbox);
         setGeostoryBbox(bbox);
+        setZoom('0');
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
