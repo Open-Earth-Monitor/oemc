@@ -368,7 +368,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           attributions="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
         />
 
-        {data && !isLoading && (
+        {data && !isLoading && isLayerActive && (
           <RLayerWMS
             ref={layerLeftRef}
             properties={{ label: gs_name, date }}
@@ -390,7 +390,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           />
         )}
 
-        {compareDate && data && !isLoading && (
+        {compareDate && data && !isLoading && isCompareLayerActive && (
           <RLayerWMS
             ref={layerRightRef}
             properties={{ label: gs_name, date: compareDate }}

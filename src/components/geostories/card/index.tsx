@@ -20,9 +20,9 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
   const { id, colorHead, title, color, ready, theme, monitors } = geostory;
 
   const handleClick = (key) => {
-    // usePostWebTraffic({
-    //   [key]: id,
-    // });
+    usePostWebTraffic({
+      [key]: id,
+    });
     console.info('WT1 -', key, id);
   };
 
@@ -50,7 +50,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
               <GeostoryDialog {...geostory} />
               <Link
                 href={`/map/geostories/${id}`}
-                data-value="geostories"
+                data-value="geostory_id"
                 data-testid={`card-link-${id}`}
                 className={cn(
                   'sm:tno-underline flex items-center space-x-2.5 py-2 font-bold underline transition-colors hover:underline sm:text-xs'
@@ -78,7 +78,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
                 <div key={`geostory-card-monitor-link-${monitor.id}`}>
                   <Link
                     href={`/map/${monitor.id}/datasets`}
-                    data-value="monitors"
+                    data-value="monitor_id"
                     className="w-full font-bold underline"
                     data-testid={`geostory-card-monitor-link-${id}`}
                     onClick={handleClick}
