@@ -3,7 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import API from 'services/api';
 
-type TrackingType = 'geostories' | 'monitors' | 'layers';
+type TrackingType = 'geostory_id' | 'monitor_id' | 'layer_id';
 
 type TrackingData = Partial<Record<TrackingType, string | string[]>>;
 
@@ -102,5 +102,7 @@ export function usePostWebTraffic(data: TrackingData, queryOptions?: UseQueryOpt
     url: '/usage-stats',
     headers: { 'Content-Type': 'application/json' },
     data,
+  }).catch((error) => {
+    console.error('Error posting web traffic', error);
   });
 }
