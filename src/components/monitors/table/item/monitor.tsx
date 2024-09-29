@@ -16,9 +16,9 @@ export const MonitorLink = ({
   isMobile,
 }: MonitorParsed & { isMobile?: boolean }) => {
   const handleClick = () => {
-    // usePostWebTraffic({
-    //   monitors: id,
-    // });
+    usePostWebTraffic({
+      monitor_id: id,
+    });
     console.info('WT4 -', 'monitors', id);
   };
 

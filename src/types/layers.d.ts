@@ -29,6 +29,9 @@ export type Layer = {
   unit: string;
   use_case: string;
   position: 'left' | 'right';
+  value_society: string;
+  data_meaning: string;
+  usage_examples: string;
 };
 
 export type LayerParsed = Omit<Layer, 'gs_style' | 'range'> & {

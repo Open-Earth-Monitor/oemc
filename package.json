@@ -21,6 +21,7 @@
     "@dnd-kit/modifiers": "6.0.1",
     "@dnd-kit/sortable": "7.0.2",
     "@egjs/react-flicking": "4.10.9",
+    "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-checkbox": "1.0.4",
     "@radix-ui/react-collapsible": "1.0.3",
     "@radix-ui/react-dialog": "^1.1.1",
