@@ -4,6 +4,7 @@ import React, { FC } from 'react';
 
 import Image from 'next/image';
 
+import { FiDownload } from 'react-icons/fi';
 // import { LinePath } from '@visx/shape';
 
 // import ExampleControls from './ExampleControls';
@@ -31,6 +32,8 @@ import type { GeostoryTooltipInfo } from './types';
 
 import { useAtom, useAtomValue } from 'jotai';
 import { useSyncSidebarState } from '@/hooks/sync-query';
+
+import { downloadCSV } from '@/hooks/datasets';
 
 const numberFormat = format(',.2f');
 
@@ -74,6 +77,14 @@ const Histogram: FC<HistogramTypes> = ({
     enabled: !!lonLat,
   });
 
+  const handleClick = () => {
+    if (histogramData && histogramData.length > 0) {
+      downloadCSV(histogramData, `data-${leftData.title}.csv`);
+    } else {
+      console.error('No data available for download.');
+    }
+  };
+
   return (
     <div
       className={cn({
@@ -87,12 +98,24 @@ const Histogram: FC<HistogramTypes> = ({
         <XIcon size={14} />
       </button>
       <div className="relative space-y-2">
-        <div className="font-satoshi mr-5 space-y-4 font-bold">
+        <div className="mr-5 space-y-4 font-satoshi font-bold">
           <div>
             <h3 className="text-sm">{leftData.title}</h3>
             <h4 className="text-2xl">
               Location {numberFormat(lonLat[0])}, {numberFormat(lonLat[1])}
             </h4>
+            <button
+              type="button"
+              onClick={handleClick}
+              className={cn({
+                'flex w-full items-center justify-end space-x-2': true,
+                'opacity-50': !histogramData,
+              })}
+              disabled={!histogramData}
+            >
+              <FiDownload className="h-6 w-6" />
+              <span className="font-inter text-xs">CSV</span>
+            </button>
             <Image
               src="/images/histogram.png"
               alt="Histogram"
