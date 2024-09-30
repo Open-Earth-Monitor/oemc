@@ -65,6 +65,7 @@ const TooltipInitialState = {
   position: null,
   coordinate: null,
   leftData: {
+    id: null,
     date: null,
     title: null,
     value: null,
@@ -73,6 +74,7 @@ const TooltipInitialState = {
     isComparable: false,
   },
   rightData: {
+    id: null,
     date: null,
     title: null,
     value: null,
@@ -214,6 +216,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           ...prev,
           leftData: {
             // This info is coming from the API instead of the layer, as requested
+            id: layerId,
             title,
             date,
             value: valueLeft,
@@ -222,7 +225,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             rangeLabels: range_labels,
             isComparable: range?.length > 1 && !!compareDate,
           },
-          rightData: { title, date: compareDate, value: valueRight, unit: compareData?.unit },
+          rightData: {
+            id: compareLayerId,
+            title,
+            date: compareDate,
+            value: valueRight,
+            unit: compareData?.unit,
+          },
         }));
       } catch {
         setTooltipInfo((prev) => ({ ...prev, value: null }));

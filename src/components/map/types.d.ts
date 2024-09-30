@@ -55,8 +55,9 @@ export type MonitorTooltipInfo = {
   position: [number, number] | null;
   coordinate: Coordinate;
   leftData: {
+    id: string;
     title: string;
-    date?: string;
+    date: string;
     unit?: string;
     value: number | null;
     range: LayerDateRange[];
@@ -64,8 +65,9 @@ export type MonitorTooltipInfo = {
     isComparable?: boolean;
   };
   rightData: {
+    id: string;
     title: string;
-    date?: string;
+    date: string;
     value: number;
     unit?: string;
   };
