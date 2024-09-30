@@ -10,7 +10,9 @@ type UseParams = {
 };
 
 type RegionData = {
-  [key: string]: number;
+  label: string;
+  layer_id: string;
+  value: number;
 };
 
 const DEFAULT_QUERY_OPTIONS = {
@@ -23,7 +25,7 @@ const DEFAULT_QUERY_OPTIONS = {
 
 export function useRegionsData(
   params: UseParams,
-  queryOptions?: UseQueryOptions<RegionData, AxiosError, RegionData>
+  queryOptions?: UseQueryOptions<RegionData[], AxiosError, RegionData[]>
 ) {
   const fetchRegionData = () =>
     API.request({
@@ -32,7 +34,7 @@ export function useRegionsData(
       params,
       ...queryOptions,
     })
-      .then((response: AxiosResponse<RegionData>) => {
+      .then((response: AxiosResponse<RegionData[]>) => {
         return response.data;
       })
       .catch((error) => {
@@ -41,9 +43,7 @@ export function useRegionsData(
 
   return useQuery(['region-data', params], fetchRegionData, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => {
-      return data;
-    },
+    select: (data) => data,
     ...queryOptions,
   });
 }
