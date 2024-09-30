@@ -5,7 +5,15 @@ import React, { FC } from 'react';
 import { format } from 'd3-format';
 import { XIcon } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
+
+import { useRegionsData } from '@/hooks/regions';
+
+import { histogramLayerLeftVisibilityAtom } from '@/app/store';
+
 import type { GeostoryTooltipInfo } from './types';
+import { Coordinate } from 'ol/coordinate';
+import { useAtom } from 'jotai';
 
 const numberFormat = format(',.2f');
 
@@ -20,6 +28,15 @@ const MapTooltip: FC<TooltipProps> = ({
   rightData,
 }: TooltipProps) => {
   if (!position || !leftData?.value) return null;
+
+  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
+    histogramLayerLeftVisibilityAtom
+  );
+
+  const handleClick = () => {
+    setLeftLayerHistogramVisibility(true);
+  };
+
   return (
     <div
       className="max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md"
@@ -32,27 +49,49 @@ const MapTooltip: FC<TooltipProps> = ({
         <XIcon size={14} className="text-brand-500" />
       </button>
       <div className="relative space-y-2">
-        <div className="mr-16 font-satoshi font-bold text-brand-500">
-          <h3 className="text-sm">{leftData.title}</h3>
-          {leftData.value !== 0 && (
-            <div className="flex items-end space-x-2">
-              <div className="space-x-2 text-xl">
-                {numberFormat(leftData.value)}
-                {!!leftData.unit && leftData.unit}
+        <div className="font-satoshi mr-5 space-y-4 font-bold text-brand-500">
+          <div>
+            <h3 className="text-sm">{leftData.title}</h3>
+            {leftData.value !== 0 && (
+              <div className="flex items-end space-x-2">
+                <div className="space-x-2 text-xl">
+                  {numberFormat(leftData.value)}
+                  {!!leftData.unit && leftData.unit}
+                </div>
               </div>
-            </div>
-          )}
-          {!leftData.value && (!!rightData.value || !rightData.date) && (
-            <span>No data is available at this specific point.</span>
+            )}
+            {!leftData.value && (!!rightData.value || !rightData.date) && (
+              <span>No data is available at this specific point.</span>
+            )}
+          </div>
+          {leftData?.value && (
+            <Button
+              variant="light"
+              onClick={handleClick}
+              className="font-inter text-xs"
+              disabled={!leftData.value}
+            >
+              See point histogram
+            </Button>
           )}
         </div>
         {!!rightData.value && (
-          <div className="border-brand-800 border-t pt-2.5 font-satoshi font-bold text-brand-500">
-            <h3 className="text-sm">{rightData.title}</h3>
-            <div className="text-xl">
-              {numberFormat(rightData.value)}
-              {!!rightData.unit && rightData.unit}
+          <div className="border-brand-800 font-satoshi mr-5 space-y-4 border-t pt-2.5 font-bold text-brand-500 ">
+            <div>
+              <h3 className="text-sm">{rightData.title}</h3>
+              <div className="text-xl">
+                {numberFormat(rightData.value)}
+                {!!rightData.unit && rightData.unit}
+              </div>
             </div>
+            <Button
+              variant="light"
+              onClick={handleClick}
+              className="font-inter text-xs"
+              disabled={!rightData.value}
+            >
+              See point histogram
+            </Button>
           </div>
         )}
         {!rightData.value && !leftData.value && (
