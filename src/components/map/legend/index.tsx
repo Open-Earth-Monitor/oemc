@@ -16,7 +16,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
   return (
     <div
       className={cn({
-        'absolute bottom-0 right-0 flex w-1/2 justify-end border-t border-secondary-900 bg-brand-500 p-1 font-inter text-xs sm:bottom-3 sm:right-3 sm:block sm:w-fit sm:max-w-[294px] sm:space-y-1 sm:border-0 sm:bg-transparent sm:p-0':
+        'font-inter absolute bottom-0 right-0 flex w-1/2 justify-end border-t border-secondary-900 bg-brand-500 p-1 text-xs sm:bottom-3 sm:right-3 sm:block sm:w-fit sm:max-w-[294px] sm:space-y-1 sm:border-0 sm:bg-transparent sm:p-0':
           true,
         'z-[700]': isMobile,
         'z-[50]': !isMobile,
@@ -40,7 +40,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
 
       {/* MOBILE */}
       <Popover>
-        <PopoverTrigger className="z-[600] h-12 w-full bg-secondary-500 font-inter text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
+        <PopoverTrigger className="font-inter z-[600] h-12 w-full bg-secondary-500 text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
           Legend
         </PopoverTrigger>
         <PopoverContent
