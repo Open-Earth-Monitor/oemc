@@ -36,12 +36,14 @@ export type GeostoryTooltipInfo = {
   position: [number, number] | null;
   coordinate: Coordinate;
   leftData: {
+    id: string;
     title: string;
     date: string;
     value: number;
     unit?: string;
   };
   rightData: {
+    id: string;
     title: string;
     date: string;
     value: number;
