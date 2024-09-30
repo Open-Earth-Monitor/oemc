@@ -190,7 +190,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
       {isMobile && (
         <div className="absolute bottom-0 left-0 right-0 z-[700] h-[58px] bg-brand-500 px-1 py-2 sm:hidden">
           <Popover onOpenChange={onOpenChange} open={defaultOpen && open}>
-            <PopoverTrigger className="absolute bottom-1 h-12 w-1/2 bg-secondary-500 font-inter text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
+            <PopoverTrigger className="font-inter absolute bottom-1 h-12 w-1/2 bg-secondary-500 text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
               Geostory
             </PopoverTrigger>
             <PopoverContent
