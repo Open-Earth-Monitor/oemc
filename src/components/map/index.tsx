@@ -8,14 +8,14 @@ import axios from 'axios';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
-import { fromLonLat } from 'ol/proj';
+import { fromLonLat, toLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 import { RView } from 'rlayers/RMap';
 
 import cn from '@/lib/classnames';
 import { mobile, tablet } from '@/lib/media-queries';
-
+import { useAtom } from 'jotai';
 import { useDebounce } from '@/hooks/datasets';
 import { useLayer, useLayerParsedSource } from '@/hooks/layers';
 import { useMonitor } from '@/hooks/monitors';
@@ -26,7 +26,8 @@ import {
   useSyncCenterSettings,
   useSyncZoomSettings,
 } from '@/hooks/sync-query';
-
+import Histogram from './histogram';
+import { histogramLayerLeftVisibilityAtom, lonLatAtom } from '@/app/store';
 import LocationSearchComponent from '@/components/location-search';
 import WebTraffic from '@/components/web-traffic';
 
@@ -42,6 +43,7 @@ import MapTooltip from './tooltip';
 import type { CustomMapProps, MonitorTooltipInfo, Bbox } from './types';
 import { useParams, usePathname } from 'next/navigation';
 import { transformToBBoxArray } from '@/lib/format';
+import { set } from 'ol/transform';
 
 interface FeatureProperties {
   [key: string]: number;
@@ -82,6 +84,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
   const isDesktop = !isMobile && !isTablet;
+  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
+    histogramLayerLeftVisibilityAtom
+  );
+  const [lonLat, setLonLat] = useAtom(lonLatAtom);
 
   const params = useParams();
   const monitorId = params.monitor_id as string;
@@ -238,6 +244,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
+      const coordinatedToDegrees = toLonLat(e.coordinate);
+      setLonLat(coordinatedToDegrees);
       const newTooltipInfo: MonitorTooltipInfo = {
         ...tooltipInfo,
         leftData: {
@@ -255,6 +263,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const handleCloseTooltip = useCallback(() => {
     const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
     setTooltipInfo(newTooltipInfo);
+    setLeftLayerHistogramVisibility(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -450,7 +459,14 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
         {isLayerActive && <Legend />}
         <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
-
+        {layerData && leftLayerHistogramVisibility && (
+          <Histogram
+            onCloseTooltip={handleCloseTooltip}
+            layerId={layerId}
+            compareLayerId={compareLayerId}
+            {...tooltipInfo}
+          />
+        )}
         {/* Interactivity */}
         {data && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}
       </RMap>

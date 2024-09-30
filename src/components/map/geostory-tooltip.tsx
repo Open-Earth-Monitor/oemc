@@ -7,13 +7,11 @@ import { XIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import { useRegionsData } from '@/hooks/regions';
-
 import { histogramLayerLeftVisibilityAtom } from '@/app/store';
 
 import type { GeostoryTooltipInfo } from './types';
-import { Coordinate } from 'ol/coordinate';
 import { useAtom } from 'jotai';
+import cn from '@/lib/classnames';
 
 const numberFormat = format(',.2f');
 
@@ -39,7 +37,11 @@ const MapTooltip: FC<TooltipProps> = ({
 
   return (
     <div
-      className="max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md"
+      className={cn({
+        'max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md':
+          true,
+        hidden: leftLayerHistogramVisibility,
+      })}
       style={{
         left: `${position[0]}px`,
         top: `${position[1] - 10}px`,
