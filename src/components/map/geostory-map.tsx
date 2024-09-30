@@ -400,6 +400,11 @@ const Map: FC<GeostoryMapProps> = ({
         height="100%"
         className="relative"
         initial={initialViewport}
+        // view={
+        //   geostoryBbox
+        //     ? ([GEOSTORY_VIEWPORT, null] as [RView, (view: RView) => void])
+        //     : ([initialViewport, null] as [RView, (view: RView) => void])
+        // }
         onMoveEnd={handleMapMove}
         onSingleClick={handleSingleClick}
         noDefaultControls
