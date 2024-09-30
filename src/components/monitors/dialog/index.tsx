@@ -65,7 +65,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
               </h2>
               <div
                 data-testid="monitor-description"
-                className="font-inter flex flex-wrap leading-[25px]"
+                className="flex flex-wrap font-inter leading-[25px]"
               >
                 {description}
               </div>
@@ -94,7 +94,12 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
                   <ul className="space-y-2 py-2 pl-8 font-bold">
                     {use_case_link.map(({ url, title }) => (
                       <li key={title}>
-                        <a href={url} className="underline">
+                        <a
+                          href={url}
+                          className="underline"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           {title}
                         </a>
                       </li>
