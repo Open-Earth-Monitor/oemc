@@ -4,8 +4,13 @@ import React, { FC } from 'react';
 
 import { format } from 'd3-format';
 import { XIcon } from 'lucide-react';
+import { useAtom } from 'jotai';
+import { Button } from '@/components/ui/button';
+
+import { histogramLayerLeftVisibilityAtom } from '@/app/store';
 
 import type { MonitorTooltipInfo } from './types';
+import cn from '@/lib/classnames';
 
 const numberFormat = format(',.2f');
 
@@ -20,14 +25,24 @@ const MapTooltip: FC<TooltipProps> = ({
   rightData,
 }: TooltipProps) => {
   if (!position || (!leftData?.value && leftData?.value !== 0)) return null;
+  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
+    histogramLayerLeftVisibilityAtom
+  );
 
+  const handleClick = () => {
+    setLeftLayerHistogramVisibility(true);
+  };
   const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
   const compareDateLabel =
     rightData.date && leftData.range?.find(({ value }) => value === rightData.date)?.label;
 
   return (
     <div
-      className="max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 font-bold text-brand-500 shadow-md"
+      className={cn({
+        'max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 font-bold text-brand-500 shadow-md':
+          true,
+        hidden: leftLayerHistogramVisibility,
+      })}
       style={{
         left: `${position[0]}px`,
         top: `${position[1] - 10}px`,
@@ -54,6 +69,17 @@ const MapTooltip: FC<TooltipProps> = ({
             {dateLabel && ` for the selected date (${dateLabel})`}.
           </span>
         )}
+        {leftData?.value && (
+          <Button
+            variant="light"
+            onClick={handleClick}
+            className="font-inter text-xs"
+            disabled={!leftData.value}
+          >
+            See point histogram
+          </Button>
+        )}
+
         {rightData.date && rightData.value !== 0 && (
           <div className="border-brand-800 mt-4 border-t pt-4 text-xl">
             {numberFormat(rightData.value)}
