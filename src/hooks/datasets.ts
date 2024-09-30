@@ -18,11 +18,7 @@ const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'li
   return THEMES_COLORS[theme][themeType] || THEMES_COLORS.Unknown[themeType];
 };
 
-// type DataObject = {
-//   label: string;
-//   layer_id: string;
-//   value: number;
-// };
+type DataObject = Array<{ layer_id: string; label: string; value: number }>;
 
 type UseParams = {
   type?: 'monitors' | 'geostories' | 'all';
@@ -121,56 +117,52 @@ export const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
-// // Function to generate CSV content from data
-// function generateCSVContent(data: DataObject): string {
-//   // Get the columns from the csvTypeMapping
+// Function to generate CSV content from JSON data
+function generateCSVContent(data: DataObject): string {
+  // Define the columns for the CSV
+  const columns = ['layer_id', 'label', 'value'];
 
-//   // Create the CSV header row
-//   const headerRow = columns.join(',') + '\n';
+  // Create the CSV header row
+  const headerRow = columns.join(',') + '\n';
 
-//   if (Object.keys(data).length === 0) {
-//     // If no data, return header and a default row with empty values
-//     const emptyRow = columns.map(() => '').join(',');
-//     return headerRow + emptyRow;
-//   }
+  if (data.length === 0) {
+    // If no data, return header and a default row with empty values
+    const emptyRow = columns.map(() => '').join(',');
+    return headerRow + emptyRow;
+  }
 
-//   // Create the CSV rows from the data
-//   const rows = Object.keys(data)
-//     .map((country) => {
-//       const row: { [key: string]: string } = { country_id: country };
-//       columns.forEach((col) => ({
-//         id: data.layer_id,
-//         label: data.label,
-//         value: data.value.toString(),
-//       }));
-//     })
-//     .join('\n');
+  // Create the CSV rows from the data
+  const rows = data
+    .map((rowData) => {
+      return `${rowData.layer_id},${rowData.label},${rowData.value}`;
+    })
+    .join('\n');
 
-//   // Combine the header and rows into a single CSV string
-//   return headerRow + rows;
-// }
+  // Combine the header and rows into a single CSV string
+  return headerRow + rows;
+}
 
-// // Function to download a CSV file
-// export function downloadCSV(data: DataObject, filename: string = 'data.csv'): void {
-//   // Generate CSV content
-//   const csvContent = generateCSVContent(data);
+// Function to download a CSV file
+export function downloadCSV(data: DataObject, filename: string = 'data.csv') {
+  // Generate CSV content
+  const csvContent = generateCSVContent(data);
 
-//   // Create a Blob from the CSV content
-//   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // Create a Blob from the CSV content
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
-//   // Create a link element
-//   const link = document.createElement('a');
+  // Create a link element
+  const link = document.createElement('a');
 
-//   // Create a URL for the Blob and set it as the href attribute
-//   const url = URL.createObjectURL(blob);
-//   link.setAttribute('href', url);
-//   link.setAttribute('download', filename);
+  // Create a URL for the Blob and set it as the href attribute
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
 
-//   // Append the link to the document body and trigger the download
-//   document.body.appendChild(link);
-//   link.click();
+  // Append the link to the document body and trigger the download
+  document.body.appendChild(link);
+  link.click();
 
-//   // Clean up by removing the link and revoking the URL
-//   document.body.removeChild(link);
-//   URL.revokeObjectURL(url);
-// }
+  // Clean up by removing the link and revoking the URL
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
