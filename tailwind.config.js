@@ -16,7 +16,7 @@ module.exports = {
       },
     },
     extend: {
-      fontFamily: {
+      font: {
         inter: ['var(--font-inter)'],
         satoshi: ['var(--font-satoshi)'],
       },
