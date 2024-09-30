@@ -45,7 +45,6 @@ const Histogram: FC<HistogramTypes> = ({
   layerId,
   compareLayerId,
   leftData,
-  rightData,
 }: HistogramTypes) => {
   const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
     histogramLayerLeftVisibilityAtom
