@@ -31,9 +31,14 @@ export function useRegionsData(
       url: '/point-query',
       params,
       ...queryOptions,
-    }).then((response: AxiosResponse<RegionData>) => {
-      return response.data;
-    });
+    })
+      .then((response: AxiosResponse<RegionData>) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('Error fetching region data:', error);
+      });
+
   return useQuery(['region-data', params], fetchRegionData, {
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) => {

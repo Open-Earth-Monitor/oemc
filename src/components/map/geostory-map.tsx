@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, FC, useCallback, useEffect, useRef, useState, ChangeEvent } from 'react';
-
+import { useAtom, useSetAtom } from 'jotai';
 import { useMediaQuery } from 'react-responsive';
 
 import axios from 'axios';
@@ -25,6 +25,8 @@ import {
   useSyncZoomSettings,
 } from '@/hooks/sync-query';
 
+import { lonLatAtom } from '@/app/store';
+
 import LocationSearchComponent from '@/components/location-search';
 import WebTraffic from '@/components/web-traffic';
 import GeostoryContent from '../geostories/content';
@@ -39,10 +41,10 @@ import SwipeControl from './controls/swipe';
 import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
 import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox } from './types';
-import { useRegionsData } from '@/hooks/regions';
 import { useLayer } from '@/hooks/layers';
-
+import { histogramLayerLeftVisibilityAtom } from '@/app/store';
 import { transformToBBoxArray } from '@/lib/format';
+import Histogram from './histogram';
 
 interface ClickEvent {
   bbox?: Bbox;
@@ -58,6 +60,11 @@ const Map: FC<GeostoryMapProps> = ({
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
   const isDesktop = !isMobile && !isTablet;
+  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
+    histogramLayerLeftVisibilityAtom
+  );
+
+  const [lonLat, setLonLat] = useAtom(lonLatAtom);
 
   const debouncedSearchValue = useDebounce(locationSearch, 500);
 
@@ -76,11 +83,13 @@ const Map: FC<GeostoryMapProps> = ({
     position: null,
     coordinate: null,
     leftData: {
+      id: null,
       date: null,
       title: null,
       value: null,
     },
     rightData: {
+      id: null,
       date: null,
       title: null,
       value: null,
@@ -90,7 +99,6 @@ const Map: FC<GeostoryMapProps> = ({
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
-  const [lonLat, setLonLat] = useState<Coordinate | null>(null);
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -212,6 +220,7 @@ const Map: FC<GeostoryMapProps> = ({
           ...prev,
           leftData: {
             // This info is coming from the API instead of the layer, as requested
+            id: layerId,
             title: layerData?.title,
             date,
             unit: layerData?.unit,
@@ -219,6 +228,7 @@ const Map: FC<GeostoryMapProps> = ({
             isComparable: layerData?.range?.length > 1,
           },
           rightData: {
+            id: compareLayerId,
             title: compareLayerData?.title,
             date: compareDate || '',
             unit: compareLayerData?.unit,
@@ -229,12 +239,14 @@ const Map: FC<GeostoryMapProps> = ({
         setTooltipInfo((prev) => ({
           ...prev,
           leftData: {
+            id: null,
             title: '',
             date: '',
             value: null,
             unit: null,
           },
           rightData: {
+            id: null,
             title: '',
             date: '',
             value: null,
@@ -253,31 +265,10 @@ const Map: FC<GeostoryMapProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tooltipInfo.position, tooltipInfo.coordinate]);
 
-  const layerPointInfoPayload = {
-    lon: lonLat?.[0] || 0,
-    lat: lonLat?.[1] || 0,
-    layer_id: layerId,
-  };
-
-  const compareLayerPointInfoPayload = {
-    lon: lonLat?.[0] || 0,
-    lat: lonLat?.[1] || 0,
-    layer_id: compareLayerId,
-  };
-
-  const { data: histogramData } = useRegionsData(layerPointInfoPayload, {
-    enabled: isLayerActive && !!lonLat,
-  });
-
-  const { data: compareHistogramData } = useRegionsData(compareLayerPointInfoPayload, {
-    enabled: isCompareLayerActive && !!lonLat,
-  });
-
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
       const coordinatedToDegrees = toLonLat(e.coordinate);
       setLonLat(coordinatedToDegrees);
-      const unit = mapRef?.current.ol.getView().getProjection().getUnits();
 
       const newTooltipInfo: GeostoryTooltipInfo = {
         ...tooltipInfo,
@@ -296,6 +287,7 @@ const Map: FC<GeostoryMapProps> = ({
   const handleCloseTooltip = useCallback(() => {
     const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
     setTooltipInfo(newTooltipInfo);
+    setLeftLayerHistogramVisibility(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -408,11 +400,6 @@ const Map: FC<GeostoryMapProps> = ({
         height="100%"
         className="relative"
         initial={initialViewport}
-        view={
-          geostoryBbox
-            ? ([GEOSTORY_VIEWPORT, null] as [RView, (view: RView) => void])
-            : ([initialViewport, null] as [RView, (view: RView) => void])
-        }
         onMoveEnd={handleMapMove}
         onSingleClick={handleSingleClick}
         noDefaultControls
@@ -520,7 +507,14 @@ const Map: FC<GeostoryMapProps> = ({
         )}
 
         <Attributions className="absolute z-40 sm:bottom-0 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
-
+        {layerData && leftLayerHistogramVisibility && (
+          <Histogram
+            onCloseTooltip={handleCloseTooltip}
+            layerId={layerId}
+            compareLayerId={compareLayerId}
+            {...tooltipInfo}
+          />
+        )}
         {/* Interactivity */}
         {layerData && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}
       </RMap>
