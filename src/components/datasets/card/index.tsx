@@ -119,7 +119,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
                   </h2>
                   <div
                     data-testid="monitor-description"
-                    className="flex flex-wrap font-inter leading-[25px]"
+                    className="font-inter flex flex-wrap leading-[25px]"
                   >
                     {description}
                   </div>
@@ -150,7 +150,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
                       <AccordionTrigger>
                         <h3 className="flex items-center space-x-2">
                           <HiOutlineGlobeAlt className="h-6 w-6" />
-                          <span className="text-2xl font-bold">Use cases</span>
+                          <span className="text-2xl font-bold">Examples</span>
                         </h3>
                       </AccordionTrigger>
                       <AccordionContent>
