@@ -71,7 +71,7 @@ type SortByProps = {
 const SortBy = ({ sortingCriteria, handleSortingCriteria }: SortByProps) => {
   return (
     <DropdownMenu modal={false}>
-      <DropdownMenuTrigger className="flex h-full items-center border-0 px-0 py-2.5 font-inter hover:bg-brand-500 sm:border sm:border-secondary-900 sm:px-3 sm:hover:bg-secondary-900">
+      <DropdownMenuTrigger className="font-inter flex h-full items-center border-0 px-0 py-2.5 hover:bg-brand-500 sm:border sm:border-secondary-900 sm:px-3 sm:hover:bg-secondary-900">
         <div>
           <span className="w-full">
             Sort <span className="hidden sm:inline"> by:</span>{' '}
@@ -83,7 +83,7 @@ const SortBy = ({ sortingCriteria, handleSortingCriteria }: SortByProps) => {
         <RadioGroup
           defaultValue="title"
           value={sortingCriteria}
-          className="flex w-full flex-1 font-inter font-medium"
+          className="font-inter flex w-full flex-1 font-medium"
           onValueChange={handleSortingCriteria}
         >
           <div className="align-left flex flex-col justify-start space-y-4">
@@ -115,7 +115,7 @@ const FilterByFormat = ({ active, handleCategoriesFilter }: FilterByFormatProps)
   return (
     <RadioGroup
       defaultValue={active}
-      className="items-center gap-4 py-3 pl-4 font-inter font-medium sm:flex sm:gap-2 sm:space-x-10 sm:pl-0"
+      className="font-inter items-center gap-4 py-3 pl-4 font-medium sm:flex sm:gap-2 sm:space-x-10 sm:pl-0"
       onValueChange={handleCategoriesFilter}
     >
       <div className="flex items-center space-x-2.5" data-testid="monitors-button-checkbox">
