@@ -35,9 +35,9 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
   const geostoryId = params.geostory_id;
 
   const handleClick = () => {
-    // usePostWebTraffic({
-    //   geostory_id: geostoryId,
-    // });
+    usePostWebTraffic({
+      geostory_id: geostoryId,
+    });
     console.info('WT2 -', 'geostories', id);
   };
 
