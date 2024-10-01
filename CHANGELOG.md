@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Better performance for opacity slider [OEMC-235](https://vizzuality.atlassian.net/browse/OEMC-235)
 - Geo-location position on page loading [OEMC-236](https://vizzuality.atlassian.net/browse/OEMC-236)
 - Loading layer from URL
+- Bookmark functionality from Link to a [OEMC-304](https://vizzuality.atlassian.net/browse/OEMC-304)
 
 ## v1.0.0-alpha.5
 
