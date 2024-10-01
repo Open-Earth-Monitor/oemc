@@ -34,7 +34,7 @@ const Hero = () => {
     <div className="container relative mx-auto w-full bg-[url('/images/landing/hero.webp')] bg-cover bg-top pb-[60px] pt-[70px] lg:h-[739px]">
       <div className="m-auto pt-[80px] sm:pt-[274px] lg:pt-[295px]">
         <h1 className="whitespace-wrap font-satoshi m-auto pb-16 text-center text-5xl font-black leading-tight lg:text-6xl lg:leading-[96px] xl:text-[80px]">
-          test4: Discover and empower with monitoring solutions.
+          Discover and empower with monitoring solutions.
         </h1>
         {/* <div className="relative top-[70px] h-full w-full">
       <div className="container relative mx-auto h-[calc(100vh_-_70px)] w-full pb-[60px] pt-[70px] lg:h-[739px] xl:pt-12">
