@@ -35,9 +35,9 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
   const geostoryId = params.geostory_id;
 
   const handleClick = () => {
-    usePostWebTraffic({
-      geostory_id: geostoryId,
-    });
+    // usePostWebTraffic({
+    //   geostory_id: geostoryId,
+    // });
     console.info('WT2 -', 'geostories', id);
   };
 
@@ -66,7 +66,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
               </h2>
               <div
                 data-testid="monitor-description"
-                className="flex flex-wrap font-inter leading-[25px]"
+                className="font-inter flex flex-wrap leading-[25px]"
               >
                 {description}
               </div>
