@@ -53,3 +53,5 @@ export const THEMES_COLORS: Record<Theme, ThemeColor> = {
     dark: 'hsla(0, 0%, 79%, 1)',
   },
 };
+
+export const DEFAULT_COLOR = 'hsla(0, 0%, 79%, 1)';

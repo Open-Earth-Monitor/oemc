@@ -2,21 +2,7 @@
 
 import React, { FC } from 'react';
 
-import Image from 'next/image';
-
 import { FiDownload } from 'react-icons/fi';
-// import { LinePath } from '@visx/shape';
-
-// import ExampleControls from './ExampleControls';
-
-export type AnnotationProps = {
-  width: number;
-  height: number;
-  compact?: boolean;
-};
-
-export const orange = '#ff7e67';
-export const greens = ['#ecf4f3', '#68b0ab', '#006a71'];
 
 import { format } from 'd3-format';
 import { XIcon } from 'lucide-react';
@@ -34,8 +20,17 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useSyncSidebarState } from '@/hooks/sync-query';
 
 import { downloadCSV } from '@/hooks/datasets';
+import Loading from '../loading';
+
+import LineChart from '../line-chart';
 
 const numberFormat = format(',.2f');
+
+export type AnnotationProps = {
+  width: number;
+  height: number;
+  compact?: boolean;
+};
 
 interface HistogramTypes extends GeostoryTooltipInfo {
   onCloseTooltip: () => void;
@@ -48,6 +43,7 @@ const Histogram: FC<HistogramTypes> = ({
   layerId,
   compareLayerId,
   leftData,
+  rightData,
 }: HistogramTypes) => {
   const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
     histogramLayerLeftVisibilityAtom
@@ -69,13 +65,37 @@ const Histogram: FC<HistogramTypes> = ({
     layer_id: compareLayerId,
   };
 
-  const { data: histogramData } = useRegionsData(layerPointInfoPayload, {
-    enabled: !!lonLat,
-  });
+  const { data: histogramData, isLoading: isLoadingHistogram } = useRegionsData(
+    layerPointInfoPayload,
+    {
+      enabled: !!lonLat,
+    }
+  );
 
-  const { data: compareHistogramData } = useRegionsData(compareLayerPointInfoPayload, {
-    enabled: !!lonLat,
-  });
+  const { data: compareHistogramData, isLoading: isLoadingCompareHistogram } = useRegionsData(
+    compareLayerPointInfoPayload,
+    {
+      enabled: !!lonLat,
+    }
+  );
+
+  const data1 =
+    (histogramData &&
+      !!histogramData.length &&
+      histogramData?.map(({ label, value }) => ({
+        x: label,
+        y: value,
+      }))) ||
+    [];
+
+  const data2 =
+    (compareHistogramData &&
+      !!compareHistogramData.length &&
+      compareHistogramData?.map(({ label, value }) => ({
+        x: label,
+        y: value,
+      }))) ||
+    [];
 
   const handleClick = () => {
     if (histogramData && histogramData.length > 0) {
@@ -84,7 +104,6 @@ const Histogram: FC<HistogramTypes> = ({
       console.error('No data available for download.');
     }
   };
-
   return (
     <div
       className={cn({
@@ -98,7 +117,7 @@ const Histogram: FC<HistogramTypes> = ({
         <XIcon size={14} />
       </button>
       <div className="relative space-y-2">
-        <div className="mr-5 space-y-4 font-satoshi font-bold">
+        <div className="font-satoshi mr-5 space-y-4 font-bold">
           <div>
             <h3 className="text-sm">{leftData.title}</h3>
             <h4 className="text-2xl">
@@ -116,35 +135,19 @@ const Histogram: FC<HistogramTypes> = ({
               <FiDownload className="h-6 w-6" />
               <span className="font-inter text-xs">CSV</span>
             </button>
-            <Image
-              src="/images/histogram.png"
-              alt="Histogram"
-              width={300}
-              height={200}
-              className="py-5"
-            />
-            <i className="flex max-w-[300px] text-xs text-secondary-800">
-              Note: The data displayed above is not real, as the actual data is currently a work in
-              progress and will be shown once finalized.
-            </i>
+            {(isLoadingHistogram || isLoadingCompareHistogram) && <Loading />}
+
+            {!isLoadingCompareHistogram && !isLoadingHistogram && (
+              <div className="relative h-full w-full">
+                <LineChart data={data1} data2={data2} />
+              </div>
+            )}
           </div>
+          {/* <Button variant="default_active" size="sm" className="w-full">
+            Compare
+          </Button> */}
         </div>
       </div>
-
-      {/* <ExampleControls width={width} height={height}>
-        {({ data, getDate, getStockValue, xScale, yScale }) => (
-          <svg width={width} height={height}>
-            <rect width={width} height={height} fill={greens[0]} />
-            <LinePath
-              stroke={greens[2]}
-              strokeWidth={2}
-              data={data}
-              x={(d) => xScale(getDate(d)) ?? 0}
-              y={(d) => yScale(getStockValue(d)) ?? 0}
-            />
-          </svg>
-        )}
-      </ExampleControls> */}
     </div>
   );
 };

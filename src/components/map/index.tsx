@@ -29,7 +29,6 @@ import {
 import Histogram from './histogram';
 import { histogramLayerLeftVisibilityAtom, lonLatAtom } from '@/app/store';
 import LocationSearchComponent from '@/components/location-search';
-import WebTraffic from '@/components/web-traffic';
 
 import Attributions from './attributions';
 import { DEFAULT_VIEWPORT } from './constants';
@@ -41,21 +40,11 @@ import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import MapTooltip from './tooltip';
 import type { CustomMapProps, MonitorTooltipInfo, Bbox } from './types';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { transformToBBoxArray } from '@/lib/format';
-import { set } from 'ol/transform';
+import CompareRegionsStatistics from './controls/compare-regions/indext';
 
-interface FeatureProperties {
-  [key: string]: number;
-}
-
-interface Feature {
-  properties: FeatureProperties;
-}
-
-interface FeatureInfoResponse {
-  features: Feature[];
-}
+import type { FeatureInfoResponse } from './types';
 
 interface ClickEvent {
   bbox?: Bbox;
@@ -83,6 +72,7 @@ const TooltipInitialState = {
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [locationSearch, setLocationSearch] = useState('');
+  const [isRegionsLayerActive, setIsRegionsLayerActive] = useState(false);
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
   const isDesktop = !isMobile && !isTablet;
@@ -96,7 +86,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const { data: monitorData } = useMonitor({ monitor_id: monitorId });
   const debouncedSearchValue = useDebounce(locationSearch, 500);
-
   const mapRef: React.MutableRefObject<{
     map: ol.Map;
     ol: {
@@ -106,6 +95,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
+  const nutsLayer = useRef(null);
+
   const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TooltipInitialState);
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
@@ -156,6 +147,18 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     });
   }, [gs_name]);
 
+  const wmsNutsSource = useMemo(() => {
+    return new TileWMS({
+      url: 'https://v2-geoserver.openlandmap.org/geoserver/oem/wms',
+      params: {
+        TILED: true,
+        ID: true,
+      },
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous',
+    });
+  }, []);
+
   /**
    * Update the URL when the user stops moving the map
    */
@@ -189,6 +192,17 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
       let valueLeft: number | null = null;
       let valueRight: number | null = null;
+
+      const TEST = wmsNutsSource.getFeatureInfoUrl(
+        coordinate as Coordinate,
+        resolution,
+        'EPSG:3857',
+        {
+          INFO_FORMAT: 'application/json',
+          DIM_DATE: date,
+          LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+        }
+      );
 
       try {
         const responseLeft = await axios.get<FeatureInfoResponse>(urlLeft);
@@ -275,6 +289,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     setLeftLayerHistogramVisibility(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleRegionsLayer = useCallback(() => {
+    setIsRegionsLayerActive((prev) => !prev);
+  }, [setIsRegionsLayerActive]);
 
   // Center to the monitor bbox
   useEffect(() => {
@@ -386,6 +404,28 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           attributions="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
         />
 
+        {isRegionsLayerActive && (
+          <RLayerWMS
+            ref={nutsLayer}
+            properties={{ label: 'NUTS' }}
+            url="https://v2-geoserver.openlandmap.org/geoserver/oem/wms"
+            opacity={0.2}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 768,
+              HEIGHT: 566,
+              SERVICE: 'WMS',
+              VERSION: '1.1.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+              SRS: 'EPSG:3857', // Changing projection to EPSG:3857 (for WMS 1.1.0)
+              BBOX: [-20037508.34, -20037508.34, 20037508.34, 20037508.34], // BBOX for EPSG:3857 (World extent)
+              NAME: 'NUTS',
+            }}
+          />
+        )}
+
         {data && !isLoading && isLayerActive && (
           <RLayerWMS
             ref={layerLeftRef}
@@ -457,7 +497,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
               'top-[108px]': !isMobile,
             })}
           >
-            {/* <WebTraffic isMobile={isMobile} /> */}
+            <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
             <BookmarkControl isMobile={isMobile} />
             <ShareControl isMobile={isMobile} />
           </div>
