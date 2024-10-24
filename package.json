@@ -65,6 +65,7 @@
     "ol": "9.0.0",
     "ol-ext": "^4.0.11",
     "postcss": "8.4.21",
+    "proj4": "^2.12.1",
     "react": "18.2.0",
     "react-copy-to-clipboard": "5.1.0",
     "react-dom": "18.2.0",

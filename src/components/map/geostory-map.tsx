@@ -28,7 +28,7 @@ import {
 import { lonLatAtom } from '@/app/store';
 
 import LocationSearchComponent from '@/components/location-search';
-import WebTraffic from '@/components/web-traffic';
+
 import GeostoryContent from '../geostories/content';
 
 import Attributions from './attributions';
@@ -45,6 +45,7 @@ import { useLayer } from '@/hooks/layers';
 import { histogramLayerLeftVisibilityAtom } from '@/app/store';
 import { transformToBBoxArray } from '@/lib/format';
 import Histogram from './histogram';
+import CompareRegionsStatistics from './controls/compare-regions/indext';
 
 interface ClickEvent {
   bbox?: Bbox;
@@ -64,6 +65,8 @@ const Map: FC<GeostoryMapProps> = ({
     histogramLayerLeftVisibilityAtom
   );
 
+  const [isRegionsLayerActive, setIsRegionsLayerActive] = useState(false);
+
   const [lonLat, setLonLat] = useAtom(lonLatAtom);
 
   const debouncedSearchValue = useDebounce(locationSearch, 500);
@@ -78,6 +81,7 @@ const Map: FC<GeostoryMapProps> = ({
 
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
+  const nutsLayer = useRef(null);
 
   const TooltipInitialState = {
     position: null,
@@ -156,6 +160,18 @@ const Map: FC<GeostoryMapProps> = ({
     });
   }, [compareLayerData?.gs_name]);
 
+  const wmsNutsSource = useMemo(() => {
+    return new TileWMS({
+      url: 'https://v2-geoserver.openlandmap.org/geoserver/oem/wms',
+      params: {
+        TILED: true,
+        ID: true,
+      },
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous',
+    });
+  }, []);
+
   /**
    * Update the URL when the user stops moving the map
    */
@@ -186,7 +202,22 @@ const Map: FC<GeostoryMapProps> = ({
         }
       );
 
-      const urlRight = wmsCompareSource.getFeatureInfoUrl(
+      const TEST2 = wmsNutsSource?.getFeatureInfoUrl(
+        coordinate as Coordinate,
+        resolution,
+        'EPSG:3857',
+        {
+          INFO_FORMAT: 'application/json',
+          LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+        }
+      );
+
+      const TEST = await axios.get(TEST2);
+      if (TEST.data.features?.length > 0 && TEST.data.features[0].properties) {
+        const properties = TEST.data.features[0].properties;
+      }
+
+      const urlRight = wmsCompareSource?.getFeatureInfoUrl(
         coordinate as Coordinate,
         resolution,
         'EPSG:3857',
@@ -391,6 +422,10 @@ const Map: FC<GeostoryMapProps> = ({
     [isDesktop, isMobile]
   );
 
+  const handleRegionsLayer = useCallback(() => {
+    setIsRegionsLayerActive((prev) => !prev);
+  }, [setIsRegionsLayerActive]);
+
   return (
     <>
       <RMap
@@ -439,6 +474,28 @@ const Map: FC<GeostoryMapProps> = ({
           />
         )}
 
+        {isRegionsLayerActive && (
+          <RLayerWMS
+            ref={nutsLayer}
+            properties={{ label: 'NUTS' }}
+            url="https://v2-geoserver.openlandmap.org/geoserver/oem/wms"
+            opacity={0.2}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 768,
+              HEIGHT: 566,
+              SERVICE: 'WMS',
+              VERSION: '1.1.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+              SRS: 'EPSG:3857', // Changing projection to EPSG:3857 (for WMS 1.1.0)
+              BBOX: [-20037508.34, -20037508.34, 20037508.34, 20037508.34], // BBOX for EPSG:3857 (World extent)
+              NAME: 'NUTS',
+            }}
+          />
+        )}
+
         {compareLayerData && compareLayerId && (
           <RLayerWMS
             ref={layerRightRef}
@@ -460,7 +517,6 @@ const Map: FC<GeostoryMapProps> = ({
             }}
           />
         )}
-
         <RLayerTile
           zIndex={100}
           url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
@@ -487,7 +543,7 @@ const Map: FC<GeostoryMapProps> = ({
               'top-[108px]': !isMobile,
             })}
           >
-            {/* <WebTraffic isMobile={isMobile} /> */}
+            <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
             <BookmarkControl isMobile={isMobile} />
             <ShareControl isMobile={isMobile} />
           </div>

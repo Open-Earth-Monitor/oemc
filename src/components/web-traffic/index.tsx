@@ -12,7 +12,13 @@ import cn from '@/lib/classnames';
 import WebTrafficContent from './content';
 import WebTrafficMobileContent from './mobile-content';
 
-const WebTraffic = ({ tablet = false, mobile = false }: { tablet?: boolean; mobile?: boolean }) => {
+const WebTraffic = ({
+  tablet = false,
+  isMobile = false,
+}: {
+  tablet?: boolean;
+  isMobile?: boolean;
+}) => {
   return (
     <Dialog>
       <DialogTrigger asChild data-testid="web-traffic-map">
@@ -30,12 +36,12 @@ const WebTraffic = ({ tablet = false, mobile = false }: { tablet?: boolean; mobi
       </DialogTrigger>
 
       <DialogContent
-        overlay={!mobile}
+        overlay={!isMobile}
         scrollArea={false}
         className={cn({
           '!flex h-full w-full flex-col border border-secondary-500/10 p-5 text-brand-500 sm:max-w-[95vw] md:max-w-[85vw] md:p-8 lg:p-12 xl:max-w-[65vw]':
             true,
-          'absolute bottom-0 left-0 right-0 top-[60px] translate-x-0 translate-y-0': mobile,
+          'absolute bottom-0 left-0 right-0 top-[60px] translate-x-0 translate-y-0': isMobile,
         })}
       >
         <DialogHeader className="pb-5">
@@ -54,7 +60,7 @@ const WebTraffic = ({ tablet = false, mobile = false }: { tablet?: boolean; mobi
           </DialogTitle>
         </DialogHeader>
         <WebTrafficContent />
-        {mobile && <WebTrafficMobileContent />}
+        {isMobile && <WebTrafficMobileContent />}
       </DialogContent>
     </Dialog>
   );

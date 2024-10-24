@@ -5,7 +5,7 @@ import type { Geostory } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
 import type { Monitor, MonitorParsed } from '@/types/monitors';
 
-import { THEMES_COLORS } from '@/constants/themes';
+import { THEMES_COLORS, DEFAULT_COLOR } from '@/constants/themes';
 
 import { isValidJSON } from '@/utils/json';
 import API from 'services/api';
@@ -13,8 +13,6 @@ import API from 'services/api';
 type UseParams = {
   monitor_id?: string;
 };
-
-const DEFAULT_COLOR = 'hsla(0, 0%, 79%, 1)';
 
 const DEFAULT_QUERY_OPTIONS = {
   refetchOnWindowFocus: false,

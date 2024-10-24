@@ -27,9 +27,9 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
   };
 
   const handleClick = (id) => {
-    // usePostWebTraffic({
-    //   geostory_id: id,
-    // });
+    usePostWebTraffic({
+      geostory_id: id,
+    });
     console.info('WT3 -', 'geostories', id);
   };
 

@@ -33,9 +33,9 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
   const params = useParams();
   const monitorId = params?.monitor_id;
   const handleClick = () => {
-    // usePostWebTraffic({
-    //   monitor_id: id,
-    // });
+    usePostWebTraffic({
+      monitor_id: id,
+    });
     console.info('WT7 -', 'monitors', id);
   };
 
