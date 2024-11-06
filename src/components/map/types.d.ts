@@ -39,14 +39,14 @@ export type GeostoryTooltipInfo = {
     id: string;
     title: string;
     date: string;
-    value: number;
+    value: string | number;
     unit?: string;
   };
   rightData: {
     id: string;
     title: string;
     date: string;
-    value: number;
+    value: string | number;
     unit?: string;
   };
 };
@@ -59,7 +59,7 @@ export type MonitorTooltipInfo = {
     title: string;
     date: string;
     unit?: string;
-    value: number | null;
+    value: string | number | null;
     range: LayerDateRange[];
     rangeLabels: string[];
     isComparable?: boolean;
@@ -68,7 +68,7 @@ export type MonitorTooltipInfo = {
     id: string;
     title: string;
     date: string;
-    value: number;
+    value: string | number;
     unit?: string;
   };
 };

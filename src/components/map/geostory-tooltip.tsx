@@ -40,8 +40,7 @@ const MapTooltip: FC<TooltipProps> = ({
 
   const [nutsId, setNutsId] = useState<string>(null);
 
-  const isRegionsLayerActive = useAtom(regionsLayerVisibility);
-
+  const [isRegionsLayerActive] = useAtom(regionsLayerVisibility);
   const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
     histogramLayerLeftVisibilityAtom
   );
@@ -113,7 +112,9 @@ const MapTooltip: FC<TooltipProps> = ({
             {leftData.value !== 0 && (
               <div className="flex items-end space-x-2">
                 <div className="space-x-2 text-xl">
-                  {numberFormat(leftData.value)}
+                  {typeof leftData.value === 'number'
+                    ? numberFormat(leftData.value)
+                    : leftData.value}
                   {!!leftData.unit && leftData.unit}
                 </div>
               </div>
@@ -148,7 +149,9 @@ const MapTooltip: FC<TooltipProps> = ({
             <div>
               <h3 className="text-sm">{rightData.title}</h3>
               <div className="text-xl">
-                {numberFormat(rightData.value)}
+                {typeof rightData.value === 'number'
+                  ? numberFormat(rightData.value)
+                  : rightData.value}
                 {!!rightData.unit && rightData.unit}
               </div>
             </div>

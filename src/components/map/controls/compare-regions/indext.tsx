@@ -1,9 +1,8 @@
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 import { cn } from '@/lib/classnames';
 
-import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
+import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 
 const CompareRegionsStatistics = ({
   isMobile,

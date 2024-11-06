@@ -190,8 +190,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         }
       );
 
-      let valueLeft: number | null = null;
-      let valueRight: number | null = null;
+      let valueLeft: number | string | null = null;
+      let valueRight: number | string | null = null;
 
       // const TEST = wmsNutsSource.getFeatureInfoUrl(
       //   coordinate as Coordinate,

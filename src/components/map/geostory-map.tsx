@@ -25,7 +25,13 @@ import {
   useSyncZoomSettings,
 } from '@/hooks/sync-query';
 
-import { coordinateAtom, lonLatAtom, resolutionAtom } from '@/app/store';
+import {
+  coordinateAtom,
+  lonLatAtom,
+  resolutionAtom,
+  regionsLayerVisibility,
+  histogramLayerLeftVisibilityAtom,
+} from '@/app/store';
 
 import LocationSearchComponent from '@/components/location-search';
 
@@ -42,7 +48,6 @@ import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
 import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox } from './types';
 import { useLayer } from '@/hooks/layers';
-import { histogramLayerLeftVisibilityAtom } from '@/app/store';
 import { transformToBBoxArray } from '@/lib/format';
 import Histogram from './histogram';
 import CompareRegionsStatistics from './controls/compare-regions/indext';
@@ -66,10 +71,9 @@ const Map: FC<GeostoryMapProps> = ({
   );
 
   const setCoordinate = useSetAtom(coordinateAtom);
-  const setResolution = useSetAtom(resolutionAtom);
+  const setResolution = useAtom(resolutionAtom)[1];
 
-  const [isRegionsLayerActive, setIsRegionsLayerActive] = useState(false);
-
+  const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibility);
   const [lonLat, setLonLat] = useAtom(lonLatAtom);
 
   const debouncedSearchValue = useDebounce(locationSearch, 500);
@@ -196,7 +200,7 @@ const Map: FC<GeostoryMapProps> = ({
     async (coordinate) => {
       setCoordinate(coordinate);
       const resolution = mapRef.current?.ol.getView()?.getResolution();
-      setResolution(resolution);
+      // setResolution(resolution);
       if (!resolution || !coordinate) return;
 
       const NUTS_layer = wmsNutsSource?.getFeatureInfoUrl(
@@ -230,8 +234,8 @@ const Map: FC<GeostoryMapProps> = ({
         }
       );
 
-      let valueLeft: number | null;
-      let valueRight: number | null;
+      let valueLeft: number | string | null;
+      let valueRight: number | string | null;
       try {
         const responseLeft = await axios.get<FeatureInfoResponse>(urlLeft);
         const NUTS_layer_response = await axios.get<FeatureInfoResponse>(NUTS_layer);
