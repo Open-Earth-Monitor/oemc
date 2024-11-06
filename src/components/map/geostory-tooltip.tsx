@@ -1,22 +1,30 @@
 'use client';
 
-import React, { FC } from 'react';
-
+import React, { FC, useState, useMemo, useCallback } from 'react';
+import axios from 'axios';
 import { format } from 'd3-format';
 import { XIcon } from 'lucide-react';
+import TileWMS from 'ol/source/TileWMS';
 
 import { Button } from '@/components/ui/button';
+import { Coordinate } from 'ol/coordinate';
+import {
+  coordinateAtom,
+  histogramLayerLeftVisibilityAtom,
+  regionsLayerVisibility,
+  resolutionAtom,
+} from '@/app/store';
 
-import { histogramLayerLeftVisibilityAtom } from '@/app/store';
-
-import type { GeostoryTooltipInfo } from './types';
+import type { FeatureInfoResponse, GeostoryTooltipInfo } from './types';
 import { useAtom } from 'jotai';
 import cn from '@/lib/classnames';
+import { useNutsLayerData } from '@/hooks/layers';
 
 const numberFormat = format(',.2f');
 
 interface TooltipProps extends GeostoryTooltipInfo {
   onCloseTooltip: () => void;
+  nutsProperties?: {};
 }
 
 const MapTooltip: FC<TooltipProps> = ({
@@ -24,8 +32,15 @@ const MapTooltip: FC<TooltipProps> = ({
   onCloseTooltip = () => null,
   leftData,
   rightData,
+  nutsProperties,
 }: TooltipProps) => {
   if (!position || !leftData?.value) return null;
+  const [coordinate] = useAtom(coordinateAtom);
+  const [resolution] = useAtom(resolutionAtom);
+
+  const [nutsId, setNutsId] = useState<string>(null);
+
+  const isRegionsLayerActive = useAtom(regionsLayerVisibility);
 
   const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
     histogramLayerLeftVisibilityAtom
@@ -34,6 +49,47 @@ const MapTooltip: FC<TooltipProps> = ({
   const handleClick = () => {
     setLeftLayerHistogramVisibility(true);
   };
+
+  const handleHistogram = useCallback(async () => {
+    const NUTS_layer = wmsNutsSource?.getFeatureInfoUrl(
+      coordinate as Coordinate,
+      resolution,
+      'EPSG:3857',
+      {
+        INFO_FORMAT: 'application/json',
+        LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+      }
+    );
+    try {
+      const NUTS_layer_response = await axios.get<FeatureInfoResponse>(NUTS_layer);
+
+      if (
+        NUTS_layer_response.data.features?.length > 0 &&
+        NUTS_layer_response.data.features[0].properties
+      ) {
+        const properties = NUTS_layer_response.data.features[0].properties;
+        setNutsId(properties?.NUTS_ID as string);
+        useNutsLayerData(
+          { NUTS_ID: nutsId, LAYER_ID: leftData.id },
+          { enabled: !!nutsId && !!leftData.id }
+        );
+      }
+    } catch {}
+  }, [nutsProperties]);
+
+  const wmsNutsSource = useMemo(() => {
+    return new TileWMS({
+      url: 'https://v2-geoserver.openlandmap.org/geoserver/oem/wms',
+      params: {
+        TILED: true,
+        ID: true,
+        name: 'oem:NUTS_RG_01M_2021_3035',
+        LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+      },
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous',
+    });
+  }, []);
 
   return (
     <div
@@ -66,7 +122,7 @@ const MapTooltip: FC<TooltipProps> = ({
               <span>No data is available at this specific point.</span>
             )}
           </div>
-          {leftData?.value && (
+          {leftData?.value && !isRegionsLayerActive && (
             <Button
               variant="light"
               onClick={handleClick}
@@ -74,6 +130,16 @@ const MapTooltip: FC<TooltipProps> = ({
               disabled={!leftData.value}
             >
               See point histogram
+            </Button>
+          )}
+          {leftData?.value && isRegionsLayerActive && (
+            <Button
+              variant="light"
+              onClick={handleHistogram}
+              className="font-inter text-xs"
+              disabled={true}
+            >
+              See region histogram
             </Button>
           )}
         </div>
@@ -86,14 +152,27 @@ const MapTooltip: FC<TooltipProps> = ({
                 {!!rightData.unit && rightData.unit}
               </div>
             </div>
-            <Button
-              variant="light"
-              onClick={handleClick}
-              className="font-inter text-xs"
-              disabled={!rightData.value}
-            >
-              See point histogram
-            </Button>
+            {!isRegionsLayerActive && (
+              <Button
+                variant="light"
+                onClick={handleClick}
+                className="font-inter text-xs"
+                disabled={true}
+              >
+                See point histogram
+              </Button>
+            )}
+            {isRegionsLayerActive && (
+              <Button
+                variant="light"
+                onClick={handleClick}
+                className="font-inter text-xs"
+                // disabled={!rightData.value}
+                disabled={true}
+              >
+                See region histogram
+              </Button>
+            )}
           </div>
         )}
         {!rightData.value && !leftData.value && (

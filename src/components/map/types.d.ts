@@ -74,7 +74,7 @@ export type MonitorTooltipInfo = {
 };
 
 interface FeatureProperties {
-  [key: string]: number;
+  [key: string]: number | string;
 }
 
 interface Feature {

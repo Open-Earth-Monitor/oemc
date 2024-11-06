@@ -25,7 +25,7 @@ import {
   useSyncZoomSettings,
 } from '@/hooks/sync-query';
 
-import { lonLatAtom } from '@/app/store';
+import { coordinateAtom, lonLatAtom, resolutionAtom } from '@/app/store';
 
 import LocationSearchComponent from '@/components/location-search';
 
@@ -65,6 +65,9 @@ const Map: FC<GeostoryMapProps> = ({
     histogramLayerLeftVisibilityAtom
   );
 
+  const setCoordinate = useSetAtom(coordinateAtom);
+  const setResolution = useSetAtom(resolutionAtom);
+
   const [isRegionsLayerActive, setIsRegionsLayerActive] = useState(false);
 
   const [lonLat, setLonLat] = useAtom(lonLatAtom);
@@ -103,6 +106,7 @@ const Map: FC<GeostoryMapProps> = ({
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
+  const [nutsProperties, setNutsProperties] = useState(null);
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -166,6 +170,8 @@ const Map: FC<GeostoryMapProps> = ({
       params: {
         TILED: true,
         ID: true,
+        name: 'oem:NUTS_RG_01M_2021_3035',
+        LAYERS: 'oem:NUTS_RG_01M_2021_3035',
       },
       serverType: 'geoserver',
       crossOrigin: 'anonymous',
@@ -188,8 +194,20 @@ const Map: FC<GeostoryMapProps> = ({
 
   const fetchTooltipValue = useCallback(
     async (coordinate) => {
+      setCoordinate(coordinate);
       const resolution = mapRef.current?.ol.getView()?.getResolution();
-      if (!resolution) return;
+      setResolution(resolution);
+      if (!resolution || !coordinate) return;
+
+      const NUTS_layer = wmsNutsSource?.getFeatureInfoUrl(
+        coordinate as Coordinate,
+        resolution,
+        'EPSG:3857',
+        {
+          INFO_FORMAT: 'application/json',
+          LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+        }
+      );
 
       const urlLeft = wmsSource.getFeatureInfoUrl(
         coordinate as Coordinate,
@@ -201,21 +219,6 @@ const Map: FC<GeostoryMapProps> = ({
           LAYERS: layerData?.gs_name,
         }
       );
-
-      const TEST2 = wmsNutsSource?.getFeatureInfoUrl(
-        coordinate as Coordinate,
-        resolution,
-        'EPSG:3857',
-        {
-          INFO_FORMAT: 'application/json',
-          LAYERS: 'oem:NUTS_RG_01M_2021_3035',
-        }
-      );
-
-      const TEST = await axios.get(TEST2);
-      if (TEST.data.features?.length > 0 && TEST.data.features[0].properties) {
-        const properties = TEST.data.features[0].properties;
-      }
 
       const urlRight = wmsCompareSource?.getFeatureInfoUrl(
         coordinate as Coordinate,
@@ -231,6 +234,16 @@ const Map: FC<GeostoryMapProps> = ({
       let valueRight: number | null;
       try {
         const responseLeft = await axios.get<FeatureInfoResponse>(urlLeft);
+        const NUTS_layer_response = await axios.get<FeatureInfoResponse>(NUTS_layer);
+
+        if (
+          NUTS_layer_response.data.features?.length > 0 &&
+          NUTS_layer_response.data.features[0].properties
+        ) {
+          const properties = NUTS_layer_response.data.features[0].properties;
+          setNutsProperties(properties);
+        }
+
         if (responseLeft.data.features?.length > 0 && responseLeft.data.features[0].properties) {
           const properties = responseLeft.data.features[0].properties;
           valueLeft = Object.values(properties)[0];
@@ -577,7 +590,13 @@ const Map: FC<GeostoryMapProps> = ({
           />
         )}
         {/* Interactivity */}
-        {layerData && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}
+        {layerData && (
+          <MapTooltip
+            onCloseTooltip={handleCloseTooltip}
+            {...tooltipInfo}
+            nutsProperties={nutsProperties}
+          />
+        )}
       </RMap>
     </>
   );
