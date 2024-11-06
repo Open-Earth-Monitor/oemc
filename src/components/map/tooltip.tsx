@@ -57,7 +57,7 @@ const MapTooltip: FC<TooltipProps> = ({
         {!!leftData.value && (
           <div className="flex items-center space-x-2">
             <div className="space-x-2 text-xl">
-              {numberFormat(leftData.value)}
+              {typeof leftData.value === 'number' ? numberFormat(leftData.value) : leftData.value}
               {!!leftData.unit && leftData.unit}
             </div>
             {leftData.isComparable && <span className="text-sm">({dateLabel})</span>}
@@ -82,7 +82,7 @@ const MapTooltip: FC<TooltipProps> = ({
 
         {rightData.date && rightData.value !== 0 && (
           <div className="border-brand-800 mt-4 border-t pt-4 text-xl">
-            {numberFormat(rightData.value)}
+            {typeof rightData.value === 'number' ? numberFormat(rightData.value) : rightData.value}
             {!!rightData.unit && rightData.unit}{' '}
             <span className="pt-4 text-sm">({compareDateLabel})</span>
           </div>

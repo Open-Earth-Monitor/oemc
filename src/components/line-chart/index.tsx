@@ -83,31 +83,31 @@ export const LineChart = ({ data, data2 }) => {
 
   const margin = { top: 25, right: 20, bottom: 30, left: 65 }; // Use the same margin values
 
-  const handleTooltip = useCallback(
-    (event) => {
-      const { x: xPoint } = localPoint(event) || { x: 0 };
-      const x0 = xScale.invert(xPoint - margin.left); // Use margin.left here to account for the offset
+  // const handleTooltip = useCallback(
+  //   (event) => {
+  //     const { x: xPoint } = localPoint(event) || { x: 0 };
+  //     const x0 = xScale.invert(xPoint - margin.left); // Use margin.left here to account for the offset
 
-      // Find the closest data point using bisect
-      const index = bisect(data.map(x), x0, 1);
-      const d0 = data[index - 1];
-      const d1 = data[index];
-      let d = d0;
+  //     // Find the closest data point using bisect
+  //     const index = bisect(data.map(x), x0, 1);
+  //     const d0 = data[index - 1];
+  //     const d1 = data[index];
+  //     let d = d0;
 
-      // Ensure we're selecting the closest point
-      if (d1 && x(d1)) {
-        d = x0 - x(d0) > x(d1) - x0 ? d1 : d0;
-      }
+  //     // Ensure we're selecting the closest point
+  //     if (d1 && x(d1)) {
+  //       d = x0 - x(d0) > x(d1) - x0 ? d1 : d0;
+  //     }
 
-      // Show the tooltip
-      showTooltip({
-        tooltipData: d,
-        tooltipLeft: xScale(x(d)),
-        tooltipTop: yScale(y(d)),
-      });
-    },
-    [showTooltip, xScale, yScale, data]
-  );
+  //     // Show the tooltip
+  //     showTooltip({
+  //       tooltipData: d,
+  //       tooltipLeft: xScale(x(d)),
+  //       tooltipTop: yScale(y(d)),
+  //     });
+  //   },
+  //   [showTooltip, xScale, yScale, data]
+  // );
 
   return (
     <div>
@@ -140,7 +140,7 @@ export const LineChart = ({ data, data2 }) => {
             y={(d) => yScale(y(d))}
             stroke="#35B6D8"
             strokeWidth={2}
-            onMouseEnter={handleTooltip}
+            // onMouseEnter={handleTooltip}
             onMouseLeave={hideTooltip}
           />
           {data2 && data2.length && (
@@ -153,9 +153,9 @@ export const LineChart = ({ data, data2 }) => {
             />
           )}
         </Group>
-        {tooltipData && (
+        {/*   {tooltipData && (
           <>
-            {/* Tooltip with HTML content */}
+           Tooltip with HTML content
             <TooltipWithBounds key={Math.random()} top={tooltipTop} left={tooltipLeft}>
               <div>
                 <p>{new Date(tooltipData.x).toLocaleDateString()}</p>
@@ -163,7 +163,7 @@ export const LineChart = ({ data, data2 }) => {
               </div>
             </TooltipWithBounds>
 
-            {/* Render GlyphCircle directly in the SVG */}
+             Render GlyphCircle directly in the SVG 
 
             <g>
               <GlyphCircle
@@ -184,7 +184,7 @@ export const LineChart = ({ data, data2 }) => {
               />
             </g>
           </>
-        )}
+        )}*/}
       </svg>
     </div>
   );
