@@ -5,6 +5,7 @@ import type { Layer, LayerParsed } from '@/types/layers';
 
 import { isValidJSON } from '@/utils/json';
 import API from 'services/api';
+import { e } from 'next-usequerystate/dist/parsers-fd455cd5';
 
 const DEFAULT_QUERY_OPTIONS = {
   refetchOnWindowFocus: false,
@@ -102,6 +103,26 @@ export function useLayerParsedSource(
         })),
       };
     },
+    ...queryOptions,
+  });
+}
+
+export function useNutsLayerData(
+  params: { NUTS_ID: string; LAYER_ID: string },
+  queryOptions?: UseQueryOptions<Layer, Error>
+) {
+  const fetchNutsLayerData = () => {
+    return API.request({
+      method: 'GET',
+      url: '/stats',
+      params,
+    }).then((response) => {
+      return response.data;
+    });
+  };
+
+  return useQuery(['region-stats', params], fetchNutsLayerData, {
+    ...DEFAULT_QUERY_OPTIONS,
     ...queryOptions,
   });
 }

@@ -193,16 +193,16 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       let valueLeft: number | null = null;
       let valueRight: number | null = null;
 
-      const TEST = wmsNutsSource.getFeatureInfoUrl(
-        coordinate as Coordinate,
-        resolution,
-        'EPSG:3857',
-        {
-          INFO_FORMAT: 'application/json',
-          DIM_DATE: date,
-          LAYERS: 'oem:NUTS_RG_01M_2021_3035',
-        }
-      );
+      // const TEST = wmsNutsSource.getFeatureInfoUrl(
+      //   coordinate as Coordinate,
+      //   resolution,
+      //   'EPSG:3857',
+      //   {
+      //     INFO_FORMAT: 'application/json',
+      //     DIM_DATE: date,
+      //     LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+      //   }
+      // );
 
       try {
         const responseLeft = await axios.get<FeatureInfoResponse>(urlLeft);

@@ -103,9 +103,9 @@ export function useGetWebTraffic(
   const geostoriesInfo = allGeostoriesQuery.data;
   const monitorsInfo = monitorsQueries.map((query) => {
     return {
-      theme: query.data?.theme,
-      title: query.data?.title,
-      color: THEMES_COLORS[query?.data?.theme]?.base || DEFAULT_COLOR,
+      theme: query.data?.[0]?.theme,
+      title: query.data?.[0]?.title,
+      color: THEMES_COLORS[query?.data?.[0]?.theme]?.base || DEFAULT_COLOR,
     };
   });
 
