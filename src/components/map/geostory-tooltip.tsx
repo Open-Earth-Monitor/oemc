@@ -49,6 +49,11 @@ const MapTooltip: FC<TooltipProps> = ({
     setLeftLayerHistogramVisibility(true);
   };
 
+  const { data: nutsLayerData } = useNutsLayerData(
+    { NUTS_ID: nutsId, LAYER_ID: leftData.id },
+    { enabled: !!nutsId && !!leftData.id }
+  );
+
   const handleHistogram = useCallback(async () => {
     const NUTS_layer = wmsNutsSource?.getFeatureInfoUrl(
       coordinate as Coordinate,
@@ -68,12 +73,10 @@ const MapTooltip: FC<TooltipProps> = ({
       ) {
         const properties = NUTS_layer_response.data.features[0].properties;
         setNutsId(properties?.NUTS_ID as string);
-        useNutsLayerData(
-          { NUTS_ID: nutsId, LAYER_ID: leftData.id },
-          { enabled: !!nutsId && !!leftData.id }
-        );
       }
-    } catch {}
+    } catch {
+      console.error('There had been an eRror while fetching NUTS layer data');
+    }
   }, [nutsProperties]);
 
   const wmsNutsSource = useMemo(() => {
@@ -138,7 +141,7 @@ const MapTooltip: FC<TooltipProps> = ({
               variant="light"
               onClick={handleHistogram}
               className="font-inter text-xs"
-              disabled={true}
+              // disabled={true}
             >
               See region histogram
             </Button>
@@ -171,7 +174,7 @@ const MapTooltip: FC<TooltipProps> = ({
                 onClick={handleClick}
                 className="font-inter text-xs"
                 // disabled={!rightData.value}
-                disabled={true}
+                // disabled={true}
               >
                 See region histogram
               </Button>
