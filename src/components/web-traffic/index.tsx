@@ -21,7 +21,7 @@ const WebTraffic = ({
 }) => {
   return (
     <Dialog>
-      <DialogTrigger asChild data-testid="web-traffic-map">
+      <DialogTrigger data-testid="web-traffic-map" className="h-full cursor-pointer">
         <div
           className={cn({
             'flex h-full items-center justify-center space-x-2 whitespace-nowrap': true,
