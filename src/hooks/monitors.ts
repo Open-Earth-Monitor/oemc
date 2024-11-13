@@ -34,7 +34,7 @@ export function useMonitor(
       ...queryOptions,
     }).then((response: AxiosResponse<Monitor[]>) => response.data[0]);
   return useQuery(['monitor', params], fetchMonitor, {
-    ...DEFAULT_QUERY_OPTIONS,
+    // ...DEFAULT_QUERY_OPTIONS,
     select: (data) => ({
       ...data,
       color: THEMES_COLORS[data.theme].base || DEFAULT_COLOR,
@@ -44,24 +44,22 @@ export function useMonitor(
   });
 }
 
+const fetchMonitors = () =>
+  API.request({
+    method: 'GET',
+    url: '/monitors',
+  }).then((response: AxiosResponse<Monitor[]>) => response.data);
 export function useMonitors(
   queryOptions?: UseQueryOptions<Monitor[], AxiosError, MonitorParsed[]>
 ) {
-  const fetchMonitors = () =>
-    API.request({
-      method: 'GET',
-      url: '/monitors',
-      ...queryOptions,
-    }).then((response: AxiosResponse<Monitor[]>) => response.data);
   return useQuery(['monitors'], fetchMonitors, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => {
-      return data.map((monitor) => ({
+    select: (data) =>
+      data.map((monitor) => ({
         ...monitor,
         color: THEMES_COLORS[monitor.theme].base || DEFAULT_COLOR,
         colorOpacity: THEMES_COLORS[monitor.theme].light || DEFAULT_COLOR,
-      }));
-    },
+      })),
     ...queryOptions,
   });
 }

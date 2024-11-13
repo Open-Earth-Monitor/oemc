@@ -18,7 +18,7 @@ import { mobile, tablet } from '@/lib/media-queries';
 import { useAtom } from 'jotai';
 import { useDebounce } from '@/hooks/datasets';
 import { useLayer, useLayerParsedSource } from '@/hooks/layers';
-import { useMonitor } from '@/hooks/monitors';
+import { useMonitor, useMonitors } from '@/hooks/monitors';
 import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
 import {
   useSyncLayersSettings,
@@ -80,11 +80,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     histogramLayerLeftVisibilityAtom
   );
   const [lonLat, setLonLat] = useAtom(lonLatAtom);
-
   const params = useParams();
   const monitorId = params.monitor_id as string;
 
-  const { data: monitorData } = useMonitor({ monitor_id: monitorId });
+  const { data: monitorsData } = useMonitors();
+  const monitorData = monitorsData?.find((d) => d.id === monitorId);
   const debouncedSearchValue = useDebounce(locationSearch, 500);
   const mapRef: React.MutableRefObject<{
     map: ol.Map;
@@ -120,8 +120,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
    * Initial viewport from the URL or the default one
    */
   const initialViewport = {
-    center: center ? center : initialViewState.center,
-    zoom: zoom ? Number(zoom) : initialViewState.zoom,
+    center: center && monitorData ? center : initialViewState.center,
+    zoom: zoom && monitorData ? Number(zoom) : initialViewState.zoom,
   } satisfies RView;
 
   /**
@@ -146,18 +146,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       crossOrigin: 'anonymous',
     });
   }, [gs_name]);
-
-  const wmsNutsSource = useMemo(() => {
-    return new TileWMS({
-      url: 'https://v2-geoserver.openlandmap.org/geoserver/oem/wms',
-      params: {
-        TILED: true,
-        ID: true,
-      },
-      serverType: 'geoserver',
-      crossOrigin: 'anonymous',
-    });
-  }, []);
 
   /**
    * Update the URL when the user stops moving the map
@@ -192,17 +180,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
       let valueLeft: number | string | null = null;
       let valueRight: number | string | null = null;
-
-      // const TEST = wmsNutsSource.getFeatureInfoUrl(
-      //   coordinate as Coordinate,
-      //   resolution,
-      //   'EPSG:3857',
-      //   {
-      //     INFO_FORMAT: 'application/json',
-      //     DIM_DATE: date,
-      //     LAYERS: 'oem:NUTS_RG_01M_2021_3035',
-      //   }
-      // );
 
       try {
         const responseLeft = await axios.get<FeatureInfoResponse>(urlLeft);
@@ -255,15 +232,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   );
 
   const [monitorBbox, setMonitorBbox] = useState(null);
-
-  const [minLon, minLat, maxLon, maxLat] = monitorBbox || [];
-  const centerLon = (minLon + maxLon) / 2;
-  const centerLat = (minLat + maxLat) / 2;
-
-  const GEOSTORY_VIEWPORT = {
-    center: [centerLon, centerLat] || initialViewState.center,
-    zoom: zoom || initialViewState.zoom,
-  };
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
