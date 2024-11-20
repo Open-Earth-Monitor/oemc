@@ -23,7 +23,7 @@ const DEFAULT_QUERY_OPTIONS = {
   staleTime: Infinity,
 };
 
-export function useRegionsData(
+export function usePointData(
   params: UseParams,
   queryOptions?: UseQueryOptions<RegionData[], AxiosError, RegionData[]>
 ) {

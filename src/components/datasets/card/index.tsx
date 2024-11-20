@@ -1,7 +1,5 @@
 'use client';
 
-import { isArray } from 'lodash-es';
-
 import { FC, useCallback, useMemo } from 'react';
 
 import { HiOutlineExternalLink } from 'react-icons/hi';
@@ -13,6 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -212,20 +211,15 @@ const DatasetCard: FC<DatasetCardProps> = ({
 
       {!isGeostory && (
         <div>
-          <button
+          <Button
             data-testid="dataset-layer-toggle-button"
             type="button"
-            className={cn(
-              'mt-7 flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-secondary-500 px-6 py-2 text-xs font-bold text-secondary-500 transition-colors hover:bg-secondary-500/20',
-              {
-                'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
-              }
-            )}
+            variant="default_active"
             onClick={handleToggleLayer}
           >
             <span>{isActive ? 'Hide' : 'Show'} layer on the map</span>
             <LuLayers className="h-3 w-3 text-inherit" title="layer" />
-          </button>
+          </Button>
         </div>
       )}
     </div>
