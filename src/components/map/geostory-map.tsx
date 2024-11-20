@@ -29,7 +29,7 @@ import {
   coordinateAtom,
   lonLatAtom,
   resolutionAtom,
-  regionsLayerVisibility,
+  regionsLayerVisibilityAtom,
   histogramLayerLeftVisibilityAtom,
 } from '@/app/store';
 
@@ -49,8 +49,9 @@ import Legend from './legend';
 import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox } from './types';
 import { useLayer } from '@/hooks/layers';
 import { transformToBBoxArray } from '@/lib/format';
-import Histogram from './histogram';
-import CompareRegionsStatistics from './controls/compare-regions/indext';
+import PointHistogram from './stats/point-histogram';
+import RegionsHistogram from './stats/region-histogram';
+import CompareRegionsStatistics from './controls/compare-regions';
 
 interface ClickEvent {
   bbox?: Bbox;
@@ -73,7 +74,7 @@ const Map: FC<GeostoryMapProps> = ({
   const setCoordinate = useSetAtom(coordinateAtom);
   const setResolution = useAtom(resolutionAtom)[1];
 
-  const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibility);
+  const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
   const [lonLat, setLonLat] = useAtom(lonLatAtom);
 
   const debouncedSearchValue = useDebounce(locationSearch, 500);
@@ -585,8 +586,17 @@ const Map: FC<GeostoryMapProps> = ({
         )}
 
         <Attributions className="absolute z-40 sm:bottom-0 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
-        {layerData && leftLayerHistogramVisibility && (
-          <Histogram
+        {layerData && leftLayerHistogramVisibility && !isRegionsLayerActive && (
+          <PointHistogram
+            onCloseTooltip={handleCloseTooltip}
+            layerId={layerId}
+            compareLayerId={compareLayerId}
+            {...tooltipInfo}
+          />
+        )}
+
+        {layerData && leftLayerHistogramVisibility && isRegionsLayerActive && (
+          <RegionsHistogram
             onCloseTooltip={handleCloseTooltip}
             layerId={layerId}
             compareLayerId={compareLayerId}

@@ -5,7 +5,6 @@ import type { Layer, LayerParsed } from '@/types/layers';
 
 import { isValidJSON } from '@/utils/json';
 import API from 'services/api';
-import { e } from 'next-usequerystate/dist/parsers-fd455cd5';
 
 const DEFAULT_QUERY_OPTIONS = {
   refetchOnWindowFocus: false,
@@ -109,7 +108,17 @@ export function useLayerParsedSource(
 
 export function useNutsLayerData(
   params: { NUTS_ID: string; LAYER_ID: string },
-  queryOptions?: UseQueryOptions<Layer, Error>
+  queryOptions?: UseQueryOptions<
+    {
+      dataset: {
+        avg: number;
+        label: string;
+        max: number;
+        min: number;
+      }[];
+    },
+    Error
+  >
 ) {
   const fetchNutsLayerData = () => {
     return API.request({

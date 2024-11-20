@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useState, useMemo, useCallback } from 'react';
+import React, { FC, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import { format } from 'd3-format';
 import { XIcon } from 'lucide-react';
@@ -11,14 +11,14 @@ import { Coordinate } from 'ol/coordinate';
 import {
   coordinateAtom,
   histogramLayerLeftVisibilityAtom,
-  regionsLayerVisibility,
+  regionsLayerVisibilityAtom,
   resolutionAtom,
+  nutsDataParamsAtom,
 } from '@/app/store';
 
 import type { FeatureInfoResponse, GeostoryTooltipInfo } from './types';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import cn from '@/lib/classnames';
-import { useNutsLayerData } from '@/hooks/layers';
 
 const numberFormat = format(',.2f');
 
@@ -37,10 +37,9 @@ const MapTooltip: FC<TooltipProps> = ({
   if (!position || !leftData?.value) return null;
   const [coordinate] = useAtom(coordinateAtom);
   const [resolution] = useAtom(resolutionAtom);
+  const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
 
-  const [nutsId, setNutsId] = useState<string>(null);
-
-  const [isRegionsLayerActive] = useAtom(regionsLayerVisibility);
+  const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
   const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
     histogramLayerLeftVisibilityAtom
   );
@@ -48,11 +47,6 @@ const MapTooltip: FC<TooltipProps> = ({
   const handleClick = () => {
     setLeftLayerHistogramVisibility(true);
   };
-
-  const { data: nutsLayerData } = useNutsLayerData(
-    { NUTS_ID: nutsId, LAYER_ID: leftData.id },
-    { enabled: !!nutsId && !!leftData.id }
-  );
 
   const handleHistogram = useCallback(async () => {
     const NUTS_layer = wmsNutsSource?.getFeatureInfoUrl(
@@ -64,6 +58,12 @@ const MapTooltip: FC<TooltipProps> = ({
         LAYERS: 'oem:NUTS_RG_01M_2021_3035',
       }
     );
+
+    if (!NUTS_layer) {
+      console.error('Failed to generate the URL for NUTS layer.');
+      return;
+    }
+
     try {
       const NUTS_layer_response = await axios.get<FeatureInfoResponse>(NUTS_layer);
 
@@ -72,12 +72,16 @@ const MapTooltip: FC<TooltipProps> = ({
         NUTS_layer_response.data.features[0].properties
       ) {
         const properties = NUTS_layer_response.data.features[0].properties;
-        setNutsId(properties?.NUTS_ID as string);
+        setNutsDataParams({
+          NUTS_ID: properties?.NUTS_ID as string,
+          LAYER_ID: leftData.id,
+        });
       }
     } catch {
-      console.error('There had been an eRror while fetching NUTS layer data');
+      console.error('There had been an error while fetching NUTS layer data');
     }
-  }, [nutsProperties]);
+    setLeftLayerHistogramVisibility(true);
+  }, [nutsProperties, coordinate, resolution, leftData.id, setLeftLayerHistogramVisibility]);
 
   const wmsNutsSource = useMemo(() => {
     return new TileWMS({
@@ -98,7 +102,7 @@ const MapTooltip: FC<TooltipProps> = ({
       className={cn({
         'max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md':
           true,
-        hidden: leftLayerHistogramVisibility,
+        hidden: leftLayerHistogramVisibility && !isRegionsLayerActive,
       })}
       style={{
         left: `${position[0]}px`,
@@ -109,7 +113,7 @@ const MapTooltip: FC<TooltipProps> = ({
         <XIcon size={14} className="text-brand-500" />
       </button>
       <div className="relative space-y-2">
-        <div className="font-satoshi mr-5 space-y-4 font-bold text-brand-500">
+        <div className="mr-5 space-y-4 font-satoshi font-bold text-brand-500">
           <div>
             <h3 className="text-sm">{leftData.title}</h3>
             {leftData.value !== 0 && (
@@ -137,18 +141,13 @@ const MapTooltip: FC<TooltipProps> = ({
             </Button>
           )}
           {leftData?.value && isRegionsLayerActive && (
-            <Button
-              variant="light"
-              onClick={handleHistogram}
-              className="font-inter text-xs"
-              // disabled={true}
-            >
+            <Button variant="light" onClick={handleHistogram} className="font-inter text-xs">
               See region histogram
             </Button>
           )}
         </div>
         {!!rightData.value && (
-          <div className="border-brand-800 font-satoshi mr-5 space-y-4 border-t pt-2.5 font-bold text-brand-500 ">
+          <div className="border-brand-800 mr-5 space-y-4 border-t pt-2.5 font-satoshi font-bold text-brand-500 ">
             <div>
               <h3 className="text-sm">{rightData.title}</h3>
               <div className="text-xl">
@@ -171,7 +170,7 @@ const MapTooltip: FC<TooltipProps> = ({
             {isRegionsLayerActive && (
               <Button
                 variant="light"
-                onClick={handleClick}
+                onClick={handleHistogram}
                 className="font-inter text-xs"
                 // disabled={!rightData.value}
                 // disabled={true}

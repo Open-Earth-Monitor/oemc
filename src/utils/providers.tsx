@@ -5,6 +5,7 @@ import { useState, type FC, type PropsWithChildren } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { Provider as JotaiProvider } from 'jotai';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 type ProvidersProps = FC<PropsWithChildren>;
 
@@ -22,9 +23,11 @@ const Providers: ProvidersProps = ({ children }) => {
       })
   );
   return (
-    <QueryClientProvider client={queryClient}>
-      <JotaiProvider>{children}</JotaiProvider>
-    </QueryClientProvider>
+    <TooltipProvider>
+      <QueryClientProvider client={queryClient}>
+        <JotaiProvider>{children}</JotaiProvider>
+      </QueryClientProvider>
+    </TooltipProvider>
   );
 };
 

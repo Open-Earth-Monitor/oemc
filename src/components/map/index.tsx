@@ -18,7 +18,7 @@ import { mobile, tablet } from '@/lib/media-queries';
 import { useAtom } from 'jotai';
 import { useDebounce } from '@/hooks/datasets';
 import { useLayer, useLayerParsedSource } from '@/hooks/layers';
-import { useMonitor, useMonitors } from '@/hooks/monitors';
+import { useMonitors } from '@/hooks/monitors';
 import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
 import {
   useSyncLayersSettings,
@@ -26,7 +26,7 @@ import {
   useSyncCenterSettings,
   useSyncZoomSettings,
 } from '@/hooks/sync-query';
-import Histogram from './histogram';
+import Histogram from './stats/point-histogram';
 import { histogramLayerLeftVisibilityAtom, lonLatAtom } from '@/app/store';
 import LocationSearchComponent from '@/components/location-search';
 
@@ -42,9 +42,10 @@ import MapTooltip from './tooltip';
 import type { CustomMapProps, MonitorTooltipInfo, Bbox } from './types';
 import { useParams } from 'next/navigation';
 import { transformToBBoxArray } from '@/lib/format';
-import CompareRegionsStatistics from './controls/compare-regions/indext';
+import CompareRegionsStatistics from './controls/compare-regions';
 
 import type { FeatureInfoResponse } from './types';
+import CompareGeolocationInfoPopup from './compare-geolocation-info';
 
 interface ClickEvent {
   bbox?: Bbox;
@@ -481,9 +482,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             onCloseTooltip={handleCloseTooltip}
             layerId={layerId}
             compareLayerId={compareLayerId}
+            isRegionsLayerActive={isRegionsLayerActive}
             {...tooltipInfo}
           />
         )}
+
         {/* Interactivity */}
         {data && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}
       </RMap>
