@@ -29,12 +29,8 @@ export function useLayers(queryOptions?: UseQueryOptions<Layer[], Error, LayerPa
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) =>
       data.map((d) => {
-        const isLegendValid = isValidJSON(d?.gs_style);
         return {
           ...d,
-          gs_style: isLegendValid
-            ? (JSON.parse(d?.gs_style || null) as LayerParsed['gs_style'])
-            : [],
           range: d?.range?.map((r, index) => ({
             value: r,
             label: d?.range_labels?.[index] || null,
@@ -59,12 +55,8 @@ export function useLayer(
   return useQuery(['layer', params], fetchLayer, {
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) => {
-      const isLegendValid = isValidJSON(data?.gs_style);
       return {
         ...data,
-        gs_style: isLegendValid
-          ? (JSON.parse(data?.gs_style || null) as LayerParsed['gs_style'])
-          : [],
         range: data?.range?.map((r, index) => ({
           value: r,
           label: data?.range_labels?.[index] || null,
@@ -90,12 +82,8 @@ export function useLayerParsedSource(
   return useQuery(['layer', params], fetchLayer, {
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) => {
-      const isLegendValid = isValidJSON(data?.gs_style);
       return {
         ...data,
-        gs_style: isLegendValid
-          ? (JSON.parse(data?.gs_style || null) as LayerParsed['gs_style'])
-          : [],
         range: data?.range?.map((r, index) => ({
           value: r,
           label: data?.range_labels?.[index] || null,

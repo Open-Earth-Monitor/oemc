@@ -7,7 +7,7 @@ import { XIcon } from 'lucide-react';
 import { useAtom } from 'jotai';
 import { Button } from '@/components/ui/button';
 
-import { histogramLayerLeftVisibilityAtom } from '@/app/store';
+import { histogramLayerLeftVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
 
 import type { MonitorTooltipInfo } from './types';
 import cn from '@/lib/classnames';
@@ -28,6 +28,8 @@ const MapTooltip: FC<TooltipProps> = ({
   const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
     histogramLayerLeftVisibilityAtom
   );
+
+  const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
   const handleClick = () => {
     setLeftLayerHistogramVisibility(true);
@@ -69,7 +71,7 @@ const MapTooltip: FC<TooltipProps> = ({
             {dateLabel && ` for the selected date (${dateLabel})`}.
           </span>
         )}
-        {leftData?.value && (
+        {leftData?.value && !isRegionsLayerActive && (
           <Button
             variant="light"
             onClick={handleClick}
@@ -77,6 +79,17 @@ const MapTooltip: FC<TooltipProps> = ({
             disabled={!leftData.value}
           >
             See point histogram
+          </Button>
+        )}
+
+        {leftData?.value && isRegionsLayerActive && (
+          <Button
+            variant="light"
+            onClick={handleClick}
+            className="font-inter text-xs"
+            disabled={!leftData.value}
+          >
+            See region histogram
           </Button>
         )}
 

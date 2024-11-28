@@ -268,12 +268,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     if (monitorData?.monitor_bbox && mapRef) {
       // TO-DO: remove split once the API is fixed
       const bbox = transformToBBoxArray(monitorData?.monitor_bbox);
+
       if (bbox) {
-        mapRef?.current?.ol
-          ?.getView()
-          ?.fit((monitorData?.monitor_bbox as unknown as string).split(',').map(Number));
+        mapRef?.current?.ol?.getView()?.fit(monitorData?.monitor_bbox);
         setMonitorBbox(monitorBbox);
-        setZoom('5'); // default viewport
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
