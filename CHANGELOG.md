@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to Node.js 18.17 required by Next 14.1.4
 - Dropdown in legend styles and interactivity [OEMC-231](https://vizzuality.atlassian.net/browse/OEMC-231)
 - Improve FE calls to API in search [OEMC-272](https://vizzuality.atlassian.net/browse/OEMC-272)
+- Update Search Location Integration to the Latest Nominatim API [OEMC-316](https://vizzuality.atlassian.net/browse/OEMC-316)
 
 ### Fixed
 

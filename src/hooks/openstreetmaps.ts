@@ -25,7 +25,7 @@ export function useOpenStreetMapsLocations(
   const fetchOpenStreetMapsLocation = () =>
     APIOpenStreetMapLocation.request({
       method: 'GET',
-      url: '/search.php',
+      url: '/search',
       params,
     }).then((response: AxiosResponse<Location[]>) => response.data);
   return useQuery(['open-street-maps-location', params], fetchOpenStreetMapsLocation, {
