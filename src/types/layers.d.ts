@@ -6,7 +6,7 @@ export type Layer = {
   gs_base_wms: string;
   gs_name: string;
   gs_dimension: string;
-  gs_style: string;
+  gs_style: LegendStyle[];
   range: string[] | null;
   author: string | null;
   coverage: string;
@@ -34,8 +34,7 @@ export type Layer = {
   usage_examples: string;
 };
 
-export type LayerParsed = Omit<Layer, 'gs_style' | 'range'> & {
-  gs_style: LegendStyle[] | null;
+export type LayerParsed = Omit<Layer, 'range'> & {
   range: LayerDateRange[] | null;
 };
 

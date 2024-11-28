@@ -122,7 +122,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
       </svg>
 
       {/* Tooltip */}
-      {tooltipData && (
+      {/* {tooltipData && (
         <Tooltip
           top={tooltipTop}
           left={tooltipLeft}
@@ -141,7 +141,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
             <strong>Value:</strong> {numberFormat(tooltipData.y)}
           </div>
         </Tooltip>
-      )}
+      )} */}
     </div>
   );
 };

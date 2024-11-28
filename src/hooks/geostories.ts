@@ -6,7 +6,6 @@ import type { Layer, LayerParsed } from '@/types/layers';
 
 import { Theme, THEMES_COLORS } from '@/constants/themes';
 
-import { isValidJSON } from '@/utils/json';
 import API from 'services/api';
 
 type UseParams = {
@@ -76,12 +75,8 @@ export function useGeostoryLayers(
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) =>
       data.map((d) => {
-        const isLegendValid = isValidJSON(d?.gs_style);
         return {
           ...d,
-          gs_style: isLegendValid
-            ? (JSON.parse(d?.gs_style || null) as LayerParsed['gs_style'])
-            : [],
           range: d?.range?.map((r, index) => ({
             value: r,
             label: d?.range_labels?.[index] || null,

@@ -19,6 +19,8 @@ import {
 } from '@/components/ui/dialog';
 import { isArray } from 'lodash-es';
 import { usePostWebTraffic } from '@/hooks/web-traffic';
+import UseCases from './use-cases';
+import { use } from 'react';
 
 type MonitorDialogProps = Partial<Monitor>;
 
@@ -38,6 +40,9 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
     });
     console.info('WT7 -', 'monitors', id);
   };
+
+  const hasValidLink =
+    Array.isArray(use_case_link) && use_case_link.some(({ title, url }) => Boolean(title || url));
 
   return (
     <Dialog>
@@ -65,7 +70,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
               </h2>
               <div
                 data-testid="monitor-description"
-                className="font-inter flex flex-wrap leading-[25px]"
+                className="flex flex-wrap font-inter leading-[25px]"
               >
                 {description}
               </div>
@@ -85,29 +90,8 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
                   </div>
                 </dl>
               </div>
-              <div className="border-t border-brand-500 py-6">
-                <h3 className="flex items-center space-x-2">
-                  <HiOutlineGlobeAlt className="h-6 w-6" />
-                  <span className="text-2xl font-bold">Use cases</span>
-                </h3>
-                {isArray(use_case_link) && use_case_link?.length > 0 && (
-                  <ul className="space-y-2 py-2 pl-8 font-bold">
-                    {use_case_link.map(({ url, title }) => (
-                      <li key={title}>
-                        <a
-                          href={url}
-                          className="underline"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {title}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
 
+              {hasValidLink && <UseCases items={use_case_link} />}
               {monitorId !== id && (
                 <Link
                   href={`/map/${id}/datasets`}
