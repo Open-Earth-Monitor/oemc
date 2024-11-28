@@ -357,7 +357,6 @@ const Map: FC<GeostoryMapProps> = ({
       const bbox = transformToBBoxArray(geostoryData?.geostory_bbox);
       if (bbox) {
         // TO-DO: remove split once the API is fixed
-        console.log('bbox', bbox);
         mapRef?.current?.ol?.getView()?.fit(bbox);
         setGeostoryBbox(bbox);
         setZoom('5'); // default zoom
