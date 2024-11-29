@@ -11,7 +11,8 @@ WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 
-ENV NEXT_PUBLIC_API_URL https://api.earthmonitor.org/
+ENV NEXT_PUBLIC_API_URL https://g3w.earthmonitor.org/dev
+/
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
@@ -24,7 +25,8 @@ FROM deps AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
-ENV NEXT_PUBLIC_API_URL https://api.earthmonitor.org/
+ENV NEXT_PUBLIC_API_URL https://g3w.earthmonitor.org/dev
+/
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED 1
 
