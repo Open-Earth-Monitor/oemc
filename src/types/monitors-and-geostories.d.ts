@@ -6,7 +6,7 @@ export type MonitorsAndGeostories = (Monitor | Geostory)[];
 export type MonitorsAndGeostoriesParsed = (MonitorParsed | GeostoryParsed)[];
 
 export type MonitorsAndGeostoriesPaginated = {
-  'monitors and geostories': (Monitor | Geostory)[];
+  response: (Monitor | Geostory)[];
   next_page: string | null;
   previous_page: string | null;
   total_items: number;
