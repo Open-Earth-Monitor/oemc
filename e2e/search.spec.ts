@@ -2,21 +2,18 @@ import { test, expect } from '@playwright/test';
 
 import type { MonitorsAndGeostoriesPaginated } from '@/types/monitors-and-geostories';
 
+const API_URL = 'https://g3w.earthmonitor.org/dev';
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
 
 test.describe('search of monitors and geostories', () => {
   test('search by title', async ({ page }) => {
-    const response = await page.waitForResponse(
-      'https://api.earthmonitor.org/monitors-and-geostories*'
-    );
+    const response = await page.waitForResponse(`${API_URL}*`);
     const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
     const searchInput = page.getByTestId('search-input');
 
-    const searchPromise = page.waitForResponse(
-      'https://api.earthmonitor.org/monitors-and-geostories?*title=*'
-    );
+    const searchPromise = page.waitForResponse(`${API_URL}?*title=*`);
     await searchInput.fill(datasetsData['monitors and geostories'][0].title);
     const filteredResponse = await searchPromise;
     const inputValue = await searchInput.inputValue();

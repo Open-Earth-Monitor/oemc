@@ -1,21 +1,29 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Group } from '@visx/group';
 import { LinePath } from '@visx/shape';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { AxisLeft, AxisBottom } from '@visx/axis';
-import { min, max } from 'd3-array';
-import { Line } from '@visx/shape';
+import { useTooltip, Tooltip } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
-import { bisect } from 'd3-array';
-import { TooltipWithBounds, useTooltip } from '@visx/tooltip';
-import { GlyphCircle } from '@visx/glyph';
+import { bisectCenter } from 'd3-array';
+import { format } from 'd3-format';
 
-// Example dimensions
+const numberFormat = format(',.2f');
+
+interface DataPoint {
+  x: string | number;
+  y: number;
+}
+
+interface LineChartProps {
+  data: DataPoint[];
+  dataCompare?: DataPoint[];
+}
+
+const margin = { top: 25, right: 20, bottom: 30, left: 65 };
 const height = 200;
 const width = 400;
-
 const colorAxis = '#848981';
-
 const tickProps = {
   hideTicks: true,
   stroke: colorAxis,
@@ -29,163 +37,111 @@ const tickProps = {
   },
 };
 
-export const LineChart = ({ data, data2 }) => {
-  const x = (d) => new Date(d.x).valueOf();
-  const y = (d) => d.y;
+const LineChart: React.FC<LineChartProps> = ({ data }) => {
+  const x = (d: DataPoint) => new Date(d.x).valueOf();
+  const y = (d: DataPoint) => d.y;
 
-  const xMax = width - 120;
-  const yMax = height - 80;
+  // Calculate scales
+  const xMin = Math.min(...data.map(x));
+  const xMax = Math.max(...data.map(x));
+  const yMin = Math.min(...data.map(y));
+  const yMax = Math.max(...data.map(y));
 
-  const yMinData1 = Number(min(data, y));
-  const yMinData2 = Number(min(data2, y));
-
-  const yMaxData1 = Number(max(data, y));
-  const yMaxData2 = Number(max(data2, y));
-
-  const yMinValue = data2 && yMinData2 < yMinData1 ? yMinData2 : yMinData1;
-  const yMaxValue = data2 && yMaxData2 > yMaxData1 ? yMaxData2 : yMaxData1;
-
-  // Get the minimum and maximum x-values for both datasets
-  const xMinData1 = Math.min(...data.map(x));
-  const xMaxData1 = Math.max(...data.map(x));
-  const xMinData2 = data2 ? Math.min(...data2.map(x)) : xMinData1;
-  const xMaxData2 = data2 ? Math.max(...data2.map(x)) : xMaxData1;
-
-  // Use the minimum x-value and maximum x-value from both datasets
-  const xMinValue = data2 && xMinData2 < xMinData1 ? xMinData2 : xMinData1;
-  const xMaxValue = data2 && xMaxData2 > xMaxData1 ? xMaxData2 : xMaxData1;
-
-  // Set up the xScale for the first dataset
   const xScale = scaleTime({
-    range: [0, xMax],
-    domain: [xMinValue, xMaxValue],
-    nice: true,
-  });
-
-  // Set up the xScale2 for the second dataset
-  const xScale2 = scaleTime({
-    range: [0, xMax],
-    domain: [xMinValue, xMaxValue],
-    nice: true,
+    range: [0, width - margin.left - margin.right],
+    domain: [xMin, xMax],
   });
 
   const yScale = scaleLinear({
-    range: [yMax, 0],
-    domain: [yMinValue, yMaxValue],
+    range: [height - margin.top - margin.bottom, 0],
+    domain: [yMin, yMax],
   });
 
-  const yScale2 = scaleLinear({
-    range: [yMax, 0],
-    domain: [yMinValue, yMaxValue],
-  });
+  const { showTooltip, hideTooltip, tooltipData, tooltipLeft, tooltipTop } =
+    useTooltip<DataPoint>();
 
-  const { showTooltip, hideTooltip, tooltipData, tooltipLeft, tooltipTop } = useTooltip();
+  // Handle mouse move to show tooltip
+  const handleMouseMove = (event: React.MouseEvent<SVGRectElement>) => {
+    const { x: mouseX } = localPoint(event) || { x: 0 };
 
-  const margin = { top: 25, right: 20, bottom: 30, left: 65 }; // Use the same margin values
+    // Adjust mouse position for margins
+    const xValue = xScale.invert(mouseX - margin.left);
 
-  // const handleTooltip = useCallback(
-  //   (event) => {
-  //     const { x: xPoint } = localPoint(event) || { x: 0 };
-  //     const x0 = xScale.invert(xPoint - margin.left); // Use margin.left here to account for the offset
+    // Find the closest data point
+    const xValues = data.map(x);
+    const index = bisectCenter(xValues, xValue.getTime());
+    const closestPoint = data[index];
 
-  //     // Find the closest data point using bisect
-  //     const index = bisect(data.map(x), x0, 1);
-  //     const d0 = data[index - 1];
-  //     const d1 = data[index];
-  //     let d = d0;
+    if (closestPoint) {
+      // Tooltip positioning
+      const adjustedLeft = xScale(x(closestPoint)) + margin.left;
+      const adjustedTop = yScale(y(closestPoint)) + margin.top;
 
-  //     // Ensure we're selecting the closest point
-  //     if (d1 && x(d1)) {
-  //       d = x0 - x(d0) > x(d1) - x0 ? d1 : d0;
-  //     }
+      showTooltip({
+        tooltipData: closestPoint,
+        tooltipLeft: adjustedLeft,
+        tooltipTop: adjustedTop,
+      });
+    }
+  };
 
-  //     // Show the tooltip
-  //     showTooltip({
-  //       tooltipData: d,
-  //       tooltipLeft: xScale(x(d)),
-  //       tooltipTop: yScale(y(d)),
-  //     });
-  //   },
-  //   [showTooltip, xScale, yScale, data]
-  // );
+  const handleMouseLeave = () => {
+    hideTooltip();
+  };
 
   return (
     <div>
       <svg width={width} height={height}>
-        <Group left={65} top={25}>
+        <Group left={margin.left} top={margin.top}>
+          {/* Y Axis */}
           <AxisLeft scale={yScale} {...tickProps} />
-          <AxisBottom scale={xScale} top={yMax} {...tickProps} />
-          {/* Top border */}
-          <Line from={{ x: 0, y: 0 }} to={{ x: xMax, y: 0 }} stroke={colorAxis} strokeWidth={0.5} />
-          {/* Right border */}
-          <Line
-            from={{ x: xMax, y: 0 }}
-            to={{ x: xMax, y: yMax }}
-            stroke={colorAxis}
-            strokeWidth={0.5}
-          />
-          {/* Bottom border */}
-          <Line
-            from={{ x: 0, y: yMax }}
-            to={{ x: xMax, y: yMax }}
-            stroke={colorAxis}
-            strokeWidth={0.5}
-          />
-          {/* Left border */}
-          <Line from={{ x: 0, y: 0 }} to={{ x: 0, y: yMax }} stroke={colorAxis} strokeWidth={0.5} />
 
+          {/* X Axis */}
+          <AxisBottom scale={xScale} top={height - margin.top - margin.bottom} {...tickProps} />
+
+          {/* Line */}
           <LinePath
             data={data}
             x={(d) => xScale(x(d))}
             y={(d) => yScale(y(d))}
             stroke="#35B6D8"
             strokeWidth={2}
-            // onMouseEnter={handleTooltip}
-            onMouseLeave={hideTooltip}
           />
-          {data2 && data2.length && (
-            <LinePath
-              data={data2}
-              x={(d) => xScale2(x(d))}
-              y={(d) => yScale2(y(d))}
-              stroke="#F06BAF"
-              strokeWidth={2}
-            />
-          )}
+
+          {/* Transparent rectangle for mouse events */}
+          <rect
+            x={0}
+            y={0}
+            width={width - margin.left - margin.right}
+            height={height - margin.top - margin.bottom}
+            fill="transparent"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+          />
         </Group>
-        {/*   {tooltipData && (
-          <>
-           Tooltip with HTML content
-            <TooltipWithBounds key={Math.random()} top={tooltipTop} left={tooltipLeft}>
-              <div>
-                <p>{new Date(tooltipData.x).toLocaleDateString()}</p>
-                <p>{tooltipData.y}</p>
-              </div>
-            </TooltipWithBounds>
-
-             Render GlyphCircle directly in the SVG 
-
-            <g>
-              <GlyphCircle
-                cx={tooltipLeft + margin.left + margin.right} // Use cx for x-position
-                cy={tooltipTop} // Use cy for y-position
-                r={5} // Adjust size of the circle
-                fill={'red'}
-                stroke={'white'}
-                strokeWidth={2}
-              />
-              <Line
-                from={{ x: tooltipLeft + margin.left + margin.right, y: 0 }}
-                to={{ x: tooltipLeft, y: height }}
-                stroke={'#EDF2F7'}
-                strokeWidth={2}
-                pointerEvents="none"
-                strokeDasharray="4,2"
-              />
-            </g>
-          </>
-        )}*/}
       </svg>
+
+      {/* Tooltip */}
+      {/* {tooltipData && (
+        <Tooltip
+          top={tooltipTop}
+          left={tooltipLeft}
+          style={{
+            backgroundColor: 'white',
+            color: 'black',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            padding: '8px',
+          }}
+        >
+          <div>
+            <strong>Date:</strong> {new Date(tooltipData.x).toLocaleDateString()}
+          </div>
+          <div>
+            <strong>Value:</strong> {numberFormat(tooltipData.y)}
+          </div>
+        </Tooltip>
+      )} */}
     </div>
   );
 };

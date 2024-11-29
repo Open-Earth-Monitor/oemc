@@ -9,7 +9,7 @@ const nextConfig = {
   output: 'standalone',
   poweredByHeader: false,
   env: {
-    API_URL: process.env.API_URL || 'https://api.earthmonitor.org/',
+    API_URL: process.env.API_URL || 'https://g3w.earthmonitor.org/dev',
   },
   images: {
     unoptimized: true,
