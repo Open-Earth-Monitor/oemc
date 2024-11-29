@@ -92,7 +92,7 @@ export function useMonitorsAndGeostoriesPaginated(
     ...queryOptions,
     select: (data): MonitorsAndGeostoriesPaginatedParsed => ({
       ...data,
-      data: data['results'].map((d) => ({
+      data: data['monitors and geostories'].map((d) => ({
         ...d,
         color: getColor(d.ready, d.theme, 'base'),
         colorHead: getColor(d.ready, d.theme, 'dark'),
