@@ -15,7 +15,11 @@
 //   // test('sort by id', async ({ page }) => {
 //   //   const response = await page.waitForResponse(
 //   //     'https://g3w.earthmonitor.org/dev
+<<<<<<< HEAD
 /monitors-and-geostories?sort_by=title'
+=======
+// /monitors-and-geostories?sort_by=title'
+>>>>>>> 3d31b60 (monitors and geostories endpoint renamed)
 //   //   );
 
 //   //   const defaultOrderedDataByTitle = (await response.json()) as MonitorsAndGeostoriesResponse[];
@@ -23,8 +27,13 @@
 
 //   //   await sortByIdCheckbox.click();
 //   //   const sortPromise = page.waitForResponse(
+<<<<<<< HEAD
 //   //     'https://g3w.earthmonitor.org/dev
 /monitors-and-geostories?sort_by=id'
+=======
+// //   //     'https://g3w.earthmonitor.org/dev
+// /monitors-and-geostories?sort_by=id'
+>>>>>>> 3d31b60 (monitors and geostories endpoint renamed)
 //   //   );
 //   //   const sortedResponse = await sortPromise;
 //   //   const sortedByIdResponse = (await sortedResponse.json()) as MonitorsAndGeostoriesResponse[];
@@ -39,7 +48,11 @@
 //   test('sort by date', async ({ page }) => {
 //     const response = await page.waitForResponse(
 //       'https://g3w.earthmonitor.org/dev
+<<<<<<< HEAD
 /monitors-and-geostories?*sort_by=title*'
+=======
+// /monitors-and-geostories?*sort_by=title*'
+>>>>>>> 3d31b60 (monitors and geostories endpoint renamed)
 //     );
 
 //     const defaultOrderedDataByTitle = (await response.json()) as PaginatedResponse;
@@ -48,7 +61,11 @@
 //     await sortByDateCheckbox.click();
 //     const sortPromise = page.waitForResponse(
 //       'https://g3w.earthmonitor.org/dev
+<<<<<<< HEAD
 /monitors-and-geostories?*sort_by=date'
+=======
+// /monitors-and-geostories?*sort_by=date'
+>>>>>>> 3d31b60 (monitors and geostories endpoint renamed)
 //     );
 //     const sortedResponse = await sortPromise;
 //     const sortedByDateResponse = (await sortedResponse.json()) as PaginatedResponse;
@@ -63,7 +80,11 @@
 //   test('sort by title (default option)', async ({ page }) => {
 //     const response = await page.waitForResponse(
 //       'https://g3w.earthmonitor.org/dev
+<<<<<<< HEAD
 /monitors-and-geostories?sort_by=title'
+=======
+// /monitors-and-geostories?sort_by=title'
+>>>>>>> 3d31b60 (monitors and geostories endpoint renamed)
 //     );
 
 //     const defaultOrderedDataByTitle = (await response.json()) as PaginatedResponse;
