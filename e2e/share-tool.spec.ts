@@ -4,8 +4,7 @@ import type { Monitor } from 'types/monitors';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/map', { waitUntil: 'load' });
-  const monitorsResponse = await page.waitForResponse('https://g3w.earthmonitor.org/dev
-/monitors');
+  const monitorsResponse = await page.waitForResponse(`${process.env.NEXT_PUBLIC_API_URL}monitors`);
   const monitorsData = (await monitorsResponse.json()) as Monitor[];
   await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });

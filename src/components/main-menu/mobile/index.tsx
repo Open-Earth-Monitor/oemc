@@ -49,7 +49,6 @@ const MainMenuMobile = () => {
     if (isOpen) {
       setIsOpen(false);
     }
-    //eslint-disable-next-line
   }, [pathname]);
 
   const handleMobile = () => {
@@ -131,7 +130,7 @@ const MainMenuMobile = () => {
                   <Link
                     href="/"
                     className={cn(
-                      'flex h-full min-w-[180px] items-center justify-center p-4 text-center font-satoshi font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500',
+                      'font-satoshi flex h-full min-w-[180px] items-center justify-center p-4 text-center font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500',
                       {
                         'hover:bg-secondary-500  hover:text-brand-500':
                           `/${pathname.split('/')[1]}` === '/',
@@ -143,7 +142,7 @@ const MainMenuMobile = () => {
                   </Link>
                   <button
                     type="button"
-                    className="flex h-full min-w-[180px] items-center justify-center p-4 text-center font-satoshi font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500"
+                    className="font-satoshi flex h-full min-w-[180px] items-center justify-center p-4 text-center font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500"
                     onClick={handleMapMenu}
                   >
                     Map
@@ -182,7 +181,7 @@ const MainMenuMobile = () => {
                     </Link>
                     <div
                       data-testid="alpha-site"
-                      className="rounded-sm border border-alert px-[6px] py-1 font-inter text-xs text-alert"
+                      className="font-inter rounded-sm border border-alert px-[6px] py-1 text-xs text-alert"
                     >
                       Alpha version
                     </div>
