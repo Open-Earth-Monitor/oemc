@@ -14,7 +14,8 @@
 // test.describe('sort monitors and geostories', () => {
 //   // test('sort by id', async ({ page }) => {
 //   //   const response = await page.waitForResponse(
-//   //     'https://api.earthmonitor.org/monitors-and-geostories?sort_by=title'
+//   //     'https://g3w.earthmonitor.org/dev
+/monitors-and-geostories?sort_by=title'
 //   //   );
 
 //   //   const defaultOrderedDataByTitle = (await response.json()) as MonitorsAndGeostoriesResponse[];
@@ -22,7 +23,8 @@
 
 //   //   await sortByIdCheckbox.click();
 //   //   const sortPromise = page.waitForResponse(
-//   //     'https://api.earthmonitor.org/monitors-and-geostories?sort_by=id'
+//   //     'https://g3w.earthmonitor.org/dev
+/monitors-and-geostories?sort_by=id'
 //   //   );
 //   //   const sortedResponse = await sortPromise;
 //   //   const sortedByIdResponse = (await sortedResponse.json()) as MonitorsAndGeostoriesResponse[];
@@ -36,7 +38,8 @@
 
 //   test('sort by date', async ({ page }) => {
 //     const response = await page.waitForResponse(
-//       'https://api.earthmonitor.org/monitors-and-geostories?*sort_by=title*'
+//       'https://g3w.earthmonitor.org/dev
+/monitors-and-geostories?*sort_by=title*'
 //     );
 
 //     const defaultOrderedDataByTitle = (await response.json()) as PaginatedResponse;
@@ -44,7 +47,8 @@
 
 //     await sortByDateCheckbox.click();
 //     const sortPromise = page.waitForResponse(
-//       'https://api.earthmonitor.org/monitors-and-geostories?*sort_by=date'
+//       'https://g3w.earthmonitor.org/dev
+/monitors-and-geostories?*sort_by=date'
 //     );
 //     const sortedResponse = await sortPromise;
 //     const sortedByDateResponse = (await sortedResponse.json()) as PaginatedResponse;
@@ -58,7 +62,8 @@
 
 //   test('sort by title (default option)', async ({ page }) => {
 //     const response = await page.waitForResponse(
-//       'https://api.earthmonitor.org/monitors-and-geostories?sort_by=title'
+//       'https://g3w.earthmonitor.org/dev
+/monitors-and-geostories?sort_by=title'
 //     );
 
 //     const defaultOrderedDataByTitle = (await response.json()) as PaginatedResponse;

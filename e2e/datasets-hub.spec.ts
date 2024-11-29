@@ -10,7 +10,8 @@ test.beforeEach(async ({ page }) => {
 
 test('geostories and monitors display', async ({ page }) => {
   const datasetsResponse = await page.waitForResponse(
-    'https://api.earthmonitor.org/monitors-and-geostories*'
+    'https://g3w.earthmonitor.org/dev
+/monitors-and-geostories*'
   );
 
   const datasetsData = (await datasetsResponse.json()) as MonitorsAndGeostoriesPaginated;
@@ -35,7 +36,8 @@ test.describe('monitors and geostories display', () => {
     await monitorsCheckbox.click();
 
     const monitorsResponse = await page.waitForResponse(
-      'https://api.earthmonitor.org/monitors-and-geostories?type=monitors*'
+      'https://g3w.earthmonitor.org/dev
+/monitors-and-geostories?type=monitors*'
     );
 
     const monitorsData = (await monitorsResponse.json()) as MonitorsAndGeostoriesPaginated;
@@ -87,7 +89,8 @@ test.describe('monitors and geostories display', () => {
     await geostoriesCheckbox.click();
 
     const geostoriesResponse = await page.waitForResponse(
-      'https://api.earthmonitor.org/monitors-and-geostories?type=geostories*'
+      'https://g3w.earthmonitor.org/dev
+/monitors-and-geostories?type=geostories*'
     );
 
     const geostoriesData = (await geostoriesResponse.json()) as MonitorsAndGeostoriesPaginated;
