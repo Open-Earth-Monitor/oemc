@@ -5,8 +5,7 @@ test('legend', async ({ page }) => {
   await page.goto('/map/m1/datasets?layers=[{"id":"l1","opacity":1,"date":"20000101_20001231"}]', {
     waitUntil: 'load',
   });
-  await page.waitForResponse('https://g3w.earthmonitor.org/dev
-/layers?layer_id=l1');
+  await page.waitForResponse(`${process.env.NEXT_PUBLIC_API_URL}layers?layer_id=l1`);
   await expect(page.getByTestId('map-legend')).toBeVisible();
 
   // should be 1 layer in the legend

@@ -4,6 +4,7 @@ import { useState, type FC, type PropsWithChildren } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import PlausibleProvider from 'next-plausible';
 import { Provider as JotaiProvider } from 'jotai';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -24,9 +25,16 @@ const Providers: ProvidersProps = ({ children }) => {
   );
   return (
     <TooltipProvider>
-      <QueryClientProvider client={queryClient}>
-        <JotaiProvider>{children}</JotaiProvider>
-      </QueryClientProvider>
+      <PlausibleProvider
+        domain="https://app.earthmonitor.org/"
+        trackOutboundLinks
+        trackFileDownloads
+        selfHosted
+      >
+        <QueryClientProvider client={queryClient}>
+          <JotaiProvider>{children}</JotaiProvider>
+        </QueryClientProvider>
+      </PlausibleProvider>
     </TooltipProvider>
   );
 };
