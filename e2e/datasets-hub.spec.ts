@@ -9,13 +9,14 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('geostories and monitors display', async ({ page }) => {
+  console.log(process.env.NEXT_PUBLIC_API_URL);
   const datasetsResponse = await page.waitForResponse(
-    'https://g3w.earthmonitor.org/dev/monitors-and-geostories*'
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories*?responseformat=json`
   );
 
   const datasetsData = (await datasetsResponse.json()) as MonitorsAndGeostoriesPaginated;
 
-  const pageLength = datasetsData['monitors and geostories'].length;
+  const pageLength = datasetsData['results'].length;
 
   const datasetCard = page.getByTestId('datasets-list').locator('li');
   const maxResultShown = pageLength;
@@ -29,17 +30,17 @@ test('geostories and monitors display', async ({ page }) => {
   await expect(resultNumber).toHaveText(result);
 });
 
-test.describe('monitors and geostories display', () => {
+test.describe('results display', () => {
   test('monitors display', async ({ page }) => {
     const monitorsCheckbox = page.getByTestId('monitors-button-checkbox');
     await monitorsCheckbox.click();
 
     const monitorsResponse = await page.waitForResponse(
-      'https://g3w.earthmonitor.org/dev/monitors-and-geostories?type=monitors*'
+      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?type=monitors*`
     );
 
     const monitorsData = (await monitorsResponse.json()) as MonitorsAndGeostoriesPaginated;
-    const firstMonitorWithData = monitorsData['monitors and geostories'].find(
+    const firstMonitorWithData = monitorsData['results'].find(
       (monitor) => monitor.ready && monitor.description !== null
     ) as Monitor;
 
@@ -87,11 +88,11 @@ test.describe('monitors and geostories display', () => {
     await geostoriesCheckbox.click();
 
     const geostoriesResponse = await page.waitForResponse(
-      'https://g3w.earthmonitor.org/dev/monitors-and-geostories?type=geostories*'
+      'https://g3w.earthmonitor.org/monitors-and-geostories?type=geostories*'
     );
 
     const geostoriesData = (await geostoriesResponse.json()) as MonitorsAndGeostoriesPaginated;
-    const firstGeostoryWithData = geostoriesData['monitors and geostories'].find(
+    const firstGeostoryWithData = geostoriesData['results'].find(
       (geostory) => geostory.ready && geostory.description !== null
     ) as Geostory;
 

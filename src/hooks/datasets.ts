@@ -37,8 +37,6 @@ const DEFAULT_QUERY_OPTIONS = {
   staleTime: Infinity,
 };
 
-const columns = ['id', 'label', 'value'];
-
 export function useMonitorsAndGeostories(
   params?: UseParams,
   queryOptions?: UseQueryOptions<MonitorsAndGeostories, Error, MonitorsAndGeostoriesParsed>
@@ -92,7 +90,7 @@ export function useMonitorsAndGeostoriesPaginated(
     ...queryOptions,
     select: (data): MonitorsAndGeostoriesPaginatedParsed => ({
       ...data,
-      data: data['monitors and geostories'].map((d) => ({
+      data: data['results'].map((d) => ({
         ...d,
         color: getColor(d.ready, d.theme, 'base'),
         colorHead: getColor(d.ready, d.theme, 'dark'),

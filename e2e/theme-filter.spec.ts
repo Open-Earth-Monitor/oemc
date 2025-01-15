@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('filter monitors and geostories by different theme', () => {
   test('Filter by theme Soil', async ({ page, request }) => {
     const response = await request.get(
-      'https://g3w.earthmonitor.org/dev/monitors-and-geostories?theme=Soil&pagination=true'
+      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?theme=Soil&pagination=true`
     );
     const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
 
@@ -17,13 +17,11 @@ test.describe('filter monitors and geostories by different theme', () => {
     await page.getByTestId('Soil-checkbox').setChecked(true);
 
     const filteredResponse = await page.waitForResponse(
-      `https://g3w.earthmonitor.org/dev/monitors-and-geostories?*theme=Soil*`
+      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?*theme=Soil*`
     );
     const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
 
-    expect(filteredJson['monitors and geostories']).toEqual(
-      datasetsData['monitors and geostories']
-    );
+    expect(filteredJson['results']).toEqual(datasetsData['results']);
 
     // check that the badge is displayed accurately
     await expect(page.getByTestId('Soil-button')).toBeVisible();
@@ -32,7 +30,7 @@ test.describe('filter monitors and geostories by different theme', () => {
 
 test(`Filter by themes Agriculture and Climate & Health`, async ({ page, request }) => {
   const response = await request.get(
-    'https://g3w.earthmonitor.org/dev/monitors-and-geostories?theme=Climate+%26+Health,Agriculture&pagination=true'
+    `https://g3w.earthmonitor.org/dev/monitors-and-geostories?theme=Climate+%26+Health,Agriculture&pagination=true`
   );
   const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
 
@@ -46,7 +44,7 @@ test(`Filter by themes Agriculture and Climate & Health`, async ({ page, request
   const filteredResponse = await responsePromise;
   const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
 
-  expect(filteredJson['monitors and geostories']).toEqual(datasetsData['monitors and geostories']);
+  expect(filteredJson['results']).toEqual(datasetsData['results']);
 
   // check that the badge is displayed accurately
   await expect(page.getByTestId('Agriculture-button')).toBeVisible();
@@ -55,7 +53,7 @@ test(`Filter by themes Agriculture and Climate & Health`, async ({ page, request
 
 test(`Filter by themes Soil and Water`, async ({ page, request }) => {
   const response = await request.get(
-    'https://g3w.earthmonitor.org/dev/monitors-and-geostories?theme=Water,Soil&pagination=true'
+    `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?theme=Water,Soil&pagination=true`
   );
   const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
 
@@ -64,12 +62,12 @@ test(`Filter by themes Soil and Water`, async ({ page, request }) => {
   await page.getByTestId('Water-checkbox').setChecked(true);
 
   const responsePromise = page.waitForResponse(
-    `https://g3w.earthmonitor.org/dev/monitors-and-geostories?*theme=Water,Soil*`
+    `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?*theme=Water,Soil*`
   );
   const filteredResponse = await responsePromise;
   const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
 
-  expect(filteredJson['monitors and geostories']).toEqual(datasetsData['monitors and geostories']);
+  expect(filteredJson['results']).toEqual(datasetsData['results']);
 
   // check that the badge is displayed accurately
   await expect(page.getByTestId('Soil-button')).toBeVisible();
@@ -83,7 +81,7 @@ test.describe('Cards and badges displayed according selected themes', () => {
     await page.getByTestId('Water-checkbox').setChecked(true);
 
     const responsePromise = page.waitForResponse(
-      'https://g3w.earthmonitor.org/dev/monitors-and-geostories?*theme=Water,Soil*'
+      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?*theme=Water,Soil*`
     );
     const filteredResponse = await responsePromise;
     const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
@@ -92,7 +90,7 @@ test.describe('Cards and badges displayed according selected themes', () => {
     const datasetsLists = page.getByTestId('datasets-list');
     const datasetsListsItems = await datasetsLists.locator('> li').count();
 
-    expect(datasetsListsItems).toBe(filteredJson['monitors and geostories'].length);
+    expect(datasetsListsItems).toBe(filteredJson['results'].length);
 
     // check that the badges are displayed accurately
     await expect(page.getByTestId('Soil-button')).toBeVisible();
@@ -105,7 +103,7 @@ test.describe('Cards and badges displayed according selected themes', () => {
     await page.getByTestId('Agriculture-checkbox').setChecked(true);
 
     const responsePromise = page.waitForResponse(
-      'https://g3w.earthmonitor.org/dev/monitors-and-geostories?*theme=Agriculture,Forest,Biodiversity*'
+      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?*theme=Agriculture,Forest,Biodiversity*`
     );
     const filteredResponse = await responsePromise;
     const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
@@ -114,7 +112,7 @@ test.describe('Cards and badges displayed according selected themes', () => {
     const datasetsLists = page.getByTestId('datasets-list');
     const datasetsListsItems = await datasetsLists.locator('> li').count();
 
-    expect(datasetsListsItems).toBe(filteredJson['monitors and geostories'].length);
+    expect(datasetsListsItems).toBe(filteredJson['results'].length);
 
     // check that the badges are displayed accurately
     await expect(page.getByTestId('Biodiversity-button')).toBeVisible();
