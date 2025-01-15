@@ -273,6 +273,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           ?.getView()
           ?.fit((monitorData?.monitor_bbox as unknown as string).split(',').map(Number));
         setMonitorBbox(monitorBbox);
+        setZoom('5'); // default viewport
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

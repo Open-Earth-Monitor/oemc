@@ -8,8 +8,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('datasets tab', async ({ page }) => {
-  const monitorsResponse = await page.waitForResponse('https://g3w.earthmonitor.org/dev
-/monitors');
+  const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
   const monitorsData = (await monitorsResponse.json()) as Monitor[];
   await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
@@ -21,15 +20,13 @@ test('datasets tab', async ({ page }) => {
 });
 
 test('datasets list', async ({ page }) => {
-  const monitorsResponse = await page.waitForResponse('https://g3w.earthmonitor.org/dev
-/monitors');
+  const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
   const monitorsData = (await monitorsResponse.json()) as Monitor[];
   await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
 
   const layersResponse = await page.waitForResponse(
-    `https://g3w.earthmonitor.org/dev
-/monitors/${monitorsData[0].id}/layers`
+    `https://api.earthmonitor.org/monitors/${monitorsData[0].id}/layers`
   );
   const layersData = (await layersResponse.json()) as Layer[];
   const datasetsList = page.getByTestId('datasets-list').locator('li');
@@ -39,8 +36,7 @@ test('datasets list', async ({ page }) => {
 
 // TODO: once we know monitors with datasets, we can test this in a better way
 test('datasets item', async ({ page }) => {
-  const monitorsResponse = await page.waitForResponse('https://g3w.earthmonitor.org/dev
-/monitors*');
+  const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors*');
   const monitorsData = (await monitorsResponse.json()) as Monitor[];
   // Find a monitor with layers (m1)
   const firstMonitorWithLayers = monitorsData.find((monitor) => monitor.id === 'm2');
@@ -49,8 +45,7 @@ test('datasets item', async ({ page }) => {
   await page.waitForURL('**/map/**/datasets*', { waitUntil: 'load' });
 
   const layersResponse = await page.waitForResponse(
-    `https://g3w.earthmonitor.org/dev
-/monitors/${firstMonitorWithLayers.id}/layers`
+    `https://api.earthmonitor.org/monitors/${firstMonitorWithLayers.id}/layers`
   );
   const layersData = (await layersResponse.json()) as Layer[];
   const firstDataset = page.getByTestId(`dataset-item-${layersData[0].layer_id}`);

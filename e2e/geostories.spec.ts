@@ -10,8 +10,7 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('geostories tab', () => {
   test('from /map/{monitor_id}/datasets', async ({ page }) => {
-    const monitorsResponse = await page.waitForResponse('https://g3w.earthmonitor.org/dev
-/monitors');
+    const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
     const monitorsData = (await monitorsResponse.json()) as Monitor[];
     const firstMonitorWithGeostories = monitorsData.find(
       (monitor) => monitor.geostories.length > 0
@@ -42,8 +41,7 @@ test.describe('geostories tab', () => {
 
     // check geostories list is visible
     const geostoriesResponse = await page.waitForResponse(
-      `https://g3w.earthmonitor.org/dev
-/monitors/${firstMonitorWithGeostories.id}/geostories`
+      `https://api.earthmonitor.org/monitors/${firstMonitorWithGeostories.id}/geostories`
     );
     const geostoriesData = (await geostoriesResponse.json()) as Geostory[];
     await expect(page.getByTestId('geostories-list')).toBeVisible();
@@ -65,8 +63,7 @@ test.describe('geostories tab', () => {
   });
 
   test('display monitor info in geostories tab', async ({ page }) => {
-    const monitorsFetchResponse = page.waitForResponse('https://g3w.earthmonitor.org/dev
-/monitors');
+    const monitorsFetchResponse = page.waitForResponse('https://api.earthmonitor.org/monitors');
     const response = await monitorsFetchResponse;
     const monitorsData = (await response.json()) as Monitor[];
     const firstMonitorWithGeostories = monitorsData.find(
@@ -93,8 +90,7 @@ test.describe('geostories tab', () => {
       waitUntil: 'load',
     });
     await page.waitForResponse(
-      `https://g3w.earthmonitor.org/dev
-/monitors/${firstMonitorWithGeostories.id}/geostories`
+      `https://api.earthmonitor.org/monitors/${firstMonitorWithGeostories.id}/geostories`
     );
 
     // check monitor info is visible
@@ -110,8 +106,7 @@ test.describe('geostories tab', () => {
   });
 
   test('display datasets from a geostory', async ({ page }) => {
-    const monitorsResponse = await page.waitForResponse('https://g3w.earthmonitor.org/dev
-/monitors');
+    const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
     const monitorsData = (await monitorsResponse.json()) as Monitor[];
     const firstMonitorWithGeostories = monitorsData.find(
       (monitor) => monitor.geostories.length > 0
@@ -120,8 +115,7 @@ test.describe('geostories tab', () => {
     await page.goto(`/map/${firstMonitorWithGeostories.id}/geostories`, { waitUntil: 'load' });
 
     const geostoriesFetchResponse = page.waitForResponse(
-      `https://g3w.earthmonitor.org/dev
-/monitors/${firstMonitorWithGeostories.id}/geostories`
+      `https://api.earthmonitor.org/monitors/${firstMonitorWithGeostories.id}/geostories`
     );
     const geostoriesResponse = await geostoriesFetchResponse;
     await expect(page.getByTestId('geostories-list')).toBeVisible();
@@ -153,8 +147,7 @@ test.describe('geostories tab', () => {
 
     // TO - DO : check if the datasets are the same as the ones in the geostory
     // const layersResponse = await page.waitForResponse(
-    //   `https://g3w.earthmonitor.org/dev
-/geostories/${geostoriesData[0].id}`
+    //   `https://api.earthmonitor.org/geostories/${geostoriesData[0].id}`
     // );
 
     // const layersData = (await layersResponse.json()) as Layer[];
@@ -168,8 +161,7 @@ test.describe('geostories tab', () => {
 test('From a selected geostory, user should be able to go back to the monitor it belongs', async ({
   page,
 }) => {
-  const monitorsResponse = await page.waitForResponse('https://g3w.earthmonitor.org/dev
-/monitors');
+  const monitorsResponse = await page.waitForResponse('https://api.earthmonitor.org/monitors');
   const monitorsData = (await monitorsResponse.json()) as Monitor[];
   const firstMonitorWithGeostories = monitorsData.find((monitor) => monitor.geostories.length > 0);
 
@@ -192,8 +184,7 @@ test('From a selected geostory, user should be able to go back to the monitor it
 
   // check geostories list is visible
   const geostoriesResponse = await page.waitForResponse(
-    `https://g3w.earthmonitor.org/dev
-/monitors/${firstMonitorWithGeostories.id}/geostories`
+    `https://api.earthmonitor.org/monitors/${firstMonitorWithGeostories.id}/geostories`
   );
   const geostoriesData = (await geostoriesResponse.json()) as Geostory[];
   await expect(page.getByTestId('geostories-list')).toBeVisible();

@@ -37,8 +37,6 @@ const DEFAULT_QUERY_OPTIONS = {
   staleTime: Infinity,
 };
 
-const columns = ['id', 'label', 'value'];
-
 export function useMonitorsAndGeostories(
   params?: UseParams,
   queryOptions?: UseQueryOptions<MonitorsAndGeostories, Error, MonitorsAndGeostoriesParsed>

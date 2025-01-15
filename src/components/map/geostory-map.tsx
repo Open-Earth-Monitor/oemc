@@ -346,10 +346,10 @@ const Map: FC<GeostoryMapProps> = ({
   const centerLon = (minLon + maxLon) / 2;
   const centerLat = (minLat + maxLat) / 2;
 
-  const GEOSTORY_VIEWPORT = {
-    center: [centerLon, centerLat] || initialViewState.center,
-    zoom: zoom || initialViewState.zoom,
-  };
+  // const GEOSTORY_VIEWPORT = {
+  //   center: [centerLon, centerLat] || initialViewState.center,
+  //   zoom: zoom || initialViewState.zoom,
+  // };
 
   // Center to the geostory bbox
   useEffect(() => {
