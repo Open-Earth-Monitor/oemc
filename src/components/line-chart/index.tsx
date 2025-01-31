@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Group } from '@visx/group';
-import { LinePath } from '@visx/shape';
+import { Line, LinePath } from '@visx/shape';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { AxisLeft, AxisBottom } from '@visx/axis';
-import { useTooltip, Tooltip } from '@visx/tooltip';
+import { bisector } from '@visx/vendor/d3-array';
+import { useTooltip, Tooltip, defaultStyles } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
-import { bisectCenter } from 'd3-array';
 import { format } from 'd3-format';
 
 const numberFormat = format(',.2f');
+
+const formatDate = (value: number | string) =>
+  new Date(value).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+  });
 
 interface DataPoint {
   x: string | number;
@@ -23,19 +29,22 @@ interface LineChartProps {
 const margin = { top: 25, right: 20, bottom: 30, left: 65 };
 const height = 200;
 const width = 400;
-const colorAxis = '#848981';
+const colorAxis = '#2E3333';
 const tickProps = {
   hideTicks: true,
   stroke: colorAxis,
   tickStroke: colorAxis,
   strokeWidth: 0.5,
   tickLabelProps: {
-    fill: colorAxis,
+    fill: '#848981',
     fontSize: 12,
-    letterSpacing: '0.5px',
+    letterSpacing: '-0.1px',
     fontWeight: 400,
   },
 };
+
+const bisectDate = bisector<DataPoint, Date>((d) => new Date(d.x)).left;
+const getDate = (d: DataPoint) => new Date(d.x);
 
 const LineChart: React.FC<LineChartProps> = ({ data }) => {
   const x = (d: DataPoint) => new Date(d.x).valueOf();
@@ -57,33 +66,29 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
     domain: [yMin, yMax],
   });
 
-  const { showTooltip, hideTooltip, tooltipData, tooltipLeft, tooltipTop } =
+  const { showTooltip, hideTooltip, tooltipData, tooltipLeft, tooltipTop, tooltipOpen } =
     useTooltip<DataPoint>();
 
-  // Handle mouse move to show tooltip
-  const handleMouseMove = (event: React.MouseEvent<SVGRectElement>) => {
-    const { x: mouseX } = localPoint(event) || { x: 0 };
-
-    // Adjust mouse position for margins
-    const xValue = xScale.invert(mouseX - margin.left);
-
-    // Find the closest data point
-    const xValues = data.map(x);
-    const index = bisectCenter(xValues, xValue.getTime());
-    const closestPoint = data[index];
-
-    if (closestPoint) {
-      // Tooltip positioning
-      const adjustedLeft = xScale(x(closestPoint)) + margin.left;
-      const adjustedTop = yScale(y(closestPoint)) + margin.top;
+  const handleMouseMove = useCallback(
+    (event: React.TouchEvent<SVGGElement> | React.MouseEvent<SVGGElement, MouseEvent>) => {
+      const { x } = localPoint(event) || { x: 0 };
+      const x0 = xScale.invert(x - margin.left);
+      const index = bisectDate(data, x0, 1);
+      const d0 = data[index - 1];
+      const d1 = data[index];
+      let d = d0;
+      if (d1 && getDate(d1)) {
+        d = x0.valueOf() - getDate(d0).valueOf() > getDate(d1).valueOf() - x0.valueOf() ? d1 : d0;
+      }
 
       showTooltip({
-        tooltipData: closestPoint,
-        tooltipLeft: adjustedLeft,
-        tooltipTop: adjustedTop,
+        tooltipData: d,
+        tooltipLeft: x - margin.left,
+        tooltipTop: yScale(d.y),
       });
-    }
-  };
+    },
+    [showTooltip, yScale, xScale]
+  );
 
   const handleMouseLeave = () => {
     hideTooltip();
@@ -92,12 +97,24 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
   return (
     <div>
       <svg width={width} height={height}>
-        <Group left={margin.left} top={margin.top}>
+        <Group width={width} left={margin.left} top={margin.top}>
           {/* Y Axis */}
-          <AxisLeft scale={yScale} {...tickProps} />
+          <AxisLeft tickValues={[yMin, yMax]} scale={yScale} {...tickProps} />
 
           {/* X Axis */}
-          <AxisBottom scale={xScale} top={height - margin.top - margin.bottom} {...tickProps} />
+          <AxisBottom
+            tickValues={[xMin, xMax]}
+            scale={xScale}
+            tickFormat={(value: number) => formatDate(value)}
+            top={height - margin.top - margin.bottom}
+            {...tickProps}
+            tickLabelProps={(a, i) => {
+              return {
+                ...tickProps.tickLabelProps,
+                textAnchor: i === 0 ? 'start' : 'end',
+              };
+            }}
+          />
 
           {/* Line */}
           <LinePath
@@ -118,30 +135,52 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           />
+
+          {/* Tooltip vertical line */}
+          {tooltipOpen && (
+            <g>
+              <Line
+                from={{ x: tooltipLeft, y: 0 }}
+                to={{ x: tooltipLeft, y: height - margin.top - margin.bottom }}
+                stroke="#2E3333"
+                strokeWidth={2}
+                pointerEvents="none"
+              />
+
+              <circle
+                cx={tooltipLeft}
+                cy={tooltipTop}
+                r={4}
+                fill="#35B6D8"
+                stroke="white"
+                strokeWidth={2}
+                pointerEvents="none"
+              />
+            </g>
+          )}
         </Group>
       </svg>
 
       {/* Tooltip */}
-      {/* {tooltipData && (
+      {tooltipOpen && (
         <Tooltip
-          top={tooltipTop}
-          left={tooltipLeft}
+          top={tooltipTop - 12}
+          left={tooltipLeft + 60}
+          key={Math.random()}
+          className="TOOLTIP"
           style={{
-            backgroundColor: 'white',
-            color: 'black',
-            border: '1px solid #ccc',
+            ...defaultStyles,
+            backgroundColor: 'transparent',
+            color: 'white',
             borderRadius: '4px',
-            padding: '8px',
           }}
         >
-          <div>
-            <strong>Date:</strong> {new Date(tooltipData.x).toLocaleDateString()}
-          </div>
-          <div>
-            <strong>Value:</strong> {numberFormat(tooltipData.y)}
+          <div className="bg-brand-500/80 p-2">
+            <p className="font-satoshi text-[10px]">{!!tooltipData && formatDate(tooltipData.x)}</p>
+            <p className="font-inter text-xs">{!!tooltipData && numberFormat(tooltipData.y)}</p>
           </div>
         </Tooltip>
-      )} */}
+      )}
     </div>
   );
 };

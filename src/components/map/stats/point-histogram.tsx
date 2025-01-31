@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 
 import { FiDownload } from 'react-icons/fi';
 
@@ -21,6 +21,7 @@ import { downloadCSV } from '@/hooks/datasets';
 import Loading from '../../loading';
 
 import LineChart from '../../line-chart';
+import { useLayerParsedSource } from '@/hooks/layers';
 
 const numberFormat = format(',.2f');
 
@@ -46,10 +47,23 @@ const PointHistogram: FC<HistogramTypes> = ({
 
   const lonLat = useAtomValue(lonLatAtom);
 
+  const { data } = useLayerParsedSource(
+    {
+      layer_id: layerId,
+    },
+    {
+      enabled: !!layerId,
+    }
+  );
+
+  const { srv_path, regex } = data || {};
+
   const layerPointInfoPayload = {
     lon: lonLat?.[0] || 0,
     lat: lonLat?.[1] || 0,
     layer_id: layerId,
+    coll: srv_path,
+    regex,
   };
 
   const { data: histogramData, isLoading: isLoadingHistogram } = usePointData(
@@ -59,22 +73,41 @@ const PointHistogram: FC<HistogramTypes> = ({
     }
   );
 
-  const histogramPointData =
-    (histogramData &&
-      !!histogramData.length &&
-      histogramData?.map(({ label, value }) => ({
-        x: label,
-        y: value,
-      }))) ||
-    [];
+  const histogramPointData = useMemo(() => {
+    if (!histogramData) return [];
+    if (Array.isArray(histogramData)) {
+      return histogramData.map((d) => ({
+        x: d.label,
+        y: d.value,
+      }));
+    } else {
+      (histogramData &&
+        Object.entries(histogramData)?.map(([label, value]) => {
+          const d1 = label.split('_')[0];
+          const date = d1.slice(0, 4) + '/' + d1.slice(4, 6) + '/' + d1.slice(6, 8);
+          return {
+            x: date,
+            y: value,
+          };
+        })) ||
+        [];
+    }
+  }, [histogramData]);
 
-  const handleClick = () => {
-    if (histogramData && histogramData.length > 0) {
-      downloadCSV(histogramData, `data-${leftData.title}.csv`);
+  const handleClick = useCallback(() => {
+    if (histogramData) {
+      const data = Array.isArray(histogramData)
+        ? histogramData
+        : histogramPointData?.map((d) => ({
+            layer_id: layerId,
+            label: d.x,
+            value: d.y,
+          }));
+      downloadCSV(data, `data-${leftData.title}.csv`);
     } else {
       console.error('No data available for download.');
     }
-  };
+  }, [histogramData, histogramPointData, layerId, leftData]);
 
   return (
     <div
@@ -89,7 +122,7 @@ const PointHistogram: FC<HistogramTypes> = ({
           <XIcon size={14} />
         </button>
         <div className="relative space-y-2">
-          <div className="mr-5 space-y-4 font-satoshi font-bold">
+          <div className="font-satoshi mr-5 space-y-4 font-bold">
             <div>
               <h3 className="text-sm">{leftData.title}</h3>
               <h4 className="text-2xl">
