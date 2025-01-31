@@ -21,7 +21,7 @@ test.describe('filter monitors and geostories by different theme', () => {
     );
     const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
 
-    expect(filteredJson['monitors and geostories']).toEqual(
+    expect(filteredJson['monitors and geostories']['results']).toEqual(
       datasetsData['monitors and geostories']
     );
 

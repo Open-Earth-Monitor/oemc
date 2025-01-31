@@ -376,7 +376,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           <RLayerWMS
             ref={nutsLayer}
             properties={{ label: 'NUTS' }}
-            url="https://v2-geoserver.openlandmap.org/geoserver/oem/wms"
+            url="https://geoserver.earthmonitor.org/geoserver/oem/wms"
             opacity={0.2}
             params={{
               FORMAT: 'image/png',
