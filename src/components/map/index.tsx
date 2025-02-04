@@ -15,7 +15,7 @@ import { RView } from 'rlayers/RMap';
 
 import cn from '@/lib/classnames';
 import { mobile, tablet } from '@/lib/media-queries';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useDebounce } from '@/hooks/datasets';
 import { useLayer, useLayerParsedSource } from '@/hooks/layers';
 import { useMonitors } from '@/hooks/monitors';
@@ -26,8 +26,17 @@ import {
   useSyncCenterSettings,
   useSyncZoomSettings,
 } from '@/hooks/sync-query';
-import Histogram from './stats/point-histogram';
-import { histogramLayerLeftVisibilityAtom, lonLatAtom } from '@/app/store';
+import PointHistogram from './stats/point-histogram';
+import RegionsHistogram from './stats/region-histogram';
+
+import {
+  compareFunctionalityAtom,
+  coordinateAtom,
+  histogramLayerLeftVisibilityAtom,
+  lonLatAtom,
+  nutsDataParamsCompareAtom,
+  regionsLayerVisibilityAtom,
+} from '@/app/store';
 import LocationSearchComponent from '@/components/location-search';
 
 import Attributions from './attributions';
@@ -46,6 +55,7 @@ import CompareRegionsStatistics from './controls/compare-regions';
 
 import type { FeatureInfoResponse } from './types';
 import CompareGeolocationInfoPopup from './compare-geolocation-info';
+import { getHistogramData } from './utils';
 
 interface ClickEvent {
   bbox?: Bbox;
@@ -73,13 +83,19 @@ const TooltipInitialState = {
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [locationSearch, setLocationSearch] = useState('');
-  const [isRegionsLayerActive, setIsRegionsLayerActive] = useState(false);
+  const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
   const isDesktop = !isMobile && !isTablet;
   const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
     histogramLayerLeftVisibilityAtom
   );
+  const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
+  const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
+  const [nutsProperties, setNutsProperties] = useState(null);
+  const [compareNutsProperties, setCompareNutsProperties] = useState(null);
+  const setCoordinate = useSetAtom(coordinateAtom);
+
   const [lonLat, setLonLat] = useAtom(lonLatAtom);
   const params = useParams();
   const monitorId = params.monitor_id as string;
@@ -162,12 +178,34 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     },
     [setCenter, setZoom]
   );
+  const wmsNutsSource = useMemo(() => {
+    return new TileWMS({
+      url: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
+      params: {
+        TILED: true,
+        ID: true,
+        name: 'oem:NUTS_RG_01M_2021_3035',
+        LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+      },
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous',
+    });
+  }, []);
 
   const fetchTooltipValue = useCallback(
     async (coordinate) => {
-      setTooltipInfo((prev) => ({ ...prev, value: null }));
+      setCoordinate(coordinate);
       const resolution = mapRef.current?.ol.getView()?.getResolution();
       if (!resolution) return;
+      const NUTS_layer = wmsNutsSource?.getFeatureInfoUrl(
+        coordinate as Coordinate,
+        resolution,
+        'EPSG:3857',
+        {
+          INFO_FORMAT: 'application/json',
+          LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+        }
+      );
       const urlLeft = wmsSource.getFeatureInfoUrl(
         coordinate as Coordinate,
         resolution,
@@ -184,9 +222,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
       try {
         const responseLeft = await axios.get<FeatureInfoResponse>(urlLeft);
-        valueLeft = responseLeft.data.features[0]?.properties
-          ? Object.values(responseLeft.data.features[0].properties)[0]
-          : null;
+        const NUTS_layer_response = await axios.get<FeatureInfoResponse>(NUTS_layer);
+        const properties = responseLeft.data.features[0].properties;
+
+        valueLeft = properties ? Object.values(properties)[0] : null;
+        const nutProperties = NUTS_layer_response.data.features[0].properties;
+
+        setNutsProperties(nutProperties);
         if (compareDate) {
           const urlRight = wmsSource.getFeatureInfoUrl(
             coordinate as Coordinate,
@@ -229,15 +271,28 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         setTooltipInfo((prev) => ({ ...prev, value: null }));
       }
     },
-    [date, compareDate, gs_name, title, wmsSource, unit, range, range_labels]
+    [date, compareDate, gs_name, title, wmsSource, unit, range, range_labels, wmsNutsSource]
   );
 
   const [monitorBbox, setMonitorBbox] = useState(null);
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
+      if (compareFunctionalityInfo) {
+        const resolution = e.map.getView()?.getResolution();
+        getHistogramData(wmsNutsSource, e.coordinate, resolution, layerId).then((data) => {
+          setNutsDataParamsCompare(data?.nutsDataParams);
+          setCompareFunctionalityInfo(false);
+          setCompareNutsProperties(data?.properties);
+        });
+        return;
+      }
+
+      setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
+      setCompareNutsProperties(null);
       const coordinatedToDegrees = toLonLat(e.coordinate);
       setLonLat(coordinatedToDegrees);
+
       const newTooltipInfo: MonitorTooltipInfo = {
         ...tooltipInfo,
         leftData: {
@@ -249,13 +304,14 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       };
       setTooltipInfo({ ...newTooltipInfo });
     },
-    [setTooltipInfo, tooltipInfo]
+    [setTooltipInfo, tooltipInfo, compareFunctionalityInfo]
   );
 
   const handleCloseTooltip = useCallback(() => {
     const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
     setTooltipInfo(newTooltipInfo);
     setLeftLayerHistogramVisibility(false);
+    setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -476,18 +532,40 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
         {isLayerActive && <Legend />}
         <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
-        {layerData && leftLayerHistogramVisibility && (
-          <Histogram
-            onCloseTooltip={handleCloseTooltip}
-            layerId={layerId}
-            compareLayerId={compareLayerId}
-            isRegionsLayerActive={isRegionsLayerActive}
-            {...tooltipInfo}
-          />
-        )}
+
+        {layerData && leftLayerHistogramVisibility ? (
+          !isRegionsLayerActive ? (
+            <PointHistogram
+              onCloseTooltip={handleCloseTooltip}
+              layerId={layerId}
+              compareLayerId={compareLayerId}
+              isRegionsLayerActive={isRegionsLayerActive}
+              {...tooltipInfo}
+            />
+          ) : (
+            <RegionsHistogram
+              onCloseTooltip={handleCloseTooltip}
+              layerId={layerId}
+              compareLayerId={compareLayerId}
+              onCompareClose={() => {
+                setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
+                setCompareNutsProperties(null);
+              }}
+              {...tooltipInfo}
+              nutsProperties={nutsProperties}
+              compareNutProperties={compareNutsProperties}
+            />
+          )
+        ) : null}
 
         {/* Interactivity */}
-        {data && <MapTooltip onCloseTooltip={handleCloseTooltip} {...tooltipInfo} />}
+        {data && (
+          <MapTooltip
+            {...tooltipInfo}
+            nutsProperties={nutsProperties}
+            onCloseTooltip={handleCloseTooltip}
+          />
+        )}
       </RMap>
     </>
   );

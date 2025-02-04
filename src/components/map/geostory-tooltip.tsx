@@ -16,15 +16,16 @@ import {
   nutsDataParamsAtom,
 } from '@/app/store';
 
-import type { FeatureInfoResponse, GeostoryTooltipInfo } from './types';
+import type { FeatureInfoResponse, GeostoryTooltipInfo, NutsProperties } from './types';
 import { useAtom, useSetAtom } from 'jotai';
 import cn from '@/lib/classnames';
+import { getHistogramData } from './utils';
 
 const numberFormat = format(',.2f');
 
 interface TooltipProps extends GeostoryTooltipInfo {
   onCloseTooltip: () => void;
-  nutsProperties?: {};
+  nutsProperties?: NutsProperties;
 }
 
 const MapTooltip: FC<TooltipProps> = ({
@@ -49,43 +50,20 @@ const MapTooltip: FC<TooltipProps> = ({
   };
 
   const handleHistogram = useCallback(async () => {
-    const NUTS_layer = wmsNutsSource?.getFeatureInfoUrl(
+    const { nutsDataParams } = await getHistogramData(
+      wmsNutsSource,
       coordinate as Coordinate,
       resolution,
-      'EPSG:3857',
-      {
-        INFO_FORMAT: 'application/json',
-        LAYERS: 'oem:NUTS_RG_01M_2021_3035',
-      }
+      leftData.id
     );
 
-    if (!NUTS_layer) {
-      console.error('Failed to generate the URL for NUTS layer.');
-      return;
-    }
-
-    try {
-      const NUTS_layer_response = await axios.get<FeatureInfoResponse>(NUTS_layer);
-
-      if (
-        NUTS_layer_response.data.features?.length > 0 &&
-        NUTS_layer_response.data.features[0].properties
-      ) {
-        const properties = NUTS_layer_response.data.features[0].properties;
-        setNutsDataParams({
-          NUTS_ID: properties?.NUTS_ID as string,
-          LAYER_ID: leftData.id,
-        });
-      }
-    } catch {
-      console.error('There had been an error while fetching NUTS layer data');
-    }
+    setNutsDataParams(nutsDataParams);
     setLeftLayerHistogramVisibility(true);
-  }, [nutsProperties, coordinate, resolution, leftData.id, setLeftLayerHistogramVisibility]);
+  }, [coordinate, resolution, leftData.id, setLeftLayerHistogramVisibility]);
 
   const wmsNutsSource = useMemo(() => {
     return new TileWMS({
-      url: 'https://v2-geoserver.openlandmap.org/geoserver/oem/wms',
+      url: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
       params: {
         TILED: true,
         ID: true,
@@ -102,7 +80,7 @@ const MapTooltip: FC<TooltipProps> = ({
       className={cn({
         'max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md':
           true,
-        hidden: leftLayerHistogramVisibility && !isRegionsLayerActive,
+        hidden: leftLayerHistogramVisibility,
       })}
       style={{
         left: `${position[0]}px`,
@@ -113,11 +91,14 @@ const MapTooltip: FC<TooltipProps> = ({
         <XIcon size={14} className="text-brand-500" />
       </button>
       <div className="relative space-y-2">
-        <div className="mr-5 space-y-4 font-satoshi font-bold text-brand-500">
+        <div className="font-satoshi mr-5 space-y-4 font-bold text-brand-500">
           <div>
             <h3 className="text-sm">{leftData.title}</h3>
             {leftData.value !== 0 && (
-              <div className="flex items-end space-x-2">
+              <div className="flex flex-col items-end space-x-2">
+                {isRegionsLayerActive && !!nutsProperties?.NAME_LATN && (
+                  <div className="font-satoshi text-2xl font-bold">{nutsProperties?.NAME_LATN}</div>
+                )}
                 <div className="space-x-2 text-xl">
                   {typeof leftData.value === 'number'
                     ? numberFormat(leftData.value)
@@ -147,7 +128,7 @@ const MapTooltip: FC<TooltipProps> = ({
           )}
         </div>
         {!!rightData.value && (
-          <div className="border-brand-800 mr-5 space-y-4 border-t pt-2.5 font-satoshi font-bold text-brand-500 ">
+          <div className="border-brand-800 font-satoshi mr-5 space-y-4 border-t pt-2.5 font-bold text-brand-500 ">
             <div>
               <h3 className="text-sm">{rightData.title}</h3>
               <div className="text-xl">

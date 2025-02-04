@@ -31,6 +31,8 @@ import {
   resolutionAtom,
   regionsLayerVisibilityAtom,
   histogramLayerLeftVisibilityAtom,
+  nutsDataParamsCompareAtom,
+  compareFunctionalityAtom,
 } from '@/app/store';
 
 import LocationSearchComponent from '@/components/location-search';
@@ -52,6 +54,7 @@ import { transformToBBoxArray } from '@/lib/format';
 import PointHistogram from './stats/point-histogram';
 import RegionsHistogram from './stats/region-histogram';
 import CompareRegionsStatistics from './controls/compare-regions';
+import { getHistogramData } from './utils';
 
 interface ClickEvent {
   bbox?: Bbox;
@@ -112,6 +115,9 @@ const Map: FC<GeostoryMapProps> = ({
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
   const [nutsProperties, setNutsProperties] = useState(null);
+  const [compareNutsProperties, setCompareNutsProperties] = useState(null);
+  const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
+  const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -126,11 +132,11 @@ const Map: FC<GeostoryMapProps> = ({
   const compareDate = compareLayers?.[0]?.date;
   const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
 
-  const compareLayerInfo = useLayer(
-    { layer_id: compareLayerId },
-    { enabled: isCompareLayerActive }
-  );
-  const layerInfo = useLayer({ layer_id: layerId }, { enabled: isLayerActive });
+  // const compareLayerInfo = useLayer(
+  //   { layer_id: compareLayerId },
+  //   { enabled: isCompareLayerActive }
+  // );
+  // const layerInfo = useLayer({ layer_id: layerId }, { enabled: isLayerActive });
 
   /**
    * Initial viewport from the URL or the default one
@@ -171,7 +177,7 @@ const Map: FC<GeostoryMapProps> = ({
 
   const wmsNutsSource = useMemo(() => {
     return new TileWMS({
-      url: 'https://v2-geoserver.openlandmap.org/geoserver/oem/wms',
+      url: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
       params: {
         TILED: true,
         ID: true,
@@ -241,12 +247,9 @@ const Map: FC<GeostoryMapProps> = ({
         const responseLeft = await axios.get<FeatureInfoResponse>(urlLeft);
         const NUTS_layer_response = await axios.get<FeatureInfoResponse>(NUTS_layer);
 
-        if (
-          NUTS_layer_response.data.features?.length > 0 &&
-          NUTS_layer_response.data.features[0].properties
-        ) {
-          const properties = NUTS_layer_response.data.features[0].properties;
-          setNutsProperties(properties);
+        const nutProperties = NUTS_layer_response?.data?.features?.[0]?.properties;
+        if (nutProperties) {
+          setNutsProperties(nutProperties);
         }
 
         if (responseLeft.data.features?.length > 0 && responseLeft.data.features[0].properties) {
@@ -307,15 +310,32 @@ const Map: FC<GeostoryMapProps> = ({
     [date, compareDate, wmsSource, wmsCompareSource, compareLayerData, layerData]
   );
 
+  // Update tooltip value when the layer changes and it's already open
   useEffect(() => {
     if (tooltipInfo.position) {
       void fetchTooltipValue(tooltipInfo.coordinate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tooltipInfo.position, tooltipInfo.coordinate]);
+  }, [tooltipInfo.position, tooltipInfo.coordinate, date]);
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
+      if (compareFunctionalityInfo) {
+        const resolution = e.map.getView()?.getResolution();
+        getHistogramData(wmsNutsSource, e.coordinate, resolution, layerId).then((data) => {
+          setTooltipInfo((prev) => ({
+            ...prev,
+            compareNutProperties: data.properties,
+          }));
+          setCompareNutsProperties(data?.properties);
+          setNutsDataParamsCompare(data?.nutsDataParams);
+          setCompareFunctionalityInfo(false);
+        });
+        return;
+      }
+
+      setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
+      setCompareNutsProperties(null);
       const coordinatedToDegrees = toLonLat(e.coordinate);
       setLonLat(coordinatedToDegrees);
 
@@ -330,13 +350,14 @@ const Map: FC<GeostoryMapProps> = ({
       };
       setTooltipInfo({ ...newTooltipInfo });
     },
-    [setTooltipInfo, tooltipInfo]
+    [setTooltipInfo, tooltipInfo, compareFunctionalityInfo]
   );
 
   const handleCloseTooltip = useCallback(() => {
     const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
     setTooltipInfo(newTooltipInfo);
     setLeftLayerHistogramVisibility(false);
+    setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -372,14 +393,6 @@ const Map: FC<GeostoryMapProps> = ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layerId, compareLayerId]);
-
-  // Update tooltip value when the layer changes and it's already open
-  useEffect(() => {
-    if (tooltipInfo.position) {
-      void fetchTooltipValue(tooltipInfo.coordinate);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date]);
 
   const handleLocationSearchChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -600,7 +613,13 @@ const Map: FC<GeostoryMapProps> = ({
             onCloseTooltip={handleCloseTooltip}
             layerId={layerId}
             compareLayerId={compareLayerId}
+            onCompareClose={() => {
+              setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
+              setCompareNutsProperties(null);
+            }}
             {...tooltipInfo}
+            compareNutProperties={compareNutsProperties}
+            nutsProperties={nutsProperties}
           />
         )}
         {/* Interactivity */}

@@ -15,7 +15,8 @@ test('geostories and monitors display', async ({ page }) => {
 
   const datasetsData = (await datasetsResponse.json()) as MonitorsAndGeostoriesPaginated;
 
-  const pageLength = datasetsData['monitors and geostories'].length;
+  // NEW RESPONSE
+  const pageLength = datasetsData['monitors and geostories'].results.length;
 
   const datasetCard = page.getByTestId('datasets-list').locator('li');
   const maxResultShown = pageLength;

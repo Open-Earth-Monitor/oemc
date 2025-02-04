@@ -62,7 +62,7 @@ const PointHistogram: FC<HistogramTypes> = ({
     lon: lonLat?.[0] || 0,
     lat: lonLat?.[1] || 0,
     layer_id: layerId,
-    coll: srv_path,
+    srv_path,
     regex,
   };
 
@@ -74,31 +74,20 @@ const PointHistogram: FC<HistogramTypes> = ({
   );
 
   const histogramPointData = useMemo(() => {
-    if (!histogramData) return [];
-    if (Array.isArray(histogramData)) {
-      return histogramData.map((d) => ({
-        x: d.label,
-        y: d.value,
-      }));
-    } else {
-      (histogramData &&
-        Object.entries(histogramData)?.map(([label, value]) => {
-          const d1 = label.split('_')[0];
-          const date = d1.slice(0, 4) + '/' + d1.slice(4, 6) + '/' + d1.slice(6, 8);
-          return {
-            x: date,
-            y: value,
-          };
-        })) ||
-        [];
-    }
+    return {
+      data:
+        (histogramData || []).map((d) => ({
+          x: d.label,
+          y: d.value,
+        })) || [],
+    };
   }, [histogramData]);
 
   const handleClick = useCallback(() => {
     if (histogramData) {
       const data = Array.isArray(histogramData)
         ? histogramData
-        : histogramPointData?.map((d) => ({
+        : histogramPointData?.data?.map((d) => ({
             layer_id: layerId,
             label: d.x,
             value: d.y,
@@ -117,14 +106,14 @@ const PointHistogram: FC<HistogramTypes> = ({
         'left-[570px]': isSidebarOpen,
       })}
     >
-      <div className="first-letter:text-2xs border border-secondary-900 bg-brand-500 p-4 shadow-md">
+      <div className="first-letter:text-2xs border border-secondary-900 bg-brand-500 p-5 shadow-md">
         <button className="absolute right-4 top-4 z-50" onClick={onCloseTooltip}>
           <XIcon size={14} />
         </button>
         <div className="relative space-y-2">
-          <div className="font-satoshi mr-5 space-y-4 font-bold">
+          <div className="font-satoshi space-y-4 font-bold">
             <div>
-              <h3 className="text-sm">{leftData.title}</h3>
+              <h3 className="mb-2 text-sm">{leftData.title}</h3>
               <h4 className="text-2xl">
                 Location {numberFormat(lonLat[0])}, {numberFormat(lonLat[1])}
               </h4>

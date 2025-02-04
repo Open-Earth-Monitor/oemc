@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 
 import { FiDownload } from 'react-icons/fi';
 
@@ -14,11 +14,12 @@ import {
   nutsDataParamsCompareAtom,
   compareFunctionalityAtom,
   nutsDataParamsAtom,
+  regionsLayerVisibilityAtom,
 } from '@/app/store';
 
 import { Button } from '@/components/ui/button';
 
-import type { GeostoryTooltipInfo } from '../types';
+import type { GeostoryTooltipInfo, NutsProperties } from '../types';
 
 import { useAtomValue } from 'jotai';
 import { useSyncSidebarState } from '@/hooks/sync-query';
@@ -29,8 +30,7 @@ import Loading from '../../loading';
 import LineChart from '../../line-chart';
 import CompareGeolocationInfoPopup from '../compare-geolocation-info';
 import { useNutsLayerData } from '@/hooks/layers';
-
-const numberFormat = format(',.2f');
+import { transformNuqsData } from '../utils';
 
 export type AnnotationProps = {
   width: number;
@@ -43,59 +43,75 @@ interface HistogramTypes extends GeostoryTooltipInfo {
   layerId: string;
   compareLayerId: string;
   isRegionsLayerActive?: boolean;
+  nutsProperties?: NutsProperties;
+  compareNutProperties?: NutsProperties;
+  onCompareClose: () => void;
 }
 
 const RegionHistogram: FC<HistogramTypes> = ({
   onCloseTooltip = () => null,
   leftData,
-  isRegionsLayerActive = false,
+  compareNutProperties,
+  nutsProperties,
+  onCompareClose,
 }: HistogramTypes) => {
   const [isSidebarOpen] = useSyncSidebarState();
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const nutsDataParams = useAtomValue(nutsDataParamsAtom);
   const nutsDataParamsCompare = useAtomValue(nutsDataParamsCompareAtom);
+  const isRegionsLayerActive = useAtomValue(regionsLayerVisibilityAtom);
 
   const {
     data: histogramDataRegionRaw,
-    isLoading: isLoadingDataHistogram,
+    isFetching: isLoadingDataHistogram,
     isError: isErrorDataHistogram,
   } = useNutsLayerData(nutsDataParams, {
-    enabled: !!nutsDataParams.NUTS_ID && !!nutsDataParams.LAYER_ID,
+    enabled: !!nutsDataParams?.NUTS_ID && !!nutsDataParams?.LAYER_ID,
   });
 
   const {
     data: histogramDataRegionRawCompare,
-    isLoading: isLoadingDataCompareHistogram,
+    isFetching: isLoadingDataCompareHistogram,
     isError: isErrorDataCompareHistogram,
-  } = useNutsLayerData(nutsDataParams, {
-    enabled: !!nutsDataParamsCompare.NUTS_ID && !!nutsDataParamsCompare.LAYER_ID,
+  } = useNutsLayerData(nutsDataParamsCompare, {
+    enabled: !!nutsDataParamsCompare?.NUTS_ID && !!nutsDataParamsCompare?.LAYER_ID,
   });
 
-  const histogramDataRegion =
-    (histogramDataRegionRaw &&
-      !isLoadingDataHistogram &&
-      !isErrorDataHistogram &&
-      histogramDataRegionRaw.dataset?.map(({ label, avg, max, min }) => ({
-        x: label,
-        y: avg,
-        max,
-        min,
-      }))) ||
-    [];
+  const histogramDataRegion = useMemo(() => {
+    if (histogramDataRegionRaw && !isLoadingDataHistogram && !isErrorDataHistogram) {
+      return {
+        title: nutsProperties?.NAME_LATN,
+        data: transformNuqsData(histogramDataRegionRaw),
+      };
+    }
+  }, [histogramDataRegionRaw, isLoadingDataHistogram, isErrorDataHistogram, nutsProperties]);
 
-  const compareHistogramDataRegion =
-    (histogramDataRegionRawCompare &&
+  const compareHistogramDataRegion = useMemo(() => {
+    if (
+      histogramDataRegionRawCompare &&
       !isLoadingDataCompareHistogram &&
-      !isErrorDataCompareHistogram &&
-      histogramDataRegionRawCompare.dataset?.map(({ label, avg, max, min }) => ({
-        x: label,
-        y: avg,
-      }))) ||
-    [];
+      !isErrorDataCompareHistogram
+    ) {
+      return {
+        title: compareNutProperties?.NAME_LATN,
+        data: transformNuqsData(histogramDataRegionRawCompare),
+      };
+    }
+  }, [
+    histogramDataRegionRawCompare,
+    isLoadingDataCompareHistogram,
+    isErrorDataCompareHistogram,
+    compareNutProperties,
+  ]);
 
   const handleClick = () => {
-    if (histogramDataRegion && histogramDataRegion.length > 0) {
-      // downloadCSV([...histogramDataRegionRaw], `data-${leftData.title}.csv`);
+    if (histogramDataRegionRaw?.dataset?.length) {
+      const data = histogramDataRegionRaw.dataset.map((d) => ({
+        layer_id: nutsDataParams.LAYER_ID,
+        label: d.label,
+        value: d.avg,
+      }));
+      downloadCSV(data, `data-${leftData.title}.csv`);
     } else {
       console.error('No data available for download.');
     }
@@ -117,15 +133,27 @@ const RegionHistogram: FC<HistogramTypes> = ({
         'left-[570px]': isSidebarOpen,
       })}
     >
-      <div className="first-letter:text-2xs border border-secondary-900 bg-brand-500 p-4 shadow-md">
+      <div className="first-letter:text-2xs border border-secondary-900 bg-brand-500 p-5 shadow-md">
         <button className="absolute right-4 top-4 z-50" onClick={onCloseTooltip}>
           <XIcon size={14} />
         </button>
         <div className="relative space-y-2">
-          <div className="mr-5 space-y-4 font-satoshi font-bold">
+          <div className="font-satoshi space-y-4 font-bold">
             <div>
-              <h3 className="text-sm">{leftData.title}</h3>
-              <h4 className="text-2xl">Regions</h4>
+              <h3 className="mb-2 text-sm">{leftData.title}</h3>
+              <h4 className="text-2xl">
+                {nutsProperties?.NAME_LATN} - {nutsProperties?.CNTR_CODE}
+              </h4>
+              {compareNutProperties && (
+                <div className="mt-3 flex  items-center gap-2">
+                  <h4 className="text-2xl">
+                    {compareNutProperties.NAME_LATN} - {compareNutProperties.CNTR_CODE}
+                  </h4>
+                  <button className="py-0" onClick={onCompareClose}>
+                    <XIcon size={24} />
+                  </button>
+                </div>
+              )}
               <button
                 type="button"
                 onClick={handleClick}
@@ -138,29 +166,24 @@ const RegionHistogram: FC<HistogramTypes> = ({
                 <FiDownload className="h-6 w-6" />
                 <span className="font-inter text-xs">CSV</span>
               </button>
-              {(isLoadingDataHistogram || isLoadingDataCompareHistogram) && <Loading />}
-
-              {(compareFunctionalityInfo &&
-                !isLoadingDataCompareHistogram &&
-                !isLoadingDataHistogram) ||
-                (!compareFunctionalityInfo && !isLoadingDataHistogram && (
-                  <div className="relative h-full w-full">
-                    <LineChart
-                      data={histogramDataRegion}
-                      dataCompare={
-                        isRegionsLayerActive &&
-                        compareFunctionalityInfo &&
-                        compareHistogramDataRegion
-                      }
-                    />
-                  </div>
-                ))}
+              {isLoadingDataHistogram || isLoadingDataCompareHistogram ? (
+                <Loading />
+              ) : (
+                <div className="relative h-full w-full">
+                  <LineChart
+                    data={histogramDataRegion}
+                    dataCompare={isRegionsLayerActive && compareHistogramDataRegion}
+                  />
+                </div>
+              )}
             </div>
-            {isRegionsLayerActive && (
-              <Button variant="default_active" size="sm" onClick={onCompareActive}>
-                Compare
-              </Button>
-            )}
+            {isRegionsLayerActive &&
+              !compareFunctionalityInfo &&
+              !compareHistogramDataRegion?.data?.length && (
+                <Button variant="default_active" size="sm" onClick={onCompareActive}>
+                  Compare
+                </Button>
+              )}
           </div>
         </div>
       </div>

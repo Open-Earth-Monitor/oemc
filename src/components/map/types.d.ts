@@ -90,3 +90,19 @@ export type GeostoryMapProps = CustomMapProps & {
   layerData: LayerParsed;
   compareLayerData: LayerParsed;
 };
+
+export type NutsProperties = {
+  CNTR_CODE: string;
+  NAME_LATN: string;
+};
+
+export type NutsDataset = {
+  avg: number;
+  label: string;
+  max: number;
+  min: number;
+};
+
+export type NuqsData = {
+  dataset: NutsDataset[];
+};
