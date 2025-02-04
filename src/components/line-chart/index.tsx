@@ -3,58 +3,34 @@ import { Group } from '@visx/group';
 import { Line, LinePath } from '@visx/shape';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { AxisLeft, AxisBottom } from '@visx/axis';
-import { bisector } from '@visx/vendor/d3-array';
-import { useTooltip, Tooltip, defaultStyles } from '@visx/tooltip';
+import { useTooltip } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
-import { format } from 'd3-format';
+import ChartTooltip from './tooltip';
+import { DataPoint, LineChartProps, TooltipData } from './types';
+import {
+  bisectDate,
+  COMPARE_DATA_COLOR,
+  DATA_COLOR,
+  formatDate,
+  getDate,
+  height,
+  margin,
+  tickProps,
+  width,
+} from './utils';
+import ChartLegend from './legend';
 
-const numberFormat = format(',.2f');
-
-const formatDate = (value: number | string) =>
-  new Date(value).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-  });
-
-interface DataPoint {
-  x: string | number;
-  y: number;
-}
-
-interface LineChartProps {
-  data: DataPoint[];
-  dataCompare?: DataPoint[];
-}
-
-const margin = { top: 25, right: 20, bottom: 30, left: 65 };
-const height = 200;
-const width = 400;
-const colorAxis = '#2E3333';
-const tickProps = {
-  hideTicks: true,
-  stroke: colorAxis,
-  tickStroke: colorAxis,
-  strokeWidth: 0.5,
-  tickLabelProps: {
-    fill: '#848981',
-    fontSize: 12,
-    letterSpacing: '-0.1px',
-    fontWeight: 400,
-  },
-};
-
-const bisectDate = bisector<DataPoint, Date>((d) => new Date(d.x)).left;
-const getDate = (d: DataPoint) => new Date(d.x);
-
-const LineChart: React.FC<LineChartProps> = ({ data }) => {
+const LineChart: React.FC<LineChartProps> = ({ data: chartData, dataCompare }) => {
+  const compare = dataCompare?.data || [];
+  const data = chartData?.data || [];
   const x = (d: DataPoint) => new Date(d.x).valueOf();
   const y = (d: DataPoint) => d.y;
 
   // Calculate scales
-  const xMin = Math.min(...data.map(x));
-  const xMax = Math.max(...data.map(x));
-  const yMin = Math.min(...data.map(y));
-  const yMax = Math.max(...data.map(y));
+  const xMin = Math.min(...data.map(x), ...compare.map(x));
+  const xMax = Math.max(...data.map(x), ...compare.map(x));
+  const yMin = Math.min(...data.map(y), ...compare.map(y));
+  const yMax = Math.max(...data.map(y), ...compare.map(y));
 
   const xScale = scaleTime({
     range: [0, width - margin.left - margin.right],
@@ -67,24 +43,35 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
   });
 
   const { showTooltip, hideTooltip, tooltipData, tooltipLeft, tooltipTop, tooltipOpen } =
-    useTooltip<DataPoint>();
+    useTooltip<TooltipData>();
+
+  const getTooltipData = (data: DataPoint[], x: number) => {
+    const x0 = xScale.invert(x - margin.left);
+    const index = bisectDate(data, x0, 1);
+    const d0 = data[index - 1];
+    const d1 = data[index];
+    let d = d0;
+    if (d1 && getDate(d1)) {
+      d = x0.valueOf() - getDate(d0).valueOf() > getDate(d1).valueOf() - x0.valueOf() ? d1 : d0;
+    }
+    return d;
+  };
 
   const handleMouseMove = useCallback(
     (event: React.TouchEvent<SVGGElement> | React.MouseEvent<SVGGElement, MouseEvent>) => {
       const { x } = localPoint(event) || { x: 0 };
-      const x0 = xScale.invert(x - margin.left);
-      const index = bisectDate(data, x0, 1);
-      const d0 = data[index - 1];
-      const d1 = data[index];
-      let d = d0;
-      if (d1 && getDate(d1)) {
-        d = x0.valueOf() - getDate(d0).valueOf() > getDate(d1).valueOf() - x0.valueOf() ? d1 : d0;
-      }
+      const tooltipData = getTooltipData(data, x);
+      const tooltipDataCompare = getTooltipData(compare, x);
 
       showTooltip({
-        tooltipData: d,
+        tooltipData: {
+          ...tooltipData,
+          ...(!!compare.length && {
+            compare: { ...tooltipDataCompare, tooltipTop: yScale(tooltipDataCompare?.y) },
+          }),
+        },
         tooltipLeft: x - margin.left,
-        tooltipTop: yScale(d.y),
+        tooltipTop: yScale(tooltipData?.y),
       });
     },
     [showTooltip, yScale, xScale]
@@ -116,14 +103,27 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
             }}
           />
 
-          {/* Line */}
-          <LinePath
-            data={data}
-            x={(d) => xScale(x(d))}
-            y={(d) => yScale(y(d))}
-            stroke="#35B6D8"
-            strokeWidth={2}
-          />
+          <Group width={width} left={0} top={0}>
+            {/* Line */}
+            <LinePath
+              data={data}
+              x={(d) => xScale(x(d))}
+              y={(d) => yScale(y(d))}
+              stroke={DATA_COLOR}
+              strokeWidth={2}
+            />
+
+            {/* Compare Line */}
+            {!!compare?.length && (
+              <LinePath
+                data={compare}
+                x={(d) => xScale(x(d))}
+                y={(d) => yScale(y(d))}
+                stroke={COMPARE_DATA_COLOR}
+                strokeWidth={2}
+              />
+            )}
+          </Group>
 
           {/* Transparent rectangle for mouse events */}
           <rect
@@ -151,11 +151,22 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
                 cx={tooltipLeft}
                 cy={tooltipTop}
                 r={4}
-                fill="#35B6D8"
+                fill={DATA_COLOR}
                 stroke="white"
                 strokeWidth={2}
                 pointerEvents="none"
               />
+              {!!compare.length && (
+                <circle
+                  cx={tooltipLeft}
+                  cy={tooltipData.compare.tooltipTop}
+                  r={4}
+                  fill={COMPARE_DATA_COLOR}
+                  stroke="white"
+                  strokeWidth={2}
+                  pointerEvents="none"
+                />
+              )}
             </g>
           )}
         </Group>
@@ -163,23 +174,17 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
 
       {/* Tooltip */}
       {tooltipOpen && (
-        <Tooltip
-          top={tooltipTop - 12}
-          left={tooltipLeft + 60}
-          key={Math.random()}
-          className="TOOLTIP"
-          style={{
-            ...defaultStyles,
-            backgroundColor: 'transparent',
-            color: 'white',
-            borderRadius: '4px',
-          }}
-        >
-          <div className="bg-brand-500/80 p-2">
-            <p className="font-satoshi text-[10px]">{!!tooltipData && formatDate(tooltipData.x)}</p>
-            <p className="font-inter text-xs">{!!tooltipData && numberFormat(tooltipData.y)}</p>
-          </div>
-        </Tooltip>
+        <ChartTooltip
+          tooltipData={tooltipData}
+          tooltipLeft={tooltipLeft}
+          tooltipTop={tooltipTop}
+          dataTitle={chartData?.title}
+          dataCompareTitle={dataCompare?.title}
+        />
+      )}
+
+      {chartData?.title && dataCompare?.title && (
+        <ChartLegend title={chartData.title} compareTitle={dataCompare.title} />
       )}
     </div>
   );

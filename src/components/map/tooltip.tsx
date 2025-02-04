@@ -1,21 +1,31 @@
 'use client';
 
-import React, { FC } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 
 import { format } from 'd3-format';
 import { XIcon } from 'lucide-react';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { Button } from '@/components/ui/button';
 
-import { histogramLayerLeftVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
+import {
+  coordinateAtom,
+  histogramLayerLeftVisibilityAtom,
+  nutsDataParamsAtom,
+  regionsLayerVisibilityAtom,
+  resolutionAtom,
+} from '@/app/store';
 
-import type { MonitorTooltipInfo } from './types';
+import type { MonitorTooltipInfo, NutsProperties } from './types';
 import cn from '@/lib/classnames';
+import { getHistogramData } from './utils';
+import { TileWMS } from 'ol/source';
+import { Coordinate } from 'ol/coordinate';
 
 const numberFormat = format(',.2f');
 
 interface TooltipProps extends MonitorTooltipInfo {
   onCloseTooltip: () => void;
+  nutsProperties?: NutsProperties;
 }
 
 const MapTooltip: FC<TooltipProps> = ({
@@ -23,17 +33,47 @@ const MapTooltip: FC<TooltipProps> = ({
   onCloseTooltip = () => null,
   leftData,
   rightData,
+  nutsProperties,
 }: TooltipProps) => {
   if (!position || (!leftData?.value && leftData?.value !== 0)) return null;
   const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
     histogramLayerLeftVisibilityAtom
   );
+  const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
 
+  const [coordinate] = useAtom(coordinateAtom);
+  const [resolution] = useAtom(resolutionAtom);
+
+  const wmsNutsSource = useMemo(() => {
+    return new TileWMS({
+      url: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
+      params: {
+        TILED: true,
+        ID: true,
+        name: 'oem:NUTS_RG_01M_2021_3035',
+        LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+      },
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous',
+    });
+  }, []);
+
+  const handleHistogram = useCallback(async () => {
+    const { nutsDataParams } = await getHistogramData(
+      wmsNutsSource,
+      coordinate as Coordinate,
+      resolution,
+      leftData.id
+    );
+    setNutsDataParams(nutsDataParams);
+    setLeftLayerHistogramVisibility(true);
+  }, [coordinate, resolution, leftData.id, setLeftLayerHistogramVisibility]);
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
   const handleClick = () => {
     setLeftLayerHistogramVisibility(true);
   };
+
   const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
   const compareDateLabel =
     rightData.date && leftData.range?.find(({ value }) => value === rightData.date)?.label;
@@ -58,6 +98,9 @@ const MapTooltip: FC<TooltipProps> = ({
 
         {!!leftData.value && (
           <div className="flex items-center space-x-2">
+            {isRegionsLayerActive && !!nutsProperties?.NAME_LATN && (
+              <div className="font-satoshi text-2xl font-bold">{nutsProperties?.NAME_LATN}</div>
+            )}
             <div className="space-x-2 text-xl">
               {typeof leftData.value === 'number' ? numberFormat(leftData.value) : leftData.value}
               {!!leftData.unit && leftData.unit}
@@ -85,7 +128,7 @@ const MapTooltip: FC<TooltipProps> = ({
         {leftData?.value && isRegionsLayerActive && (
           <Button
             variant="light"
-            onClick={handleClick}
+            onClick={handleHistogram}
             className="font-inter text-xs"
             disabled={!leftData.value}
           >
