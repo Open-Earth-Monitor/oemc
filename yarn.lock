@@ -5060,6 +5060,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.4.7":
+  version: 16.4.7
+  resolution: "dotenv@npm:16.4.7"
+  checksum: c27419b5875a44addcc56cc69b7dc5b0e6587826ca85d5b355da9303c6fc317fc9989f1f18366a16378c9fdd9532d14117a1abe6029cc719cdbbef6eaef2cea4
+  languageName: node
+  linkType: hard
+
 "earcut@npm:^2.2.3":
   version: 2.2.4
   resolution: "earcut@npm:2.2.4"
@@ -7952,6 +7959,7 @@ __metadata:
     clsx: ^2.0.0
     cmdk: ^1.0.0
     d3-format: ^3.1.0
+    dotenv: ^16.4.7
     embla-carousel-react: ^8.1.7
     eslint: ^9.9.0
     eslint-config-next: 14.1.4

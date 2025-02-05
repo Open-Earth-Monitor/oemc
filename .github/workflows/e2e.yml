@@ -24,8 +24,10 @@ jobs:
         run: yarn install --immutable
       - name: Playwright install
         run: yarn playwright install --with-deps chrome
+      - name: Check installed Playwright browsers
+        run: yarn playwright install --dry-run
       - name: Run Playwright tests
-        run: yarn playwright test
+        run: yarn playwright test --browser=chromium --headless=false
         env:
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
       - uses: actions/upload-artifact@v4
