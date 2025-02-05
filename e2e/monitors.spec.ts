@@ -8,8 +8,7 @@ test.beforeEach(async ({ page }) => {
 
 // test.describe('monitors navigation', () => {
 //   test('from modal in /map', async ({ page }) => {
-//     const response = await page.waitForResponse('https://g3w.earthmonitor.org/dev
-/monitors');
+//     const response = await page.waitForResponse(  `${process.env.NEXT_PUBLIC_API_URL}monitors`);
 //     const json = (await response.json()) as Monitor[];
 //     const monitorsIds = json
 //       .filter((monitor) => monitor.ready && monitor.description !== null)
@@ -30,8 +29,7 @@ test.beforeEach(async ({ page }) => {
 //   });
 //   // TO - DO - add back
 //   // test('from modal in /map/{monitor_id}/datasets', async ({ page }) => {
-//   //   const monitorsFetchResponse = page.waitForResponse('https://g3w.earthmonitor.org/dev
-/monitors');
+//   //   const monitorsFetchResponse = page.waitForResponse('https://g3w.earthmonitor.org/dev/monitors');
 //   //   const response = await monitorsFetchResponse;
 //   //   const json = (await response.json()) as Monitor[];
 //   //   const monitorsIds = json

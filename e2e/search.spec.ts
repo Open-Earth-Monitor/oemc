@@ -27,13 +27,13 @@ test.describe('search of monitors and geostories', () => {
       await expect(page.getByTestId('datasets-result')).toHaveText('1 result');
     } else if (filteredJson['monitors and geostories'].length > 1) {
       await expect(page.getByTestId('datasets-result')).toHaveText(
-        `${filteredJson['monitors and geostories'].length} results`
+        `${filteredJson['monitors and geostories']['results'].length} results`
       );
     }
 
     // check that the no results disclaimer is displayed
     const noResultsDisclaimer = page.getByTestId('no-results-found');
-    if (!filteredJson['monitors and geostories'].length) {
+    if (!filteredJson['monitors and geostories']['results'].length) {
       await expect(noResultsDisclaimer).toBeVisible();
     }
   });
