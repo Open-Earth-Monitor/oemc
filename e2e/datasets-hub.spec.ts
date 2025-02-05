@@ -15,8 +15,7 @@ test('geostories and monitors display', async ({ page }) => {
 
   const datasetsData = (await datasetsResponse.json()) as MonitorsAndGeostoriesPaginated;
 
-  // NEW RESPONSE
-  const pageLength = datasetsData['monitors and geostories'].results.length;
+  const pageLength = datasetsData['monitors and geostories']?.results?.length;
 
   const datasetCard = page.getByTestId('datasets-list').locator('li');
   const maxResultShown = pageLength;
@@ -40,7 +39,7 @@ test.describe('monitors and geostories display', () => {
     );
 
     const monitorsData = (await monitorsResponse.json()) as MonitorsAndGeostoriesPaginated;
-    const firstMonitorWithData = monitorsData['monitors and geostories'].find(
+    const firstMonitorWithData = monitorsData['monitors and geostories']?.results?.find(
       (monitor) => monitor.ready && monitor.description !== null
     ) as Monitor;
 
@@ -92,7 +91,7 @@ test.describe('monitors and geostories display', () => {
     );
 
     const geostoriesData = (await geostoriesResponse.json()) as MonitorsAndGeostoriesPaginated;
-    const firstGeostoryWithData = geostoriesData['monitors and geostories'].find(
+    const firstGeostoryWithData = geostoriesData['monitors and geostories']?.results?.find(
       (geostory) => geostory.ready && geostory.description !== null
     ) as Geostory;
 
