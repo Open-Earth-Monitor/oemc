@@ -10,12 +10,11 @@ test.beforeEach(async ({ page }) => {
 
 test('geostories and monitors display', async ({ page }) => {
   const datasetsResponse = await page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories*`
+    `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories/*`
   );
 
   const datasetsData = (await datasetsResponse.json()) as MonitorsAndGeostoriesPaginated;
-
-  const pageLength = datasetsData['monitors and geostories']?.results?.length;
+  const pageLength = datasetsData['monitors and geostories']?.['results']?.length;
 
   const datasetCard = page.getByTestId('datasets-list').locator('li');
   const maxResultShown = pageLength;
@@ -35,7 +34,7 @@ test.describe('monitors and geostories display', () => {
     await monitorsCheckbox.click();
 
     const monitorsResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?type=monitors*`
+      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?type=monitors/`
     );
 
     const monitorsData = (await monitorsResponse.json()) as MonitorsAndGeostoriesPaginated;
@@ -87,7 +86,7 @@ test.describe('monitors and geostories display', () => {
     await geostoriesCheckbox.click();
 
     const geostoriesResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?type=geostories*`
+      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?type=geostories/`
     );
 
     const geostoriesData = (await geostoriesResponse.json()) as MonitorsAndGeostoriesPaginated;

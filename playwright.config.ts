@@ -1,5 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Read from ".env.test" file.
+dotenv.config({ path: path.resolve(__dirname, '.env.test') });
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -21,10 +27,13 @@ export default defineConfig({
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: process.env.CI ? 'yarn build && yarn start' : 'yarn dev',
+    command: process.env.CI ? 'yarn build && yarn start' : 'NODE_ENV=test && yarn dev',
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
+    env: {
+      NEXT_PUBLIC_API_URL: 'https://g3w.earthmonitor.org/dev/',
+    },
   },
   /* Run tests in files in parallel */
   fullyParallel: !process.env.CI,
@@ -51,7 +60,7 @@ export default defineConfig({
   projects: [
     {
       name: 'Google Chrome',
-      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+      use: { ...devices['Desktop Chrome'], channel: 'chromium' },
     },
     ...(process.env.CI
       ? []
