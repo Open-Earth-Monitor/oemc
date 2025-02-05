@@ -21,7 +21,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
       - name: Install project dependencies
-        run: yarn install --immutable
+        run: yarn install
       - name: Playwright install
         run: yarn playwright install --with-deps chrome
       - name: Check installed Playwright browsers
