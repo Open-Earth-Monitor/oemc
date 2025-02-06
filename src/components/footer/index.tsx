@@ -20,14 +20,14 @@ import SocialMedia from './social-media';
 
 export const Footer: FC = () => {
   return (
-    <footer className="flex w-full space-y-7 bg-gradient-to-b from-[#09131D] to-brand-500 py-7 font-inter outline-none">
+    <footer className="font-inter flex w-full space-y-7 bg-gradient-to-b from-[#09131D] to-brand-500 py-7 outline-none">
       <div className="container flex flex-col items-center">
         <div className="flex  w-full flex-1 flex-col flex-wrap justify-between gap-4 border-b border-secondary-900 pb-7 sm:flex-row">
           <div className="flex items-center space-x-3">
             <span className="text-xs text-secondary-700">Powered by</span>
             <Image
               alt="Open-earth-monitor"
-              src="/images/OEM-logo.svg"
+              src="/images/OEM_Logo.webp"
               width={147}
               height={40}
               className="inline-block"
@@ -135,7 +135,7 @@ export const Footer: FC = () => {
         <div className="flex w-full items-center space-x-2 ">
           <Image src="/images/landing/EU.svg" width={53} height={35} alt="European Union Logo" />
 
-          <span className="block flex-1 flex-wrap space-x-2 py-7 font-inter text-xs leading-tight text-secondary-700 sm:max-w-[434px]">
+          <span className="font-inter block flex-1 flex-wrap space-x-2 py-7 text-xs leading-tight text-secondary-700 sm:max-w-[434px]">
             This project has received funding from the European Union&apos;s Horizon Europe research
             and innovation programme under{' '}
             <a
