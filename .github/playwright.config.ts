@@ -19,8 +19,8 @@ dotenv.config({ path: path.resolve(__dirname, '.env.test') });
 const PORT = process.env.PORT || 3000;
 
 export default defineConfig({
-  // testDir: './e2e',
-  // outputDir: './e2e/test-results',
+  // testDir: './OEM_Logo.webp',
+  // outputDir: './OEM_Logo.webp/test-results',
   timeout: 120000,
   expect: {
     timeout: 120000,
