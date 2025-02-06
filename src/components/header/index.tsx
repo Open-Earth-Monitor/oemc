@@ -14,7 +14,7 @@ const Header = () => {
           <Link href="/">
             <Image
               alt="Open-earth-monitor"
-              src="/images/OEM-logo.svg"
+              src="/images/OEM_Logo.webp"
               width={147}
               height={40}
               className="block"
