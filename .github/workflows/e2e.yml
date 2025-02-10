@@ -16,20 +16,26 @@ jobs:
     runs-on: ubuntu-22.04
     environment: production
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Node setup
+        uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
+      - name: Enable Yarn
+        run: corepack enable yarn
+
       - name: Install project dependencies
         run: yarn install
+
       - name: Playwright install
-        run: yarn playwright install --with-deps chrome
-      - name: Check installed Playwright browsers
-        run: yarn playwright install --dry-run
+        run: yarn playwright install --with-deps chromium
+
       - name: Run Playwright tests
-        run: yarn playwright test --headed
-        env:
-          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+        run: yarn playwright test
+#        env:
+#          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
