@@ -16,7 +16,7 @@ export default defineConfig({
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: process.env.CI ? 'yarn build && yarn start' : 'yarn dev',
+    command: process.env.CI ? 'yarn build && node .next/standalone/server.js' : 'yarn dev',
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
