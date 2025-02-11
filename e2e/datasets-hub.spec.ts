@@ -33,7 +33,7 @@ test.only('geostories and monitors display', async ({ page }) => {
   await expect(resultNumber).toHaveText(result);
 });
 
-test.describe('monitors and geostories display', () => {
+test.only('monitors and geostories display', () => {
   test('monitors display', async ({ page }) => {
     const monitorsCheckbox = page.getByTestId('monitors-button-checkbox');
     await monitorsCheckbox.click();

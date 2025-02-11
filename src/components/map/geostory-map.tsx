@@ -23,6 +23,7 @@ import {
   useSyncCompareLayersSettings,
   useSyncCenterSettings,
   useSyncZoomSettings,
+  useSyncBboxSettings,
 } from '@/hooks/sync-query';
 
 import {
@@ -114,6 +115,7 @@ const Map: FC<GeostoryMapProps> = ({
   const [layers] = useSyncLayersSettings();
   const [center, setCenter] = useSyncCenterSettings();
   const [zoom, setZoom] = useSyncZoomSettings();
+  const [bbox, setBbox] = useSyncBboxSettings();
   const [nutsProperties, setNutsProperties] = useState(null);
   const [compareNutsProperties, setCompareNutsProperties] = useState(null);
   const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);

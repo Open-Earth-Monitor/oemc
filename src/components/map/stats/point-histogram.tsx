@@ -101,7 +101,8 @@ const PointHistogram: FC<HistogramTypes> = ({
   return (
     <div
       className={cn({
-        'absolute top-[81px] z-50 space-y-5 text-secondary-500 shadow-md': true,
+        'absolute top-[81px] z-50 min-h-[390px] min-w-[420px] space-y-5 text-secondary-500 shadow-md':
+          true,
         'left-2.5 ': !isSidebarOpen,
         'left-[570px]': isSidebarOpen,
       })}
