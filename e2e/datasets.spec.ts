@@ -27,7 +27,7 @@ test('datasets list', async ({ page }) => {
   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
 
   const layersResponse = await page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}${monitorsData[0].id}/layers/`
+    `${process.env.NEXT_PUBLIC_API_URL}/${monitorsData[0].id}/layers/`
   );
   const layersData = (await layersResponse.json()) as Layer[];
   const datasetsList = page.getByTestId('datasets-list').locator('li');
@@ -38,7 +38,7 @@ test('datasets list', async ({ page }) => {
 // TODO: once we know monitors with datasets, we can test this in a better way
 test('datasets item', async ({ page }) => {
   const monitorsResponse = await page.waitForResponse(
-    `https://g3w.earthmonitor.org/dev/monitors*/`
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors*/`
   );
   const monitorsData = (await monitorsResponse.json()) as Monitor[];
   // Find a monitor with layers (m1)
@@ -48,7 +48,7 @@ test('datasets item', async ({ page }) => {
   await page.waitForURL('**/map/**/datasets*', { waitUntil: 'load' });
 
   const layersResponse = await page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}${firstMonitorWithLayers.id}/layers/`
+    `${process.env.NEXT_PUBLIC_API_URL}/${firstMonitorWithLayers.id}/layers/`
   );
   const layersData = (await layersResponse.json()) as Layer[];
   const firstDataset = page.getByTestId(`dataset-item-${layersData[0].layer_id}`);

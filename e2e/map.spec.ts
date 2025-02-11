@@ -6,7 +6,7 @@ test('legend', async ({ page }) => {
     waitUntil: 'load',
   });
 
-  await page.waitForResponse(`${process.env.NEXT_PUBLIC_API_URL}layers?layer_id=l1`);
+  await page.waitForResponse(`${process.env.NEXT_PUBLIC_API_URL}/layers?layer_id=l1`);
   await expect(page.getByTestId('map-legend')).toBeVisible();
 
   // should be 1 layer in the legend

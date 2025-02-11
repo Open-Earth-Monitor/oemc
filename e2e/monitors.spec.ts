@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 
 // test.describe('monitors navigation', () => {
 //   test('from modal in /map', async ({ page }) => {
-//     const response = await page.waitForResponse(  `${process.env.NEXT_PUBLIC_API_URL}monitors`);
+//     const response = await page.waitForResponse(  `${process.env.NEXT_PUBLIC_API_URL}/monitors`);
 //     const json = (await response.json()) as Monitor[];
 //     const monitorsIds = json
 //       .filter((monitor) => monitor.ready && monitor.description !== null)

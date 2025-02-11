@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('filter monitors and geostories by different theme', () => {
   test('Filter by theme Soil', async ({ page, request }) => {
     const response = await request.get(
-      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?theme=Soil&pagination=true`
+      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?theme=Soil&pagination=true`
     );
     const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
 
@@ -17,7 +17,7 @@ test.describe('filter monitors and geostories by different theme', () => {
     await page.getByTestId('Soil-checkbox').setChecked(true);
 
     const filteredResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?*theme=Soil/*`
+      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?*theme=Soil/*`
     );
     const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
 
@@ -32,7 +32,7 @@ test.describe('filter monitors and geostories by different theme', () => {
 
 test(`Filter by themes Agriculture and Climate & Health`, async ({ page, request }) => {
   const response = await request.get(
-    `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?theme=Climate+%26+Health,Agriculture&pagination=true`
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?theme=Climate+%26+Health,Agriculture&pagination=true`
   );
   const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
 
@@ -41,7 +41,7 @@ test(`Filter by themes Agriculture and Climate & Health`, async ({ page, request
   await page.getByTestId('Climate & Health-checkbox').setChecked(true);
 
   const responsePromise = page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?*theme=Climate+%26+Health,Agriculture*/`
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?*theme=Climate+%26+Health,Agriculture*/`
   );
   const filteredResponse = await responsePromise;
   const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
@@ -55,7 +55,7 @@ test(`Filter by themes Agriculture and Climate & Health`, async ({ page, request
 
 test(`Filter by themes Soil and Water`, async ({ page, request }) => {
   const response = await request.get(
-    `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?theme=Water,Soil&pagination=true`
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?theme=Water,Soil&pagination=true`
   );
   const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
 
@@ -64,7 +64,7 @@ test(`Filter by themes Soil and Water`, async ({ page, request }) => {
   await page.getByTestId('Water-checkbox').setChecked(true);
 
   const responsePromise = page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?*theme=Water,Soil*`
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?*theme=Water,Soil*`
   );
   const filteredResponse = await responsePromise;
   const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
@@ -83,7 +83,7 @@ test.describe('Cards and badges displayed according selected themes', () => {
     await page.getByTestId('Water-checkbox').setChecked(true);
 
     const responsePromise = page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?*theme=Water,Soil*/`
+      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?*theme=Water,Soil*/`
     );
     const filteredResponse = await responsePromise;
     const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
@@ -105,7 +105,7 @@ test.describe('Cards and badges displayed according selected themes', () => {
     await page.getByTestId('Agriculture-checkbox').setChecked(true);
 
     const responsePromise = page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?*theme=Agriculture,Forest,Biodiversity*`
+      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?*theme=Agriculture,Forest,Biodiversity*`
     );
     const filteredResponse = await responsePromise;
     const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
