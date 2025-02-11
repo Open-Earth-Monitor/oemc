@@ -200,10 +200,10 @@ const LandingDatasets = () => {
             </div>
           </div>
         </div>
-        {!!data?.total_items && (
+        {!!data?.count && (
           <div data-testid="datasets-result" className="py-5 font-inter text-secondary-700">
-            <span data-testid="result-number">{data?.total_items}</span>{' '}
-            {data?.total_items === 1 ? 'result' : 'results'}
+            <span data-testid="result-number">{data?.count}</span>{' '}
+            {data?.count === 1 ? 'result' : 'results'}
           </div>
         )}
         <div className="min-h-[380px]">

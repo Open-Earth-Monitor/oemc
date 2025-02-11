@@ -6,15 +6,15 @@ export type MonitorsAndGeostories = (Monitor | Geostory)[];
 export type MonitorsAndGeostoriesParsed = (MonitorParsed | GeostoryParsed)[];
 
 export type MonitorsAndGeostoriesPaginated = {
-  response: (Monitor | Geostory)[];
+  results: (Monitor | Geostory)[];
   next_page: string | null;
   previous_page: string | null;
-  total_items: number;
+  count: number;
 };
 
 export type MonitorsAndGeostoriesPaginatedParsed = {
   data: (MonitorParsed | GeostoryParsed)[];
   next_page: string | null;
   previous_page: string | null;
-  total_items: number;
+  count: number;
 };

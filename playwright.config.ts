@@ -10,10 +10,10 @@ const PORT = process.env.PORT || 3000;
 export default defineConfig({
   testDir: './e2e',
   outputDir: './e2e/test-results',
-  timeout: 120000,
-  expect: {
-    timeout: 120000,
-  },
+  // timeout: 120000,
+  // expect: {
+  //   timeout: 120000,
+  // },
   /* Run your local dev server before starting the tests */
   webServer: {
     command: process.env.CI ? 'yarn build && node .next/standalone/server.js' : 'yarn dev',
