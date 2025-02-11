@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // fetch data
   const geostoryData = await axios
-    .get<Geostory[]>(`${process.env.NEXT_PUBLIC_API_URL}geostories?geostory_id=${id}`)
+    .get<Geostory[]>(`${process.env.NEXT_PUBLIC_API_URL}/geostories?geostory_id=${id}`)
     .then((response) => response.data);
 
   return {

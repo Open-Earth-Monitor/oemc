@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // fetch data
   const monitorData = await axios
-    .get<Monitor[]>(`${process.env.NEXT_PUBLIC_API_URL}monitors/${id}`)
+    .get<Monitor[]>(`${process.env.NEXT_PUBLIC_API_URL}/monitors/${id}`)
     .then((response) => response.data);
 
   if (!monitorData?.length) return { title: 'Geostory not found' };

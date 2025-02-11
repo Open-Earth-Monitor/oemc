@@ -3,22 +3,20 @@ import { test, expect } from '@playwright/test';
 import type { Geostory } from '@/types/geostories';
 import type { Monitor } from '@/types/monitors';
 import type { MonitorsAndGeostoriesPaginated } from '@/types/monitors-and-geostories';
-import {MONITOR_GEOSTORIES} from "./data/monitor-geostories";
+import { MONITOR_GEOSTORIES } from './data/monitor-geostories';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
 
 test.only('geostories and monitors display', async ({ page }) => {
-  const API_URL_REGEX = new RegExp(`${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories/*`);
+  const API_URL_REGEX = new RegExp(`${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/*`);
 
-  await page.route(API_URL_REGEX, async route => {
+  await page.route(API_URL_REGEX, async (route) => {
     await route.fulfill({ json: MONITOR_GEOSTORIES });
   });
 
-  const datasetsResponse = await page.waitForResponse(
-    API_URL_REGEX
-  );
+  const datasetsResponse = await page.waitForResponse(API_URL_REGEX);
 
   const datasetsData = (await datasetsResponse.json()) as MonitorsAndGeostoriesPaginated;
   const pageLength = datasetsData['results']?.length;
@@ -41,7 +39,7 @@ test.describe('monitors and geostories display', () => {
     await monitorsCheckbox.click();
 
     const monitorsResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?type=monitors/`
+      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?type=monitors/`
     );
 
     const monitorsData = (await monitorsResponse.json()) as MonitorsAndGeostoriesPaginated;
@@ -93,7 +91,7 @@ test.describe('monitors and geostories display', () => {
     await geostoriesCheckbox.click();
 
     const geostoriesResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories?type=geostories/`
+      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?type=geostories/`
     );
 
     const geostoriesData = (await geostoriesResponse.json()) as MonitorsAndGeostoriesPaginated;
