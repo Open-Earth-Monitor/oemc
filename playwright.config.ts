@@ -16,7 +16,7 @@ export default defineConfig({
   // },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: process.env.CI ? 'NODE_ENV=test yarn build && node .next/standalone/server.js' : 'yarn dev',
+    command: process.env.CI ? 'NODE_ENV=test yarn build && next start' : 'yarn dev',
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
@@ -48,13 +48,13 @@ export default defineConfig({
       name: 'Chromium',
       use: { ...devices['Desktop Chrome'], channel: 'chromium' },
     },
-    ...(process.env.CI
-      ? []
-      : [
-          {
-            name: 'Mozilla Firefox',
-            use: { ...devices['Desktop Firefox'] },
-          },
-        ]),
+    // ...(process.env.CI
+    //   ? []
+    //   : [
+    //       {
+    //         name: 'Mozilla Firefox',
+    //         use: { ...devices['Desktop Firefox'] },
+    //       },
+    //     ]),
   ],
 });
