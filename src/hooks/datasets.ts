@@ -46,7 +46,7 @@ export function useMonitorsAndGeostories(
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostories>({
       method: 'GET',
-      url: '/monitors-and-geostories',
+      url: '/monitors-and-geostories/',
       params,
       ...queryOptions,
     }).then((response) => response.data);
@@ -77,7 +77,7 @@ export function useMonitorsAndGeostoriesPaginated(
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostoriesPaginated>({
       method: 'GET',
-      url: '/monitors-and-geostories',
+      url: '/monitors-and-geostories/',
       params: {
         ...(theme && theme.length > 0 && { theme: themeQuery }),
         ...restParams,
