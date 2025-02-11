@@ -114,6 +114,7 @@ export function useNutsLayerData(
       url: '/stats',
       params,
     }).then((response) => {
+      console.log(response.data);
       return response.data;
     });
   };

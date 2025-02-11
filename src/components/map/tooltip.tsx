@@ -77,7 +77,7 @@ const MapTooltip: FC<TooltipProps> = ({
   const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
   const compareDateLabel =
     rightData.date && leftData.range?.find(({ value }) => value === rightData.date)?.label;
-
+  console.log(leftData);
   return (
     <div
       className={cn({

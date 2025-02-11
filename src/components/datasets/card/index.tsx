@@ -216,6 +216,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
             type="button"
             variant="default_active"
             onClick={handleToggleLayer}
+            className="flex items-center space-x-2"
           >
             <span>{isActive ? 'Hide' : 'Show'} layer on the map</span>
             <LuLayers className="h-3 w-3 text-inherit" title="layer" />
