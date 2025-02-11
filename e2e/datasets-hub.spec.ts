@@ -4,7 +4,6 @@ import type { Geostory } from '@/types/geostories';
 import type { Monitor } from '@/types/monitors';
 import type { MonitorsAndGeostoriesPaginated } from '@/types/monitors-and-geostories';
 import {MONITOR_GEOSTORIES} from "./data/monitor-geostories";
-import * as process from "node:process";
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -13,7 +12,7 @@ test.beforeEach(async ({ page }) => {
 test.only('geostories and monitors display', async ({ page }) => {
   const API_URL_REGEX = new RegExp(`${process.env.NEXT_PUBLIC_API_URL}monitors-and-geostories/*`);
 
-  page.route(API_URL_REGEX, async route => {
+  await page.route(API_URL_REGEX, async route => {
     await route.fulfill({ json: MONITOR_GEOSTORIES });
   });
 
