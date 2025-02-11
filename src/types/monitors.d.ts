@@ -28,12 +28,12 @@ export type MonitorsPaginated = {
   monitors: Monitor[];
   next_page: string | null;
   previous_page: string | null;
-  total_items: number;
+  count: number;
 };
 
 export type MonitorsPaginatedParsed = {
   data: MonitorParsed[];
   next_page: string | null;
   previous_page: string | null;
-  total_items: number;
+  count: number;
 };
