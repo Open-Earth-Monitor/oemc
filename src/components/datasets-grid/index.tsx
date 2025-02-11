@@ -235,7 +235,7 @@ const LandingDatasets = () => {
             <Pagination
               page={page}
               setPage={setPage}
-              totalItems={data?.total_items}
+              totalItems={data?.count}
               maxLength={6}
               nextPage={data?.next_page}
               previousPage={data?.previous_page}
