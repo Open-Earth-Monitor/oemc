@@ -11,7 +11,6 @@ import type { Coordinate } from 'ol/coordinate';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
-import { RView } from 'rlayers/RMap';
 
 import cn from '@/lib/classnames';
 import { mobile, tablet } from '@/lib/media-queries';
@@ -23,8 +22,7 @@ import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
 import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
-  useSyncCenterSettings,
-  useSyncZoomSettings,
+  useSyncBboxSettings,
 } from '@/hooks/sync-query';
 import PointHistogram from './stats/point-histogram';
 import RegionsHistogram from './stats/region-histogram';
@@ -40,7 +38,7 @@ import {
 import LocationSearchComponent from '@/components/location-search';
 
 import Attributions from './attributions';
-import { DEFAULT_VIEWPORT } from './constants';
+import { DEFAULT_VIEWPORT, InitialViewport } from './constants';
 // map controls
 import Controls from './controls';
 import BookmarkControl from './controls/bookmark';
@@ -48,17 +46,21 @@ import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import Legend from './legend';
 import MapTooltip from './tooltip';
-import type { CustomMapProps, MonitorTooltipInfo, Bbox } from './types';
+import type { CustomMapProps, MonitorTooltipInfo } from './types';
 import { useParams } from 'next/navigation';
 import { transformToBBoxArray } from '@/lib/format';
 import CompareRegionsStatistics from './controls/compare-regions';
 
 import type { FeatureInfoResponse } from './types';
-import CompareGeolocationInfoPopup from './compare-geolocation-info';
 import { getHistogramData } from './utils';
 
+import { Extent } from 'ol/extent';
+import BasemapControl from './controls/basemaps';
+import Basemaps from './basemap';
+import BasemapLayer from './basemap';
+
 interface ClickEvent {
-  bbox?: Bbox;
+  bbox?: Extent;
 }
 
 const TooltipInitialState = {
@@ -92,6 +94,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   );
   const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
+  const [bbox, setBbox] = useSyncBboxSettings();
   const [nutsProperties, setNutsProperties] = useState(null);
   const [compareNutsProperties, setCompareNutsProperties] = useState(null);
   const setCoordinate = useSetAtom(coordinateAtom);
@@ -107,6 +110,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     map: ol.Map;
     ol: {
       getView: () => ol.View;
+      getSize: () => ol.Size;
     };
   }> = useRef<null>(null);
 
@@ -116,8 +120,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TooltipInitialState);
   const [layers] = useSyncLayersSettings();
-  const [center, setCenter] = useSyncCenterSettings();
-  const [zoom, setZoom] = useSyncZoomSettings();
 
   // Layer from the URL
   const layerId = layers?.[0]?.id;
@@ -133,13 +135,23 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const { data: compareData } = useLayer({ layer_id: compareLayerId });
 
+  // bbox that come defined in the monitor itself
+  const predefinedBbox = transformToBBoxArray(monitorData?.monitor_bbox);
+
+  // check URL in case the site has been shared, if not get predefined bbox if not use the default one
+  const monitorBbox = useMemo(
+    () => bbox ?? predefinedBbox ?? initialViewState.bbox,
+    [bbox, predefinedBbox]
+  );
+
   /**
    * Initial viewport from the URL or the default one
    */
   const initialViewport = {
-    center: center && monitorData ? center : initialViewState.center,
-    zoom: zoom && monitorData ? Number(zoom) : initialViewState.zoom,
-  } satisfies RView;
+    zoom: initialViewState.zoom,
+    center: initialViewState.center,
+    bbox: monitorBbox,
+  } satisfies InitialViewport;
 
   /**
    * Get the layer source from the API
@@ -167,17 +179,19 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   /**
    * Update the URL when the user stops moving the map
    */
-  const handleMapMove = useCallback<
-    (e: MapBrowserEvent<UIEvent & { frameState: { viewState: RView } }>) => void
-  >(
-    (e) => {
-      const { center, zoom } = e.frameState.viewState;
+  const handleMapMove = useCallback(() => {
+    if (!mapRef.current) return;
 
-      void setCenter(center);
-      void setZoom(zoom.toString());
-    },
-    [setCenter, setZoom]
-  );
+    const map = mapRef.current.ol;
+    const mapSize = map.getSize();
+
+    if (!mapSize) return;
+
+    const bbox = map.getView().calculateExtent(mapSize);
+
+    setBbox(bbox);
+  }, [setBbox]);
+
   const wmsNutsSource = useMemo(() => {
     return new TileWMS({
       url: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
@@ -274,8 +288,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     [date, compareDate, gs_name, title, wmsSource, unit, range, range_labels, wmsNutsSource]
   );
 
-  const [monitorBbox, setMonitorBbox] = useState(null);
-
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
       if (compareFunctionalityInfo) {
@@ -319,20 +331,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     setIsRegionsLayerActive((prev) => !prev);
   }, [setIsRegionsLayerActive]);
 
-  // Center to the monitor bbox
   useEffect(() => {
-    if (monitorData?.monitor_bbox && mapRef) {
-      // TO-DO: remove split once the API is fixed
-      const bbox = transformToBBoxArray(monitorData?.monitor_bbox);
-      if (bbox) {
-        mapRef?.current?.ol
-          ?.getView()
-          ?.fit((monitorData?.monitor_bbox as unknown as string).split(',').map(Number));
-        setMonitorBbox(monitorBbox);
-      }
+    if (monitorBbox && mapRef) {
+      setBbox(monitorBbox);
+      mapRef?.current?.ol?.getView()?.fit(monitorBbox);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [monitorData?.monitor_bbox]);
+  }, [monitorBbox]);
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
@@ -381,7 +385,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       bbox: [
         ...fromLonLat([+d.boundingbox[2], +d.boundingbox[0]]),
         ...fromLonLat([+d.boundingbox[3], +d.boundingbox[1]]),
-      ] as Bbox,
+      ] as Extent,
     }));
   }, [locationData]);
 
@@ -397,12 +401,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       }
 
       // Center the map
-      const [minLon, minLat, maxLon, maxLat] = e.bbox;
-      const centerLon = (minLon + maxLon) / 2;
-      const centerLat = (minLat + maxLat) / 2;
-      setCenter([centerLon, centerLat]);
-      const zoom = isMobile ? 2 : 5;
-      setZoom(zoom.toString());
+      setBbox(e.bbox);
     },
     [isDesktop, isMobile]
   );
@@ -422,11 +421,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         onSingleClick={handleSingleClick}
         noDefaultControls
       >
-        <RLayerTile
-          properties={{ label: 'Basemap' }}
-          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          attributions="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-        />
+        <BasemapLayer />
 
         {isRegionsLayerActive && (
           <RLayerWMS
@@ -500,6 +495,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
         />
 
+        <RLayerTile
+          zIndex={100}
+          url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+          attributions="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>"
+        />
+
         <Controls>
           <LocationSearchComponent
             locationSearch={locationSearch}
@@ -524,6 +525,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
             <BookmarkControl isMobile={isMobile} />
             <ShareControl isMobile={isMobile} />
+            <BasemapControl isMobile={isMobile} />
           </div>
           {isCompareLayerActive && data && !isLoading && (
             <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />

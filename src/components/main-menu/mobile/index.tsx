@@ -145,7 +145,7 @@ const MainMenuMobile = () => {
                     className="font-satoshi flex h-full min-w-[180px] items-center justify-center p-4 text-center font-bold text-secondary-500 transition-colors first:border-t first:border-secondary-900 hover:bg-secondary-500 hover:text-brand-500"
                     onClick={handleMapMenu}
                   >
-                    Map
+                    Explore Data
                   </button>
                   {menuVisibility && (
                     <div

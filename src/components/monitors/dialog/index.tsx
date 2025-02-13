@@ -52,7 +52,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
           data-testid={`card-button-${id}`}
           className="h-12 max-w-fit p-4 text-base sm:h-9 sm:text-xs"
         >
-          Know more
+          Learn more
         </Button>
       </DialogTrigger>
       <DialogContent
@@ -70,7 +70,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
               </h2>
               <div
                 data-testid="monitor-description"
-                className="flex flex-wrap font-inter leading-[25px]"
+                className="font-inter flex flex-wrap leading-[25px]"
               >
                 {description}
               </div>

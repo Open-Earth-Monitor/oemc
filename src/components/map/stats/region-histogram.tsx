@@ -124,7 +124,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
   const onCloseCompareInfo = useCallback(() => {
     setCompareFunctionalityInfo(false);
   }, []);
-  console.log(histogramDataRegionRaw, nutsDataParams);
+
   return (
     <div
       className={cn({

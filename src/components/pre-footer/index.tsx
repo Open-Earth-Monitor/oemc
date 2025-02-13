@@ -7,7 +7,7 @@ import { HiOutlineArrowUp } from 'react-icons/hi';
 
 const PreFooter = () => {
   return (
-    <section className="relative m-auto font-satoshi">
+    <section className="font-satoshi relative m-auto">
       <div className="relative flex h-fit w-full overflow-hidden bg-[url('/images/landing/prefooter.webp')] bg-cover bg-top bg-no-repeat lg:h-[760px]">
         <div className="container relative m-auto mb-32 mt-40 flex w-full flex-col lg:flex-row">
           <div className="flex flex-1 lg:items-center">
@@ -26,7 +26,7 @@ const PreFooter = () => {
                     href="https://earthmonitor.org/"
                     rel="noopener noreferrer"
                   >
-                    Know more about the project
+                    Learn more about the project
                   </a>
                   <motion.div
                     className="h-0.5 w-0 bg-secondary-500"

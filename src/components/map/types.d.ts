@@ -3,8 +3,8 @@ import type { RView } from 'rlayers/RMap';
 
 import type { GeostoryParsed } from '@/types/geostories';
 import type { LayerDateRange, LayerParsed } from '@/types/layers';
-
-export type Bbox = [number, number, number, number];
+import { InitialViewport } from './constants';
+import { Bbox } from 'ol/extent';
 
 export interface CustomMapProps extends Omit<RMapProps, 'initial'> {
   /** A function that returns the map instance */
@@ -17,20 +17,18 @@ export interface CustomMapProps extends Omit<RMapProps, 'initial'> {
   /** Zoom level, 0 is the whole world, 28 is maximum resolution */
   /** When resolution is set, it takes precedence over the zoom level  */
 
-  viewState?: Partial<RView>;
-  initialViewState?: Partial<RView>;
-  initial?: Partial<RView>;
+  viewState?: { bbox: Bbox };
+  initialViewState?: InitialViewport;
+  initial?: { bbox: Bbox };
 
   /** An string that defines the rotation axis */
   constrainedAxis?: 'x' | 'y';
 
   /** A function that exposes the viewport */
-  onMapViewStateChange?: (viewstate: Partial<RView>) => void;
+  onMapViewStateChange?: (viewstate: { bbox: Bbox }) => void;
 
   isGeostory?: boolean;
 }
-
-export type ExplicitViewState = Pick<RView, 'center' | 'zoom'>;
 
 export type GeostoryTooltipInfo = {
   position: [number, number] | null;

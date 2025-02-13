@@ -1,6 +1,10 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 
+import { getCenter } from 'ol/extent';
+import { fromLonLat, toLonLat } from 'ol/proj';
+import View from 'ol/View';
+
 import API from 'services/api';
 
 type UseParams = {
@@ -46,4 +50,36 @@ export function usePointData(
     select: (data) => data,
     ...queryOptions,
   });
+}
+
+export function getBboxFromMap(map) {
+  const view = map?.getView();
+  const extent = view.calculateExtent(map.getSize());
+  const bbox = [toLonLat([extent[0], extent[1]]), toLonLat([extent[2], extent[3]])];
+
+  return bbox;
+}
+
+export function getCenterAndZoomFromBbox(bbox, mapSize) {
+  // Convert BBOX a EPSG:3857
+  const bbox3857 = bbox.map((coord, i) =>
+    i % 2 === 0 ? fromLonLat([coord, bbox[i + 1]])[0] : fromLonLat([bbox[i - 1], coord])[1]
+  );
+
+  // Get center of the BBOX
+  const center = getCenter(bbox3857);
+
+  // Get view from the center
+  const view = new View({
+    center: center,
+    projection: 'EPSG:3857',
+  });
+
+  // Adjust view to fit the BBOX
+  view.fit(bbox3857, { size: mapSize });
+
+  return {
+    center: toLonLat(center), // Convertir a EPSG:4326
+    zoom: view.getZoom(),
+  };
 }

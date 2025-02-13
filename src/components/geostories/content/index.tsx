@@ -142,19 +142,20 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                   <ScrollArea className="h-full p-7.5 md:w-[370px] lg:w-[526px]" type="auto">
                     <div className="space-y-6">
                       <div className="divide-y divide-secondary-900">
-                        {geostoryData?.monitors?.[0].id && (
-                          <Link
-                            href={`/map/${geostoryData.monitors[0].id}/geostories`}
-                            className="sticky top-0 z-10 block space-x-3 bg-brand-500 pb-8 font-bold"
-                            data-testid="back-to-monitor"
-                            style={{ color: geostoryData.color }}
-                          >
-                            <HiArrowLeft className="inline-block h-6 w-6" />
-                            <span data-testid="monitor-title-back-btn">
-                              Back to {geostoryData.monitors[0].title}.
-                            </span>
-                          </Link>
-                        )}
+                        <div>
+                          {geostoryData?.monitors.length && <div>Reports to:</div>}
+                          {geostoryData?.monitors?.map((monitor) => (
+                            <Link
+                              href={`/map/${monitor.id}/geostories`}
+                              className="sticky top-0 z-10 block space-x-3 bg-brand-500 pb-8 font-bold"
+                              data-testid="back-to-monitor"
+                              style={{ color: geostoryData.color }}
+                            >
+                              <HiArrowLeft className="inline-block h-6 w-6" />
+                              <span data-testid="monitor-title-back-btn">{monitor.title}.</span>
+                            </Link>
+                          ))}
+                        </div>
                         {isGeostoryLoading && <Loading />}
                         {geostoryData && !isGeostoryLoading && (
                           <GeostoryHeader {...geostoryData} color={geostoryData.color} />

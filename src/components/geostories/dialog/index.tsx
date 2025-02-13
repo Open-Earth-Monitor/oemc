@@ -48,7 +48,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
           data-testid={`card-button-${id}`}
           className="h-12 max-w-fit text-base hover:bg-transparent hover:shadow-[2px_2px_#ffffe5] sm:h-9 sm:p-4 sm:text-xs"
         >
-          Know more
+          Learn more
         </Button>
       </DialogTrigger>
       <DialogContent
@@ -66,7 +66,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
               </h2>
               <div
                 data-testid="monitor-description"
-                className="flex flex-wrap font-inter leading-[25px]"
+                className="font-inter flex flex-wrap leading-[25px]"
               >
                 {description}
               </div>

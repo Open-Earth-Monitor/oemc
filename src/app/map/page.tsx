@@ -18,7 +18,7 @@ const MapLayout: NextPage = () => (
         <section className="space-y-6">
           <header className="sm:divide-x-secondary-500 sm:divide-x">
             <h1 className="font-satoshi text-4xl font-bold leading-tight text-secondary-500 sm:inline-block sm:pr-6">
-              Monitors directory
+              Monitor List
             </h1>
             <span className="inline-block sm:pl-6">Select one to discover</span>
           </header>
