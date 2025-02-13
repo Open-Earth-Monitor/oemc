@@ -5,7 +5,7 @@ export const navLinks = [
     'data-testid': 'hub-link',
   },
   {
-    name: 'Map',
+    name: 'Explore Data',
     href: '/map',
     'data-testid': 'map-link',
   },

@@ -27,7 +27,7 @@ const MonitorsDirectoryDialog: FC = () => {
           data-testid="monitors-directory-trigger"
           className="text-secondary-500"
         >
-          Monitors Directory
+          Monitor List
         </Button>
       </DialogTrigger>
       <DialogContent
@@ -43,7 +43,7 @@ const MonitorsDirectoryDialog: FC = () => {
             <DialogTitle asChild>
               <header className="sm:divide-x-secondary-500 text-left sm:divide-x">
                 <h1 className="font-satoshi text-4xl font-bold leading-tight text-secondary-500 sm:inline-block sm:pr-6">
-                  Monitors directory
+                  Monitor List
                 </h1>
                 <span className="inline-block sm:pl-6">Select one to discover</span>
               </header>

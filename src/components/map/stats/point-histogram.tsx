@@ -10,7 +10,7 @@ import { XIcon } from 'lucide-react';
 import { cn } from '@/lib/classnames';
 
 import { lonLatAtom } from '@/app/store';
-import { usePointData } from '@/hooks/regions';
+import { usePointData } from '@/hooks/map';
 
 import type { GeostoryTooltipInfo } from '../types';
 

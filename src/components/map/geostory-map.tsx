@@ -6,7 +6,7 @@ import { useMediaQuery } from 'react-responsive';
 
 import axios from 'axios';
 import type { MapBrowserEvent } from 'ol';
-import ol from 'ol';
+import ol, { View } from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
@@ -21,15 +21,12 @@ import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
 import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
-  useSyncCenterSettings,
-  useSyncZoomSettings,
   useSyncBboxSettings,
 } from '@/hooks/sync-query';
 
 import {
   coordinateAtom,
   lonLatAtom,
-  resolutionAtom,
   regionsLayerVisibilityAtom,
   histogramLayerLeftVisibilityAtom,
   nutsDataParamsCompareAtom,
@@ -49,16 +46,18 @@ import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
-import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse, Bbox } from './types';
-import { useLayer } from '@/hooks/layers';
+import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse } from './types';
 import { transformToBBoxArray } from '@/lib/format';
 import PointHistogram from './stats/point-histogram';
 import RegionsHistogram from './stats/region-histogram';
 import CompareRegionsStatistics from './controls/compare-regions';
 import { getHistogramData } from './utils';
 
+import { Extent } from 'ol/extent';
+import { InitialViewport } from './constants';
+
 interface ClickEvent {
-  bbox?: Bbox;
+  bbox?: Extent;
 }
 
 const Map: FC<GeostoryMapProps> = ({
@@ -76,7 +75,6 @@ const Map: FC<GeostoryMapProps> = ({
   );
 
   const setCoordinate = useSetAtom(coordinateAtom);
-  const setResolution = useAtom(resolutionAtom)[1];
 
   const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
   const [lonLat, setLonLat] = useAtom(lonLatAtom);
@@ -88,6 +86,7 @@ const Map: FC<GeostoryMapProps> = ({
     map: ol.Map;
     ol: {
       getView: () => ol.View;
+      getSize: () => ol.Size;
     };
   }> = useRef<null>(null);
 
@@ -113,8 +112,6 @@ const Map: FC<GeostoryMapProps> = ({
   };
   const [tooltipInfo, setTooltipInfo] = useState<GeostoryTooltipInfo>(TooltipInitialState);
   const [layers] = useSyncLayersSettings();
-  const [center, setCenter] = useSyncCenterSettings();
-  const [zoom, setZoom] = useSyncZoomSettings();
   const [bbox, setBbox] = useSyncBboxSettings();
   const [nutsProperties, setNutsProperties] = useState(null);
   const [compareNutsProperties, setCompareNutsProperties] = useState(null);
@@ -134,19 +131,23 @@ const Map: FC<GeostoryMapProps> = ({
   const compareDate = compareLayers?.[0]?.date;
   const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
 
-  // const compareLayerInfo = useLayer(
-  //   { layer_id: compareLayerId },
-  //   { enabled: isCompareLayerActive }
-  // );
-  // const layerInfo = useLayer({ layer_id: layerId }, { enabled: isLayerActive });
+  // bbox that come defined in the geostory
+  const predefinedBbox = transformToBBoxArray(geostoryData?.geostory_bbox);
+
+  // check URL in case the site has been shared, if not get predefined bbox if not use the default one
+  const geostoryBbox = useMemo(
+    () => bbox ?? predefinedBbox ?? initialViewState.bbox,
+    [bbox, predefinedBbox]
+  );
 
   /**
    * Initial viewport from the URL or the default one
    */
   const initialViewport = {
-    center: center ? center : initialViewState.center,
-    zoom: zoom ? Number(zoom) : initialViewState.zoom,
-  } satisfies RView;
+    zoom: initialViewState.zoom,
+    center: initialViewState.center,
+    bbox: geostoryBbox,
+  } satisfies InitialViewport;
 
   /* Interactivity */
   const wmsSource = useMemo(() => {
@@ -194,16 +195,18 @@ const Map: FC<GeostoryMapProps> = ({
   /**
    * Update the URL when the user stops moving the map
    */
-  const handleMapMove = useCallback<
-    (e: MapBrowserEvent<UIEvent & { frameState: { viewState: RView } }>) => void
-  >(
-    (e) => {
-      const { center, zoom } = e.frameState.viewState;
-      void setCenter(center);
-      void setZoom(zoom.toString());
-    },
-    [setCenter, setZoom]
-  );
+  const handleMapMove = useCallback(() => {
+    if (!mapRef.current) return;
+
+    const map = mapRef.current.ol;
+    const mapSize = map.getSize();
+
+    if (!mapSize) return;
+
+    const bbox = map.getView().calculateExtent(mapSize);
+
+    setBbox(bbox);
+  }, [setBbox]);
 
   const fetchTooltipValue = useCallback(
     async (coordinate) => {
@@ -363,30 +366,12 @@ const Map: FC<GeostoryMapProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [geostoryBbox, setGeostoryBbox] = useState(null);
-
-  const [minLon, minLat, maxLon, maxLat] = geostoryBbox || [];
-  const centerLon = (minLon + maxLon) / 2;
-  const centerLat = (minLat + maxLat) / 2;
-
-  const GEOSTORY_VIEWPORT = {
-    center: [centerLon, centerLat] || initialViewState.center,
-    zoom: zoom || initialViewState.zoom,
-  };
-
-  // Center to the geostory bbox
   useEffect(() => {
-    if (geostoryData?.geostory_bbox && mapRef) {
-      const bbox = transformToBBoxArray(geostoryData?.geostory_bbox);
-      if (bbox) {
-        // TO-DO: remove split once the API is fixed
-        mapRef?.current?.ol?.getView()?.fit(bbox);
-        setGeostoryBbox(bbox);
-        setZoom('5'); // default zoom
-      }
+    if (geostoryBbox && mapRef) {
+      setBbox(geostoryBbox);
+      mapRef?.current?.ol?.getView()?.fit(geostoryBbox);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geostoryData?.geostory_bbox]);
+  }, [geostoryBbox]);
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
@@ -429,7 +414,7 @@ const Map: FC<GeostoryMapProps> = ({
       bbox: [
         ...fromLonLat([+d.boundingbox[2], +d.boundingbox[0]]),
         ...fromLonLat([+d.boundingbox[3], +d.boundingbox[1]]),
-      ] as Bbox,
+      ] as Extent,
     }));
   }, [locationData]);
 
@@ -445,12 +430,7 @@ const Map: FC<GeostoryMapProps> = ({
       }
 
       // Center the map
-      const [minLon, minLat, maxLon, maxLat] = e.bbox;
-      const centerLon = (minLon + maxLon) / 2;
-      const centerLat = (minLat + maxLat) / 2;
-      setCenter([centerLon, centerLat]);
-      const zoom = isMobile ? 2 : 5;
-      setZoom(zoom.toString());
+      setBbox(e.bbox);
     },
     [isDesktop, isMobile]
   );
@@ -458,6 +438,9 @@ const Map: FC<GeostoryMapProps> = ({
   const handleRegionsLayer = useCallback(() => {
     setIsRegionsLayerActive((prev) => !prev);
   }, [setIsRegionsLayerActive]);
+
+  const mapZoom = useMemo(() => mapRef.current?.ol.getView()?.getZoom(), [mapRef]);
+  const mapCenter = useMemo(() => mapRef.current?.ol.getView()?.getCenter(), [mapRef]);
 
   return (
     <>
@@ -467,12 +450,10 @@ const Map: FC<GeostoryMapProps> = ({
         width="100%"
         height="100%"
         className="relative"
-        initial={initialViewport}
-        // view={
-        //   geostoryBbox
-        //     ? ([GEOSTORY_VIEWPORT, null] as [RView, (view: RView) => void])
-        //     : ([initialViewport, null] as [RView, (view: RView) => void])
-        // }
+        initial={{
+          center: mapZoom ?? initialViewport.center,
+          zoom: mapCenter ?? initialViewport.zoom,
+        }}
         onMoveEnd={handleMapMove}
         onSingleClick={handleSingleClick}
         noDefaultControls

@@ -22,7 +22,7 @@ const CompareRegionsStatistics = ({
   );
 
   return (
-    <Tooltip>
+    <Tooltip delayDuration={100}>
       <TooltipTrigger asChild>
         <motion.button
           initial="initial"
@@ -35,7 +35,7 @@ const CompareRegionsStatistics = ({
             'bg-white stroke-brand-500': isRegionsLayerActive,
           })}
           onClick={() => setIsRegionsLayerActive((prev) => !prev)}
-          // disabled={leftLayerHistogramVisibility && !isRegionsLayerActive}
+          disabled={leftLayerHistogramVisibility}
         >
           {
             <svg
@@ -79,8 +79,8 @@ const CompareRegionsStatistics = ({
       </TooltipTrigger>
 
       <TooltipPortal>
-        <TooltipContent side="left" align="center">
-          <div className="text-sM">
+        <TooltipContent sideOffset={0} side="left" align="center">
+          <div className="text-sm">
             {!isRegionsLayerActive && !leftLayerHistogramVisibility && 'Enable the regions layer'}
             {!isRegionsLayerActive &&
               leftLayerHistogramVisibility &&

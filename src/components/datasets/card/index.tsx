@@ -12,15 +12,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from '@/components/ui/dialog';
 
 import cn from '@/lib/classnames';
 import { isValidUrl } from '@/lib/url';
@@ -96,7 +87,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
           {title}
         </h2>
 
-        <Dialog>
+        {/* <Dialog>
           <DialogTrigger
             data-testid="disclaimer-data-interpretation"
             className="font-inter text-xs font-bold uppercase text-secondary-500 underline"
@@ -189,7 +180,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
       </div>
 
       <p data-testid="dataset-description" className="text-secondary-500">
