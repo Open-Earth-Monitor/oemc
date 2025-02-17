@@ -7,7 +7,7 @@ import { cn } from '@/lib/classnames';
 
 import Loading from '@/components/loading';
 import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
-import type { Bbox } from '@/components/map/types';
+import { Extent } from 'ol/extent';
 import { Input } from '@/components/ui/input';
 
 function LocationSearchComponent({
@@ -22,9 +22,9 @@ function LocationSearchComponent({
 }: {
   isMobile?: boolean;
   locationSearch: string;
-  OPTIONS: { label: string; value: number | undefined; bbox: Bbox }[];
+  OPTIONS: { label: string; value: number | undefined; bbox: Extent }[];
   handleLocationSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleClick: (option: { label: string; value: number | undefined; bbox: Bbox }) => void;
+  handleClick: (option: { label: string; value: number | undefined; bbox: Extent }) => void;
   isLoading: boolean;
   isFetching: boolean;
   className?: string;
@@ -39,7 +39,11 @@ function LocationSearchComponent({
     setDropdownVisible(false);
   }, [handleLocationSearchChange]);
 
-  const handleOptionClick = (option: { label: string; value: number | undefined; bbox: Bbox }) => {
+  const handleOptionClick = (option: {
+    label: string;
+    value: number | undefined;
+    bbox: Extent;
+  }) => {
     handleClick(option);
     setDropdownVisible(false);
     handleReset();
@@ -126,7 +130,7 @@ function LocationSearchComponent({
           <div className="relative">
             <div
               className={cn({
-                'absolute right-0 top-[17px] z-50 max-h-[40vh] w-[300px] flex-1 overflow-y-auto rounded-b-[4px] bg-[#09131DDF] px-10 font-inter leading-4 text-secondary-700 shadow-lg':
+                'font-inter absolute right-0 top-[17px] z-50 max-h-[40vh] w-[300px] flex-1 overflow-y-auto rounded-b-[4px] bg-[#09131DDF] px-10 leading-4 text-secondary-700 shadow-lg':
                   true,
                 [className]: !!className,
               })}

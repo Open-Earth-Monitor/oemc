@@ -26,7 +26,7 @@ import {
 } from '@/hooks/sync-query';
 import PointHistogram from './stats/point-histogram';
 import RegionsHistogram from './stats/region-histogram';
-
+import { Size } from 'ol/size';
 import {
   compareFunctionalityAtom,
   coordinateAtom,
@@ -110,7 +110,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     map: ol.Map;
     ol: {
       getView: () => ol.View;
-      getSize: () => ol.Size;
+      getSize: () => Size;
     };
   }> = useRef<null>(null);
 
@@ -495,12 +495,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
         />
 
-        <RLayerTile
-          zIndex={100}
-          url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
-          attributions="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>"
-        />
-
         <Controls>
           <LocationSearchComponent
             locationSearch={locationSearch}
@@ -523,9 +517,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             })}
           >
             <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
+            <BasemapControl isMobile={isMobile} />
             <BookmarkControl isMobile={isMobile} />
             <ShareControl isMobile={isMobile} />
-            <BasemapControl isMobile={isMobile} />
           </div>
           {isCompareLayerActive && data && !isLoading && (
             <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />

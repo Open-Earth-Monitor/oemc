@@ -1,9 +1,7 @@
 import { motion } from 'framer-motion';
 
 import { cn } from '@/lib/classnames';
-import { useAtom } from 'jotai';
 
-import { regionsLayerVisibilityAtom, histogramLayerLeftVisibilityAtom } from '@/app/store';
 import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import { TooltipPortal } from '@radix-ui/react-tooltip';
 import { LuMap } from 'react-icons/lu';
@@ -37,12 +35,12 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
             </motion.button>
           </PopoverTrigger>
         </TooltipTrigger>
-        <PopoverContent className="p-0" align="start" side="left">
+        <PopoverContent className="w-fit p-0" align="start" side="right">
           <div className="p-4">
             {BASEMAPS.map((basemap) => (
               <button
                 key={basemap.label}
-                className="flex w-full items-center justify-start p-2 text-left text-sm text-secondary-500"
+                className="flex items-center justify-start text-left text-sm text-secondary-500"
                 onClick={() => {
                   setBasemap((prev) => {
                     if (prev === basemap.id) return prev;

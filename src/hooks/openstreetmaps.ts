@@ -1,11 +1,11 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
-import { Bbox } from '@/components/map/types';
+import { Extent } from 'ol/extent';
 import { APIOpenStreetMapLocation } from 'services/api';
 
 export type Location = {
-  boundingbox: Bbox;
+  boundingbox: Extent;
   place_id: number;
   display_name: string;
   name: string;

@@ -6,12 +6,12 @@ import { useMediaQuery } from 'react-responsive';
 
 import axios from 'axios';
 import type { MapBrowserEvent } from 'ol';
-import ol, { View } from 'ol';
+import ol from 'ol';
+import { Size } from 'ol/size';
 import type { Coordinate } from 'ol/coordinate';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
-import { RView } from 'rlayers/RMap';
 
 import { cn } from '@/lib/classnames';
 import { mobile, tablet } from '@/lib/media-queries';
@@ -55,6 +55,9 @@ import { getHistogramData } from './utils';
 
 import { Extent } from 'ol/extent';
 import { InitialViewport } from './constants';
+import BasemapControl from './controls/basemaps';
+import BasemapLayer from './basemap';
+import { RView } from 'rlayers/RMap';
 
 interface ClickEvent {
   bbox?: Extent;
@@ -86,7 +89,7 @@ const Map: FC<GeostoryMapProps> = ({
     map: ol.Map;
     ol: {
       getView: () => ol.View;
-      getSize: () => ol.Size;
+      getSize: () => Size;
     };
   }> = useRef<null>(null);
 
@@ -439,8 +442,11 @@ const Map: FC<GeostoryMapProps> = ({
     setIsRegionsLayerActive((prev) => !prev);
   }, [setIsRegionsLayerActive]);
 
-  const mapZoom = useMemo(() => mapRef.current?.ol.getView()?.getZoom(), [mapRef]);
-  const mapCenter = useMemo(() => mapRef.current?.ol.getView()?.getCenter(), [mapRef]);
+  const mapZoom = useMemo(() => mapRef.current?.ol.getView()?.getZoom() as RView['zoom'], [mapRef]);
+  const mapCenter = useMemo(
+    () => mapRef.current?.ol.getView()?.getCenter() as RView['center'],
+    [mapRef]
+  );
 
   return (
     <>
@@ -451,18 +457,14 @@ const Map: FC<GeostoryMapProps> = ({
         height="100%"
         className="relative"
         initial={{
-          center: mapZoom ?? initialViewport.center,
-          zoom: mapCenter ?? initialViewport.zoom,
+          center: mapCenter ?? initialViewport.center,
+          zoom: mapZoom ?? initialViewport.zoom,
         }}
         onMoveEnd={handleMapMove}
         onSingleClick={handleSingleClick}
         noDefaultControls
       >
-        <RLayerTile
-          properties={{ label: 'Basemap' }}
-          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          attributions="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-        />
+        <BasemapLayer />
 
         {layerData && layerId && (
           <RLayerWMS
@@ -558,6 +560,7 @@ const Map: FC<GeostoryMapProps> = ({
             })}
           >
             <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
+            <BasemapControl isMobile={isMobile} />
             <BookmarkControl isMobile={isMobile} />
             <ShareControl isMobile={isMobile} />
           </div>

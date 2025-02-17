@@ -142,20 +142,6 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                   <ScrollArea className="h-full p-7.5 md:w-[370px] lg:w-[526px]" type="auto">
                     <div className="space-y-6">
                       <div className="divide-y divide-secondary-900">
-                        <div>
-                          {geostoryData?.monitors.length && <div>Reports to:</div>}
-                          {geostoryData?.monitors?.map((monitor) => (
-                            <Link
-                              href={`/map/${monitor.id}/geostories`}
-                              className="sticky top-0 z-10 block space-x-3 bg-brand-500 pb-8 font-bold"
-                              data-testid="back-to-monitor"
-                              style={{ color: geostoryData.color }}
-                            >
-                              <HiArrowLeft className="inline-block h-6 w-6" />
-                              <span data-testid="monitor-title-back-btn">{monitor.title}.</span>
-                            </Link>
-                          ))}
-                        </div>
                         {isGeostoryLoading && <Loading />}
                         {geostoryData && !isGeostoryLoading && (
                           <GeostoryHeader {...geostoryData} color={geostoryData.color} />
@@ -180,6 +166,23 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                       </div>
                     </div>
                     {children}
+                    <div className="flex flex-col items-start space-y-2 py-6">
+                      {geostoryData?.monitors.length && (
+                        <div className="py-2">
+                          Monitor{geostoryData?.monitors.length > 1 && 's'}:
+                        </div>
+                      )}
+                      {geostoryData?.monitors?.map((monitor) => (
+                        <Link
+                          href={`/map/${monitor.id}/geostories`}
+                          className="font-bold"
+                          data-testid="back-to-monitor"
+                          style={{ color: geostoryData.color }}
+                        >
+                          <span data-testid="monitor-title-back-btn">{monitor.title}</span>
+                        </Link>
+                      ))}
+                    </div>
                   </ScrollArea>
                 </motion.div>
               </motion.div>
