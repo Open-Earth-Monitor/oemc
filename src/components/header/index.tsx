@@ -8,7 +8,7 @@ import WebTraffic from '@/components/web-traffic';
 
 const Header = () => {
   return (
-    <div className="absolute z-[1000] h-[60px] w-screen items-center border-b border-b-secondary-900 bg-[#09131DCC] sm:h-[70px]">
+    <div className="content-box absolute z-[1000] h-[60px] w-screen items-center border-b border-b-secondary-900 bg-[#09131DCC] sm:h-[70px]">
       <div className="m-auto flex h-full items-center justify-between px-3 sm:container">
         <div className="mr-2 flex items-center space-x-4">
           <Link href="/">

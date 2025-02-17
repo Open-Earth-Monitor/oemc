@@ -93,8 +93,8 @@ const LandingDatasets = () => {
   );
 
   return (
-    <Element className="to-bg-brand-500 w-full bg-gradient-to-t from-[#09131D]" name="datasetsGrid">
-      <div className="container mx-auto">
+    <Element className="relative w-full" name="datasetsGrid">
+      <div className="container mx-auto w-full p-5">
         <div className="flex h-14">
           <Search
             placeholder="Search by name, type of dataset..."
@@ -105,7 +105,7 @@ const LandingDatasets = () => {
           <div className="hidden sm:block">
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger
-                className="flex h-14 min-w-[258px] items-center border-[0.5px] border-l-0 border-secondary-900 font-inter"
+                className="font-inter flex h-14 min-w-[258px] items-center border-[0.5px] border-l-0 border-secondary-900"
                 data-testid="themes-filter"
               >
                 <div className="w-full">
@@ -118,7 +118,7 @@ const LandingDatasets = () => {
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="align-left flex w-full flex-1 flex-col bg-brand-500 font-inter"
+                className="align-left font-inter flex w-full flex-1 flex-col bg-brand-500"
                 sideOffset={-1}
               >
                 <FilterByCategories activeThemes={activeThemes} handleThemes={handleThemes} />
@@ -162,7 +162,7 @@ const LandingDatasets = () => {
             >
               Filters
             </PopoverTrigger>
-            <PopoverContent className="min-w-fit bg-brand-500 px-0 py-0 font-inter" sideOffset={-1}>
+            <PopoverContent className="font-inter min-w-fit bg-brand-500 px-0 py-0" sideOffset={-1}>
               <div className="flex justify-end p-5">
                 <PopoverClose>
                   <XIcon className="h-4 w-4 text-secondary-500" />
@@ -201,7 +201,7 @@ const LandingDatasets = () => {
           </div>
         </div>
         {!!data?.count && (
-          <div data-testid="datasets-result" className="py-5 font-inter text-secondary-700">
+          <div data-testid="datasets-result" className="font-inter py-5 text-secondary-700">
             <span data-testid="result-number">{data?.count}</span>{' '}
             {data?.count === 1 ? 'result' : 'results'}
           </div>
@@ -216,7 +216,7 @@ const LandingDatasets = () => {
               {data?.data?.map(({ id, ...d }) => (
                 <li key={id} data-testid="datasets-card">
                   <motion.div
-                    className="overflow-hidden font-inter"
+                    className="font-inter overflow-hidden"
                     whileHover={{
                       translateY: '-10px',
                     }}
