@@ -14,7 +14,7 @@ const Hero = () => {
               'linear-gradient(180deg, rgba(9, 19, 29, 0) 66.27%, #09131D 100%), linear-gradient(90deg, #09131D 0%, rgba(9, 19, 29, 0) 14.6%, rgba(9, 19, 29, 0) 85.45%, #09131D 100%)',
           }}
         />
-        <div className="absolute m-auto pt-48 xl:pt-[274px]">
+        <div className="container absolute left-0 right-0 m-auto w-full pt-52 sm:pt-48 xl:pt-[274px]">
           <h1 className="whitespace-wrap font-satoshi m-auto pb-16 text-center text-5xl font-black leading-tight lg:text-6xl lg:leading-[96px] xl:text-[80px]">
             Discover and empower with monitoring solutions.
           </h1>

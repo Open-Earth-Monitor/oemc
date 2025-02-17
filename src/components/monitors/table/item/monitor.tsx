@@ -38,11 +38,14 @@ export const MonitorLink = ({
       key={id}
       href={`/map/${id}/datasets${urlParams}`}
       onClick={handleClick}
-      className={cn({ 'flex items-center  px-2 font-bold sm:px-4': true, 'border-l-4': !isMobile })}
+      className={cn({
+        'flex items-center px-2 text-left font-bold sm:px-4': true,
+        'border-l-4': !isMobile,
+      })}
       style={{ borderLeftColor: color }}
     >
       <motion.h2 initial="initial" whileHover="hover" className="text-xl font-bold sm:text-2xl">
-        <span className="block">{title}.</span>
+        <span className="block text-left">{title}</span>
         <motion.div
           className="h-0.5 w-0 bg-secondary-500"
           variants={{

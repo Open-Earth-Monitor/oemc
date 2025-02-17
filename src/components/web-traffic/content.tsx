@@ -3,41 +3,7 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useGetWebTraffic } from '@/hooks/web-traffic';
 import Loading from '../loading';
-const mostVisitedMonitors = [
-  {
-    tag: '#Agriculture',
-    title: 'Tropical monitor.',
-    color: '#FF9383',
-  },
-  {
-    tag: '#Soil',
-    title: 'EU-soil monitor.',
-    color: '#F2C69C',
-  },
-  {
-    tag: '#Biodiversity',
-    title: 'EU-reforestation planner tool.',
-    color: '#FBFBB1',
-  },
-  {
-    tag: '#Water',
-    title: 'EU-flood monitor.',
-    color: '#BDDEFD',
-  },
-  {
-    tag: '#Forest',
-    title: 'EU-in-situ-data tool.',
-    color: '#B5FEC5',
-  },
-];
-
-const mostVisitedGeostories = [
-  'Soil bare-fraction dynamics',
-  'Air Quality during COVID-19 (Europe)',
-  'Vegetation trait diversity',
-  'Trait-based reforestation monitoring',
-  'Climate change (Europe)',
-];
+import Script from 'next/script';
 
 const WebTrafficContent = () => {
   const { isLoadingGeostories, isLoadingMonitors, geostoriesInfo, monitorsInfo } =
@@ -70,20 +36,17 @@ const WebTrafficContent = () => {
           value="web-graphic"
           className="relative mt-0 box-content flex w-full flex-1 grow flex-col rounded-none"
         >
-          <iframe
-            className="absolute bottom-0 left-0 right-0 top-0"
-            style={{
-              justifySelf: 'center',
-              border: 'none',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              width: '100%',
-              height: '100%',
-            }}
-            src="//rf.revolvermaps.com/w/7/a/a2.php?i=5ys2ccrnfty&m=0c&c=2becbf&cr1=2becbf&sx=0&cw=0b1825&cb=28333d"
+          <div />
+
+          <script
+            type="text/javascript"
+            id="clustrmaps"
+            src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=a&t=tt&d=e9bF-yBRaYPXvvGpxTgq-74ob4nqMoaLjIgTO-UoDyQ&co=092539"
+          />
+
+          <Script
+            id="clustrmaps"
+            src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=a&t=tt&d=e9bF-yBRaYPXvvGpxTgq-74ob4nqMoaLjIgTO-UoDyQ&co=092539"
           />
         </TabsContent>
 
