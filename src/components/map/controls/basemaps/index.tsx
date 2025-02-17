@@ -36,11 +36,11 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
           </PopoverTrigger>
         </TooltipTrigger>
         <PopoverContent className="w-fit p-0" align="start" side="right">
-          <div className="p-4">
+          <div className="space-y-2.5 p-2">
             {BASEMAPS.map((basemap) => (
               <button
                 key={basemap.label}
-                className="flex items-center justify-start text-left text-sm text-secondary-500"
+                className="flex items-center justify-start rounded-sm px-4 text-left text-sm text-secondary-500 hover:bg-secondary-500 hover:text-brand-500"
                 onClick={() => {
                   setBasemap((prev) => {
                     if (prev === basemap.id) return prev;

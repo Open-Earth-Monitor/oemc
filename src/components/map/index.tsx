@@ -26,7 +26,6 @@ import {
 } from '@/hooks/sync-query';
 import PointHistogram from './stats/point-histogram';
 import RegionsHistogram from './stats/region-histogram';
-import { Size } from 'ol/size';
 import {
   compareFunctionalityAtom,
   coordinateAtom,
@@ -36,7 +35,7 @@ import {
   regionsLayerVisibilityAtom,
 } from '@/app/store';
 import LocationSearchComponent from '@/components/location-search';
-
+import { Size } from 'ol/size';
 import Attributions from './attributions';
 import { DEFAULT_VIEWPORT, InitialViewport } from './constants';
 // map controls

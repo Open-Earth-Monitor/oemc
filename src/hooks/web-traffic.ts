@@ -1,6 +1,6 @@
 import { useQuery, useQueries, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-
+import { sortBy } from 'lodash';
 import API from 'services/api';
 
 import { THEMES_COLORS, DEFAULT_COLOR } from '@/constants/themes';
@@ -9,16 +9,9 @@ type TrackingType = 'geostory_id' | 'monitor_id' | 'layer_id';
 
 type TrackingData = Partial<Record<TrackingType, string | string[]>>;
 
-type TrafficCountData = [string, number];
-
-type WebTrafficData = {
-  geostories: TrafficCountData[];
-  monitors: TrafficCountData[];
-};
-
 type WebTrafficResponseData = {
-  topMonitorIds: string[];
-  topGeostoryIds: string[];
+  monitors: { monitor_id: string; counter: number }[];
+  geostories: { geostory_id: string; counter: number }[];
 };
 
 const DEFAULT_QUERY_OPTIONS = {
@@ -29,16 +22,8 @@ const DEFAULT_QUERY_OPTIONS = {
   staleTime: Infinity,
 };
 
-const getTopFive = (group: TrafficCountData[]) => {
-  // Sort the group by the second element in descending order
-  return group
-    .sort((a, b) => b[1] - a[1]) // Sort by the second element (number)
-    .slice(0, 5) // Get the top 5
-    .map((item) => item[0]); // Return only the first element (e.g., 'g2', 'm2')
-};
-
 export function useGetWebTraffic(
-  queryOptions?: UseQueryOptions<WebTrafficData, AxiosError, WebTrafficResponseData>
+  queryOptions?: UseQueryOptions<WebTrafficResponseData, AxiosError, WebTrafficResponseData>
 ) {
   // Step 1: Fetch usage stats to get top 5 geostory and monitor IDs
   const fetchWebTraffic = () =>
@@ -47,20 +32,19 @@ export function useGetWebTraffic(
       url: '/usage-stats',
     }).then((response) => response.data);
 
-  const webTrafficQuery = useQuery<WebTrafficData, AxiosError, WebTrafficResponseData>(
+  const webTrafficQuery = useQuery<WebTrafficResponseData, AxiosError, WebTrafficResponseData>(
     ['web-traffic'],
     fetchWebTraffic,
     {
       ...DEFAULT_QUERY_OPTIONS,
-      select: (data: WebTrafficData) => ({
-        topGeostoryIds: getTopFive(data.geostories), // Get top 5 geostory IDs
-        topMonitorIds: getTopFive(data.monitors), // Get top 5 monitor IDs
+      select: (data) => ({
+        geostories: sortBy(data.geostories, 'counter').slice(0, 5), // Get top
+        monitors: sortBy(data.monitors, 'counter').slice(0, 5),
       }),
       ...queryOptions,
     }
   );
 
-  // Step 2: Fetch all geostories and filter by top 5 most visited IDs
   const fetchAllGeostories = () =>
     API.request({
       method: 'GET',
@@ -68,9 +52,10 @@ export function useGetWebTraffic(
     }).then((response) => response.data);
 
   const allGeostoriesQuery = useQuery(['geostories'], fetchAllGeostories, {
-    enabled: !!webTrafficQuery.data?.topGeostoryIds, // Only fetch if topGeostoryIds is available
+    enabled: !!webTrafficQuery.data?.geostories.length, // Only fetch if topGeostoryIds is available
     select: (allGeostories) => {
-      const topGeostoryIds = webTrafficQuery.data?.topGeostoryIds || [];
+      const topGeostoryIds =
+        webTrafficQuery.data.geostories.map(({ geostory_id }) => geostory_id) || [];
       // Filter geostories by the top 5 most visited IDs and return their titles
       return allGeostories
         .filter((geostory) => topGeostoryIds.includes(geostory.id))
@@ -88,7 +73,7 @@ export function useGetWebTraffic(
 
   const monitorsQueries = useQueries({
     queries:
-      webTrafficQuery.data?.topMonitorIds.map((monitor_id) => ({
+      webTrafficQuery.data?.monitors.map(({ monitor_id }) => ({
         queryKey: ['monitor', monitor_id],
         queryFn: () => fetchMonitor(monitor_id),
         enabled: !!monitor_id, // Only enable if monitor_id exists

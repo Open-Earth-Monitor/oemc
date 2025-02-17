@@ -78,6 +78,7 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
                 key={`monitor-geostory-${geostoryId}`}
                 initial="initial"
                 whileHover="hover"
+                className="w-fit"
               >
                 <a
                   href={`/map/geostories/${geostoryId}`}

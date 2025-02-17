@@ -1,10 +1,11 @@
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import { HiOutlineNewspaper, HiOutlineGlobeAlt } from 'react-icons/hi';
 
 import cn from '@/lib/classnames';
-import { isArray } from 'lodash-es';
+import { compact, isArray } from 'lodash-es';
 import type { Geostory } from '@/types/geostories';
 
 import { Button } from '@/components/ui/button';
@@ -40,6 +41,14 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
     });
     console.info('WT2 -', 'geostories', id);
   };
+
+  const publicationsArray = useMemo(
+    () =>
+      Array.isArray(publications)
+        ? compact(publications.map(({ url, title }) => (url && title ? { url, title } : null)))
+        : [],
+    [publications]
+  );
 
   return (
     <Dialog>
@@ -107,9 +116,9 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                   <HiOutlineNewspaper className="h-6 w-6" />
                   <span className="text-2xl font-bold">Publications</span>
                 </h3>
-                {publications?.length > 0 && (
+                {publicationsArray?.length > 0 && (
                   <ul className="space-y-2 py-2 pl-8 font-bold">
-                    {publications.map(({ url, title }) => (
+                    {publications?.map(({ url, title }) => (
                       <li key={title}>
                         <a href={url} className="underline">
                           {title}
