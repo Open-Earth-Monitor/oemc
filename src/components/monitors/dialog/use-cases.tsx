@@ -10,7 +10,7 @@ const UseCasesUnit: React.FC<{ title: string; url: string }> = ({ title, url }) 
       rel="noopener noreferrer"
       title={url ? title : 'empty link'}
     >
-      {title || 'Title not provided'}
+      {title}
     </a>
   </li>
 );

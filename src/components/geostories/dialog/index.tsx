@@ -145,7 +145,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              {title || 'Title not provided'}
+                              {title}
                             </a>
                           </li>
                         )
