@@ -135,14 +135,14 @@ const Map: FC<GeostoryMapProps> = ({
   const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
 
   // bbox that come defined in the geostory
-  const predefinedBbox = transformToBBoxArray(geostoryData?.geostory_bbox);
+  const predefinedBbox = geostoryData?.geostory_bbox;
 
   // check URL in case the site has been shared, if not get predefined bbox if not use the default one
-  const geostoryBbox = useMemo(
-    () => bbox ?? predefinedBbox ?? initialViewState.bbox,
-    [bbox, predefinedBbox]
-  );
-
+  const geostoryBbox = useMemo(() => {
+    if (bbox) return bbox;
+    if (predefinedBbox) return predefinedBbox;
+    return initialViewState.bbox;
+  }, [bbox, predefinedBbox, initialViewState.bbox]);
   /**
    * Initial viewport from the URL or the default one
    */

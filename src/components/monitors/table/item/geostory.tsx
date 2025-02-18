@@ -73,32 +73,32 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
             transition={{ duration: 0.2 }}
             exit={{ height: 0, opacity: 0 }}
           >
-            {geostories.map(({ id: geostoryId, title }) => (
-              <motion.li
-                key={`monitor-geostory-${geostoryId}`}
-                initial="initial"
-                whileHover="hover"
-                className="w-fit"
-              >
-                <a
-                  href={`/map/geostories/${geostoryId}`}
-                  data-id={geostoryId}
-                  className="block"
-                  onClick={handleClick}
+            {geostories.map(({ id: geostoryId, title, geostory_bbox }) => {
+              const href = geostory_bbox
+                ? `/map/geostories/${geostoryId}?bbox=${geostory_bbox}`
+                : `/map/geostories/${geostoryId}`;
+              return (
+                <motion.li
+                  key={`monitor-geostory-${geostoryId}`}
+                  initial="initial"
+                  whileHover="hover"
+                  className="w-fit"
                 >
-                  <div className="text-left">
-                    <span>{title}</span>
-                    <motion.div
-                      className="h-0.5 w-0 bg-secondary-500"
-                      variants={{
-                        initial: { width: 0 },
-                        hover: { width: '100%' },
-                      }}
-                    />
-                  </div>
-                </a>
-              </motion.li>
-            ))}
+                  <a href={href} data-id={geostoryId} className="block" onClick={handleClick}>
+                    <div className="text-left">
+                      <span>{title}</span>
+                      <motion.div
+                        className="h-0.5 w-0 bg-secondary-500"
+                        variants={{
+                          initial: { width: 0 },
+                          hover: { width: '100%' },
+                        }}
+                      />
+                    </div>
+                  </a>
+                </motion.li>
+              );
+            })}
           </motion.ul>
         )}
       </AnimatePresence>

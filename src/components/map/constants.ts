@@ -13,7 +13,7 @@ export type InitialViewport = {
  * EUROPE viewport
  */
 export const DEFAULT_VIEWPORT: InitialViewport = {
-  bbox: [-12.5, 35.4729, 32.5, 58.0858],
+  bbox: [-1391493.6349, 4228333.5219, 3617883.4508, 7985363.0743],
   center: fromLonLat([10, 48]),
   zoom: 5,
 };

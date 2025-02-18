@@ -7,7 +7,7 @@ import { cn } from '@/lib/classnames';
 import { MonitorParsed } from '@/types/monitors';
 
 import { usePostWebTraffic } from '@/hooks/web-traffic';
-import { useMonitor, useMonitors } from '@/hooks/monitors';
+import { useMonitors } from '@/hooks/monitors';
 
 export const MonitorLink = ({
   id,
@@ -26,11 +26,7 @@ export const MonitorLink = ({
 
   const monitorData = monitorsData?.find((monitor) => monitor.id === id);
   const monitorBbox = monitorData?.monitor_bbox;
-  const [minLon, minLat, maxLon, maxLat] = monitorBbox || [];
-  const centerLon = (minLon + maxLon) / 2;
-  const centerLat = (minLat + maxLat) / 2;
-
-  const urlParams = monitorBbox ? `/?center=[${centerLon},${centerLat}]&zoom=5` : '';
+  const urlParams = monitorBbox ? `/?bbox=${monitorBbox}` : '';
 
   return (
     <Link
