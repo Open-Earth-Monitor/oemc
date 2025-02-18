@@ -135,13 +135,14 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const { data: compareData } = useLayer({ layer_id: compareLayerId });
 
   // bbox that come defined in the monitor itself
-  const predefinedBbox = transformToBBoxArray(monitorData?.monitor_bbox);
+  const predefinedBbox = monitorData?.monitor_bbox;
 
   // check URL in case the site has been shared, if not get predefined bbox if not use the default one
-  const monitorBbox = useMemo(
-    () => bbox ?? predefinedBbox ?? initialViewState.bbox,
-    [bbox, predefinedBbox]
-  );
+  const monitorBbox = useMemo(() => {
+    if (bbox) return bbox;
+    if (predefinedBbox) return predefinedBbox;
+    return initialViewState.bbox;
+  }, [bbox, predefinedBbox, initialViewState.bbox]);
 
   /**
    * Initial viewport from the URL or the default one
