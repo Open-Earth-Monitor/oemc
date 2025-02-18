@@ -93,7 +93,7 @@ function LocationSearchComponent({
         >
           <LuSearch
             className={cn({
-              'h-5 w-5 justify-center text-secondary-500 group-hover:bg-secondary-500 group-hover:text-brand-500':
+              'h-5 w-5 cursor-pointer justify-center text-secondary-500 group-hover:bg-secondary-500 group-hover:text-brand-500':
                 true,
               'group-hover:bg-transparent group-hover:text-secondary-500': inputExpanded,
             })}

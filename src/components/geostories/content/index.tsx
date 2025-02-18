@@ -200,7 +200,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
             <PopoverContent
               sideOffset={0}
               side="top"
-              className="w-screen rounded-none border-none px-0 py-0"
+              className="w-screen rounded-none border-none p-0 pb-5"
             >
               <PopoverClose className="absolute left-0 top-0 block h-12 w-[60px] -translate-y-full border-none bg-brand-500 focus:text-secondary-500">
                 <ChevronDown className="mx-auto h-6 w-6 text-secondary-500" />
@@ -209,19 +209,6 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                 <div className="w-full space-y-1 sm:space-y-6">
                   <div className="space-y-6">
                     <div className="divide-y divide-secondary-900">
-                      {geostoryData?.monitors?.[0].id && (
-                        <Link
-                          href={`/map/${geostoryData.monitors[0].id}/geostories`}
-                          className="sticky top-0 z-10 block space-x-3 bg-brand-500 p-6 pb-2  font-bold"
-                          data-testid="back-to-monitor"
-                          style={{ color: geostoryData.color }}
-                        >
-                          <HiArrowLeft className="inline-block h-6 w-6" />
-                          <span data-testid="monitor-title-back-btn">
-                            Back to {geostoryData.monitors[0].title}.
-                          </span>
-                        </Link>
-                      )}
                       {isGeostoryLoading && <Loading />}
                       {geostoryData && !isGeostoryLoading && (
                         <GeostoryHeader {...geostoryData} color={geostoryData.color} />
@@ -245,6 +232,25 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                       )}
                     </div>
                   </div>
+                  {geostoryData?.monitors.length && (
+                    <div className="flex flex-col items-start space-y-2 p-6">
+                      <span className="text-secondary-500">
+                        {geostoryData?.monitors.length === 1 ? 'Monitor:' : 'Monitors:'}
+                      </span>
+                      {geostoryData?.monitors?.[0].id && (
+                        <Link
+                          href={`/map/${geostoryData.monitors[0].id}/geostories`}
+                          className="bg-brand-500 font-bold"
+                          data-testid="back-to-monitor"
+                          style={{ color: geostoryData.color }}
+                        >
+                          <span data-testid="monitor-title-back-btn">
+                            {geostoryData.monitors[0].title}.
+                          </span>
+                        </Link>
+                      )}
+                    </div>
+                  )}
                 </div>
               </ScrollArea>
             </PopoverContent>
