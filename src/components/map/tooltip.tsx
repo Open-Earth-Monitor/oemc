@@ -81,7 +81,7 @@ const MapTooltip: FC<TooltipProps> = ({
   return (
     <div
       className={cn({
-        'max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 font-bold text-brand-500 shadow-md':
+        'text-2xs absolute z-50 max-w-[200px] translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-5 font-bold text-brand-500 shadow-md':
           true,
         hidden: leftLayerHistogramVisibility,
       })}
@@ -94,7 +94,7 @@ const MapTooltip: FC<TooltipProps> = ({
         <XIcon size={14} />
       </button>
       <div className="relative space-y-4">
-        <h3 className="mr-16 text-sm font-bold">{leftData.title}</h3>
+        <h3 className="mt-4 text-right text-sm font-bold">{leftData.title}</h3>
 
         {!!leftData.value && (
           <div className="flex items-center space-x-2">
@@ -118,7 +118,7 @@ const MapTooltip: FC<TooltipProps> = ({
           <Button
             variant="light"
             onClick={handleClick}
-            className="font-inter text-xs"
+            className="font-inter w-full text-xs"
             disabled={!leftData.value}
           >
             See point histogram
@@ -129,7 +129,7 @@ const MapTooltip: FC<TooltipProps> = ({
           <Button
             variant="light"
             onClick={handleHistogram}
-            className="font-inter text-xs"
+            className="font-inter p-2 text-xs"
             disabled={!leftData.value}
           >
             See region histogram
@@ -137,7 +137,7 @@ const MapTooltip: FC<TooltipProps> = ({
         )}
 
         {rightData.date && rightData.value !== 0 && (
-          <div className="border-brand-800 mt-4 border-t pt-4 text-xl">
+          <div className="border-brand-800 mt-4 border-t pt-4 text-right text-xl">
             {typeof rightData.value === 'number' ? numberFormat(rightData.value) : rightData.value}
             {!!rightData.unit && rightData.unit}{' '}
             <span className="pt-4 text-sm">({compareDateLabel})</span>

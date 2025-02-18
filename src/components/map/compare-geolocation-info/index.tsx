@@ -28,7 +28,8 @@ export const CompareGeolocationInfoPopup: FC<CompareGeolocationInfoPopupProps> =
         </button>
       </div>
       <p className="font-inter text-opacity-95">
-        You can add one more region directly from the map, by clicking on it.
+        You can add one more region directly from the map,
+        <br /> by clicking on it.
       </p>
     </div>
   );

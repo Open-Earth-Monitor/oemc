@@ -74,11 +74,11 @@ const MapTooltip: FC<TooltipProps> = ({
       crossOrigin: 'anonymous',
     });
   }, []);
-
+  console.log(position, window.innerWidth, window.innerHeight);
   return (
     <div
       className={cn({
-        'max-w-32 text-2xs absolute z-50 translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-4 shadow-md':
+        'text-2xs absolute z-50 max-w-[200px] translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-5 shadow-md':
           true,
         hidden: leftLayerHistogramVisibility,
       })}
@@ -91,9 +91,9 @@ const MapTooltip: FC<TooltipProps> = ({
         <XIcon size={14} className="text-brand-500" />
       </button>
       <div className="relative space-y-2">
-        <div className="font-satoshi mr-5 space-y-4 font-bold text-brand-500">
+        <div className="font-satoshi space-y-4 font-bold text-brand-500">
           <div>
-            <h3 className="text-sm">{leftData.title}</h3>
+            <h3 className="mt-4 text-right text-sm">{leftData.title}</h3>
             {leftData.value !== 0 && (
               <div className="flex flex-col items-end space-x-2">
                 {isRegionsLayerActive && !!nutsProperties?.NAME_LATN && (
@@ -115,22 +115,22 @@ const MapTooltip: FC<TooltipProps> = ({
             <Button
               variant="light"
               onClick={handleClick}
-              className="font-inter text-xs"
+              className="font-inter w-full p-2 text-xs"
               disabled={!leftData.value}
             >
               See point histogram
             </Button>
           )}
           {leftData?.value && isRegionsLayerActive && (
-            <Button variant="light" onClick={handleHistogram} className="font-inter text-xs">
+            <Button variant="light" onClick={handleHistogram} className="font-inter p-2 text-xs">
               See region histogram
             </Button>
           )}
         </div>
         {!!rightData.value && (
-          <div className="border-brand-800 font-satoshi mr-5 space-y-4 border-t pt-2.5 font-bold text-brand-500 ">
+          <div className="border-brand-800 font-satoshi space-y-4 border-t pt-2.5 font-bold text-brand-500 ">
             <div>
-              <h3 className="text-sm">{rightData.title}</h3>
+              <h3 className="mt-4 text-right text-sm">{rightData.title}</h3>
               <div className="text-xl">
                 {typeof rightData.value === 'number'
                   ? numberFormat(rightData.value)

@@ -32,7 +32,7 @@ const CompareRegionsStatistics = ({
             'p-4': isMobile,
             [CONTROL_BUTTON_STYLES.mobile]: isMobile,
             [CONTROL_BUTTON_STYLES.default]: !isMobile,
-            'bg-white stroke-brand-500': isRegionsLayerActive,
+            'bg-secondary-500 stroke-brand-500': isRegionsLayerActive,
           })}
           onClick={() => setIsRegionsLayerActive((prev) => !prev)}
           disabled={leftLayerHistogramVisibility}
