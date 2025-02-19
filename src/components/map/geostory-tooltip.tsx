@@ -74,11 +74,11 @@ const MapTooltip: FC<TooltipProps> = ({
       crossOrigin: 'anonymous',
     });
   }, []);
-  console.log(position, window.innerWidth, window.innerHeight);
+
   return (
     <div
       className={cn({
-        'text-2xs absolute z-50 max-w-[200px] translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-5 shadow-md':
+        'text-2xs absolute z-50 max-w-[300px] translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-5 shadow-md':
           true,
         hidden: leftLayerHistogramVisibility,
       })}
@@ -92,12 +92,14 @@ const MapTooltip: FC<TooltipProps> = ({
       </button>
       <div className="relative space-y-2">
         <div className="font-satoshi space-y-4 font-bold text-brand-500">
-          <div>
-            <h3 className="mt-4 text-right text-sm">{leftData.title}</h3>
+          <div className="space-y-2">
+            <h3 className="break-word mt-4 flex flex-wrap text-left text-sm">{leftData.title}</h3>
             {leftData.value !== 0 && (
-              <div className="flex flex-col items-end space-x-2">
+              <div className="flex flex-col items-start">
                 {isRegionsLayerActive && !!nutsProperties?.NAME_LATN && (
-                  <div className="font-satoshi text-2xl font-bold">{nutsProperties?.NAME_LATN}</div>
+                  <div className="font-satoshi flex flex-wrap text-left text-2xl font-bold">
+                    {nutsProperties?.NAME_LATN}
+                  </div>
                 )}
                 <div className="space-x-2 text-xl">
                   {typeof leftData.value === 'number'
@@ -130,7 +132,7 @@ const MapTooltip: FC<TooltipProps> = ({
         {!!rightData.value && (
           <div className="border-brand-800 font-satoshi space-y-4 border-t pt-2.5 font-bold text-brand-500 ">
             <div>
-              <h3 className="mt-4 text-right text-sm">{rightData.title}</h3>
+              <h3 className="mt-4 text-left text-sm">{rightData.title}</h3>
               <div className="text-xl">
                 {typeof rightData.value === 'number'
                   ? numberFormat(rightData.value)

@@ -166,3 +166,76 @@ export function downloadCSV(data: DataObject, filename: string = 'data.csv') {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
+
+interface RegionData {
+  name: string;
+  min: number;
+  max: number;
+  avg: number;
+}
+
+interface DataObjectCompare {
+  date: string;
+  layer_id: string;
+  regionA: RegionData;
+  regionB: RegionData;
+}
+
+// Function to generate CSV content from structured region data
+function generateCSVContentCompare(data: DataObjectCompare[]): string {
+  // Define the columns for the CSV
+  const columns = [
+    'Date',
+    'layer_id',
+    `${data[0].regionA.name} A Min`,
+    `${data[0].regionA.name} A Max`,
+    `${data[0].regionA.name} A Avg`,
+    `${data[0].regionB.name} B Min`,
+    `${data[0].regionB.name} B Max`,
+    `${data[0].regionB.name} B Avg`,
+  ];
+
+  // Create the CSV header row
+  const headerRow = columns.join(',') + '\n';
+
+  if (data.length === 0) {
+    // If no data, return header and a default row with empty values
+    const emptyRow = columns.map(() => '').join(',');
+    return headerRow + emptyRow;
+  }
+
+  // Create the CSV rows from the data
+  const rows = data
+    .map((rowData) => {
+      return `${rowData.date},${rowData.layer_id},${rowData.regionA.min},${rowData.regionA.max},${rowData.regionA.avg},${rowData.regionB.min},${rowData.regionB.max},${rowData.regionB.avg}`;
+    })
+    .join('\n');
+
+  // Combine the header and rows into a single CSV string
+  return headerRow + rows;
+}
+
+// Function to download a CSV file
+export function downloadCSVCompare(data: DataObjectCompare[], filename: string = 'data.csv') {
+  // Generate CSV content
+  const csvContent = generateCSVContentCompare(data);
+
+  // Create a Blob from the CSV content
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+  // Create a link element
+  const link = document.createElement('a');
+
+  // Create a URL for the Blob and set it as the href attribute
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+
+  // Append the link to the document body and trigger the download
+  document.body.appendChild(link);
+  link.click();
+
+  // Clean up by removing the link and revoking the URL
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}

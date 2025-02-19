@@ -1,5 +1,5 @@
 type Basemap = {
-  id: string;
+  id: 'world_imagery' | 'Esri_WorldGrayCanvas';
   label: string;
   attributions: string;
   url: string;
