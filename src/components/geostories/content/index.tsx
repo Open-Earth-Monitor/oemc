@@ -235,7 +235,9 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                   {geostoryData?.monitors.length && (
                     <div className="flex flex-col items-start space-y-2 p-6">
                       <span className="text-secondary-500">
-                        {geostoryData?.monitors.length === 1 ? 'Monitor:' : 'Monitors:'}
+                        {geostoryData?.monitors.length === 1
+                          ? 'Related monitor:'
+                          : 'Related monitors:'}
                       </span>
                       {geostoryData?.monitors?.[0].id && (
                         <Link
