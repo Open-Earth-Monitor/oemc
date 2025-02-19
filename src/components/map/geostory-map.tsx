@@ -47,7 +47,6 @@ import SwipeControl from './controls/swipe';
 import MapTooltip from './geostory-tooltip';
 import Legend from './legend';
 import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse } from './types';
-import { transformToBBoxArray } from '@/lib/format';
 import PointHistogram from './stats/point-histogram';
 import RegionsHistogram from './stats/region-histogram';
 import CompareRegionsStatistics from './controls/compare-regions';
@@ -90,9 +89,11 @@ const Map: FC<GeostoryMapProps> = ({
     ol: {
       getView: () => ol.View;
       getSize: () => Size;
+      getPixelFromCoordinate: (coordinate: Coordinate) => [number, number];
     };
   }> = useRef<null>(null);
-
+  const tooltipRef = useRef<HTMLDivElement | null>(null);
+  const pointCoordinates = fromLonLat([2.1734, 41.3851]);
   const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
   const nutsLayer = useRef(null);
@@ -208,8 +209,33 @@ const Map: FC<GeostoryMapProps> = ({
 
     const bbox = map.getView().calculateExtent(mapSize);
 
+    // Ensure tooltip position updates only if we have a coordinate
+    if (tooltipInfo.coordinate) {
+      const updatedPixelPosition = map.getPixelFromCoordinate(tooltipInfo.coordinate);
+
+      setTooltipInfo((prev) => ({
+        ...prev,
+        position: updatedPixelPosition, // Updated pixel position
+      }));
+    }
+
     setBbox(bbox);
   }, [setBbox]);
+
+  const handleMapDrag = useCallback(() => {
+    if (!mapRef.current) return;
+
+    const map = mapRef.current.ol;
+    // Ensure tooltip position updates only if we have a coordinate
+    if (tooltipInfo.coordinate) {
+      const updatedPixelPosition = map.getPixelFromCoordinate(tooltipInfo.coordinate);
+
+      setTooltipInfo((prev) => ({
+        ...prev,
+        position: updatedPixelPosition, // Updated pixel position
+      }));
+    }
+  }, [setTooltipInfo, tooltipInfo.coordinate]);
 
   const fetchTooltipValue = useCallback(
     async (coordinate) => {
@@ -276,25 +302,27 @@ const Map: FC<GeostoryMapProps> = ({
           }
         }
 
-        setTooltipInfo((prev) => ({
-          ...prev,
-          leftData: {
-            // This info is coming from the API instead of the layer, as requested
-            id: layerId,
-            title: layerData?.title,
-            date,
-            unit: layerData?.unit,
-            value: valueLeft,
-            isComparable: layerData?.range?.length > 1,
-          },
-          rightData: {
-            id: compareLayerId,
-            title: compareLayerData?.title,
-            date: compareDate || '',
-            unit: compareLayerData?.unit,
-            value: valueRight,
-          },
-        }));
+        setTooltipInfo((prev) => {
+          return {
+            ...prev,
+            leftData: {
+              // This info is coming from the API instead of the layer, as requested
+              id: layerId,
+              title: layerData?.title,
+              date,
+              unit: layerData?.unit,
+              value: valueLeft,
+              isComparable: layerData?.range?.length > 1,
+            },
+            rightData: {
+              id: compareLayerId,
+              title: compareLayerData?.title,
+              date: compareDate || '',
+              unit: compareLayerData?.unit,
+              value: valueRight,
+            },
+          };
+        });
       } catch {
         setTooltipInfo((prev) => ({
           ...prev,
@@ -331,10 +359,12 @@ const Map: FC<GeostoryMapProps> = ({
       if (compareFunctionalityInfo) {
         const resolution = e.map.getView()?.getResolution();
         getHistogramData(wmsNutsSource, e.coordinate, resolution, layerId).then((data) => {
-          setTooltipInfo((prev) => ({
-            ...prev,
-            compareNutProperties: data.properties,
-          }));
+          setTooltipInfo((prev) => {
+            return {
+              ...prev,
+              compareNutProperties: data.properties,
+            };
+          });
           setCompareNutsProperties(data?.properties);
           setNutsDataParamsCompare(data?.nutsDataParams);
           setCompareFunctionalityInfo(false);
@@ -461,6 +491,7 @@ const Map: FC<GeostoryMapProps> = ({
           zoom: mapZoom ?? initialViewport.zoom,
         }}
         onMoveEnd={handleMapMove}
+        onPointerDrag={handleMapDrag}
         onSingleClick={handleSingleClick}
         noDefaultControls
       >

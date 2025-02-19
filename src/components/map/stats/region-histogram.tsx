@@ -4,7 +4,6 @@ import React, { FC, useCallback, useMemo } from 'react';
 
 import { FiDownload } from 'react-icons/fi';
 
-import { format } from 'd3-format';
 import { XIcon } from 'lucide-react';
 
 import { useAtom } from 'jotai';
@@ -24,7 +23,7 @@ import type { GeostoryTooltipInfo, NutsProperties } from '../types';
 import { useAtomValue } from 'jotai';
 import { useSyncSidebarState } from '@/hooks/sync-query';
 
-import { downloadCSV } from '@/hooks/datasets';
+import { downloadCSV, downloadCSVCompare } from '@/hooks/datasets';
 import Loading from '../../loading';
 
 import LineChart from '../../line-chart';
@@ -105,13 +104,37 @@ const RegionHistogram: FC<HistogramTypes> = ({
   ]);
 
   const handleClick = () => {
-    if (histogramDataRegionRaw?.dataset?.length) {
+    if (
+      histogramDataRegionRaw?.dataset?.length &&
+      !histogramDataRegionRawCompare?.dataset?.length
+    ) {
       const data = histogramDataRegionRaw.dataset.map((d) => ({
         layer_id: nutsDataParams.LAYER_ID,
         label: d.label,
         value: d.avg,
       }));
       downloadCSV(data, `data-${leftData.title}.csv`);
+    } else if (
+      histogramDataRegionRaw?.dataset?.length &&
+      histogramDataRegionRawCompare?.dataset?.length
+    ) {
+      const data = histogramDataRegionRaw.dataset.map((d, i) => ({
+        date: d.label,
+        layer_id: nutsDataParams.LAYER_ID,
+        regionA: {
+          name: nutsProperties?.NAME_LATN,
+          min: d.min,
+          max: d.max,
+          avg: d.avg,
+        },
+        regionB: {
+          name: compareNutProperties?.NAME_LATN,
+          min: histogramDataRegionRawCompare.dataset[i].min,
+          max: histogramDataRegionRawCompare.dataset[i].max,
+          avg: histogramDataRegionRawCompare.dataset[i].avg,
+        },
+      }));
+      downloadCSVCompare(data, `data-${leftData.title}-compare.csv`);
     } else {
       console.error('No data available for download.');
     }

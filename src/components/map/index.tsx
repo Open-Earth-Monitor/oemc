@@ -14,7 +14,7 @@ import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 
 import cn from '@/lib/classnames';
 import { mobile, tablet } from '@/lib/media-queries';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useDebounce } from '@/hooks/datasets';
 import { useLayer, useLayerParsedSource } from '@/hooks/layers';
 import { useMonitors } from '@/hooks/monitors';
@@ -23,6 +23,7 @@ import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
   useSyncBboxSettings,
+  useSyncBasemapSettings,
 } from '@/hooks/sync-query';
 import PointHistogram from './stats/point-histogram';
 import RegionsHistogram from './stats/region-histogram';
@@ -44,10 +45,9 @@ import BookmarkControl from './controls/bookmark';
 import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import Legend from './legend';
-import MapTooltip from './tooltip';
+import MapTooltip from './monitor-tooltip';
 import type { CustomMapProps, MonitorTooltipInfo } from './types';
 import { useParams } from 'next/navigation';
-import { transformToBBoxArray } from '@/lib/format';
 import CompareRegionsStatistics from './controls/compare-regions';
 
 import type { FeatureInfoResponse } from './types';
@@ -55,7 +55,6 @@ import { getHistogramData } from './utils';
 
 import { Extent } from 'ol/extent';
 import BasemapControl from './controls/basemaps';
-import Basemaps from './basemap';
 import BasemapLayer from './basemap';
 
 interface ClickEvent {
@@ -91,6 +90,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
     histogramLayerLeftVisibilityAtom
   );
+  const [basemap] = useSyncBasemapSettings();
   const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const [bbox, setBbox] = useSyncBboxSettings();
@@ -110,6 +110,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     ol: {
       getView: () => ol.View;
       getSize: () => Size;
+      getPixelFromCoordinate: (coordinate: Coordinate) => [number, number];
     };
   }> = useRef<null>(null);
 
@@ -191,6 +192,21 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
     setBbox(bbox);
   }, [setBbox]);
+
+  const handleMapDrag = useCallback(() => {
+    if (!mapRef.current) return;
+
+    const map = mapRef.current.ol;
+    // Ensure tooltip position updates only if we have a coordinate
+    if (tooltipInfo.coordinate) {
+      const updatedPixelPosition = map.getPixelFromCoordinate(tooltipInfo.coordinate);
+
+      setTooltipInfo((prev) => ({
+        ...prev,
+        position: updatedPixelPosition, // Updated pixel position
+      }));
+    }
+  }, [setTooltipInfo, tooltipInfo.coordinate]);
 
   const wmsNutsSource = useMemo(() => {
     return new TileWMS({
@@ -418,6 +434,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         className="relative"
         initial={initialViewport}
         onMoveEnd={handleMapMove}
+        onPointerDrag={handleMapDrag}
         onSingleClick={handleSingleClick}
         noDefaultControls
       >
@@ -490,10 +507,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           />
         )}
 
-        <RLayerTile
-          zIndex={100}
-          url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-        />
+        {basemap === 'world_imagery' && (
+          <RLayerTile
+            zIndex={100}
+            url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+          />
+        )}
 
         <Controls>
           <LocationSearchComponent

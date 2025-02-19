@@ -81,7 +81,7 @@ const MapTooltip: FC<TooltipProps> = ({
   return (
     <div
       className={cn({
-        'text-2xs absolute z-50 max-w-[200px] translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-5 font-bold text-brand-500 shadow-md':
+        'text-2xs absolute z-50 max-w-[300px] translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-5 font-bold text-brand-500 shadow-md':
           true,
         hidden: leftLayerHistogramVisibility,
       })}
@@ -91,13 +91,13 @@ const MapTooltip: FC<TooltipProps> = ({
       }}
     >
       <button className="absolute right-4 top-4 z-50" onClick={onCloseTooltip}>
-        <XIcon size={14} />
+        <XIcon size={14} className="text-brand-500" />
       </button>
       <div className="relative space-y-4">
-        <h3 className="mt-4 text-right text-sm font-bold">{leftData.title}</h3>
+        <h3 className="mt-4 text-left text-sm font-bold">{leftData.title}</h3>
 
         {!!leftData.value && (
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-col items-start">
             {isRegionsLayerActive && !!nutsProperties?.NAME_LATN && (
               <div className="font-satoshi text-2xl font-bold">{nutsProperties?.NAME_LATN}</div>
             )}

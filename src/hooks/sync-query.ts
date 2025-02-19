@@ -22,4 +22,7 @@ export const useSyncSidebarState = () =>
   useQueryState('sidebar-open', parseAsBoolean.withDefault(true));
 
 export const useSyncBasemapSettings = () =>
-  useQueryState('basemap', parseAsJson<string>().withDefault('world_imagery'));
+  useQueryState(
+    'basemap',
+    parseAsJson<'world_imagery' | 'Esri_WorldGrayCanvas'>().withDefault('world_imagery')
+  );

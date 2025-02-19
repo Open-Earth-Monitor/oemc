@@ -5,7 +5,7 @@ import VideoComponent from './video';
 const Hero = () => {
   return (
     <div className="relative top-[70px] h-full w-full">
-      <div className="container relative mx-auto h-[calc(100vh_-_70px)] w-full pb-[60px] pt-[70px] lg:h-[739px]">
+      <div className="container relative mx-auto h-[calc(100vh_-_70px)] w-full pb-[60px] pt-[70px] lg:h-[739px] xl:pt-12">
         <VideoComponent />
         <div
           className="absolute bottom-0 left-0 right-0 top-0"
