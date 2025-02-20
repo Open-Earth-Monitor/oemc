@@ -22,6 +22,7 @@ import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
   useSyncBboxSettings,
+  useSyncBasemapSettings,
 } from '@/hooks/sync-query';
 
 import {
@@ -68,6 +69,7 @@ const Map: FC<GeostoryMapProps> = ({
   layerData,
   compareLayerData,
 }) => {
+  const [basemap] = useSyncBasemapSettings();
   const [locationSearch, setLocationSearch] = useState('');
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
@@ -564,10 +566,13 @@ const Map: FC<GeostoryMapProps> = ({
             }}
           />
         )}
-        <RLayerTile
-          zIndex={100}
-          url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-        />
+
+        {basemap === 'world_imagery' && (
+          <RLayerTile
+            zIndex={100}
+            url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+          />
+        )}
 
         <Controls>
           <LocationSearchComponent

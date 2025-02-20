@@ -76,7 +76,7 @@ const PointHistogram: FC<HistogramTypes> = ({
   const histogramPointData = useMemo(() => {
     return {
       data:
-        (histogramData || []).map((d) => ({
+        (histogramData || [])?.map((d) => ({
           x: d.label,
           y: d.value,
         })) || [],
@@ -101,8 +101,7 @@ const PointHistogram: FC<HistogramTypes> = ({
   return (
     <div
       className={cn({
-        'absolute top-[81px] z-50 min-h-[390px] min-w-[420px] space-y-5 text-secondary-500 shadow-md':
-          true,
+        'absolute top-[81px] z-50 min-w-[420px] space-y-5 text-secondary-500 shadow-md': true,
         'left-2.5': !isSidebarOpen,
         'left-[570px]': isSidebarOpen,
       })}
