@@ -205,9 +205,9 @@ const DatasetCard: FC<DatasetCardProps> = ({
           <Button
             data-testid="dataset-layer-toggle-button"
             type="button"
-            variant="default_active"
+            variant={isActive ? 'default_active' : 'default'}
             onClick={handleToggleLayer}
-            className="flex items-center space-x-2"
+            className="flex w-full items-center space-x-2"
           >
             <span>{isActive ? 'Hide' : 'Show'} layer on the map</span>
             <LuLayers className="h-3 w-3 text-inherit" title="layer" />

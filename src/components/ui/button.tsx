@@ -11,7 +11,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'border-2 border-secondary-500 text-xs hover:bg-secondary-500 hover:bg-opacity-10 hover:text-secondary-500 hover:border-secondary-500 hover:shadow-[-2px_2px_rgb(255, 255, 230)]',
+          'border-2 border-secondary-500 text-xs hover:bg-secondary-500 hover:bg-opacity-10 hover:text-secondary-500 hover:border-secondary-500 hover:shadow-[2px_2px_#ffffe5]',
         default_active:
           'bg-secondary-500 text-brand-500 hover:border-secondary-500 hover:shadow-[2px_2px_#ffffe5] hover:border-[1px] hover:border-secondary-700 w-full',
         light:
