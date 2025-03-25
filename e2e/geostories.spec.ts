@@ -209,7 +209,7 @@ test('From a selected geostory, user should be able to go back to the monitor it
   await page.waitForURL(`**/map/geostories/${firstGeostoryId}`, { waitUntil: 'load' });
   await expect(page.getByTestId('monitor-title-back-btn')).toBeVisible();
   await expect(page.getByTestId('back-to-monitor')).toBeVisible();
-  const text = `Back to ${firstMonitorWithGeostories.title}.`;
+  const text = `${firstMonitorWithGeostories.title}`;
   await expect(page.getByTestId('back-to-monitor')).toHaveText(text);
   await page.getByTestId('monitor-title-back-btn').click();
   await page.waitForURL(`**/map/${firstMonitorWithGeostories.id}/geostories`, {

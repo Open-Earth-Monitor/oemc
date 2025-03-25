@@ -39,11 +39,11 @@ test.describe('monitors and geostories display', () => {
     await monitorsCheckbox.click();
 
     const monitorsResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?type=monitors/`
+      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/?type=monitors*`
     );
 
     const monitorsData = (await monitorsResponse.json()) as MonitorsAndGeostoriesPaginated;
-    const firstMonitorWithData = monitorsData['monitors and geostories']?.results?.find(
+    const firstMonitorWithData = monitorsData?.results?.find(
       (monitor) => monitor.ready && monitor.description !== null
     ) as Monitor;
 
@@ -91,11 +91,11 @@ test.describe('monitors and geostories display', () => {
     await geostoriesCheckbox.click();
 
     const geostoriesResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?type=geostories/`
+      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/?type=geostories*`
     );
 
     const geostoriesData = (await geostoriesResponse.json()) as MonitorsAndGeostoriesPaginated;
-    const firstGeostoryWithData = geostoriesData['monitors and geostories']?.results?.find(
+    const firstGeostoryWithData = geostoriesData?.results?.find(
       (geostory) => geostory.ready && geostory.description !== null
     ) as Geostory;
 
