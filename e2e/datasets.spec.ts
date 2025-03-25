@@ -8,7 +8,9 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('datasets tab', async ({ page }) => {
-  const monitorsResponse = await page.waitForResponse(`${process.env.NEXT_PUBLIC_API_URL}`);
+  const monitorsResponse = await page.waitForResponse(
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors/`
+  );
 
   const monitorsData = (await monitorsResponse.json()) as Monitor[];
   await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
@@ -21,13 +23,15 @@ test('datasets tab', async ({ page }) => {
 });
 
 test('datasets list', async ({ page }) => {
-  const monitorsResponse = await page.waitForResponse(`${process.env.NEXT_PUBLIC_API_URL}`);
+  const monitorsResponse = await page.waitForResponse(
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors/`
+  );
   const monitorsData = (await monitorsResponse.json()) as Monitor[];
   await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
 
   const layersResponse = await page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}/${monitorsData[0].id}/layers/`
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors/${monitorsData[0].id}/layers/`
   );
   const layersData = (await layersResponse.json()) as Layer[];
   const datasetsList = page.getByTestId('datasets-list').locator('li');
@@ -48,7 +52,7 @@ test('datasets item', async ({ page }) => {
   await page.waitForURL('**/map/**/datasets*', { waitUntil: 'load' });
 
   const layersResponse = await page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}/${firstMonitorWithLayers.id}/layers/`
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors/${firstMonitorWithLayers.id}/layers/`
   );
   const layersData = (await layersResponse.json()) as Layer[];
   const firstDataset = page.getByTestId(`dataset-item-${layersData[0].layer_id}`);
