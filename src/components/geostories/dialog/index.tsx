@@ -148,7 +148,11 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                             >
                               {title}
                             </a>
-                            {doi && !!doi.length && doi.map((d) => <DoiBadge doi={d} />)}
+                            {doi &&
+                              !!doi.length &&
+                              doi.map((d) =>
+                                d !== 'DOI NOT READY' ? <DoiBadge doi={d} /> : null
+                              )}{' '}
                           </li>
                         )
                     )}
