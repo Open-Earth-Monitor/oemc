@@ -18,3 +18,5 @@ export type MonitorsAndGeostoriesPaginatedParsed = {
   previous_page: string | null;
   count: number;
 };
+
+export type UseCase = { title: string; url: string; doi: string[] };

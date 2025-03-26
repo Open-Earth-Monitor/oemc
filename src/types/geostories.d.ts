@@ -1,6 +1,7 @@
 import type { Theme } from '@/constants/themes';
 
 import type { Layer } from './layers';
+import { UseCase } from './monitors-and-geostories';
 
 export type Geostory = {
   author: string;
@@ -15,7 +16,7 @@ export type Geostory = {
   metadata_url: string;
   notebooks_url: string;
   publications: { title: string; url: string }[];
-  use_case_link: { title: string; url: string }[];
+  use_case_link: UseCase[];
   geostory_bbox: number[] | null;
   monitors: { id: string; title: string }[];
 };

@@ -5,7 +5,9 @@ import type { Metadata, NextPage } from 'next';
 import MonitorsTable from '@/components/monitors/table';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-const StaticMap = dynamic(() => import('@/components/map/static'), { ssr: false });
+const StaticMap = dynamic(() => import('@/components/map/static'), {
+  ssr: false,
+});
 
 export const metadata: Metadata = {
   title: 'Map - Open Earth Monitor Cyberinfrastructure',

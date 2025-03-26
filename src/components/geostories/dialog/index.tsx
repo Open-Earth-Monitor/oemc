@@ -19,6 +19,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { usePostWebTraffic } from '@/hooks/web-traffic';
+import DoiBadge from '@/components/doi-badge';
 
 type GeostoryDialogProps = Partial<Geostory>;
 
@@ -136,9 +137,9 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                 {isArray(use_case_link) && use_case_link?.length > 0 && (
                   <ul className="space-y-2 py-2 pl-8 font-bold">
                     {use_case_link.map(
-                      ({ url, title }) =>
+                      ({ url, title, doi }) =>
                         !!url && (
-                          <li key={title}>
+                          <li key={title} className="flex items-center justify-between">
                             <a
                               href={url}
                               className="underline"
@@ -147,6 +148,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                             >
                               {title}
                             </a>
+                            {doi && !!doi.length && doi.map((d) => <DoiBadge doi={d} />)}
                           </li>
                         )
                     )}

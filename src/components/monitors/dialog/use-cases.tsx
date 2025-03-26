@@ -1,8 +1,10 @@
 import { HiOutlineGlobeAlt } from 'react-icons/hi';
 import type { Monitor } from '@/types/monitors';
+import { UseCase } from '@/types/monitors-and-geostories';
+import DoiBadge from '@/components/doi-badge';
 
-const UseCasesUnit: React.FC<{ title: string; url: string }> = ({ title, url }) => (
-  <li>
+const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }: UseCase) => (
+  <li className="flex items-center justify-between">
     <a
       href={url}
       className="underline"
@@ -12,6 +14,7 @@ const UseCasesUnit: React.FC<{ title: string; url: string }> = ({ title, url }) 
     >
       {title}
     </a>
+    {doi && !!doi.length && doi.map((d) => <DoiBadge doi={d} />)}
   </li>
 );
 
@@ -27,8 +30,8 @@ const UseCases: React.FC<{ items: Monitor['use_case_link'] }> = ({ items }) => {
         <span className="text-2xl font-bold">Use cases</span>
       </h3>
       <ul className="space-y-2 py-2 pl-8 font-bold">
-        {items.map(({ url, title }, index) => (
-          <UseCasesUnit key={index} title={title} url={url} />
+        {items.map((props, index) => (
+          <UseCasesUnit key={index} {...props} />
         ))}
       </ul>
     </div>
