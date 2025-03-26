@@ -18,7 +18,7 @@ const MainMenuDesktop = () => {
         return (
           <Link
             className={cn(
-              'flex h-full items-center justify-center border-l border-r border-secondary-900 text-center font-satoshi font-bold transition-colors hover:bg-secondary-900 lg:min-w-[180px]',
+              'font-satoshi flex h-full items-center justify-center border-l border-r border-secondary-900 text-center font-bold transition-colors hover:bg-secondary-900 lg:min-w-[180px]',
               {
                 'bg-secondary-500 text-brand-500 hover:text-secondary-500': isActive,
               }

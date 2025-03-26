@@ -23,6 +23,7 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
     });
     console.info('WT6 -', 'monitors', id);
   };
+
   return (
     <div
       className="flex min-h-[260px] flex-col justify-between px-6 py-6 text-brand-500 sm:h-[468px] sm:px-8"
