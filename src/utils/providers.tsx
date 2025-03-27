@@ -30,6 +30,9 @@ const Providers: ProvidersProps = ({ children }) => {
         trackOutboundLinks
         trackFileDownloads
         selfHosted
+        scriptProps={{
+          src: 'https://plausible.earthmonitor.org/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js',
+        }}
       >
         <QueryClientProvider client={queryClient}>
           <JotaiProvider>{children}</JotaiProvider>
