@@ -4,7 +4,7 @@ import { UseCase } from '@/types/monitors-and-geostories';
 import DoiBadge from '@/components/doi-badge';
 
 const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }: UseCase) => (
-  <li className="flex items-center justify-between">
+  <li className="flex flex-col space-y-2">
     <a
       href={url}
       className="underline"
@@ -14,7 +14,9 @@ const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }: UseCase) => (
     >
       {title}
     </a>
-    {doi && !!doi.length && doi.map((d) => (d !== 'DOI NOT READY' ? <DoiBadge doi={d} /> : null))}
+    <span className="flex flex-wrap gap-1">
+      {doi && !!doi.length && doi.map((d) => (d !== 'DOI NOT READY' ? <DoiBadge doi={d} /> : null))}
+    </span>
   </li>
 );
 
