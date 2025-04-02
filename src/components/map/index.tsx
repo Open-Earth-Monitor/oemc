@@ -10,7 +10,7 @@ import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
-import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
+import { RLayerWMS, RMap, RLayerTile, RControl, RLayerTileWMS } from 'rlayers';
 
 import cn from '@/lib/classnames';
 import { mobile, tablet } from '@/lib/media-queries';
@@ -463,15 +463,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         )}
 
         {data && !isLoading && isLayerActive && (
-          <RLayerWMS
+          <RLayerTileWMS
             ref={layerLeftRef}
             properties={{ label: gs_name, date }}
             url={gs_base_wms}
             opacity={opacity ?? 1}
             params={{
               FORMAT: 'image/png',
-              WIDTH: 256,
-              HEIGHT: 256,
               SERVICE: 'WMS',
               VERSION: '1.3.0',
               REQUEST: 'GetMap',

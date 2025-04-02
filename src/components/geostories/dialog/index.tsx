@@ -139,7 +139,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                     {use_case_link.map(
                       ({ url, title, doi }) =>
                         !!url && (
-                          <li key={title} className="flex items-center justify-between">
+                          <li key={title} className="flex flex-col space-y-2">
                             <a
                               href={url}
                               className="underline"
@@ -148,11 +148,13 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                             >
                               {title}
                             </a>
-                            {doi &&
-                              !!doi.length &&
-                              doi.map((d) =>
-                                d !== 'DOI NOT READY' ? <DoiBadge doi={d} /> : null
-                              )}{' '}
+                            <span className="flex flex-wrap gap-1">
+                              {doi &&
+                                !!doi.length &&
+                                doi.map((d) =>
+                                  d !== 'DOI NOT READY' ? <DoiBadge doi={d} /> : null
+                                )}
+                            </span>
                           </li>
                         )
                     )}
