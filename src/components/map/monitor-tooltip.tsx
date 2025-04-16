@@ -114,36 +114,36 @@ const MapTooltip: FC<TooltipProps> = ({
             {dateLabel && ` for the selected date (${dateLabel})`}.
           </span>
         )}
-        {leftData?.value && !isRegionsLayerActive && (
+        {!!leftData?.value && !isRegionsLayerActive && (
           <Button
             variant="light"
             onClick={handleClick}
             className="font-inter w-full text-xs"
             disabled={!leftData.value}
           >
-            See point histogram
+            See point-based summary
           </Button>
         )}
 
-        {leftData?.value && isRegionsLayerActive && (
+        {!!leftData?.value && isRegionsLayerActive && (
           <Button
             variant="light"
             onClick={handleHistogram}
             className="font-inter p-2 text-xs"
             disabled={!leftData.value}
           >
-            See region histogram
+            See regions-based summary
           </Button>
         )}
 
-        {rightData.date && rightData.value !== 0 && (
+        {!!rightData.date && rightData.value !== 0 && (
           <div className="border-brand-800 mt-4 border-t pt-4 text-right text-xl">
             {typeof rightData.value === 'number' ? numberFormat(rightData.value) : rightData.value}
             {!!rightData.unit && rightData.unit}{' '}
             <span className="pt-4 text-sm">({compareDateLabel})</span>
           </div>
         )}
-        {rightData.date && !rightData.value && !leftData.value && (
+        {!!rightData.date && !rightData.value && !leftData.value && (
           <span className="pt-4 text-sm font-light">
             No data is available at this specific point for the selected dates ({dateLabel} and{' '}
             {compareDateLabel}).
