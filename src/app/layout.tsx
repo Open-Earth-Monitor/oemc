@@ -1,13 +1,11 @@
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 
-import Header from '@/components/header';
 import Providers from '@/utils/providers';
 
 // Styles
 import '@/styles/globals.css';
 import 'ol/ol.css';
-import Script from 'next/script';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -51,10 +49,7 @@ export default function RootLayout({ children }) {
       <body className="font-inter mx-auto h-full min-h-screen w-screen overflow-x-hidden bg-brand-500">
         <div className="flex h-full flex-col">
           <main className="relative h-full flex-1">
-            <Providers>
-              <Header />
-              {children}
-            </Providers>
+            <Providers>{children}</Providers>
           </main>
         </div>
       </body>
