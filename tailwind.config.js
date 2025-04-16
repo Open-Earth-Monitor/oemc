@@ -9,11 +9,13 @@ module.exports = {
   content: ['./src/app/**/*.{ts,tsx}', './src/components/**/*.{ts,tsx}'],
   theme: {
     container: {
-      center: true,
-      padding: '2rem',
-      screens: {
-        '2xl': '1400px',
-      },
+      DEFAULT: '1rem', // Default padding for medium screens
+      sm: '1rem', // Small screens
+      md: '1rem', // Medium screens
+      lg: '2rem', // Large screens
+      xl: '4rem', // Extra large screens
+      '2xl': '6rem', // Extra-extra large screens
+      '3xl': '10rem', // Extra-extra-extra large screens
     },
     extend: {
       font: {
@@ -21,6 +23,13 @@ module.exports = {
         satoshi: ['var(--font-satoshi)'],
       },
       colors: {
+        black: {
+          500: '#09131D',
+        },
+        white: {
+          50: '#FFFFFF',
+          500: '#FFFFE6',
+        },
         gray: {
           600: 'hsl(220, 7%, 40%)',
         },
@@ -68,7 +77,7 @@ module.exports = {
         },
         accent: {
           DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+          green: 'hsl(var(--accent-green))',
         },
         popover: {
           DEFAULT: 'hsl(var(--popover))',
