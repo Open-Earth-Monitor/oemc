@@ -115,7 +115,7 @@ const MapTooltip: FC<TooltipProps> = ({
           </div>
           {leftData?.value && !isRegionsLayerActive && leftData.range && (
             <Button
-              variant="light"
+              variant="default"
               onClick={handleClick}
               className="font-inter w-full p-2 text-xs"
               disabled={!leftData.value}
@@ -123,8 +123,8 @@ const MapTooltip: FC<TooltipProps> = ({
               See point-based summary
             </Button>
           )}
-          {leftData?.value && isRegionsLayerActive && leftData.range && (
-            <Button variant="light" onClick={handleHistogram} className="font-inter p-2 text-xs">
+          {leftData?.value && isRegionsLayerActive && (
+            <Button variant="default" onClick={handleHistogram} className="font-inter p-2 text-xs">
               See regions-based summary
             </Button>
           )}
@@ -142,7 +142,7 @@ const MapTooltip: FC<TooltipProps> = ({
             </div>
             {!isRegionsLayerActive && rightData.range && (
               <Button
-                variant="light"
+                variant="default"
                 onClick={handleClick}
                 className="font-inter text-xs"
                 // disabled={true}
@@ -152,7 +152,7 @@ const MapTooltip: FC<TooltipProps> = ({
             )}
             {!!isRegionsLayerActive && rightData.range && (
               <Button
-                variant="light"
+                variant="default"
                 onClick={handleHistogram}
                 className="font-inter text-xs"
                 // disabled={!rightData.value}
