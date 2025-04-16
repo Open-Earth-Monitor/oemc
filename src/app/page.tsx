@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 const Hub: NextPage = () => (
   <>
     <Hero />
-    <LandingDatasets />
     <SocialMedia />
+    <LandingDatasets />
     <Footer />
   </>
 );

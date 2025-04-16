@@ -5088,31 +5088,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"embla-carousel-react@npm:^8.1.7":
-  version: 8.1.7
-  resolution: "embla-carousel-react@npm:8.1.7"
+"embla-carousel-react@npm:^8.6.0":
+  version: 8.6.0
+  resolution: "embla-carousel-react@npm:8.6.0"
   dependencies:
-    embla-carousel: 8.1.7
-    embla-carousel-reactive-utils: 8.1.7
+    embla-carousel: 8.6.0
+    embla-carousel-reactive-utils: 8.6.0
   peerDependencies:
-    react: ^16.8.0 || ^17.0.1 || ^18.0.0
-  checksum: 47c605c0e5da55b510578b8a5da46f7318e86a97a1e856179bdb2ee2388a2c86c3429080239cd8721ed8d2ecb2816f7cee93e04e84e25355553e6bd5c3248f07
+    react: ^16.8.0 || ^17.0.1 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 30622c3f6bc3de5b608ab3fd82f69ec2ad86e86657c4c9d780380cf159bf5dac0170adced74aecd117c521c06fa014fe71b5fa0ec7c293921fd1cb7dff460be3
   languageName: node
   linkType: hard
 
-"embla-carousel-reactive-utils@npm:8.1.7":
-  version: 8.1.7
-  resolution: "embla-carousel-reactive-utils@npm:8.1.7"
+"embla-carousel-reactive-utils@npm:8.6.0":
+  version: 8.6.0
+  resolution: "embla-carousel-reactive-utils@npm:8.6.0"
   peerDependencies:
-    embla-carousel: 8.1.7
-  checksum: 2c4875f6a4d1c86381bafaabd1e9892c44df1a46ab8fdaa83084a90a6a764af01961c0d0417bfab3b667d3b2e34f95a9ec06d6c9d7266e6f7f1fdec6a954984c
+    embla-carousel: 8.6.0
+  checksum: d3663addcb10a5cfecac976987f27fd58f2142ef944da9cd56568120752a71cb04d731e9c396f2e426f43be730f02145a87b88747c6902e24544a6fca9fc0141
   languageName: node
   linkType: hard
 
-"embla-carousel@npm:8.1.7":
-  version: 8.1.7
-  resolution: "embla-carousel@npm:8.1.7"
-  checksum: 9ce97b170275dfc545493799d171a617fa7a18a369c8020f52feafe52483beb457df9559dcc5402bc1e825080f3bc2aa899507fe06eb537665a891d030dfa059
+"embla-carousel@npm:8.6.0":
+  version: 8.6.0
+  resolution: "embla-carousel@npm:8.6.0"
+  checksum: d943d225d069a8cf0b876440297dda42107e5e69006387c6bce1163b027ac5e5beba67160db818a763c7c46f2103238a097953ac3f383362f8104535cd278de1
   languageName: node
   linkType: hard
 
@@ -7951,7 +7951,7 @@ __metadata:
     cmdk: ^1.0.0
     d3-format: ^3.1.0
     dotenv: ^16.4.7
-    embla-carousel-react: ^8.1.7
+    embla-carousel-react: ^8.6.0
     eslint: ^9.9.0
     eslint-config-next: 14.1.4
     eslint-config-prettier: ^8.8.0
