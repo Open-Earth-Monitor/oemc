@@ -41,7 +41,7 @@ const SocialMedia = () => {
       },
     },
   };
-  console.log(data);
+
   return (
     <section className="font-satoshi relative grid w-full grid-cols-12">
       <div className="container col-span-12 m-auto flex flex-col items-center justify-center space-y-[18px] sm:space-y-10">
