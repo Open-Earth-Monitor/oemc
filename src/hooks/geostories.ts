@@ -7,6 +7,7 @@ import type { Layer, LayerParsed } from '@/types/layers';
 import { Theme, THEMES_COLORS } from '@/constants/themes';
 
 import API from 'services/api';
+import { parseBBox } from '@/utils/bbox';
 
 type UseParams = {
   geostory_id?: string;
@@ -54,6 +55,7 @@ export function useGeostoryParsed(
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) => ({
       ...data,
+      geostory_bbox: parseBBox(data.geostory_bbox, 'geostory'),
       color: getColor(data.ready, data.theme, 'base'),
     }),
     ...queryOptions,
@@ -96,6 +98,8 @@ export function useGeostories(queryOptions?: UseQueryOptions<Geostory[], Error>)
     }).then((response: AxiosResponse<Geostory[]>) => response.data);
   return useQuery(['geostories'], fetchGeostories, {
     ...DEFAULT_QUERY_OPTIONS,
+    select: (data) =>
+      data.map((d) => ({ ...d, geostory_bbox: parseBBox(d.geostory_bbox, 'geostory') })),
     ...queryOptions,
   });
 }

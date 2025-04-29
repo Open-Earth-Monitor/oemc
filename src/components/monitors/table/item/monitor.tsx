@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 import { cn } from '@/lib/classnames';
@@ -24,7 +25,10 @@ export const MonitorLink = ({
 
   const { data: monitorsData } = useMonitors();
 
-  const monitorData = monitorsData?.find((monitor) => monitor.id === id);
+  const monitorData = useMemo(
+    () => monitorsData?.find((monitor) => monitor.id === id),
+    [id, monitorsData]
+  );
   const monitorBbox = monitorData?.monitor_bbox;
   const urlParams = monitorBbox ? `/?bbox=${monitorBbox}` : '';
 

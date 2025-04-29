@@ -7,7 +7,7 @@ import type { Monitor, MonitorParsed } from '@/types/monitors';
 
 import { THEMES_COLORS, DEFAULT_COLOR } from '@/constants/themes';
 
-import { isValidJSON } from '@/utils/json';
+import { parseBBox } from '@/utils/bbox';
 import API from 'services/api';
 
 type UseParams = {
@@ -57,6 +57,7 @@ export function useMonitors(
     select: (data) =>
       data.map((monitor) => ({
         ...monitor,
+        monitor_bbox: parseBBox(monitor.monitor_bbox, 'monitor'),
         color: THEMES_COLORS[monitor.theme].base || DEFAULT_COLOR,
         colorOpacity: THEMES_COLORS[monitor.theme].light || DEFAULT_COLOR,
       })),
@@ -105,7 +106,6 @@ export function useMonitorGeostories(
     }).then((response: AxiosResponse<Geostory[]>) => response.data);
   return useQuery(['monitors-geostories', params], fetchMonitorGeostories, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => data,
     ...queryOptions,
   });
 }

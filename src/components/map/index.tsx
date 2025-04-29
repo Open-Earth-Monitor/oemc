@@ -137,7 +137,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   // bbox that come defined in the monitor itself
   const predefinedBbox = monitorData?.monitor_bbox;
-
   // check URL in case the site has been shared, if not get predefined bbox if not use the default one
   const monitorBbox = useMemo(() => {
     if (bbox) return bbox;
