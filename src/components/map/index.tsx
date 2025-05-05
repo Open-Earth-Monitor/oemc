@@ -278,7 +278,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         setTooltipInfo((prev) => ({
           ...prev,
           leftData: {
-            // This info is coming from the API instead of the layer, as requested
             id: layerId,
             title,
             date,
