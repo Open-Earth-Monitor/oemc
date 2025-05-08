@@ -48,7 +48,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          variant="light"
+          variant="default"
           data-testid={`card-button-${id}`}
           className="h-12 max-w-fit p-4 text-base sm:h-9 sm:text-xs"
         >

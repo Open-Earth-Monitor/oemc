@@ -31,3 +31,26 @@ export const navSubLinksCommunity = [
     'data-testid': 'developers-link',
   },
 ];
+
+export const otherResources = [
+  {
+    name: 'Live usage statistics',
+    href: 'usage-stats/',
+    'data-testid': 'usage-stats-link',
+  },
+  {
+    name: 'Disclaimer',
+    href: 'usage-stats/',
+    'data-testid': 'usage-stats-link',
+  },
+  {
+    name: 'Privacy Policy',
+    href: 'usage-stats/',
+    'data-testid': 'usage-stats-link',
+  },
+  {
+    name: 'Contact us',
+    href: 'usage-stats/',
+    'data-testid': 'usage-stats-link',
+  },
+];
