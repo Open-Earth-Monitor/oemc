@@ -1,10 +1,16 @@
 'use client';
 
-import { FC } from 'react';
+import React, { useMemo, FC, useCallback, useEffect, useRef, useState, ChangeEvent } from 'react';
 
-import MonitorMap from './monitor-map';
+import { useMediaQuery } from 'react-responsive';
 
-import { DEFAULT_VIEWPORT } from './constants';
+import axios from 'axios';
+import type { MapBrowserEvent } from 'ol';
+import ol from 'ol';
+import type { Coordinate } from 'ol/coordinate';
+import { fromLonLat, toLonLat } from 'ol/proj';
+import TileWMS from 'ol/source/TileWMS';
+import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
 
 import cn from '@/lib/classnames';
 import { mobile, tablet } from '@/lib/media-queries';
@@ -18,7 +24,6 @@ import {
   useSyncCompareLayersSettings,
   useSyncBboxSettings,
   useSyncBasemapSettings,
-  useSyncBasemapLabelsSettings,
 } from '@/hooks/sync-query';
 import PointHistogram from './stats/point-histogram';
 import RegionsHistogram from './stats/region-histogram';
@@ -39,7 +44,7 @@ import Controls from './controls';
 import BookmarkControl from './controls/bookmark';
 import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
-import { Legend } from './legend';
+import Legend from './legend';
 import MapTooltip from './monitor-tooltip';
 import type { CustomMapProps, MonitorTooltipInfo } from './types';
 import { useParams } from 'next/navigation';
@@ -51,7 +56,6 @@ import { getHistogramData } from './utils';
 import { Extent } from 'ol/extent';
 import BasemapControl from './controls/basemaps';
 import BasemapLayer from './basemap';
-import { LABELS } from './controls/basemaps/constants';
 
 interface ClickEvent {
   bbox?: Extent;
@@ -77,7 +81,7 @@ const TooltipInitialState = {
   },
 };
 
-const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
+const MonitorMap: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [locationSearch, setLocationSearch] = useState('');
   const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
   const isMobile = useMediaQuery(mobile);
@@ -90,7 +94,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const [bbox, setBbox] = useSyncBboxSettings();
-  const [activeLabels] = useSyncBasemapLabelsSettings();
   const [nutsProperties, setNutsProperties] = useState(null);
   const [compareNutsProperties, setCompareNutsProperties] = useState(null);
   const setCoordinate = useSetAtom(coordinateAtom);
@@ -134,6 +137,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   // bbox that come defined in the monitor itself
   const predefinedBbox = monitorData?.monitor_bbox;
+
   // check URL in case the site has been shared, if not get predefined bbox if not use the default one
   const monitorBbox = useMemo(() => {
     if (bbox) return bbox;
@@ -275,6 +279,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         setTooltipInfo((prev) => ({
           ...prev,
           leftData: {
+            // This info is coming from the API instead of the layer, as requested
             id: layerId,
             title,
             date,
@@ -320,7 +325,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         ...tooltipInfo,
         leftData: {
           ...tooltipInfo.leftData,
-          range,
           value: null,
         },
         coordinate: e.coordinate,
@@ -345,10 +349,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   useEffect(() => {
     if (monitorBbox && mapRef) {
-      void setBbox(monitorBbox);
+      setBbox(monitorBbox);
       mapRef?.current?.ol?.getView()?.fit(monitorBbox);
     }
-  }, [monitorBbox, setBbox]);
+  }, [monitorBbox]);
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
@@ -420,153 +424,152 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const layerData = useLayer({ layer_id: layerId });
 
-  const labelUrl = useMemo(
-    () => LABELS.find((label) => activeLabels === label.id)?.url,
-    [activeLabels]
-  );
-
   return (
-    <>
-      <RMap
-        ref={mapRef as unknown as React.RefObject<null>}
-        projection="EPSG:3857"
-        width="100%"
-        height="100%"
-        className="relative"
-        initial={initialViewport}
-        onMoveEnd={handleMapMove}
-        onPointerDrag={handleMapDrag}
-        onSingleClick={handleSingleClick}
-        noDefaultControls
-      >
-        <BasemapLayer />
+    <RMap
+      ref={mapRef as unknown as React.RefObject<null>}
+      projection="EPSG:3857"
+      width="100%"
+      height="100%"
+      className="relative"
+      initial={initialViewport}
+      onMoveEnd={handleMapMove}
+      onPointerDrag={handleMapDrag}
+      onSingleClick={handleSingleClick}
+      noDefaultControls
+    >
+      <BasemapLayer />
 
-        {isRegionsLayerActive && (
-          <RLayerWMS
-            ref={nutsLayer}
-            properties={{ label: 'NUTS' }}
-            url="https://geoserver.earthmonitor.org/geoserver/oem/wms"
-            opacity={0.2}
-            params={{
-              FORMAT: 'image/png',
-              WIDTH: 768,
-              HEIGHT: 566,
-              SERVICE: 'WMS',
-              VERSION: '1.1.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: 'oem:NUTS_RG_01M_2021_3035',
-              SRS: 'EPSG:3857', // Changing projection to EPSG:3857 (for WMS 1.1.0)
-              BBOX: [-20037508.34, -20037508.34, 20037508.34, 20037508.34], // BBOX for EPSG:3857 (World extent)
-              NAME: 'NUTS',
-            }}
-          />
+      {isRegionsLayerActive && (
+        <RLayerWMS
+          ref={nutsLayer}
+          properties={{ label: 'NUTS' }}
+          url="https://geoserver.earthmonitor.org/geoserver/oem/wms"
+          opacity={0.2}
+          params={{
+            FORMAT: 'image/png',
+            WIDTH: 768,
+            HEIGHT: 566,
+            SERVICE: 'WMS',
+            VERSION: '1.1.0',
+            REQUEST: 'GetMap',
+            TRANSPARENT: true,
+            LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+            SRS: 'EPSG:3857', // Changing projection to EPSG:3857 (for WMS 1.1.0)
+            BBOX: [-20037508.34, -20037508.34, 20037508.34, 20037508.34], // BBOX for EPSG:3857 (World extent)
+            NAME: 'NUTS',
+          }}
+        />
+      )}
+
+      {data && !isLoading && isLayerActive && (
+        <RLayerWMS
+          ref={layerLeftRef}
+          properties={{ label: gs_name, date }}
+          url={gs_base_wms}
+          opacity={opacity ?? 1}
+          params={{
+            FORMAT: 'image/png',
+            SERVICE: 'WMS',
+            VERSION: '1.3.0',
+            REQUEST: 'GetMap',
+            TRANSPARENT: true,
+            LAYERS: gs_name,
+            DIM_DATE: date,
+            CRS: 'EPSG:3857',
+            BBOX: 'bbox-epsg-3857',
+          }}
+        />
+      )}
+
+      {compareDate && data && !isLoading && isCompareLayerActive && (
+        <RLayerWMS
+          ref={layerRightRef}
+          properties={{ label: gs_name, date: compareDate }}
+          url={gs_base_wms}
+          opacity={opacity ?? 1}
+          params={{
+            FORMAT: 'image/png',
+            WIDTH: 256,
+            HEIGHT: 256,
+            SERVICE: 'WMS',
+            VERSION: '1.3.0',
+            REQUEST: 'GetMap',
+            TRANSPARENT: true,
+            LAYERS: gs_name,
+            DIM_DATE: compareDate,
+            CRS: 'EPSG:3857',
+            BBOX: 'bbox-epsg-3857',
+          }}
+          visible={isCompareLayerActive}
+        />
+      )}
+
+      {basemap === 'world_imagery' && (
+        <RLayerTile
+          zIndex={100}
+          url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+        />
+      )}
+
+      <Controls>
+        <LocationSearchComponent
+          locationSearch={locationSearch}
+          OPTIONS={OPTIONS}
+          handleLocationSearchChange={handleLocationSearchChange}
+          handleClick={handleClick}
+          isLoading={isLoadingLocationData}
+          isFetching={isFetchingLocationData}
+          isMobile={isMobile}
+        />
+        {!isMobile && (
+          <RControl.RZoom className="ol-zoom" key="ol-zoom" zoomOutLabel="-" zoomInLabel="+" />
         )}
 
-        {data && !isLoading && isLayerActive && (
-          <RLayerWMS
-            ref={layerLeftRef}
-            properties={{ label: gs_name, date }}
-            url={gs_base_wms}
-            opacity={opacity ?? 1}
-            params={{
-              FORMAT: 'image/png',
-              SERVICE: 'WMS',
-              VERSION: '1.3.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: gs_name,
-              DIM_DATE: date,
-              CRS: 'EPSG:3857',
-              BBOX: 'bbox-epsg-3857',
-            }}
-          />
+        <div
+          className={cn({
+            'absolute flex w-full flex-col items-end justify-end space-y-1.5': true,
+            'top-12': isMobile,
+            'top-[108px]': !isMobile,
+          })}
+        >
+          <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
+          <BasemapControl isMobile={isMobile} />
+          <BookmarkControl isMobile={isMobile} />
+          <ShareControl isMobile={isMobile} />
+        </div>
+        {isCompareLayerActive && data && !isLoading && (
+          <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
         )}
+      </Controls>
 
-        {compareDate && data && !isLoading && isCompareLayerActive && (
-          <RLayerWMS
-            ref={layerRightRef}
-            properties={{ label: gs_name, date: compareDate }}
-            url={gs_base_wms}
-            opacity={opacity ?? 1}
-            params={{
-              FORMAT: 'image/png',
-              WIDTH: 256,
-              HEIGHT: 256,
-              SERVICE: 'WMS',
-              VERSION: '1.3.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: gs_name,
-              DIM_DATE: compareDate,
-              CRS: 'EPSG:3857',
-              BBOX: 'bbox-epsg-3857',
+      {isLayerActive && <Legend />}
+      <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
+
+      {layerData && leftLayerHistogramVisibility ? (
+        !isRegionsLayerActive ? (
+          <PointHistogram
+            onCloseTooltip={handleCloseTooltip}
+            layerId={layerId}
+            compareLayerId={compareLayerId}
+            isRegionsLayerActive={isRegionsLayerActive}
+            {...tooltipInfo}
+          />
+        ) : (
+          <RegionsHistogram
+            onCloseTooltip={handleCloseTooltip}
+            layerId={layerId}
+            compareLayerId={compareLayerId}
+            onCompareClose={() => {
+              setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
+              setCompareNutsProperties(null);
             }}
-            visible={isCompareLayerActive}
+            {...tooltipInfo}
+            nutsProperties={nutsProperties}
+            compareNutProperties={compareNutsProperties}
           />
-        )}
+        )
+      ) : null}
 
-        <RLayerTile zIndex={100} url={labelUrl} />
-
-        <Controls>
-          <LocationSearchComponent
-            locationSearch={locationSearch}
-            OPTIONS={OPTIONS}
-            handleLocationSearchChange={handleLocationSearchChange}
-            handleClick={handleClick}
-            isLoading={isLoadingLocationData}
-            isFetching={isFetchingLocationData}
-            isMobile={isMobile}
-          />
-          {!isMobile && (
-            <RControl.RZoom className="ol-zoom" key="ol-zoom" zoomOutLabel="-" zoomInLabel="+" />
-          )}
-
-          <div
-            className={cn({
-              'absolute flex w-full flex-col items-end justify-end space-y-1.5': true,
-              'top-12': isMobile,
-              'top-[108px]': !isMobile,
-            })}
-          >
-            <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
-            <BasemapControl isMobile={isMobile} />
-            <BookmarkControl isMobile={isMobile} />
-            <ShareControl isMobile={isMobile} />
-          </div>
-          {isCompareLayerActive && data && !isLoading && (
-            <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
-          )}
-        </Controls>
-
-        {isLayerActive && <Legend />}
-        <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
-
-        {layerData && leftLayerHistogramVisibility ? (
-          !isRegionsLayerActive ? (
-            <PointHistogram
-              onCloseTooltip={handleCloseTooltip}
-              layerId={layerId}
-              compareLayerId={compareLayerId}
-              isRegionsLayerActive={isRegionsLayerActive}
-              {...tooltipInfo}
-            />
-          ) : (
-            <RegionsHistogram
-              onCloseTooltip={handleCloseTooltip}
-              layerId={layerId}
-              compareLayerId={compareLayerId}
-              onCompareClose={() => {
-                setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
-                setCompareNutsProperties(null);
-              }}
-              {...tooltipInfo}
-              nutsProperties={nutsProperties}
-              compareNutProperties={compareNutsProperties}
-            />
-          )
-        ) : null}
-      </RMap>
       {/* Interactivity */}
       {data && (
         <MapTooltip
@@ -575,8 +578,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           onCloseTooltip={handleCloseTooltip}
         />
       )}
-    </>
+    </RMap>
   );
 };
 
-export default Map;
+export default MonitorMap;

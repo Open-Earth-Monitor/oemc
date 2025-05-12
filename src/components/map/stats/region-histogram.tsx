@@ -206,7 +206,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
             {isRegionsLayerActive &&
               !compareFunctionalityInfo &&
               !compareHistogramDataRegion?.data?.length && (
-                <Button variant="default_active" size="sm" onClick={onCompareActive}>
+                <Button variant="default" size="sm" onClick={onCompareActive}>
                   Compare
                 </Button>
               )}

@@ -11,15 +11,15 @@ import NavLinks from '../nav-links';
 const MainMenuDesktop = () => (
   <Popover>
     <PopoverTrigger
-      className="flex items-center space-x-3.5 rounded-full border-none px-5 py-2.5"
+      className="flex h-full items-center space-x-3.5 rounded-full border-none px-5 py-2.5"
       data-testid="themes-filter-desktop"
     >
       <span className="font-medium">Menu</span>
       <LuMenu className="h-6 w-6 text-accent-green" />
     </PopoverTrigger>
-    <PopoverContent className="font-inter min-w-fit bg-secondary-500" sideOffset={-1}>
+    <PopoverContent className="font-inter min-w-fit bg-secondary-500 p-0" sideOffset={-1}>
       <NavLinks />
-      <div className="font-inter min-w-fit divide-y divide-yellow-500 bg-secondary-500">
+      <div className="font-inter min-w-fit divide-y divide-yellow-500 bg-secondary-500 p-6">
         <CommunityDropdown />
         <OtherResourcesLinks />
       </div>

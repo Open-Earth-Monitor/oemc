@@ -11,7 +11,7 @@ const NavLinks = () => {
   const pathname = usePathname();
 
   return (
-    <ul className="w-full space-y-2 text-2xl font-medium">
+    <ul className="w-full space-y-2 p-6 text-2xl font-medium">
       {navLinks.map(({ name, ...props }) => {
         const isActive = `/${pathname.split('/')[1]}` === props.href;
         return (
@@ -19,7 +19,7 @@ const NavLinks = () => {
             key={props.href}
             className={cn({
               'decoration py-6 hover:bg-white-100': true,
-              'list-disc': isActive,
+              'list-inside list-disc': isActive,
             })}
           >
             <Link {...props} className="space-x-2.5">

@@ -18,6 +18,10 @@ const Hero = () => {
           </Link>
         </div>
       </div>
+      <div className="absolute bottom-10 right-10 flex items-center space-x-2">
+        <span className="h-[9px] w-[9px] bg-gradient-to-r from-[#1EEDBF] to-[#75A1FF]" />
+        <span className="text-xs font-medium">Global wind speed at 10 km</span>
+      </div>
     </div>
   );
 };
