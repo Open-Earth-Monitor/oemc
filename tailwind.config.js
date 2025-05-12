@@ -30,6 +30,7 @@ module.exports = {
           50: '#FFFFFF',
           100: '#DFDFDF',
           500: '#FFFFE6',
+          700: '#FFFFE680',
         },
         gray: {
           600: 'hsl(220, 7%, 40%)',
@@ -88,6 +89,9 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+      },
+      backgroundImage: {
+        'custom-gradient': 'linear-gradient(131.67deg, #1EEDBF 0%, #75A1FF 100%)',
       },
       borderRadius: {
         lg: 'var(--radius)',
