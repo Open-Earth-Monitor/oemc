@@ -41,12 +41,16 @@ const SocialMedia = () => {
       },
     },
   };
-
+  // bg-gradient-to-r from-[#1EEDBF] to-[#75A1FF]
   return (
-    <section className="font-satoshi relative grid w-full grid-cols-12">
+    <section
+      className="font-satoshi relative grid h-screen w-full grid-cols-12 bg-red-800
+  
+     "
+    >
       <div className="container col-span-12 m-auto flex flex-col items-center justify-center space-y-[18px] sm:space-y-10">
-        <h3 className="max-w-xs text-center  text-xl font-medium sm:max-w-sm sm:text-2xl md:max-w-xl lg:max-w-3xl">
-          <span className="text-white-500">
+        <h3 className="max-w-xs py-12 text-center text-xl font-medium sm:max-w-sm sm:text-2xl md:max-w-xl lg:max-w-3xl">
+          <span className="text-[28px] text-white-500">
             Open Earth Monitor connects people, data, and technology to drive global sustainability.
           </span>{' '}
           <span className="bg-[linear-gradient(131.67deg,_#1EEDBF_0%,_#75A1FF_100%)] bg-clip-text text-transparent">

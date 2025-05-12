@@ -1,23 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 
 import { LuSplitSquareHorizontal } from 'react-icons/lu';
-import Image from 'next/image';
-
-import { formatDate } from '@/lib/format';
 
 import { Post as PostTypes } from '@/hooks/social-media';
 
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { PostHeader } from '@/components/social-media/post-header';
 
 export const Post = ({ post }: { post: PostTypes }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded] = useState(false);
   const [height, setHeight] = useState(130);
   const [showReadMore, setShowReadMore] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
-
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
 
   useEffect(() => {
     if (contentRef.current) {
@@ -27,23 +20,10 @@ export const Post = ({ post }: { post: PostTypes }) => {
   }, []);
 
   const data = post?.reblog || post;
+
   return (
-    <div className="h-full p-5" key={post.id}>
-      <div className="flex items-center space-x-4">
-        <Image
-          src={data?.account.avatar_static}
-          alt={data?.account.display_name || data.id}
-          width={56}
-          height={56}
-          className="shrink-0 rounded-full"
-        />
-        <div className="font-medium text-white-500">
-          <h4 className="w-1/2">
-            {post?.reblog?.account.display_name || post?.account.display_name}
-          </h4>
-          <span className="text-accent-green">@{data?.account.username}</span>
-        </div>
-      </div>
+    <div className="h-full max-w-xs bg-[#09131D4D] p-5" key={post.id}>
+      <PostHeader post={post} />
 
       <div className="space-y-4">
         <div
@@ -70,7 +50,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
           </div>
         )}
       </div>
-      <div className="relative mt-5">
+      {/* <div className="relative mt-5">
         {!!data?.media_attachments.length && (
           <Carousel className="w-full" hasLength={data?.media_attachments?.length > 1}>
             <CarouselContent>
@@ -88,7 +68,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
           </Carousel>
         )}
         <div className="mt-10 text-secondary-700">{formatDate(post?.created_at, false)}</div>
-      </div>
+      </div> */}
     </div>
   );
 };
