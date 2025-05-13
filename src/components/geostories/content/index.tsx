@@ -90,14 +90,14 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
     <>
       {/* Desktop and tablet */}
       {!isMobile && (
-        <div className="monitors absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:left-4 sm:top-[82px] sm:w-fit sm:border-0 sm:p-0">
+        <div className="monitors absolute bottom-0 left-0 top-0 z-[55] w-full border-secondary-900 bg-brand-500 p-1 sm:w-fit sm:border-0 sm:p-0">
           <motion.section
             initial={{ x: '-100%' }} // Start hidden and off-screen
             animate={{
               x: open ? 0 : '-100%', // Slide in and out
             }}
             transition={{ duration: 0.5, ease: 'easeInOut' }} // Smooth easing
-            className="absolute bottom-3 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:left-4 sm:w-fit sm:border-0 sm:p-0"
+            className="absolute bottom-0 left-0 top-0 z-[55] h-screen w-full border-secondary-900 bg-brand-500 p-1 sm:w-fit sm:border-0 sm:p-0"
           >
             {/* Desktop */}
             <div className="relative">
@@ -125,7 +125,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                   },
                 }}
                 transition={{ duration: 0.3 }}
-                className="bottom-3 left-4 top-auto w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)]"
+                className="bottom-0 left-0 top-0 h-screen w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block"
               >
                 <motion.div
                   initial={{ opacity: 1, x: 0 }}
@@ -137,7 +137,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                     },
                   }}
                   transition={{ duration: 0.3 }}
-                  className="bottom-3 left-4 h-[calc(100vh-24px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block"
+                  className="bottom-0 left-0 top-0 h-screen w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block"
                 >
                   <ScrollArea className="h-full p-7.5 md:w-[370px] lg:w-[526px]" type="auto">
                     <div className="space-y-6">

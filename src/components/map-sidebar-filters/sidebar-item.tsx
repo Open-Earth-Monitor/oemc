@@ -1,5 +1,6 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { MouseEvent } from 'react';
+import { useSyncCategory } from '@/hooks/sync-query';
 
 import { cn } from '@/lib/classnames';
 
@@ -19,27 +20,44 @@ export type SidebarItemProps = {
 };
 
 const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
-  const handleClick = (e: MouseEvent<HTMLButtonElement>, type: SidebarProps['type']) => {
-    console.log('sketch', e);
+  const [category, setCategory] = useSyncCategory();
+
+  const handleClick = (type: SidebarProps['type']) => {
+    setCategory(type);
   };
 
-  const isActive = true;
+  const isActive = useMemo(() => {
+    return category === button.id;
+  }, [category, button.id]);
+
   return (
     <button
       key={button.id}
       className={cn(
-        'h-full w-full grow overflow-hidden p-3.5 transition-all duration-500 hover:bg-custom-gradient'
+        'h-full w-full grow overflow-hidden p-3.5 transition-all duration-500 hover:bg-custom-gradient',
+        { 'bg-custom-gradient': isActive }
       )}
-      onClick={(e) => handleClick(e, button.id)}
+      onClick={() => handleClick(button.id)}
     >
       <div
         className={cn(
           'group flex flex-col items-center space-y-4 transition-transform duration-300'
         )}
       >
-        <Icon className="h-10 w-10 text-white-500 group-hover:text-black-500" />
+        <Icon
+          className={cn('h-10 w-10  group-hover:text-black-500', {
+            'text-black-500': isActive,
+          })}
+        />
 
-        <span className="text-xs font-medium text-white-700 transition-none group-hover:text-black-500">
+        <span
+          className={cn(
+            'text-xs font-medium text-white-700 transition-none group-hover:text-black-500',
+            {
+              'text-black-500': isActive,
+            }
+          )}
+        >
           {button.label}
         </span>
       </div>

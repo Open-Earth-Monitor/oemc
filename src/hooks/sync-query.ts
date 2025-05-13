@@ -32,3 +32,11 @@ export const useSyncBasemapLabelsSettings = () =>
     'basemap-labels',
     parseAsJson<'dark' | 'light' | 'no-label'>().withDefault('light')
   );
+
+export const useSyncCategory = () =>
+  useQueryState(
+    'category',
+    parseAsJson<
+      'all' | 'agriculture' | 'water' | 'climate&health' | 'soils' | 'forest' | 'biodiversity'
+    >().withDefault('all')
+  );
