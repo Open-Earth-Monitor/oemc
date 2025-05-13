@@ -15,7 +15,6 @@ import MonitorHeader from '@/components/monitors/header';
 import TabsNav from '@/components/tabs-nav';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import SidebarFilters from '@/components/map-sidebar-filters';
 
 const MonitorContent = ({ children }: PropsWithChildren) => {
   const isMobile = useMediaQuery(mobile);
@@ -39,9 +38,9 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <section className="monitors absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:left-4 sm:top-[82px] sm:w-fit sm:border-0 sm:p-0">
+    <section className="monitors absolute bottom-0 left-0 top-0 z-[55] w-full  bg-brand-500 p-1  sm:w-fit sm:border-0 sm:p-0">
       {/* Desktop and tablet */}
-      <SidebarFilters />
+
       {!isMobile && (
         <motion.section
           initial={{ x: '-100%' }} // Start hidden and off-screen
@@ -49,7 +48,7 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
             x: open ? 0 : '-100%', // Slide in and out
           }}
           transition={{ duration: 0.5, ease: 'easeInOut' }} // Smooth easing
-          className="absolute bottom-3 left-24 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:w-fit sm:border-0 sm:p-0"
+          className="absolute bottom-0 left-0 top-0 z-[55] w-full  bg-brand-500 p-1 sm:w-fit sm:border-0 sm:p-0"
         >
           <div className="relative">
             <button
@@ -76,7 +75,7 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
                 },
               }}
               transition={{ duration: 0.3 }}
-              className="bottom-3 left-24 top-auto w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)]"
+              className="bottom-3 left-0 top-auto w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)]"
             >
               <motion.div
                 initial={{ opacity: 1, x: 0 }}
@@ -88,7 +87,7 @@ const MonitorContent = ({ children }: PropsWithChildren) => {
                   },
                 }}
                 transition={{ duration: 0.3 }}
-                className="bottom-3 left-24 h-[calc(100vh-24px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block"
+                className="bottom-3 left-0 h-[calc(100vh-24px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block"
               >
                 <ScrollArea className="h-full p-7.5 md:w-[370px] lg:w-[526px]" type="auto">
                   <div className="w-full space-y-1 sm:space-y-6">

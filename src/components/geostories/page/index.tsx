@@ -56,7 +56,6 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
           <Loading />
         </div>
       )}
-      <Header />
       {geostoryData && !isGeostoryLoading && (
         <Map
           geostoryData={geostoryData}

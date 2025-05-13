@@ -4,10 +4,15 @@ import Link from 'next/link';
 import MainMenuDesktop from '../main-menu/desktop';
 import MainMenuMobile from '../main-menu/mobile';
 import MainMenuTablet from '../main-menu/tablet';
+import cn from '@/lib/classnames';
 
-const Header = () => {
+const Header = ({ className }: { className?: string }) => {
   return (
-    <div className="content-box absolute z-[1000] h-[60px] w-screen items-center sm:h-[70px]">
+    <div
+      className={cn('content-box absolute z-[1000] h-[60px] w-full items-center sm:h-[70px]', {
+        [className]: className,
+      })}
+    >
       <div className="m-auto flex h-full items-center justify-between px-3 sm:container">
         <Link href="/">
           <Image
