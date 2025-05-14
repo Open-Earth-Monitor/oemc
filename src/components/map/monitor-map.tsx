@@ -522,15 +522,13 @@ const MonitorMap: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT })
           isMobile={isMobile}
           className="absolute right-0 top-[-134px]"
         />
-        {/* {!isMobile && (
-        )} */}
+
         <RControl.RZoom className="ol-zoom" key="ol-zoom" zoomOutLabel="-" zoomInLabel="+" />
 
         <div
           className={cn({
-            'absolute top-[-26px] flex w-full flex-col items-end justify-end space-y-1.5': true,
-            // 'top-12': isMobile,
-            // 'top-[108px]': !isMobile,
+            'absolute top-4 flex w-full flex-col items-end justify-end space-y-1.5 sm:top-[-26px]':
+              true,
           })}
         >
           <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
