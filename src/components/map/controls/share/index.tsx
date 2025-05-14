@@ -46,7 +46,7 @@ const ShareControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
           aria-label="share tool"
           className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
         >
-          <HiOutlineShare className={CONTROL_ICON_STYLES.default} />
+          <HiOutlineShare size={22} />
         </button>
       </PopoverTrigger>
       <PopoverContent
