@@ -45,7 +45,7 @@ const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
         )}
       >
         <Icon
-          className={cn('h-10 w-10  group-hover:text-black-500', {
+          className={cn('h-10 w-10  fill-current group-hover:text-black-500', {
             'text-black-500': isActive,
           })}
         />
