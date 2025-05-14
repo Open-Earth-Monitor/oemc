@@ -18,7 +18,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { isArray } from 'lodash-es';
-import { usePostWebTraffic } from '@/hooks/web-traffic';
+import { postWebTraffic } from '@/hooks/web-traffic';
 import UseCases from './use-cases';
 import { use } from 'react';
 
@@ -35,7 +35,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
   const params = useParams();
   const monitorId = params?.monitor_id;
   const handleClick = () => {
-    usePostWebTraffic({
+    postWebTraffic({
       monitor_id: id,
     });
     console.info('WT7 -', 'monitors', id);
@@ -48,7 +48,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          variant="light"
+          variant="default"
           data-testid={`card-button-${id}`}
           className="h-12 max-w-fit p-4 text-base sm:h-9 sm:text-xs"
         >

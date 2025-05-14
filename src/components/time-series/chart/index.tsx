@@ -84,7 +84,7 @@ const Chart: FC<{
                 height={22}
                 width={isEdge && !isSelectedYear ? 2 : 1}
                 className={cn({
-                  'w-[1px] cursor-pointer fill-current text-brand-50 hover:bg-white hover:fill-white hover:text-white':
+                  'hover:bg-white hover:fill-white hover:text-white w-[1px] cursor-pointer fill-current text-brand-50':
                     true,
                   'w-[2px]': isEdge && !isSelectedYear,
                   'text-white': isEdge,
@@ -117,7 +117,7 @@ const Chart: FC<{
               horizontalAnchor={!isEdge ? 'middle' : isEndIndex ? 'end' : 'start'}
               verticalAnchor="middle"
             >
-              <div className="relative flex rounded-3xl border-none bg-brand-50 px-2 py-1 font-inter text-xs text-secondary-500">
+              <div className="font-inter relative flex rounded-3xl border-none bg-brand-50 px-2 py-1 text-xs text-secondary-500">
                 {selectedYear}
                 {!isEdge && (
                   <div className="absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 transform border-x-8 border-t-[10px] border-x-transparent border-y-brand-50 border-b-brand-50" />

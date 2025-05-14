@@ -143,7 +143,7 @@ function generateCSVContent(data: DataObject): string {
 }
 
 // Function to download a CSV file
-export function downloadCSV(data: DataObject, filename: string = 'data.csv') {
+export function downloadCSV(data: DataObject, filename: string) {
   // Generate CSV content
   const csvContent = generateCSVContent(data);
 
@@ -216,7 +216,7 @@ function generateCSVContentCompare(data: DataObjectCompare[]): string {
 }
 
 // Function to download a CSV file
-export function downloadCSVCompare(data: DataObjectCompare[], filename: string = 'data.csv') {
+export function downloadCSVCompare(data: DataObjectCompare[], filename: string) {
   // Generate CSV content
   const csvContent = generateCSVContentCompare(data);
 

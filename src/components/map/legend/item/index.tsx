@@ -22,7 +22,7 @@ const LegendItem: FC<LegendItemPropsWithChildren> = ({
         })}
       >
         {icon && <div className="absolute left-0 top-0">{icon}</div>}
-        <div className="font-heading text-sm text-white">{name}</div>
+        <div className="font-heading text-white text-sm">{name}</div>
       </div>
     </div>
 

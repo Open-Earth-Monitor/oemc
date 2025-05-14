@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, ElementRef, ComponentPropsWithoutRef } from 'react';
+import { forwardRef, ElementRef, ComponentPropsWithoutRef, PropsWithChildren } from 'react';
 
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 
@@ -25,8 +25,7 @@ const Checkbox = forwardRef<
 
 const CheckboxIndicator = forwardRef<
   ElementRef<typeof CheckboxPrimitive.Indicator>,
-  ComponentPropsWithoutRef<typeof CheckboxPrimitive.Indicator> & {
-    children: React.ReactNode;
+  PropsWithChildren<ComponentPropsWithoutRef<typeof CheckboxPrimitive.Indicator>> & {
     className?: string;
   }
 >(({ className, children, ...props }, ref) => (

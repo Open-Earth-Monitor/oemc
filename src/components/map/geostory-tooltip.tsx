@@ -35,7 +35,6 @@ const MapTooltip: FC<TooltipProps> = ({
   rightData,
   nutsProperties,
 }: TooltipProps) => {
-  if (!position || !leftData?.value) return null;
   const [coordinate] = useAtom(coordinateAtom);
   const [resolution] = useAtom(resolutionAtom);
   const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
@@ -74,6 +73,7 @@ const MapTooltip: FC<TooltipProps> = ({
       crossOrigin: 'anonymous',
     });
   }, []);
+  if (!position || !leftData?.value) return null;
 
   return (
     <div
@@ -115,7 +115,7 @@ const MapTooltip: FC<TooltipProps> = ({
           </div>
           {leftData?.value && !isRegionsLayerActive && (
             <Button
-              variant="light"
+              variant="default"
               onClick={handleClick}
               className="font-inter w-full p-2 text-xs"
               disabled={!leftData.value}
@@ -124,7 +124,7 @@ const MapTooltip: FC<TooltipProps> = ({
             </Button>
           )}
           {leftData?.value && isRegionsLayerActive && (
-            <Button variant="light" onClick={handleHistogram} className="font-inter p-2 text-xs">
+            <Button variant="default" onClick={handleHistogram} className="font-inter p-2 text-xs">
               See regions-based summary
             </Button>
           )}
@@ -142,7 +142,7 @@ const MapTooltip: FC<TooltipProps> = ({
             </div>
             {!isRegionsLayerActive && (
               <Button
-                variant="light"
+                variant="default"
                 onClick={handleClick}
                 className="font-inter text-xs"
                 // disabled={true}
@@ -152,7 +152,7 @@ const MapTooltip: FC<TooltipProps> = ({
             )}
             {!!isRegionsLayerActive && (
               <Button
-                variant="light"
+                variant="default"
                 onClick={handleHistogram}
                 className="font-inter text-xs"
                 // disabled={!rightData.value}
