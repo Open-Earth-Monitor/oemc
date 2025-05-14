@@ -7,6 +7,8 @@
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
+    --alert: 167 85% 52%;
+
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
@@ -146,19 +148,28 @@
   margin: 0 !important;
 }
 
+.ol-control button:hover {
+  outline: none !important;
+}
+
+.ol-control button:focus {
+  outline: none !important;
+}
+
 .ol-zoom {
   display: block !important;
   flex-direction: column !important;
   position: absolute !important;
-  right: 10px !important;
+  right: 20px !important;
   width: 34px !important;
-  height: 34px !important;
+  height: 68px !important;
   align-items: center;
   justify-content: center;
-  background-color: hsl(210, 54%, 9%) !important;
-  top: 121px !important;
+  z-index: 50  !important;
+  top: calc(50% - 94px) !important;
   left: unset !important;
   margin: 0 !important;
+  border-radius: 50% !important;
 }
 
 .ol-zoom-in,
@@ -166,26 +177,28 @@
   color: hsl(60, 100%, 95%) !important;
   background-color: hsl(210, 54%, 9%) !important;
   outline-offset: 0px !important;
-  height: 100% !important;
+  height: 50% !important;
   width: 100% !important;
   overflow: hidden !important;
 }
 
 .ol-zoom-in:hover,
 .ol-zoom-out:hover {
-  background-color: hsl(60, 100%, 95%) !important;
-  color: hsl(210, 54%, 9%) !important;
+  /* background-color: hsl(60, 100%, 95%) !important; */
+  color: hsl(var(--alert)) !important;
 }
 
 .ol-zoom-out {
+  font-weight: normal !important;
   font-size: 32px !important;
   padding-bottom: 4px !important;
-  border-radius: 0 0 calc(var(--radius) - 4px) calc(var(--radius) - 4px) !important;
+  border-radius: 0 0 50% 50% !important;
 }
 
 .ol-zoom-in {
+  font-weight: normal !important;
   font-size: 24px !important;
-  border-radius: calc(var(--radius) - 4px) calc(var(--radius) - 4px) 0 0 !important;
+  border-radius:50% 50% 0 0 !important;
 }
 
 .ol-swipe::before {
@@ -236,3 +249,4 @@
   width: 15px;
   background-color: hsl(60, 100%, 95%);
 }
+
