@@ -206,6 +206,52 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
         {!isLoading && !error && isFetched && !isLoadingLegendData && isFetchedLegendData && (
           <LegendGraphic dataLayer={layerData} dataLegend={legendData} />
         )}
+        {layerData?.gs_style &&
+          layerData?.gs_style.length > 8 &&
+          !isLoading &&
+          isFetched &&
+          !!isError && (
+            <div className="flex flex-col space-y-1 p-2">
+              <div className="absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent via-black-500 to-black-500" />
+
+              {layerData?.gs_style.map(({ color, label }) => (
+                <div
+                  key={label}
+                  className="flex items-baseline space-x-2"
+                  data-testid="dataset-legend-item"
+                >
+                  <div
+                    className="h-2 w-2"
+                    style={{
+                      backgroundColor: color,
+                    }}
+                  />
+                  <div className="text-left text-xs text-secondary-500 opacity-50">{label}</div>
+                </div>
+              ))}
+              <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black-500 via-transparent to-transparent" />
+            </div>
+          )}
+
+        {layerData?.gs_style &&
+          layerData?.gs_style.length <= 8 &&
+          !isError &&
+          !isLoading &&
+          isFetched && (
+            <div className="flex">
+              {layerData?.gs_style?.map(({ color, label }) => (
+                <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
+                  <div
+                    className="h-2 w-full"
+                    style={{
+                      backgroundColor: color,
+                    }}
+                  />
+                  <div className="text-center text-xs opacity-50">{label}</div>
+                </div>
+              ))}
+            </div>
+          )}
       </ScrollArea>
       {isGeostory && range?.length > 0 && (
         <TimeSeries
@@ -364,8 +410,27 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           </div>
 
           <ScrollArea className="max-h-[216px]">
-            {isLoadingCompare && (
-              <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
+            {compareLayerData?.gs_style && compareLayerData?.gs_style.length > 8 && (
+              <div className="flex flex-col space-y-1 p-2">
+                <div className="absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent via-black-500 to-black-500" />
+
+                {compareLayerData?.gs_style.map(({ color, label }) => (
+                  <div
+                    key={label}
+                    className="flex items-baseline space-x-2"
+                    data-testid="dataset-legend-item"
+                  >
+                    <div
+                      className="h-2 w-2"
+                      style={{
+                        backgroundColor: color,
+                      }}
+                    />
+                    <div className="text-left text-xs opacity-50">{label}</div>
+                  </div>
+                ))}
+                <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black-500 via-transparent to-transparent" />
+              </div>
             )}
             {!isLoadingCompare && !isErrorCompare && isFetchedCompare && (
               <LegendGraphic dataLayer={layerDataCompare} dataLegend={legendDataCompare} />

@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 
-import { BiCheck } from 'react-icons/bi';
-
+import { LuCheck } from 'react-icons/lu';
 import { Theme, THEMES } from '@/constants/themes';
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown';
@@ -47,7 +46,7 @@ const FilterByCategories = ({ activeThemes, handleThemes }: FilterByCategoriesPr
             className="h-5 w-5 border border-secondary-500 bg-transparent text-brand-500 outline-none ring-0 hover:bg-secondary-900 data-[state=checked]:border-none"
           >
             <CheckboxIndicator className="h-full w-full border-none bg-secondary-500 text-brand-500 outline-0 ring-0 hover:bg-secondary-900">
-              <BiCheck className="h-4 w-4 fill-current" />
+              <LuCheck className="h-4 w-4 fill-current" />
             </CheckboxIndicator>
           </Checkbox>
           <Label

@@ -14,6 +14,7 @@ const buttonVariants = cva(
           'bg-white-500 border-white/800 hover:bg-border-white hover:text-white-500 active:bg-white-500 active:text-black-500 active:border-black-500 active:bg-white-500',
         gradient:
           'border-none bg-[linear-gradient(131.67deg,_#1EEDBF_0%,_#75A1FF_100%)] text-black-500 font-medium',
+        background: 'border-none text-white-500 bg-white-500 bg-opacity-5 hover:bg-white-500/80',
       },
       size: {
         default: 'px-3.5 py-3',

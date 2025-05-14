@@ -35,7 +35,6 @@ const MapTooltip: FC<TooltipProps> = ({
   rightData,
   nutsProperties,
 }: TooltipProps) => {
-  if (!position || (!leftData?.value && leftData?.value !== 0)) return null;
   const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
     histogramLayerLeftVisibilityAtom
   );
@@ -77,7 +76,7 @@ const MapTooltip: FC<TooltipProps> = ({
   const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
   const compareDateLabel =
     rightData.date && leftData.range?.find(({ value }) => value === rightData.date)?.label;
-
+  if (!position || (!leftData?.value && leftData?.value !== 0)) return null;
   return (
     <div
       className={cn({

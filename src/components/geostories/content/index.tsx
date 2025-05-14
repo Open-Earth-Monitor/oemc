@@ -9,7 +9,6 @@ import { useParams } from 'next/navigation';
 import { PopoverClose } from '@radix-ui/react-popover';
 import { motion } from 'framer-motion';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { HiArrowLeft } from 'react-icons/hi';
 
 import { mobile, tablet } from '@/lib/media-queries';
 
@@ -174,6 +173,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                       )}
                       {geostoryData?.monitors?.map((monitor) => (
                         <Link
+                          key={monitor.id}
                           href={`/map/${monitor.id}/geostories`}
                           className="font-bold"
                           data-testid="back-to-monitor"

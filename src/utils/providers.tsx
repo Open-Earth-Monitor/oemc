@@ -3,9 +3,9 @@
 import { useState, type FC, type PropsWithChildren } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-import PlausibleProvider from 'next-plausible';
 import { Provider as JotaiProvider } from 'jotai';
+import PlausibleProvider from 'next-plausible';
+
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 type ProvidersProps = FC<PropsWithChildren>;

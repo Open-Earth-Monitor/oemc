@@ -1,4 +1,4 @@
-import { LuArrowRightCircle } from 'react-icons/lu';
+import { LuCircleArrowRight } from 'react-icons/lu';
 import Link from 'next/link';
 import { Button } from 'components/ui/button';
 
@@ -13,7 +13,7 @@ const Hero = () => {
           <Link href="/map">
             <Button variant="gradient">
               <span>Explore data</span>
-              <LuArrowRightCircle className="h-6 w-6" />
+              <LuCircleArrowRight className="h-6 w-6" />
             </Button>
           </Link>
         </div>
