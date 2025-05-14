@@ -161,15 +161,14 @@
   flex-direction: column !important;
   position: absolute !important;
   right: 20px !important;
-  width: 34px !important;
   height: 68px !important;
   align-items: center;
   justify-content: center;
   z-index: 50  !important;
-  top: calc(50% - 94px) !important;
   left: unset !important;
   margin: 0 !important;
   border-radius: 50% !important;
+  @apply !top-[142px] sm:!top-[calc(50%-94px)] w-[48px] sm:w-[34px] h-[96px] sm:h-[68px];
 }
 
 .ol-zoom-in,
