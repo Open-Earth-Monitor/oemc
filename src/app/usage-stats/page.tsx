@@ -4,13 +4,15 @@ import cn from '@/lib/classnames';
 
 import WebTrafficContent from '@/components/web-traffic/content';
 import WebTrafficMobileContent from '@/components/web-traffic/mobile-content';
+import { useMediaQuery } from 'react-responsive';
+import { mobile } from '@/lib/media-queries';
 
 export const metadata: Metadata = {
   title: 'Map - Open Earth Monitor Cyberinfrastructure',
 };
 
-const MapLayout: NextPage = () => {
-  const isMobile = false; // TO - DO replace with actual mobile detection logic
+const UsageStatsPage: NextPage = () => {
+  const isMobile = useMediaQuery(mobile);
   return (
     <div className="h-screen">
       <div className="flex items-center justify-between">
@@ -27,4 +29,4 @@ const MapLayout: NextPage = () => {
   );
 };
 
-export default MapLayout;
+export default UsageStatsPage;
