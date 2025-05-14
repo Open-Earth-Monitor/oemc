@@ -1,11 +1,15 @@
 'use client';
 
-import { InView } from 'react-intersection-observer';
-
-import { motion } from 'framer-motion';
 import { orderBy } from 'lodash-es';
 
 import { useSocialMedia } from '@/hooks/social-media';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 
 import Loading from '@/components/loading';
 import { Post } from '@/components/social-media/post';
@@ -20,34 +24,8 @@ const SocialMedia = () => {
     },
   });
 
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.5,
-        delay: 1,
-      },
-    },
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
-  // bg-gradient-to-r from-[#1EEDBF] to-[#75A1FF]
   return (
-    <section
-      className="font-satoshi relative grid h-screen w-full grid-cols-12 bg-red-800
-  
-     "
-    >
+    <section className="font-satoshi relative grid h-screen w-full md:grid-cols-10 lg:grid-cols-12">
       <div className="container col-span-12 m-auto flex flex-col items-center justify-center space-y-[18px] sm:space-y-10">
         <h3 className="max-w-xs py-12 text-center text-xl font-medium sm:max-w-sm sm:text-2xl md:max-w-xl lg:max-w-3xl">
           <span className="text-[28px] text-white-500">
@@ -63,27 +41,30 @@ const SocialMedia = () => {
           </div>
         )}
         {isFetched && (
-          <InView triggerOnce>
-            {({ ref }) => (
-              <motion.div
-                ref={ref}
-                className=" gap-5 sm:grid-cols-2 xl:grid-cols-4"
-                variants={container}
-                initial="hidden"
-                animate="show"
-              >
-                {data?.map((post) => (
-                  <motion.div
+          <Carousel
+            className="w-full"
+            opts={{
+              align: 'center',
+              loop: true,
+              slidesToScroll: 1,
+              active: true,
+            }}
+          >
+            <CarouselContent>
+              {data?.map((post) => {
+                return (
+                  <CarouselItem
                     key={post.id}
-                    variants={item}
-                    className="flex h-full w-full max-w-full flex-col"
+                    className="flex h-full w-full basis-1/3 items-center justify-center"
                   >
                     <Post post={post} />
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-          </InView>
+                  </CarouselItem>
+                );
+              })}
+            </CarouselContent>
+            <CarouselPrevious variant="background" />
+            <CarouselNext variant="background" />
+          </Carousel>
         )}
       </div>
     </section>

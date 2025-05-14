@@ -35,7 +35,6 @@ const MapTooltip: FC<TooltipProps> = ({
   rightData,
   nutsProperties,
 }: TooltipProps) => {
-  if (!position || !leftData?.value) return null;
   const [coordinate] = useAtom(coordinateAtom);
   const [resolution] = useAtom(resolutionAtom);
   const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
@@ -74,6 +73,7 @@ const MapTooltip: FC<TooltipProps> = ({
       crossOrigin: 'anonymous',
     });
   }, []);
+  if (!position || !leftData?.value) return null;
 
   return (
     <div

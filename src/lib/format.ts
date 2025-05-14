@@ -1,3 +1,5 @@
+import { BBox } from 'ol/render/canvas/Executor';
+
 export const formatDate = (date: string, time: boolean) => {
   const d = new Date(date);
 
@@ -32,11 +34,10 @@ export function transformToBBoxArray(str) {
   const MAX_Y = 20048966.1;
 
   try {
-    // Convert the string to an array of numbers
     const bboxArray = str
       .split(',')
-      .map((item) => item.trim()) // Trim extra spaces
-      .map(Number); // Convert to numbers
+      .map((item) => item.trim())
+      .map(Number) satisfies BBox;
 
     // Check if all items are valid numbers and we have exactly 4 numbers
     if (bboxArray.length === 4 && bboxArray.every((num) => !isNaN(num))) {
@@ -48,11 +49,11 @@ export function transformToBBoxArray(str) {
       const isCorrectOrder = xMin < xMax && yMin < yMax; // Make sure the bbox is valid
 
       if (isValidX && isValidY && isCorrectOrder) {
-        return bboxArray; // Valid bbox
+        return bboxArray;
       }
     }
-    return false; // Return false if it's not a valid bbox
+    return false;
   } catch (error) {
-    return false; // Return false if any error occurs
+    return false;
   }
 }

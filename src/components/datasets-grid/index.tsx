@@ -7,7 +7,7 @@ import { Element, scroller } from 'react-scroll';
 import { PopoverClose } from '@radix-ui/react-popover';
 import { motion } from 'framer-motion';
 import { XIcon } from 'lucide-react';
-import { RxCross2 } from 'react-icons/rx';
+import { LuX } from 'react-icons/lu';
 
 import cn from '@/lib/classnames';
 
@@ -143,7 +143,7 @@ const LandingDatasets = () => {
                 aria-label={`Remove ${theme}`}
               >
                 <span>{theme}</span>
-                <RxCross2 className="h-4 w-4 fill-current" />
+                <LuX className="h-4 w-4 fill-current" />
               </button>
             </li>
           ))}

@@ -13,12 +13,12 @@ import { Monitor } from '@/types/monitors';
 import { TAG_STYLE } from '@/styles/constants';
 
 import MonitorDialog from '../dialog';
-import { usePostWebTraffic } from '@/hooks/web-traffic';
+import { postWebTraffic } from '@/hooks/web-traffic';
 
 const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
   const { id, description, title, color, ready, theme } = monitor;
   const handleClick = () => {
-    usePostWebTraffic({
+    postWebTraffic({
       monitor_id: id,
     });
     console.info('WT6 -', 'monitors', id);
@@ -63,7 +63,7 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
           </div>
         ) : (
           <div>
-            <div className="float-left flex items-center space-x-2 rounded-md bg-black/10 px-3 py-2 leading-none">
+            <div className="bg-black/10 float-left flex items-center space-x-2 rounded-md px-3 py-2 leading-none">
               <LuRefreshCcw className="h-5 w-5" />
               <span className="text-xs font-bold">Monitor under-development</span>
             </div>

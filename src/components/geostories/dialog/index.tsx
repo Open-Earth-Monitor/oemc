@@ -18,7 +18,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-import { usePostWebTraffic } from '@/hooks/web-traffic';
+import { postWebTraffic } from '@/hooks/web-traffic';
 import DoiBadge from '@/components/doi-badge';
 
 type GeostoryDialogProps = Partial<Geostory>;
@@ -37,7 +37,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
   const geostoryId = params.geostory_id;
 
   const handleClick = () => {
-    usePostWebTraffic({
+    postWebTraffic({
       geostory_id: geostoryId,
     });
     console.info('WT2 -', 'geostories', id);
@@ -152,7 +152,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                               {doi &&
                                 !!doi.length &&
                                 doi.map((d) =>
-                                  d !== 'DOI NOT READY' ? <DoiBadge doi={d} /> : null
+                                  d !== 'DOI NOT READY' ? <DoiBadge doi={d} key={d} /> : null
                                 )}
                             </span>
                           </li>
