@@ -4,7 +4,7 @@ import type { FC, FormEvent, MouseEvent } from 'react';
 import { usePathname } from 'next/navigation';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { AiFillStar } from 'react-icons/ai';
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { useLocalStorage } from 'usehooks-ts';
 
 import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
@@ -95,7 +95,7 @@ export const BookmarkControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
       <SheetTrigger
         className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
       >
-        <AiFillStar className={CONTROL_ICON_STYLES.default} />
+        <AiOutlineStar size={22} strokeWidth={2} />
       </SheetTrigger>
       <SheetContent
         side="right"
@@ -145,7 +145,10 @@ export const BookmarkControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
         </SheetHeader>
 
         {!isInputVisible && (
-          <Button className="h-11 w-full sm:h-9" onClick={() => setInputVisibility(true)}>
+          <Button
+            className="h-11 w-full text-brand-500 sm:h-9"
+            onClick={() => setInputVisibility(true)}
+          >
             Bookmark current URL
           </Button>
         )}
