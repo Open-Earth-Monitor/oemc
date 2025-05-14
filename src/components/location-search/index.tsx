@@ -68,20 +68,24 @@ function LocationSearchComponent({
 
   return (
     <div
-      className={cn('relative z-50 flex items-center', {
-        'w-[300px]': inputExpanded,
-      })}
+      className={cn(
+        'z-50',
+        {
+          'w-[300px]': inputExpanded,
+        },
+        className
+      )}
     >
       <motion.div
         className={cn({
           group: true,
           [CONTROL_BUTTON_STYLES.mobile]: isMobile,
           [CONTROL_BUTTON_STYLES.default]: !isMobile,
-          [className]: !!className,
           'flex items-center': !inputExpanded, // Center the input when not expanded
           'w-[300px] justify-start bg-[#09131DCC] px-4 hover:bg-brand-500 hover:text-secondary-500':
             inputExpanded, // Expand to full width when input is expanded
-          'rounded-b-none': dropdownVisible && locationSearch && !!OPTIONS.length && inputExpanded,
+          'rounded-2xl rounded-b-none':
+            dropdownVisible && locationSearch && !!OPTIONS.length && inputExpanded,
         })}
         onClick={handleExpanded} // Handle click to expand/collapse input
       >
@@ -93,8 +97,7 @@ function LocationSearchComponent({
         >
           <LuSearch
             className={cn({
-              'h-5 w-5 cursor-pointer justify-center text-secondary-500 group-hover:bg-secondary-500 group-hover:text-brand-500':
-                true,
+              'h-5 w-5 cursor-pointer justify-center': true,
               'group-hover:bg-transparent group-hover:text-secondary-500': inputExpanded,
             })}
           />
@@ -127,12 +130,11 @@ function LocationSearchComponent({
 
       {(isLoading && isFetching) ||
         (dropdownVisible && locationSearch && !!OPTIONS.length && inputExpanded && (
-          <div className="relative">
+          <div className="relative w-full">
             <div
               className={cn({
-                'font-inter absolute right-0 top-[17px] z-50 max-h-[40vh] w-[300px] flex-1 overflow-y-auto rounded-b-[4px] bg-[#09131DDF] px-10 leading-4 text-secondary-700 shadow-lg':
+                'font-inter right-0 top-[17px] z-50 max-h-[40vh] w-[300px] flex-1 overflow-y-auto rounded-b-2xl bg-[#09131DDF] px-10 leading-4 text-secondary-700 shadow-lg':
                   true,
-                [className]: !!className,
               })}
             >
               {isLoading && isFetching && <Loading />}

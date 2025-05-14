@@ -39,7 +39,7 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
                 [CONTROL_BUTTON_STYLES.default]: !isMobile,
               })}
             >
-              <LuMap />
+              <LuMap size={22} />
             </motion.button>
           </PopoverTrigger>
         </TooltipTrigger>

@@ -520,16 +520,17 @@ const MonitorMap: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT })
           isLoading={isLoadingLocationData}
           isFetching={isFetchingLocationData}
           isMobile={isMobile}
+          className="absolute right-0 top-[-134px]"
         />
-        {!isMobile && (
-          <RControl.RZoom className="ol-zoom" key="ol-zoom" zoomOutLabel="-" zoomInLabel="+" />
-        )}
+        {/* {!isMobile && (
+        )} */}
+        <RControl.RZoom className="ol-zoom" key="ol-zoom" zoomOutLabel="-" zoomInLabel="+" />
 
         <div
           className={cn({
-            'absolute flex w-full flex-col items-end justify-end space-y-1.5': true,
-            'top-12': isMobile,
-            'top-[108px]': !isMobile,
+            'absolute top-[-26px] flex w-full flex-col items-end justify-end space-y-1.5': true,
+            // 'top-12': isMobile,
+            // 'top-[108px]': !isMobile,
           })}
         >
           <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
