@@ -1,30 +1,23 @@
-import type { Metadata, NextPage } from 'next';
-
-import cn from '@/lib/classnames';
+import type { NextPage } from 'next';
 
 import WebTrafficContent from '@/components/web-traffic/content';
-import WebTrafficMobileContent from '@/components/web-traffic/mobile-content';
 
-export const metadata: Metadata = {
-  title: 'Map - Open Earth Monitor Cyberinfrastructure',
-};
-
-const MapLayout: NextPage = () => {
-  const isMobile = false; // TO - DO replace with actual mobile detection logic
+const UsageStatsPage: NextPage = () => {
   return (
-    <div className="h-screen">
-      <div className="flex items-center justify-between">
-        <header className="divide-y-secondary-500/10 flex items-center space-x-5 divide-x text-secondary-500">
-          <h2 className="text-4xl font-bold">Live Usage Statistics</h2>
-          <span className="pl-4">Switch between the two different tabs</span>
-        </header>
-        <div className="space-y-3" data-testid="disclaimer-content"></div>
+    <div className="container m-auto h-screen ">
+      <div className="flex flex-col space-y-8 py-80">
+        <h1 className="text-4xl font-bold">
+          Live{' '}
+          <span className="bg-[linear-gradient(131.67deg,_#1EEDBF_0%,_#75A1FF_100%)] bg-clip-text text-transparent">
+            Usage Statistics
+          </span>
+        </h1>
+        <h2>Web geographic activity</h2>
       </div>
 
       <WebTrafficContent />
-      {isMobile && <WebTrafficMobileContent />}
     </div>
   );
 };
 
-export default MapLayout;
+export default UsageStatsPage;

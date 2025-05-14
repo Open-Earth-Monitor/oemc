@@ -1,10 +1,8 @@
 import type { NextPage, Metadata } from 'next';
 
 import LandingDatasets from '@/components/datasets-grid';
-import Footer from '@/components/footer';
 import Hero from '@/components/hero';
 import SocialMedia from '@/components/social-media';
-import Header from '@/components/header';
 
 export const metadata: Metadata = {
   title: 'Hub - Open Earth Monitor Cyberinfrastructure',
@@ -14,11 +12,9 @@ export const metadata: Metadata = {
 
 const Hub: NextPage = () => (
   <>
-    <Header />
     <Hero />
     <SocialMedia />
     <LandingDatasets />
-    <Footer />
   </>
 );
 
