@@ -28,53 +28,33 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
     <Tooltip delayDuration={100}>
       <Popover>
         <TooltipTrigger asChild>
-          <PopoverTrigger>
-            <motion.button
-              initial="initial"
-              whileHover="hover"
-              className={cn({
-                'group bg-brand-500 stroke-secondary-500 hover:stroke-brand-500': true,
-                'p-4': isMobile,
-                [CONTROL_BUTTON_STYLES.mobile]: isMobile,
-                [CONTROL_BUTTON_STYLES.default]: !isMobile,
-              })}
-            >
-              <LuMap size={22} />
-            </motion.button>
+          <PopoverTrigger
+            className={cn({
+              'group bg-brand-500 stroke-secondary-500 hover:stroke-brand-500': true,
+              [CONTROL_BUTTON_STYLES.mobile]: isMobile,
+              [CONTROL_BUTTON_STYLES.default]: !isMobile,
+            })}
+          >
+            <LuMap size={22} />
           </PopoverTrigger>
         </TooltipTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start" side="right">
-          <div className="space-y-4 p-1">
-            <div>
-              <span className="p-4 text-secondary-700 underline">Basemap settings</span>
-              {BASEMAPS.map((basemap) => (
-                <button
-                  key={basemap.label}
-                  className={cn({
-                    'flex w-full items-center justify-start rounded-sm px-4 py-2 text-left text-sm text-secondary-500 ':
-                      true,
-                    'bg-secondary-700 text-brand-500': basemap.id === selectedBasemap,
-                    'hover:bg-secondary-500 hover:text-brand-500': basemap.id !== selectedBasemap,
-                  })}
-                  disabled={basemap.id === selectedBasemap}
-                  onClick={() => {
-                    setBasemap((prev) => {
-                      if (prev === basemap.id) return prev;
-                      return basemap.id;
-                    });
-                  }}
-                >
-                  {basemap.label}
-                </button>
-              ))}
-            </div>
-            <div>
-              <span className="p-4 text-secondary-700 underline">Label settings</span>
-
-              <RadioGroup
-                value={activeLabels}
-                className="font-inter flex w-full flex-1 font-medium"
-                onValueChange={handleMapLabels}
+        <PopoverContent
+          className="w-fit overflow-hidden bg-white-500 p-0"
+          align="start"
+          side="right"
+        >
+          
+          <div className="py-1">
+            {BASEMAPS.map((basemap) => (
+              <button
+                key={basemap.label}
+                className="flex w-full items-center justify-start rounded-sm px-4 py-2 text-left text-sm  text-brand-500 hover:bg-alert"
+                onClick={() => {
+                  setBasemap((prev) => {
+                    if (prev === basemap.id) return prev;
+                    return basemap.id;
+                  });
+                }}
               >
                 <div className="align-left flex flex-col justify-start space-y-2 px-4 py-2">
                   {LABELS.map((value) => (

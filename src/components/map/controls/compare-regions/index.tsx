@@ -29,7 +29,6 @@ const CompareRegionsStatistics = ({
           whileHover="hover"
           className={cn({
             'group bg-brand-500 text-secondary-500': true,
-            'p-4': isMobile,
             [CONTROL_BUTTON_STYLES.mobile]: isMobile,
             [CONTROL_BUTTON_STYLES.default]: !isMobile,
             'bg-secondary-500 text-brand-500': isRegionsLayerActive,
