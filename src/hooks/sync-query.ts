@@ -26,3 +26,11 @@ export const useSyncBasemapSettings = () =>
     'basemap',
     parseAsJson<'world_imagery' | 'Esri_WorldGrayCanvas'>().withDefault('world_imagery')
   );
+
+export const useSyncCategory = () =>
+  useQueryState(
+    'category',
+    parseAsJson<
+      'all' | 'agriculture' | 'water' | 'climate&health' | 'soils' | 'forest' | 'biodiversity'
+    >().withDefault('all')
+  );

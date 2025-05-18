@@ -22,11 +22,7 @@ const MonitorsDirectoryDialog: FC = () => {
   return (
     <Dialog>
       <DialogTrigger className="w-full" asChild>
-        <Button
-          variant="dark"
-          data-testid="monitors-directory-trigger"
-          className="text-secondary-500"
-        >
+        <Button data-testid="monitors-directory-trigger" className="text-secondary-500">
           Monitor List
         </Button>
       </DialogTrigger>

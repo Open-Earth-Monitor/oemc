@@ -20,27 +20,26 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
     <Tooltip delayDuration={100}>
       <Popover>
         <TooltipTrigger asChild>
-          <PopoverTrigger>
-            <motion.button
-              initial="initial"
-              whileHover="hover"
-              className={cn({
-                'group bg-brand-500 stroke-secondary-500 hover:stroke-brand-500': true,
-                'p-4': isMobile,
-                [CONTROL_BUTTON_STYLES.mobile]: isMobile,
-                [CONTROL_BUTTON_STYLES.default]: !isMobile,
-              })}
-            >
-              <LuMap />
-            </motion.button>
+          <PopoverTrigger
+            className={cn({
+              'group bg-brand-500 stroke-secondary-500 hover:stroke-brand-500': true,
+              [CONTROL_BUTTON_STYLES.mobile]: isMobile,
+              [CONTROL_BUTTON_STYLES.default]: !isMobile,
+            })}
+          >
+            <LuMap size={22} />
           </PopoverTrigger>
         </TooltipTrigger>
-        <PopoverContent className="w-fit p-0" align="start" side="right">
-          <div className="p-1">
+        <PopoverContent
+          className="w-fit overflow-hidden bg-white-500 p-0"
+          align="start"
+          side="right"
+        >
+          <div className="py-1">
             {BASEMAPS.map((basemap) => (
               <button
                 key={basemap.label}
-                className="flex w-full items-center justify-start rounded-sm px-4 py-2 text-left text-sm text-secondary-500 hover:bg-secondary-500 hover:text-brand-500"
+                className="flex w-full items-center justify-start rounded-sm px-4 py-2 text-left text-sm  text-brand-500 hover:bg-alert"
                 onClick={() => {
                   setBasemap((prev) => {
                     if (prev === basemap.id) return prev;

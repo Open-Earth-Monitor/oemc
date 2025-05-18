@@ -7,11 +7,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Geostory } from '@/types/geostories';
 
 import { TAG_STYLE } from '@/styles/constants';
-import { usePostWebTraffic } from '@/hooks/web-traffic';
+import { postWebTraffic } from '@/hooks/web-traffic';
 
 const GeostoryItem: FC<Geostory & { color: string }> = ({ id, color, title }) => {
   const handleClick = () => {
-    usePostWebTraffic({
+    postWebTraffic({
       geostory_id: id,
     });
     console.info('WT5 -', 'geostories', id);

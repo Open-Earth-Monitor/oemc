@@ -12,7 +12,8 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
 }: ControlsPropsWithChildren) => (
   <div
     className={cn({
-      'absolute right-2.5 top-[81px] z-40 flex flex-col space-y-1.5': true,
+      'absolute right-5 top-[222px] z-40 flex flex-col space-y-1.5 sm:top-1/2 sm:-translate-y-[50%]':
+        true,
       [className]: !!className,
     })}
   >

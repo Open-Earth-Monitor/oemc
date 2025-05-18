@@ -205,7 +205,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
           <Button
             data-testid="dataset-layer-toggle-button"
             type="button"
-            variant={isActive ? 'default_active' : 'default'}
+            variant={isActive ? 'gradient' : 'default'}
             onClick={handleToggleLayer}
             className="flex w-full items-center space-x-2"
           >

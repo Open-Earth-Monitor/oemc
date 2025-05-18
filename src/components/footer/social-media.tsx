@@ -77,7 +77,7 @@ export const SocialMedia: FC<{
         </div>
       </a>
 
-      {/* TO - DO - add link */}
+      {/* TO - DO - There is no Mastodon account provided */}
       {/* <a
       target="_blank"
       rel="noopener noreferrer"

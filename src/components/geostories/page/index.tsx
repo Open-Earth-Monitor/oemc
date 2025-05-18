@@ -8,6 +8,7 @@ import { useGeostoryParsed, useGeostoryLayers } from '@/hooks/geostories';
 import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
 
 import Loading from '@/components/loading';
+import Header from '@/components/header';
 
 const Map = dynamic(() => import('@/components/map/geostory-map'), { ssr: false });
 

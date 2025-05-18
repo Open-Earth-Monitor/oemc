@@ -192,7 +192,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           isFetched &&
           !!isError && (
             <div className="flex flex-col space-y-1 p-2">
-              <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
+              <div className="absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent via-black-500 to-black-500" />
 
               {layerData?.gs_style.map(({ color, label }) => (
                 <div
@@ -209,7 +209,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                   <div className="text-left text-xs text-secondary-500 opacity-50">{label}</div>
                 </div>
               ))}
-              <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black-500 via-transparent to-transparent" />
             </div>
           )}
 
@@ -392,7 +392,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           <ScrollArea className="max-h-[216px]">
             {compareLayerData?.gs_style && compareLayerData?.gs_style.length > 8 && (
               <div className="flex flex-col space-y-1 p-2">
-                <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
+                <div className="absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent via-black-500 to-black-500" />
 
                 {compareLayerData?.gs_style.map(({ color, label }) => (
                   <div
@@ -409,7 +409,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                     <div className="text-left text-xs opacity-50">{label}</div>
                   </div>
                 ))}
-                <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black-500 via-transparent to-transparent" />
               </div>
             )}
 

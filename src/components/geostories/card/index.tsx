@@ -14,13 +14,13 @@ import { Geostory } from '@/types/geostories';
 import { TAG_STYLE } from '@/styles/constants';
 
 import GeostoryDialog from '../dialog';
-import { usePostWebTraffic } from '@/hooks/web-traffic';
+import { postWebTraffic } from '@/hooks/web-traffic';
 
 const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string }> = (geostory) => {
   const { id, colorHead, title, color, ready, theme, monitors } = geostory;
 
   const handleClick = (key) => {
-    usePostWebTraffic({
+    postWebTraffic({
       [key]: id,
     });
     console.info('WT1 -', key, id);
@@ -63,7 +63,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
             </div>
           ) : (
             <div>
-              <div className="float-left flex items-center space-x-2 rounded-md bg-black/10 px-3 py-2 leading-none">
+              <div className="bg-black/10 float-left flex items-center space-x-2 rounded-md px-3 py-2 leading-none">
                 <LuRefreshCcw className="h-5 w-5" />
                 <span className="text-xs font-bold">Geostory under-development</span>
               </div>
