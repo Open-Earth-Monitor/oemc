@@ -1,6 +1,8 @@
 import type { NextPage, Metadata } from 'next';
 
 import LandingDatasets from '@/components/datasets-grid';
+import Footer from '@/components/footer';
+import Header from '@/components/header';
 import Hero from '@/components/hero';
 import SocialMedia from '@/components/social-media';
 
@@ -12,9 +14,11 @@ export const metadata: Metadata = {
 
 const Hub: NextPage = () => (
   <>
+    <Header />
     <Hero />
     <SocialMedia />
     <LandingDatasets />
+    <Footer />
   </>
 );
 

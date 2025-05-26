@@ -5,15 +5,14 @@ import { useCallback, useMemo, useState } from 'react';
 import { Element, scroller } from 'react-scroll';
 
 import { PopoverClose } from '@radix-ui/react-popover';
-import { motion } from 'framer-motion';
 import { XIcon } from 'lucide-react';
 import { LuX } from 'react-icons/lu';
 
 import cn from '@/lib/classnames';
 
-import { useMonitorsAndGeostoriesPaginated, useDebounce } from '@/hooks/datasets';
-
 import { THEMES, type Theme } from '@/constants/themes';
+
+import { useMonitorsAndGeostoriesPaginated, useDebounce } from '@/hooks/datasets';
 
 import GeostoryCard from '@/components/geostories/card';
 import Loading from '@/components/loading';
@@ -210,21 +209,15 @@ const LandingDatasets = () => {
           {!isLoading && !isError && (
             <ul
               id="explore-section"
-              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+              className="grid gap-6 py-6 sm:grid-cols-2 lg:grid-cols-3"
               data-testid="datasets-list"
             >
               {data?.data?.map(({ id, ...d }) => (
                 <li key={id} data-testid="datasets-card">
-                  <motion.div
-                    className="font-inter overflow-hidden"
-                    whileHover={{
-                      translateY: '-10px',
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
+                  <div className="font-inter">
                     {d.entity_type === 'monitor' && <MonitorCard id={id} {...d} />}
                     {d.entity_type === 'geo_story' && <GeostoryCard id={id} {...d} />}
-                  </motion.div>
+                  </div>
                 </li>
               ))}
             </ul>

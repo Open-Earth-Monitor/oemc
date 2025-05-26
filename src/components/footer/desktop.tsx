@@ -4,8 +4,9 @@ import { FC } from 'react';
 
 import Image from 'next/image';
 
-import SocialMedia from './social-media';
 import MainMenuDesktop from '../main-menu/desktop';
+
+import SocialMedia from './social-media';
 
 export const FooterDesktop: FC = () => {
   return (

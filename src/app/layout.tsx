@@ -6,9 +6,6 @@ import Providers from '@/utils/providers';
 // Styles
 import '@/styles/globals.css';
 import 'ol/ol.css';
-import Header from '@/components/header';
-import Footer from '@/components/footer';
-
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -51,11 +48,7 @@ export default function RootLayout({ children }) {
       <body className="font-inter mx-auto h-full min-h-screen w-screen overflow-x-hidden bg-brand-500">
         <div className="flex h-full flex-col">
           <main className="relative h-full flex-1">
-            <Providers>
-              <Header />
-              {children}
-              <Footer />
-            </Providers>
+            <Providers>{children}</Providers>
           </main>
         </div>
       </body>
