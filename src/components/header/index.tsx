@@ -1,10 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import cn from '@/lib/classnames';
+
 import MainMenuDesktop from '../main-menu/desktop';
 import MainMenuMobile from '../main-menu/mobile';
 import MainMenuTablet from '../main-menu/tablet';
-import cn from '@/lib/classnames';
 
 const Header = ({ className }: { className?: string }) => {
   return (

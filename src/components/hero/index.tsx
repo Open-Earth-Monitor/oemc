@@ -1,5 +1,7 @@
-import { LuCircleArrowRight } from 'react-icons/lu';
 import Link from 'next/link';
+
+import { LuCircleArrowRight } from 'react-icons/lu';
+
 import { Button } from 'components/ui/button';
 
 const Hero = () => {
@@ -10,7 +12,7 @@ const Hero = () => {
           Discover and empower with monitoring solutions.
         </h1>
         <div className="flex items-center justify-center">
-          <Link href="/map">
+          <Link href="/explore">
             <Button variant="gradient">
               <span>Explore data</span>
               <LuCircleArrowRight className="h-6 w-6" />
