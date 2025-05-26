@@ -1,14 +1,19 @@
 import { useMemo } from 'react';
+
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
+import { compact, isArray } from 'lodash-es';
 import { HiOutlineNewspaper, HiOutlineGlobeAlt } from 'react-icons/hi';
+import { LuInfo } from 'react-icons/lu';
 
 import cn from '@/lib/classnames';
-import { compact, isArray } from 'lodash-es';
+
 import type { Geostory } from '@/types/geostories';
 
-import { Button } from '@/components/ui/button';
+import { postWebTraffic } from '@/hooks/web-traffic';
+
+import DoiBadge from '@/components/doi-badge';
 import {
   Dialog,
   DialogContent,
@@ -18,8 +23,6 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-import { postWebTraffic } from '@/hooks/web-traffic';
-import DoiBadge from '@/components/doi-badge';
 
 type GeostoryDialogProps = Partial<Geostory>;
 
@@ -53,13 +56,12 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          data-testid={`card-button-${id}`}
-          className="h-12 max-w-fit text-base hover:bg-transparent hover:shadow-[2px_2px_#ffffe5] sm:h-9 sm:p-4 sm:text-xs"
-        >
-          Learn more
-        </Button>
+      <DialogTrigger
+        data-testid={`card-button-${id}`}
+        className="flex items-center space-x-3 text-xs font-bold"
+      >
+        <LuInfo className="h-6 w-6" />
+        <span>More info</span>
       </DialogTrigger>
       <DialogContent
         data-testid={`monitor-card-${id}`}

@@ -39,28 +39,31 @@ const DEFAULT_QUERY_OPTIONS = {
 
 const columns = ['id', 'label', 'value'];
 
-export function useMonitorsAndGeostories(
+export function useMonitorsAndGeostories<TData = MonitorsAndGeostoriesParsed>(
   params?: UseParams,
-  queryOptions?: UseQueryOptions<MonitorsAndGeostories, Error, MonitorsAndGeostoriesParsed>
+  queryOptions?: UseQueryOptions<MonitorsAndGeostories, Error, TData>
 ) {
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostories>({
       method: 'GET',
       url: '/monitors-and-geostories/',
       params,
-      ...queryOptions,
     }).then((response) => response.data);
 
-  return useQuery(['monitor-and-geostories', params], fetchMonitorAndGeostories, {
+  return useQuery({
+    queryKey: ['monitor-and-geostories', params],
+    queryFn: fetchMonitorAndGeostories,
     ...DEFAULT_QUERY_OPTIONS,
     ...queryOptions,
-    select: (data): MonitorsAndGeostoriesParsed =>
-      data.map((d) => ({
-        ...d,
-        color: THEMES_COLORS[d.theme].base || THEMES_COLORS.Unknown.base,
-        colorHead: THEMES_COLORS[d.theme].dark || THEMES_COLORS.Unknown.dark,
-        colorOpacity: THEMES_COLORS[d.theme].light || THEMES_COLORS.Unknown.light,
-      })),
+    select:
+      queryOptions?.select ??
+      (((data) =>
+        data.map((d) => ({
+          ...d,
+          color: THEMES_COLORS[d.theme]?.base ?? THEMES_COLORS.Unknown.base,
+          colorHead: THEMES_COLORS[d.theme]?.dark ?? THEMES_COLORS.Unknown.dark,
+          colorOpacity: THEMES_COLORS[d.theme]?.light ?? THEMES_COLORS.Unknown.light,
+        }))) as unknown as (data: MonitorsAndGeostories) => TData),
   });
 }
 

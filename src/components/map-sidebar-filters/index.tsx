@@ -2,13 +2,14 @@
 
 import { cn } from '@/lib/classnames';
 
-import { AllCategoriesIcon } from '@/components/ui/icons/sidebar/all_category';
 import { AgricultureIcon } from '@/components/ui/icons/sidebar/agriculture_category';
-import { WaterIcon } from '@/components/ui/icons/sidebar/water_category';
-import { ClimateAndHealthIcon } from '@/components/ui/icons/sidebar/climate_&_health_category';
-import { SoilsIcon } from '@/components/ui/icons/sidebar/soils_category';
-import { ForestIcon } from '@/components/ui/icons/sidebar/forest_category';
+import { AllCategoriesIcon } from '@/components/ui/icons/sidebar/all_category';
 import { BiodiversityIcon } from '@/components/ui/icons/sidebar/biodiversity_category';
+import { ClimateAndHealthIcon } from '@/components/ui/icons/sidebar/climate_&_health_category';
+import { ForestIcon } from '@/components/ui/icons/sidebar/forest_category';
+import { SoilsIcon } from '@/components/ui/icons/sidebar/soils_category';
+import { WaterIcon } from '@/components/ui/icons/sidebar/water_category';
+
 import SidebarItem from './sidebar-item';
 
 export type SidebarProps = {
