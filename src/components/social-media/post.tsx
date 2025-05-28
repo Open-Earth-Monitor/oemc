@@ -33,7 +33,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
         {!!data?.media_attachments.length && data?.media_attachments.length === 1 && (
           <Image
             src={data?.media_attachments[0].preview_url}
-            alt={data?.media_attachments[0].description || data?.card?.title}
+            alt={data?.media_attachments[0].description || data?.card?.title || 'post'}
             width={data?.media_attachments[0].meta.small.width}
             height={data?.media_attachments[0].meta.small.height}
           />

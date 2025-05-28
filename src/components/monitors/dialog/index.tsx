@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-import { HiOutlineGlobeAlt } from 'react-icons/hi';
+import { LuInfo } from 'react-icons/lu';
 
 import cn from '@/lib/classnames';
 
 import type { Monitor } from '@/types/monitors';
 
-import { Button } from '@/components/ui/button';
+import { postWebTraffic } from '@/hooks/web-traffic';
+
 import {
   Dialog,
   DialogContent,
@@ -17,10 +18,8 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-import { isArray } from 'lodash-es';
-import { postWebTraffic } from '@/hooks/web-traffic';
+
 import UseCases from './use-cases';
-import { use } from 'react';
 
 type MonitorDialogProps = Partial<Monitor>;
 
@@ -46,14 +45,12 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          variant="default"
-          data-testid={`card-button-${id}`}
-          className="h-12 max-w-fit p-4 text-base sm:h-9 sm:text-xs"
-        >
-          Learn more
-        </Button>
+      <DialogTrigger
+        data-testid={`card-button-${id}`}
+        className="flex items-center space-x-3 text-xs font-bold"
+      >
+        <LuInfo className="h-6 w-6" />
+        <span>More info</span>
       </DialogTrigger>
       <DialogContent
         data-testid={`monitor-card-${id}`}

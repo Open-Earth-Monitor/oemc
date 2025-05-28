@@ -6,11 +6,17 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 
 import { cn } from 'lib/classnames';
 
-const Select = SelectPrimitive.Root;
-
 const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
+
+const Select = ({ children, ...props }: ComponentPropsWithoutRef<typeof SelectPrimitive.Root>) => {
+  return <SelectPrimitive.Root {...props}>{children}</SelectPrimitive.Root>;
+};
+
+export default Select;
+
+Select.displayName = SelectPrimitive.Root.displayName;
 
 const SelectIcon = forwardRef<
   ElementRef<typeof SelectPrimitive.Icon>,
@@ -34,7 +40,6 @@ const SelectTrigger = forwardRef<
   ElementRef<typeof SelectPrimitive.Trigger>,
   ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => {
-  console.log(className);
   return (
     <SelectPrimitive.Trigger
       ref={ref}
@@ -58,9 +63,10 @@ const SelectContent = forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn({
-        'relative z-50 overflow-hidden border border-secondary-900 bg-brand-500 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2':
+        'relative z-50 overflow-hidden rounded-xl bg-white-500 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2':
           true,
-        [className]: !!className,
+        'w-[var(--radix-select-trigger-width)]': position === 'popper',
+        className,
       })}
       position={position}
       {...props}
@@ -90,19 +96,22 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName;
 const SelectItem = forwardRef<
   ElementRef<typeof SelectPrimitive.Item>,
   ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Item
-    ref={ref}
-    className={cn({
-      'relative m-auto flex w-fit cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-sm px-2 py-1.5 text-sm text-secondary-500 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50':
-        true,
-      [className]: !!className,
-    })}
-    {...props}
-  >
-    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-  </SelectPrimitive.Item>
-));
+>(({ className, children, ...props }, ref) => {
+  console.log(className);
+  return (
+    <SelectPrimitive.Item
+      {...props}
+      ref={ref}
+      className={cn({
+        'relative m-auto flex cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-sm px-2 py-1.5 text-sm capitalize text-black-500 outline-none hover:bg-accent-green data-[disabled]:pointer-events-none data-[disabled]:opacity-50':
+          true,
+        className: !!className,
+      })}
+    >
+      <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    </SelectPrimitive.Item>
+  );
+});
 SelectItem.displayName = SelectPrimitive.Item.displayName;
 
 const SelectSeparator = forwardRef<

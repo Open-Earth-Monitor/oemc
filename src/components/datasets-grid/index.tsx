@@ -19,13 +19,11 @@ import Loading from '@/components/loading';
 import MonitorCard from '@/components/monitors/card';
 import Pagination from '@/components/pagination';
 import Search from '@/components/search';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown';
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
-import { PopoverContent, PopoverTrigger, Popover } from '../ui/popover';
-
-import { FilterByCategories, FilterByFormat, SortBy } from './filters';
+import { FilterByFormat, SortBy } from './filters';
 import type { SortingCriteria, Dataset } from './types';
+import LandingDatasetsGridTitle from './title';
+import ThemesFilter from './themes-filter';
 
 const LandingDatasets = () => {
   const [counter, setCounter] = useState(0);
@@ -92,39 +90,20 @@ const LandingDatasets = () => {
   );
 
   return (
-    <Element className="relative w-full" name="datasetsGrid">
-      <div className="container mx-auto w-full p-5">
+    <Element className="relative z-10 -mt-52 w-full bg-black-500" name="datasetsGrid">
+      <div className="container mx-auto w-full px-5 py-32">
+        <div>
+          <LandingDatasetsGridTitle />
+        </div>
         <div className="flex h-14">
           <Search
             placeholder="Search by name, type of dataset..."
             value={searchValue}
             setValue={setSearchValue}
-            className="flex h-full flex-1 border-[0.5px] border-secondary-900"
+            className="flex h-full flex-1 border-b-[0.5px] border-b-secondary-900"
           />
-          <div className="hidden sm:block">
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger
-                className="font-inter flex h-14 min-w-[258px] items-center border-[0.5px] border-l-0 border-secondary-900"
-                data-testid="themes-filter"
-              >
-                <div className="w-full">
-                  {filteredThemes.length === activeThemes.length && 'All categories selected'}
-                  {activeThemes.length === 0 && 'Filter by categories'}
-                  {activeThemes.length === 1 && activeThemes[0]}
-                  {activeThemes.length > 1 &&
-                    filteredThemes.length > activeThemes.length &&
-                    `${activeThemes[0]} +${activeThemes.length - 1}`}
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="align-left font-inter flex w-full flex-1 flex-col bg-brand-500"
-                sideOffset={-1}
-              >
-                <FilterByCategories activeThemes={activeThemes} handleThemes={handleThemes} />
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
         </div>
+        <ThemesFilter />
         <ul
           className={cn(
             'mb-10 flex flex-wrap gap-3 text-secondary-500',
@@ -154,37 +133,6 @@ const LandingDatasets = () => {
               handleSortingCriteria={handleSortingCriteria}
             />
           </div>
-          <Popover modal={false}>
-            <PopoverTrigger
-              className="border-none py-2.5 underline"
-              data-testid="themes-filter-mobile"
-            >
-              Filters
-            </PopoverTrigger>
-            <PopoverContent className="font-inter min-w-fit bg-brand-500 px-0 py-0" sideOffset={-1}>
-              <div className="flex justify-end p-5">
-                <PopoverClose>
-                  <XIcon className="h-4 w-4 text-secondary-500" />
-                </PopoverClose>
-              </div>
-              <Collapsible className="border-y-[0.5px] border-secondary-900">
-                <CollapsibleTrigger className="bg-brand-500 py-2 text-secondary-500 hover:bg-brand-500">
-                  Filter by categories
-                </CollapsibleTrigger>
-                <CollapsibleContent className="px-2 pb-2">
-                  <FilterByCategories activeThemes={activeThemes} handleThemes={handleThemes} />
-                </CollapsibleContent>
-              </Collapsible>
-              <Collapsible>
-                <CollapsibleTrigger className="bg-brand-500 py-2 text-secondary-500 hover:bg-brand-500">
-                  Filter by format
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <FilterByFormat active={active} handleCategoriesFilter={handleCategoriesFilter} />
-                </CollapsibleContent>
-              </Collapsible>
-            </PopoverContent>
-          </Popover>
         </div>
         <div className="hidden items-center justify-between sm:flex">
           <div>
@@ -199,17 +147,12 @@ const LandingDatasets = () => {
             </div>
           </div>
         </div>
-        {!!data?.count && (
-          <div data-testid="datasets-result" className="font-inter py-5 text-secondary-700">
-            <span data-testid="result-number">{data?.count}</span>{' '}
-            {data?.count === 1 ? 'result' : 'results'}
-          </div>
-        )}
+
         <div className="min-h-[380px]">
           {!isLoading && !isError && (
             <ul
               id="explore-section"
-              className="grid gap-6 py-6 sm:grid-cols-2 lg:grid-cols-3"
+              className="grid gap-6 py-6 sm:grid-cols-2 lg:grid-cols-4"
               data-testid="datasets-list"
             >
               {data?.data?.map(({ id, ...d }) => (
