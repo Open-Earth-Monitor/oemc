@@ -1,9 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { LuCheck } from 'react-icons/lu';
+import { LuListFilter } from 'react-icons/lu';
 import { Theme, THEMES } from '@/constants/themes';
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { TAG_STYLE } from '@/styles/constants';
 
@@ -25,6 +26,11 @@ type FilterByCategoriesProps = {
       >
     >
   ) => void;
+};
+
+type SortByProps = {
+  sortingCriteria: string;
+  handleSortingCriteria: (value: string) => void;
 };
 
 const FilterByCategories = ({ activeThemes, handleThemes }: FilterByCategoriesProps) => {
@@ -62,46 +68,31 @@ const FilterByCategories = ({ activeThemes, handleThemes }: FilterByCategoriesPr
   );
 };
 
-type SortByProps = {
-  sortingCriteria: string;
-  handleSortingCriteria: (value: string) => void;
-};
-
 const SortBy = ({ sortingCriteria, handleSortingCriteria }: SortByProps) => {
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
   return (
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger className="font-inter flex h-full items-center border-0 px-0 py-2.5 hover:bg-brand-500 sm:border sm:border-secondary-900 sm:px-3 sm:hover:bg-secondary-900">
-        <div>
-          <span className="w-full">
-            Sort <span className="hidden sm:inline"> by:</span>{' '}
-          </span>
-          <span className="hidden font-bold capitalize sm:inline">{sortingCriteria}</span>
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="min-w-fit p-4" sideOffset={-1} alignOffset={0} align="start">
-        <RadioGroup
-          defaultValue="title"
-          value={sortingCriteria}
-          className="font-inter flex w-full flex-1 font-medium"
-          onValueChange={handleSortingCriteria}
-        >
-          <div className="align-left flex flex-col justify-start space-y-4">
-            {SORTING.map((sort) => (
-              <div
-                key={sort}
-                className="flex items-center space-x-3"
-                data-testid={`${sort}-button`}
-              >
-                <RadioGroupItem value={sort} id={sort} />
-                <Label htmlFor={sort} className="capitalize">
-                  {sort}
-                </Label>
-              </div>
-            ))}
+    <div className="flex items-center justify-between space-x-6">
+      <Select value={sortingCriteria} onValueChange={handleSortingCriteria}>
+        <SelectTrigger className="w-fit min-w-[100px] border-none outline-none hover:bg-transparent">
+          <div className="space-x-2.5">
+            <span className="text-white-500/50">Sort by:</span>
+            <span className="capitalize">{sortingCriteria}</span>
           </div>
-        </RadioGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </SelectTrigger>
+        <SelectContent className="dropdown-menu-content">
+          {SORTING.map((sort) => (
+            <SelectItem key={sort} value={sort} data-testid={`${sort}-button`}>
+              {sort}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <LuListFilter
+        className="h-5 w-5 text-white-500"
+        onClick={() => setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
+      />
+    </div>
   );
 };
 
