@@ -4,9 +4,8 @@ import { cn } from '@/lib/classnames';
 
 import { Label } from '@/components/ui/label';
 
-import { LuListFilter } from 'react-icons/lu';
-
 import { Checkbox } from '../ui/checkbox';
+import { SortBy } from '../datasets-grid/filters';
 
 function SidebarCheckbox() {
   const [showDetail, setShowDetail] = useState(false);
@@ -40,11 +39,7 @@ function SidebarCheckbox() {
           />
         </div>
       </div>
-      <div className="flex w-fit items-center justify-between space-x-2.5">
-        <span className="text-white-500/50">Sort by:</span>
-        <span>Title</span>
-        <LuListFilter className="h-5 w-5 text-white-500" />
-      </div>
+      <SortBy />
     </div>
   );
 }

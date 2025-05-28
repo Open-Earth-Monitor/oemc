@@ -1,11 +1,11 @@
 import { FC, useMemo } from 'react';
-import { MouseEvent } from 'react';
 import { useSyncCategory } from '@/hooks/sync-query';
 
 import { cn } from '@/lib/classnames';
+import { Themes } from './types';
 
 export type SidebarProps = {
-  type?: 'all' | 'agriculture' | 'water' | 'climate&health' | 'soils' | 'forest' | 'biodiversity';
+  type?: Themes;
   enabled?: boolean;
 };
 
@@ -22,7 +22,7 @@ export type SidebarItemProps = {
 const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
   const [category, setCategory] = useSyncCategory();
 
-  const handleClick = (type: SidebarProps['type']) => {
+  const handleClick = (type: Themes) => {
     setCategory(type);
   };
 

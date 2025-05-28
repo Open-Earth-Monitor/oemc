@@ -3,14 +3,14 @@
 import { FC, PropsWithChildren } from 'react';
 
 import Map from '@/components/map';
-import SidebarFilters from '@/components/map-sidebar-filters';
+import SidebarThemeFilters from '@/components/theme-filter/map-sidebar';
 import Sidebar from '@/components/sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 const ExploreLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <main className="relative">
-      <SidebarFilters />
+      <SidebarThemeFilters />
       <SidebarProvider>
         <Sidebar />
         <div className="w-full">

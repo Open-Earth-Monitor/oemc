@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { DropdownMenu, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 
 import { cn } from '@/lib/classnames';
 
 import { navLinks, navSubLinksCommunity } from '@/components/main-menu/constants';
 import {
+  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuPortal,
