@@ -5,7 +5,7 @@ import { cn } from '@/lib/classnames';
 import { Label } from '@/components/ui/label';
 
 import { Checkbox } from '../ui/checkbox';
-import { SortBy } from '../datasets-grid/filters';
+import SortBy from '@/components/sort-by';
 
 function SidebarCheckbox() {
   const [showDetail, setShowDetail] = useState(false);
