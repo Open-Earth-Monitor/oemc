@@ -43,3 +43,5 @@ export const THEMES = [
     Icon: BiodiversityIcon,
   },
 ] as const;
+
+export type ThemeID = (typeof THEMES)[number]['id'];
