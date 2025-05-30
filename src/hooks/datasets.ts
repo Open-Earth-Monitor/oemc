@@ -37,8 +37,6 @@ const DEFAULT_QUERY_OPTIONS = {
   staleTime: Infinity,
 };
 
-const columns = ['id', 'label', 'value'];
-
 export function useMonitorsAndGeostories<TData = MonitorsAndGeostoriesParsed>(
   params?: UseParams,
   queryOptions?: UseQueryOptions<MonitorsAndGeostories, Error, TData>
@@ -60,6 +58,7 @@ export function useMonitorsAndGeostories<TData = MonitorsAndGeostoriesParsed>(
       (((data) =>
         data.map((d) => ({
           ...d,
+          type: d.type || d.id.startsWith('g') ? 'geostory' : 'monitor',
           color: THEMES_COLORS[d.theme]?.base ?? THEMES_COLORS.Unknown.base,
           colorHead: THEMES_COLORS[d.theme]?.dark ?? THEMES_COLORS.Unknown.dark,
           colorOpacity: THEMES_COLORS[d.theme]?.light ?? THEMES_COLORS.Unknown.light,

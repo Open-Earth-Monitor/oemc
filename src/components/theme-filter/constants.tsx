@@ -8,37 +8,37 @@ import { WaterIcon } from '@/components/ui/icons/sidebar/water_category';
 
 export const THEMES = [
   {
-    id: 'all',
+    id: 'All',
     label: 'All',
     Icon: AllCategoriesIcon,
   },
   {
-    id: 'agriculture',
+    id: 'Agriculture',
     label: 'Agriculture',
     Icon: AgricultureIcon,
   },
   {
-    id: 'water',
+    id: 'Water',
     label: 'Water',
     Icon: WaterIcon,
   },
   {
-    id: 'climate&health',
+    id: 'Climate & Health',
     label: 'Climate & Health',
     Icon: ClimateAndHealthIcon,
   },
   {
-    id: 'soils',
-    label: 'Soils',
+    id: 'Soil',
+    label: 'Soil',
     Icon: SoilsIcon,
   },
   {
-    id: 'forest',
+    id: 'Forest',
     label: 'Forest',
     Icon: ForestIcon,
   },
   {
-    id: 'biodiversity',
+    id: 'Biodiversity',
     label: 'Biodiversity',
     Icon: BiodiversityIcon,
   },

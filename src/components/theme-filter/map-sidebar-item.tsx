@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { useSyncCategory } from '@/hooks/sync-query';
+import { useSyncTheme } from '@/hooks/sync-query';
 
 import { cn } from '@/lib/classnames';
 import { Themes } from './types';
@@ -20,15 +20,15 @@ export type SidebarItemProps = {
 };
 
 const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
-  const [category, setCategory] = useSyncCategory();
+  const [theme, setTheme] = useSyncTheme();
 
   const handleClick = (type: Themes) => {
-    setCategory(type);
+    setTheme(type);
   };
 
   const isActive = useMemo(() => {
-    return category === button.id;
-  }, [category, button.id]);
+    return theme === button.id;
+  }, [theme, button.id]);
 
   return (
     <button
@@ -58,7 +58,7 @@ const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
             }
           )}
         >
-          {button.label}
+          {button.label} holi
         </span>
       </div>
     </button>

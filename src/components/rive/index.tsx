@@ -33,6 +33,5 @@ export default function Simple({
     ...riveParams,
     ...opts,
   });
-  console.log(rive?.stateMachineNames);
   return <RiveComponent {...props} />;
 }
