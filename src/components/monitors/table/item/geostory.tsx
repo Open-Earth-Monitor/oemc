@@ -6,6 +6,7 @@ import { HiOutlineChevronUp } from 'react-icons/hi';
 import { cn } from '@/lib/classnames';
 
 import { MonitorParsed } from '@/types/monitors';
+
 import { postWebTraffic } from '@/hooks/web-traffic';
 
 export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: MonitorParsed) => {

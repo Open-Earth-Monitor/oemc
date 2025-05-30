@@ -25,6 +25,7 @@ export type GeostoryParsed = Geostory & {
   color: string;
   colorOpacity?: string;
   colorHead?: string;
+  type: 'geostory';
 };
 
 export type GeostoriesPaginated = {

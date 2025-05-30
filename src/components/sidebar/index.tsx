@@ -1,21 +1,33 @@
 import { useState } from 'react';
 
 import { cn } from '@/lib/classnames';
-
+import SortBy from '../sort-by';
 import { Sidebar, SidebarContent, SidebarHeader } from '@/components/ui/sidebar';
 import { useMonitorsAndGeostories } from '@/hooks/datasets';
 import SidebarSelect from './select';
 
-import { Label } from '@/components/ui/label';
-
-import { Checkbox, CheckboxIndicator } from '../ui/checkbox';
 import SidebarCheckbox from './checkbox';
+import SidebarDatasetCard from './card';
+import { SortingCriteria } from '../datasets-grid/types';
+import Loading from '../loading';
+import { useSyncTheme, useSyncDatasetType } from '@/hooks/sync-query';
+import DatasetCardMonitor from './card-monitor-content';
+import DatasetCardGeostory from './card-geostory-content';
 
 function AppSidebar() {
-  const { data: results } = useMonitorsAndGeostories(null, {
-    select: (data) => {
-      return data.length;
-    },
+  const [datasetType] = useSyncDatasetType();
+  const [theme] = useSyncTheme();
+  const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
+  // Show more/fewer details about the datasets
+  const [showDetail, setShowDetail] = useState(false);
+  const {
+    data: results,
+    isLoading,
+    isFetched,
+  } = useMonitorsAndGeostories({
+    ...(datasetType !== 'all' && { type: datasetType }),
+    ...(theme !== 'all' && { theme: [theme] }),
+    sort_by: sortingCriteria,
   });
 
   return (
@@ -30,8 +42,8 @@ function AppSidebar() {
           </h1>
 
           <span className="flex w-fit justify-end space-x-1 place-self-end rounded-full bg-white-500 bg-opacity-5 px-2 text-sm font-medium">
-            <span>{results}</span>
-            <span>{results === 1 ? 'result' : 'results'}</span>
+            <span>{results?.length}</span>
+            <span>{results?.length === 1 ? 'result' : 'results'}</span>
           </span>
         </div>
       </SidebarHeader>
@@ -39,7 +51,30 @@ function AppSidebar() {
         <div className="py-6">
           <SidebarSelect />
         </div>
-        <SidebarCheckbox />
+        <div className="flex items-center justify-between">
+          <SidebarCheckbox setShowDetail={setShowDetail} />
+          <SortBy sortingCriteria={sortingCriteria} handleSortingCriteria={setSortingCriteria} />
+        </div>
+        {/* Cards - Monitors & Geostories */}
+        {isLoading && !isFetched && <Loading />}
+        {!isLoading && isFetched && (
+          <ul>
+            {results?.map((result) => {
+              return (
+                <li key={result.id} className="mb-4">
+                  <SidebarDatasetCard {...result}>
+                    {result.type === 'monitor' && (
+                      <DatasetCardMonitor showMore={showDetail} {...result} />
+                    )}
+                    {result.type === 'geostory' && (
+                      <DatasetCardGeostory showMore={showDetail} {...result} />
+                    )}
+                  </SidebarDatasetCard>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </SidebarContent>
     </Sidebar>
   );

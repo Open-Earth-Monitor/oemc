@@ -1,12 +1,13 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { Element, scroller } from 'react-scroll';
 
 import { THEMES, type Theme } from '@/constants/themes';
 
 import { useMonitorsAndGeostoriesPaginated, useDebounce } from '@/hooks/datasets';
+import { useSyncDatasetType } from '@/hooks/sync-query';
 
 import GeostoryCard from '@/components/geostories/card';
 import Loading from '@/components/loading';
@@ -28,7 +29,7 @@ const LandingDatasets = () => {
   const [searchValue, setSearchValue] = useState<string>('');
 
   // activeDatasetType is used to filter the datasets by type (monitors, geostories, or all)
-  const [activeDatasetType, setActiveDatasetType] = useState<Dataset>('all');
+  const [activeDatasetType, setActiveDatasetType] = useSyncDatasetType();
   const [activeThemes, setActiveThemes] = useState<(Theme & 'All')[]>([]);
 
   const debouncedSearchValue = useDebounce(searchValue, 500);
@@ -58,7 +59,6 @@ const LandingDatasets = () => {
       },
     }
   );
-  const filteredThemes = useMemo(() => THEMES.filter((theme) => theme !== 'Unknown'), []);
 
   const handleDatasetTypeFilter = useCallback(
     (id: Dataset) => {

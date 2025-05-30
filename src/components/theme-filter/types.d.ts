@@ -1,8 +1,8 @@
 export type Themes =
-  | 'all'
-  | 'agriculture'
-  | 'water'
-  | 'climate&health'
-  | 'soils'
-  | 'forest'
-  | 'biodiversity';
+  | 'Agriculture'
+  | 'Water'
+  | 'Climate & Health'
+  | 'Forest'
+  | 'Biodiversity'
+  | 'Soil'
+  | 'All';
