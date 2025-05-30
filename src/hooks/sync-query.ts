@@ -33,10 +33,14 @@ export const useSyncBasemapLabelsSettings = () =>
     parseAsJson<'dark' | 'light' | 'no-label'>().withDefault('light')
   );
 
-export const useSyncCategory = () =>
+export const useSyncTheme = () =>
   useQueryState(
-    'category',
+    'theme',
     parseAsJson<
-      'all' | 'agriculture' | 'water' | 'climate&health' | 'soils' | 'forest' | 'biodiversity'
-    >().withDefault('all')
+      'Agriculture' | 'Water' | 'Climate & Health' | 'Forest' | 'Biodiversity' | 'Soil' | 'All'
+    >().withDefault('All')
   );
+
+//  Filter view in monitors, geostories or everything
+export const useSyncDatasetType = () =>
+  useQueryState('datasetType', parseAsJson<'all' | 'monitors' | 'geostories'>().withDefault('all'));

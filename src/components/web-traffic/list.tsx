@@ -9,7 +9,7 @@ const WebTrafficRankingContent = ({ type }) => {
     useGetWebTraffic();
   const isLoading = type === 'monitors' ? isLoadingMonitors : isLoadingGeostories;
   const data = type === 'monitors' ? monitorsInfo : geostoriesInfo;
-  console.log(geostoriesInfo);
+
   return (
     <div className="h-full w-full grid-cols-2 space-y-4  p-6 text-secondary-500">
       <h5 className="text-xs font-medium uppercase tracking-widest text-alert">

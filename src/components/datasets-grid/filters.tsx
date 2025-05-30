@@ -1,3 +1,5 @@
+import { LuChevronDown } from 'react-icons/lu';
+
 import {
   Select,
   SelectTrigger,
@@ -6,18 +8,17 @@ import {
   SelectIcon,
   SelectValue,
 } from '@/components/ui/select';
-import { LuChevronDown } from 'react-icons/lu';
-import { Button, buttonVariants } from '../ui/button';
-import cn from '@/lib/classnames';
 
-type FilterByCategoriesProps = {
+import { buttonVariants } from '../ui/button';
+
+type FilterByDatasetTypeProps = {
   active: (typeof DATASET_TYPES)[number];
   handleDatasetTypeChange: (value: (typeof DATASET_TYPES)[number]) => void;
 };
 
 const DATASET_TYPES = ['monitors', 'geostories', 'all'] as const;
 
-const FilterByCategories = ({ active, handleDatasetTypeChange }: FilterByCategoriesProps) => {
+const FilterByDatasetType = ({ active, handleDatasetTypeChange }: FilterByDatasetTypeProps) => {
   return (
     <div className="flex items-center justify-between space-x-2.5">
       <span>Show:</span>
@@ -43,4 +44,4 @@ const FilterByCategories = ({ active, handleDatasetTypeChange }: FilterByCategor
   );
 };
 
-export default FilterByCategories;
+export default FilterByDatasetType;
