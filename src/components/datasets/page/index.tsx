@@ -9,7 +9,7 @@ import { useSyncLayersSettings } from '@/hooks/sync-query';
 
 import DatasetCard from '@/components/datasets/card';
 import Loading from '@/components/loading';
-
+import Sidebar from '@/components/sidebar';
 const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   const { data, error, isLoading, isError } = useMonitorLayers({ monitor_id });
   const [layers, setLayers] = useSyncLayersSettings();
@@ -33,7 +33,7 @@ const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) 
   }, [data]);
 
   if (error?.code === '400') return redirect('/not-found');
-
+  console.log('datsets page');
   return (
     <div>
       {isLoading && <Loading />}

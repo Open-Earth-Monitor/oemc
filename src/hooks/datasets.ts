@@ -52,7 +52,7 @@ export function useMonitorsAndGeostories<TData = MonitorsAndGeostoriesParsed>(
       method: 'GET',
       url: '/monitors-and-geostories/',
       params: {
-        ...(theme && theme.length > 0 && { theme: themeQuery }),
+        ...(theme && theme.length > 0 && theme !== 'All' && { theme: themeQuery }),
         ...restParams,
       },
     }).then((response) => response.data);

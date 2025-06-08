@@ -26,6 +26,7 @@ type Props = {
 const MapSidebarPage: NextPage<{ params: { geostory_id: string } }> = ({
   params: { geostory_id },
 }) => {
+  console.log('page explore');
   return (
     <SidebarProvider>
       <Sidebar />
