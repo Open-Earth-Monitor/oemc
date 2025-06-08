@@ -1,19 +1,43 @@
-import { PropsWithChildren } from 'react';
+import axios from 'axios';
 import type { Metadata, NextPage } from 'next';
 
-import Footer from '@/components/footer';
-import Header from '@/components/header';
+import type { Geostory } from '@/types/geostories';
 
-export const metadata: Metadata = {
-  title: 'Map - Open Earth Monitor Cyberinfrastructure',
+import SidebarContent from '@/containers/sidebar-content';
+import Sidebar from '@/components/sidebar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+
+type Props = {
+  params: { geostory_id: string };
 };
 
-const MapLayout: NextPage<PropsWithChildren> = ({ children }) => (
-  <div className="h-screen w-screen">
-    <Header />
-    {children}
-    <Footer />
-  </div>
-);
+// export async function generateMetadata({ params }: Props): Promise<Metadata> {
+// read route params
+// const id = params.geostory_id;
+// fetch data
+// const geostoryData = await axios
+//   .get<Geostory[]>(`${process.env.NEXT_PUBLIC_API_URL}/geostories?geostory_id=${id}`)
+//   .then((response) => response.data);
+// return {
+//   title: `Map page`,
+// };
+// }
 
-export default MapLayout;
+const MapSidebarPage: NextPage<{ params: { geostory_id: string } }> = ({
+  params: { geostory_id },
+}) => {
+  return (
+    <SidebarProvider>
+      <Sidebar />
+      <div className="w-full">
+        <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
+          {/* Map + Trigger */}
+
+          <SidebarTrigger />
+        </div>
+      </div>
+    </SidebarProvider>
+  );
+};
+
+export default MapSidebarPage;

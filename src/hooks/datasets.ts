@@ -10,8 +10,10 @@ import type {
 } from '@/types/monitors-and-geostories';
 
 import { Theme, THEMES_COLORS } from '@/constants/themes';
-
+import { SortingCriteria } from '@/components/datasets-grid/types';
+import type { ThemeQueryParam } from '@/hooks/sync-query';
 import API from 'services/api';
+import { isArray } from 'lodash-es';
 
 const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'light') => {
   if (!ready) return 'hsla(0, 0%, 79%, 1)';
@@ -23,10 +25,11 @@ type DataObject = Array<{ layer_id: string; label: string; value: number }>;
 type UseParams = {
   type?: 'monitors' | 'geostories' | 'all';
   page?: number;
-  theme?: Theme[];
+  theme?: ThemeQueryParam;
   monitor_id?: string;
   pagination?: boolean;
-  sort_by?: 'title' | 'date';
+  count?: number;
+  sort_by?: SortingCriteria;
 };
 
 const DEFAULT_QUERY_OPTIONS = {
@@ -41,11 +44,17 @@ export function useMonitorsAndGeostories<TData = MonitorsAndGeostoriesParsed>(
   params?: UseParams,
   queryOptions?: UseQueryOptions<MonitorsAndGeostories, Error, TData>
 ) {
+  const { theme, ...restParams } = params || { theme: undefined };
+  console.log(theme, 'theme');
+  const themeQuery = isArray(theme) && theme.length > 0 ? `${theme.join(',')}` : theme;
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostories>({
       method: 'GET',
       url: '/monitors-and-geostories/',
-      params,
+      params: {
+        ...(theme && theme.length > 0 && { theme: themeQuery }),
+        ...restParams,
+      },
     }).then((response) => response.data);
 
   return useQuery({
@@ -75,7 +84,7 @@ export function useMonitorsAndGeostoriesPaginated(
   >
 ) {
   const { theme, ...restParams } = params || { theme: undefined };
-  const themeQuery = theme && theme.length > 0 ? `${theme.join(',')}` : '';
+  const themeQuery = isArray(theme) && theme.length > 0 ? `${theme.join(',')}` : '';
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostoriesPaginated>({
       method: 'GET',

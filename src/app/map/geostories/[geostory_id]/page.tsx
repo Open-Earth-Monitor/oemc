@@ -26,7 +26,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const GeostoryPage: NextPage<{ params: { geostory_id: string } }> = ({
   params: { geostory_id },
 }) => {
-  return <GeostoryPageComponent geostory_id={geostory_id} />;
+  return (
+    <div className="absolute bottom-0 top-0">geostory {geostory_id}</div>
+    //  <GeostoryPageComponent geostory_id={geostory_id} />
+  );
 };
 
 export default GeostoryPage;
