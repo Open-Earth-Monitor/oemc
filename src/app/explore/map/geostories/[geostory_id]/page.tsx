@@ -1,0 +1,35 @@
+import axios from 'axios';
+import type { Metadata, NextPage } from 'next';
+
+import type { Geostory } from '@/types/geostories';
+
+import GeostoryPageComponent from '@/components/geostories/page';
+
+type Props = {
+  params: { geostory_id: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // read route params
+  const id = params.geostory_id;
+
+  // fetch data
+  const geostoryData = await axios
+    .get<Geostory[]>(`${process.env.NEXT_PUBLIC_API_URL}/geostories?geostory_id=${id}`)
+    .then((response) => response.data);
+
+  return {
+    title: `${geostoryData[0].title} - Open Earth Monitor Cyberinfrastructure`,
+  };
+}
+
+const GeostoryPage: NextPage<{ params: { geostory_id: string } }> = ({
+  params: { geostory_id },
+}) => {
+  return (
+    <div className="absolute bottom-0 top-0">geostory {geostory_id}</div>
+    //  <GeostoryPageComponent geostory_id={geostory_id} />
+  );
+};
+
+export default GeostoryPage;

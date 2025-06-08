@@ -11,7 +11,7 @@ function DatasetCardMonitor({ showMore, theme, title, geostories, color, id }) {
             {theme}
           </span>
         </div>
-        <Link href={`/explore/map/${id}/datasets`}>
+        <Link href={`/explore/map/monitor/${id}/datasets`}>
           <h2 style={{ color: color }} className="text-[22px]">
             {title}
           </h2>
