@@ -57,9 +57,7 @@ export function useGetWebTraffic(
       const topGeostoryIds =
         webTrafficQuery.data.geostories.map(({ geostory_id }) => geostory_id) || [];
       // Filter geostories by the top 5 most visited IDs and return their titles
-      return allGeostories
-        .filter((geostory) => topGeostoryIds.includes(geostory.id))
-        .map((geostory) => geostory.title);
+      return allGeostories.filter((geostory) => topGeostoryIds.includes(geostory.id));
     },
     ...queryOptions,
   });
@@ -79,15 +77,23 @@ export function useGetWebTraffic(
         enabled: !!monitor_id, // Only enable if monitor_id exists
       })) || [],
   });
-
   const isLoadingMonitors =
     webTrafficQuery.isLoading || monitorsQueries.some((query) => query.isLoading);
 
   const isLoadingGeostories = webTrafficQuery.isLoading || allGeostoriesQuery.isLoading;
 
-  const geostoriesInfo = allGeostoriesQuery.data;
+  const geostoriesInfo = allGeostoriesQuery?.data?.map((query) => {
+    return {
+      monitor_id: query.id,
+      theme: query.theme,
+      title: query.title,
+      color: THEMES_COLORS[query?.theme]?.base || DEFAULT_COLOR,
+    };
+  });
+
   const monitorsInfo = monitorsQueries.map((query) => {
     return {
+      monitor_id: query.data?.[0]?.id,
       theme: query.data?.[0]?.theme,
       title: query.data?.[0]?.title,
       color: THEMES_COLORS[query?.data?.[0]?.theme]?.base || DEFAULT_COLOR,

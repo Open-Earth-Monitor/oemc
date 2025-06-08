@@ -58,7 +58,7 @@ const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
             }
           )}
         >
-          {button.label} holi
+          {button.label}
         </span>
       </div>
     </button>
