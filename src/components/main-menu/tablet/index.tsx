@@ -14,7 +14,6 @@ import {
   DropdownMenuItem,
   DropdownMenuPortal,
 } from '@/components/ui/dropdown';
-import WebTraffic from '@/components/web-traffic';
 
 const MainMenuDesktop = () => {
   const pathname = usePathname();
@@ -76,7 +75,6 @@ const MainMenuDesktop = () => {
           </DropdownMenuContent>
         </DropdownMenuPortal>
       </DropdownMenu>
-      <WebTraffic tablet />
     </nav>
   );
 };

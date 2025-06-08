@@ -296,8 +296,8 @@ const SidebarTrigger = forwardRef<ElementRef<typeof Button>, ComponentProps<type
         className={cn(
           {
             'absolute bottom-2 z-10 h-8 w-8 border-none bg-black-300': true,
-            'left-[232px]': open,
-            'left-[107px]': !open,
+            'left-[482px]': open,
+            'left-[98px]': !open,
           },
           className
         )}

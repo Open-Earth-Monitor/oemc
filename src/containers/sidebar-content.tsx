@@ -1,39 +1,37 @@
-'use client';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 
-import { cn } from '@/lib/classnames';
-import SortBy from '../sort-by';
-import { Sidebar, SidebarContent, SidebarHeader } from '@/components/ui/sidebar';
+import SortBy from '@/components/sort-by';
+import { SidebarContent, SidebarHeader } from '@/components/ui/sidebar';
 import { useMonitorsAndGeostories } from '@/hooks/datasets';
-import SidebarSelect from './select';
+import SidebarSelect from '@/components/sidebar/select';
 
-import SidebarCheckbox from './checkbox';
-import SidebarDatasetCard from './card';
-import { SortingCriteria } from '../datasets-grid/types';
-import Loading from '../loading';
+import SidebarCheckbox from '@/components/sidebar/checkbox';
+import SidebarDatasetCard from '@/components/sidebar/card';
+import { SortingCriteria } from '@/components/datasets-grid/types';
+import Loading from '@/components/loading';
 import { useSyncTheme, useSyncDatasetType } from '@/hooks/sync-query';
-import DatasetCardMonitor from './card-monitor-content';
-import DatasetCardGeostory from './card-geostory-content';
+import DatasetCardMonitor from '@/components/sidebar/card-monitor-content';
+import DatasetCardGeostory from '@/components/sidebar/card-geostory-content';
+import { Sidebar } from 'lucide-react';
 
-function AppSidebar() {
+const MapSidebarContent = () => {
   const [datasetType] = useSyncDatasetType();
   const [theme] = useSyncTheme();
   const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
   // Show more/fewer details about the datasets
   const [showDetail, setShowDetail] = useState(false);
-
-  const params = useMemo(
-    () => ({
-      ...(datasetType !== 'all' && { type: datasetType }),
-      ...(theme && { theme }),
-      sort_by: sortingCriteria,
-    }),
-    [datasetType, theme, sortingCriteria]
-  );
-  const { data: results, isLoading, isFetched } = useMonitorsAndGeostories(params);
-
+  const {
+    data: results,
+    isLoading,
+    isFetched,
+  } = useMonitorsAndGeostories({
+    ...(datasetType !== 'all' && { type: datasetType }),
+    ...(theme !== 'all' && { theme: [theme] }),
+    sort_by: sortingCriteria,
+  });
   return (
-    <Sidebar className="w-96 bg-black-400 px-9 py-12">
+    <Sidebar className="h-full w-full overflow-y-auto bg-white-500 bg-opacity-5">
+      {/* Header */}
       <SidebarHeader>
         <div className="grid h-full w-full grid-cols-2 items-end justify-center gap-5">
           <h1 className="max-w-1/2 text-xl text-white-500">
@@ -81,6 +79,6 @@ function AppSidebar() {
       </SidebarContent>
     </Sidebar>
   );
-}
+};
 
-export default AppSidebar;
+export default MapSidebarContent;

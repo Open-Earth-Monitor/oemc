@@ -2,6 +2,8 @@ import { useQueryState } from 'next-usequerystate';
 import { parseAsJson, parseAsInteger, parseAsBoolean } from 'next-usequerystate/parsers';
 import { Extent } from 'ol/extent';
 
+import type { Theme } from '@/constants/themes';
+
 type LayerSettings = {
   id: string;
   opacity: number;
@@ -26,14 +28,9 @@ export const useSyncBasemapSettings = () =>
     'basemap',
     parseAsJson<'world_imagery' | 'Esri_WorldGrayCanvas'>().withDefault('world_imagery')
   );
-
+export type ThemeQueryParam = Theme | `${Theme},${string}`;
 export const useSyncTheme = () =>
-  useQueryState(
-    'theme',
-    parseAsJson<
-      'Agriculture' | 'Water' | 'Climate & Health' | 'Forest' | 'Biodiversity' | 'Soil' | 'All'
-    >().withDefault('All')
-  );
+  useQueryState<ThemeQueryParam>('theme', parseAsJson<ThemeQueryParam>());
 
 //  Filter view in monitors, geostories or everything
 export const useSyncDatasetType = () =>

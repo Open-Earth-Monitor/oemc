@@ -1,4 +1,7 @@
-function DatasetCardMonitor({ showMore, theme, title, geostories, color }) {
+import Link from 'next/link';
+
+function DatasetCardMonitor({ showMore, theme, title, geostories, color, id }) {
+  console.log({ geostories });
   return (
     <div className="space-y-2.5 divide-y divide-white-900">
       <div className="space-y-4 font-medium">
@@ -8,9 +11,11 @@ function DatasetCardMonitor({ showMore, theme, title, geostories, color }) {
             {theme}
           </span>
         </div>
-        <h2 style={{ color: color }} className="text-[22px]">
-          {title}
-        </h2>
+        <Link href={`/explore/map/${id}/datasets`}>
+          <h2 style={{ color: color }} className="text-[22px]">
+            {title}
+          </h2>
+        </Link>
       </div>
       {!showMore && geostories.length && (
         <div className="space-y-4 pt-1 text-xs">
@@ -18,7 +23,7 @@ function DatasetCardMonitor({ showMore, theme, title, geostories, color }) {
           <ul className="space-y-2.5">
             {geostories.map((geostory) => (
               <li key={geostory.id} className="font-bold underline">
-                {geostory.title}
+                <Link href={`/explore/map/geostories/${geostory.id}`}>{geostory.title}</Link>
               </li>
             ))}
           </ul>
