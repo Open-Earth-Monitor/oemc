@@ -1,13 +1,13 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 
 import { Element, scroller } from 'react-scroll';
 
 import { THEMES, type Theme } from '@/constants/themes';
 
 import { useMonitorsAndGeostoriesPaginated, useDebounce } from '@/hooks/datasets';
-import { useSyncDatasetType } from '@/hooks/sync-query';
+import { useSyncDatasetType, useSyncTheme } from '@/hooks/sync-query';
 
 import GeostoryCard from '@/components/geostories/card';
 import Loading from '@/components/loading';
@@ -31,34 +31,35 @@ const LandingDatasets = () => {
   // activeDatasetType is used to filter the datasets by type (monitors, geostories, or all)
   const [activeDatasetType, setActiveDatasetType] = useSyncDatasetType();
   const [activeThemes, setActiveThemes] = useState<(Theme & 'All')[]>([]);
-
   const debouncedSearchValue = useDebounce(searchValue, 500);
-  const { data, isError, isLoading, isFetching } = useMonitorsAndGeostoriesPaginated(
-    {
+
+  const params = useMemo(
+    () => ({
       ...(activeDatasetType !== 'all' && { type: activeDatasetType }),
+      ...(activeThemes.length > 0 && { theme: activeThemes }),
       ...(debouncedSearchValue !== '' &&
         debouncedSearchValue.length >= 2 && { title: debouncedSearchValue }),
-      ...(activeThemes.length > 0 && { theme: activeThemes }),
       sort_by: sortingCriteria,
       pagination: true,
       page,
-    },
-    {
-      keepPreviousData: true,
-      onSuccess: () => {
-        // avoiding scroll on first render
-        if (counter > 0) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-          scroller.scrollTo('datasetsGrid', {
-            duration: 500,
-            delay: 20,
-            smooth: 'easeInOutQuint',
-          });
-        }
-        setCounter(counter + 1);
-      },
-    }
+    }),
+    [activeDatasetType, activeThemes, sortingCriteria]
   );
+  const { data, isError, isLoading, isFetching } = useMonitorsAndGeostoriesPaginated(params, {
+    keepPreviousData: true,
+    onSuccess: () => {
+      // avoiding scroll on first render
+      if (counter > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        scroller.scrollTo('datasetsGrid', {
+          duration: 500,
+          delay: 20,
+          smooth: 'easeInOutQuint',
+        });
+      }
+      setCounter(counter + 1);
+    },
+  });
 
   const handleDatasetTypeFilter = useCallback(
     (id: Dataset) => {

@@ -16,7 +16,7 @@ export const SORTING = ['title', 'date'] satisfies SortingCriteria[];
 
 type SortByProps = {
   sortingCriteria: string;
-  handleSortingCriteria: (value: string) => SetStateAction<SortingCriteria>;
+  handleSortingCriteria: (value: SortingCriteria) => void;
 };
 
 const SortBy = ({ sortingCriteria, handleSortingCriteria }: SortByProps) => {

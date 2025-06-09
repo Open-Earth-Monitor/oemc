@@ -128,15 +128,24 @@ const DatasetCard: FC<DatasetCardProps> = ({
           autoPlay={true}
         />
       )}
-      <div className="flex items-center space-x-2">
-        <Switch onClick={handleRegionsLayerVisibility} />
-        <span
-          className={cn('text-sm', {
-            'text-accent-green': regionsLayerVisibility,
-          })}
-        >
-          Activate regions to analyze
-        </span>
+      <div className="flex flex-col space-y-2.5">
+        <div className="flex items-center space-x-2">
+          <Switch onClick={handleRegionsLayerVisibility} />
+          <span
+            className={cn('text-sm', {
+              'text-accent-green': regionsLayerVisibility,
+            })}
+          >
+            Activate regions to analyze
+          </span>
+          {regionsLayerVisibility && (
+            <div className="flex w-full items-end justify-between">
+              <p className="text-xs text-secondary-500">
+                Click on the map to select a region and analyze it based on the active layer.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
