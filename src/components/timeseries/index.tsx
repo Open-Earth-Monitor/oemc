@@ -11,6 +11,7 @@ import type { LayerDateRange, LayerParsed } from '@/types/layers';
 
 import { useSyncLayersSettings } from '@/hooks/sync-query';
 
+import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
@@ -73,10 +74,11 @@ const TimeSeries: FC<{
   const endRangelabel = range && range[range.length - 1].label;
 
   return (
-    <div className="space-y-4 border-secondary-900 pt-2.5">
+    <div>
       <div className="flex justify-between">
-        <div className="flex items-center space-x-2 text-secondary-500">
-          <span className="text-[10px]">DATE:</span>
+        {/* Select dates */}
+        <div className="flex flex-col text-secondary-500">
+          <span className="text-sm">Select date:</span>
           {currentRange && (
             <Select
               value={currentRange.value}
@@ -87,14 +89,14 @@ const TimeSeries: FC<{
               }}
             >
               <SelectTrigger className="text-xs font-semibold underline">
-                <>
+                <Button variant="outline">
                   <SelectValue />
                   <SelectIcon className="w-full">
                     <HiChevronDown
                       className={cn({ 'h-5 w-5': true, 'rotate-180': contentVisibility })}
                     />
                   </SelectIcon>
-                </>
+                </Button>
               </SelectTrigger>
               <SelectContent
                 className="z-[1000] flex max-h-56 w-full min-w-fit items-center text-center"
@@ -114,6 +116,8 @@ const TimeSeries: FC<{
           )}
         </div>
       </div>
+
+      {/* Timeline */}
       <div className="flex w-full space-x-3">
         <button
           type="button"

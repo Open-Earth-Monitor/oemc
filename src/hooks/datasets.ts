@@ -45,7 +45,7 @@ export function useMonitorsAndGeostories<TData = MonitorsAndGeostoriesParsed>(
   queryOptions?: UseQueryOptions<MonitorsAndGeostories, Error, TData>
 ) {
   const { theme, ...restParams } = params || { theme: undefined };
-  console.log(theme, 'theme');
+
   const themeQuery = isArray(theme) && theme.length > 0 ? `${theme.join(',')}` : theme;
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostories>({
