@@ -44,7 +44,7 @@ function AppSidebar() {
 
           <span className="flex w-fit justify-end space-x-1 place-self-end rounded-full bg-white-500 bg-opacity-5 px-2 text-sm font-medium">
             <span>{results?.length}</span>
-            {}
+
             {!isLoading && isFetched && <span>{results?.length === 1 ? 'result' : 'results'}</span>}
           </span>
         </div>
