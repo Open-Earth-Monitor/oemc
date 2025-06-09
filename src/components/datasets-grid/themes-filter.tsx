@@ -17,10 +17,10 @@ const ThemesFilter = ({
   const toggleTheme = useCallback(
     (theme: ThemeID) => {
       const allThemeIds = themesIds;
-      const isAll = theme === 'all';
+      const isAll = theme === 'All';
 
       setSelectedThemes((prev) => {
-        const isAllSelected = prev.includes('all');
+        const isAllSelected = prev.includes('All');
 
         // If clicking 'all'
         if (isAll) {
@@ -37,11 +37,11 @@ const ThemesFilter = ({
         // Toggle individual theme
         const updated = isSelected ? prev.filter((t) => t !== theme) : [...prev, theme];
 
-        const nonAllThemes = allThemeIds.filter((id) => id !== 'all');
+        const nonAllThemes = allThemeIds.filter((id) => id !== 'All');
         const allSelected =
-          nonAllThemes.every((t) => updated.includes(t)) && !updated.includes('all');
+          nonAllThemes.every((t) => updated.includes(t)) && !updated.includes('All');
 
-        return allSelected ? [...updated, 'all'] : updated;
+        return allSelected ? [...updated, 'All'] : updated;
       });
     },
     [setSelectedThemes]
@@ -51,8 +51,8 @@ const ThemesFilter = ({
     <div className="flex w-full flex-wrap gap-2.5">
       {THEMES.map((theme) => {
         const isActive = selectedThemes.includes(theme.id);
-        const isAllSelected = selectedThemes.includes('all');
-        const isAll = theme.id === 'all';
+        const isAllSelected = selectedThemes.includes('All');
+        const isAll = theme.id === 'All';
         const variant =
           (isAllSelected && isAll) || (!isAllSelected && isActive) ? 'default' : 'outline';
         return (
