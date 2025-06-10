@@ -3,7 +3,7 @@ import type { Metadata, NextPage } from 'next';
 
 import type { Monitor } from '@/types/monitors';
 
-import DatasetPageComponent from '@/components/datasets/page';
+import MonitorMapComponent from '@/components/datasets/page';
 
 type Props = {
   params: { monitor_id: string };
@@ -21,12 +21,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!monitorData?.length) return { title: 'Monitor not found' };
 
   return {
-    title: `${monitorData[0].title} - Open Earth Monitor Cyberinfrastructure pruebassss`,
+    title: `${monitorData[0].title} - Open Earth Monitor Cyberinfrastructure`,
   };
 }
 
-const DatasetsPage: NextPage<{ params: { monitor_id: string } }> = ({ params: { monitor_id } }) => {
-  return <DatasetPageComponent monitor_id={monitor_id} />;
+const ExploreMonitorMapPage: NextPage<{ params: { monitor_id: string } }> = ({
+  params: { monitor_id },
+}) => {
+  return <MonitorMapComponent monitor_id={monitor_id} />;
 };
 
-export default DatasetsPage;
+export default ExploreMonitorMapPage;

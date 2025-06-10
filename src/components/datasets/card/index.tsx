@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 import { FC, useCallback, useMemo } from 'react';
 
 import { useAtom } from 'jotai';
@@ -119,7 +121,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
           </Button>
         </div>
       )}
-      {isActive && (
+      {isActive && range && !!range.length && (
         <TimeSeries
           layerId={id}
           range={range}
@@ -128,7 +130,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
           autoPlay={true}
         />
       )}
-      <div className="flex flex-col space-y-2.5">
+      <div className="flex flex-col space-y-2.5 border-t border-dashed border-white-900 pt-3.5">
         <div className="flex items-center space-x-2">
           <Switch onClick={handleRegionsLayerVisibility} />
           <span
@@ -138,14 +140,20 @@ const DatasetCard: FC<DatasetCardProps> = ({
           >
             Activate regions to analyze
           </span>
-          {regionsLayerVisibility && (
-            <div className="flex w-full items-end justify-between">
-              <p className="text-xs text-secondary-500">
-                Click on the map to select a region and analyze it based on the active layer.
-              </p>
-            </div>
-          )}
         </div>
+        {regionsLayerVisibility && (
+          <div className="flex w-full items-center justify-between">
+            <p className="max-w- text-xs text-secondary-500">
+              Click on the map to select a region and analyze it based on the active layer.
+            </p>
+            <Image
+              src={`/svgs/regions-sidebar.svg`}
+              width={34}
+              height={34}
+              alt="left layer active"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

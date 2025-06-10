@@ -53,10 +53,9 @@ const satoshi = localFont({
 });
 
 export default function RootLayout({ children }) {
-  console.log('RootLayout rendered');
   return (
     <html lang="en" className={`${satoshi.variable} ${inter.variable} h-full min-h-screen`}>
-      <body className="font-inter mx-auto h-full min-h-screen w-screen overflow-x-hidden bg-brand-500">
+      <body className="mx-auto h-full min-h-screen w-screen overflow-x-hidden bg-brand-500 font-inter">
         <div className="flex h-full flex-col">
           <main className="relative h-full flex-1">
             <Providers>{children}</Providers>

@@ -10,11 +10,9 @@ import { useSyncLayersSettings } from '@/hooks/sync-query';
 
 import DatasetCard from '@/components/datasets/card';
 import Loading from '@/components/loading';
-import { ArrowLeft } from 'lucide-react';
-import cn from '@/lib/classnames';
-import { buttonVariants } from '@/components/ui/button';
 import CardHeader from '@/components/sidebar/card-header';
 import MonitorDialog from '@/components/monitors/dialog';
+import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geostories-button';
 
 const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   const {
@@ -51,16 +49,10 @@ const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) 
   if (error?.code === '400') return redirect('/not-found');
 
   const { title, theme, color, id, description, geostories } = monitor || {};
-  console.log('datsets page', data, monitor);
+
   return (
     <div>
-      <Link href="/explore" className="flex items-center gap-2">
-        <div className={cn(buttonVariants({ variant: 'background' }), 'rounded-full p-2.5')}>
-          <ArrowLeft className="h-6 w-6" />
-        </div>
-
-        <span className="font-medium">All Monitors & Geostories</span>
-      </Link>
+      <BackToMonitorsAndGeostories />
       {isLoadingMonitorLayers && <Loading />}
       <div className="space-y-6 py-4">
         <CardHeader

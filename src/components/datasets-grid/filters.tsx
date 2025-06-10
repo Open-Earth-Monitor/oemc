@@ -26,13 +26,11 @@ const FilterByDatasetType = ({ active, handleDatasetTypeChange }: FilterByDatase
         <SelectTrigger>
           <SelectValue placeholder="All" className={buttonVariants({ variant: 'outline' })}>
             <span className="capitalize">{active}</span>
-            <SelectIcon>
-              <LuChevronDown className="h-5 w-5" />
-            </SelectIcon>
+            <SelectIcon />
           </SelectValue>
         </SelectTrigger>
 
-        <SelectContent>
+        <SelectContent className="!w-fit">
           {DATASET_TYPES.map((type) => (
             <SelectItem key={type} value={type} data-testid={`${type}-option`}>
               {type}
