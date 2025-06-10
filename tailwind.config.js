@@ -18,9 +18,9 @@ module.exports = {
       '3xl': '10rem', // Extra-extra-extra large screens
     },
     extend: {
-      font: {
-        inter: ['var(--font-inter)'],
-        satoshi: ['var(--font-satoshi)'],
+      fontFamily: {
+        inter: ['var(--font-inter)', 'sans-serif'],
+        satoshi: ['var(--font-satoshi)', 'sans-serif'],
       },
       colors: {
         'accent-green': 'var(--accent-green)',
@@ -33,7 +33,8 @@ module.exports = {
           50: '#FFFFFF',
           100: '#DFDFDF',
           500: '#FFFFE6',
-          700: '#FFFFE680',
+          700: 'hsla(60, 100%, 95%, 0.5)',
+          800: 'hsla(60, 100%, 95%, 0.2)',
           900: 'hsla(60, 100%, 95%, 0.1)',
           950: 'hsla(60, 100%, 95%, 0.05)',
         },

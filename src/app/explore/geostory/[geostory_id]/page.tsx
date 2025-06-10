@@ -18,15 +18,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .get<Geostory[]>(`${process.env.NEXT_PUBLIC_API_URL}/geostories?geostory_id=${id}`)
     .then((response) => response.data);
 
+  if (!geostoryData?.length) return { title: 'Geostory not found' };
   return {
     title: `${geostoryData[0].title} - Open Earth Monitor Cyberinfrastructure`,
   };
 }
 
-const GeostoryPage: NextPage<{ params: { geostory_id: string } }> = ({
+const ExploreGeostoryMapPage: NextPage<{ params: { geostory_id: string } }> = ({
   params: { geostory_id },
 }) => {
   return <GeostoryPageComponent geostory_id={geostory_id} />;
 };
 
-export default GeostoryPage;
+export default ExploreGeostoryMapPage;

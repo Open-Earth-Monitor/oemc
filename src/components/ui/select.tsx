@@ -38,12 +38,13 @@ const SelectIcon = forwardRef<
   <SelectPrimitive.Icon
     ref={ref}
     className={cn(
-      'flex w-full items-center justify-between bg-transparent text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 group-data-[state=open]:rotate-180 group-data-[state=open]:text-accent-green',
+      'flex w-fit bg-transparent text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 group-data-[state=open]:rotate-180 group-data-[state=open]:text-accent-green',
       className
     )}
     {...props}
   >
     {children}
+    <LuChevronDown className="h-4 w-4" />
   </SelectPrimitive.Icon>
 ));
 
