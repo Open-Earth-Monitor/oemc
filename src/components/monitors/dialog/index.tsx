@@ -44,7 +44,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
     Array.isArray(use_case_link) && use_case_link.some(({ title, url }) => Boolean(title || url));
 
   return (
-    <Dialog open={true}>
+    <Dialog>
       <DialogTrigger
         data-testid={`card-button-${id}`}
         className="flex items-center space-x-3 text-xs font-bold"
@@ -64,7 +64,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
               </h2>
               <div
                 data-testid="monitor-description"
-                className="font-inter flex flex-wrap leading-[25px]"
+                className="flex flex-wrap font-inter leading-[25px]"
               >
                 {description}
               </div>

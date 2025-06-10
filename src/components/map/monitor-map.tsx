@@ -423,7 +423,6 @@ const MonitorMap: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT })
   );
 
   const layerData = useLayer({ layer_id: layerId });
-  console.log('MonitorMap rendered', layerData, layerId);
 
   return (
     <RMap

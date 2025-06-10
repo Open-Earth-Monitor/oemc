@@ -17,7 +17,11 @@ const GeostoryItem: FC<Geostory & { color: string }> = ({ id, color, title }) =>
     console.info('WT5 -', 'geostories', id);
   };
   return (
-    <Link href={`/map/geostories/${id}`} data-testid={`geostory-link-${id}`} onClick={handleClick}>
+    <Link
+      href={`/explore/geostory/${id}`}
+      data-testid={`geostory-link-${id}`}
+      onClick={handleClick}
+    >
       <AnimatePresence>
         <motion.div
           style={{ backgroundColor: color }}

@@ -34,7 +34,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({
         </span>
       </div>
       <Link
-        href={`/explore/map/${type === 'monitor' ? 'monitor' : 'geostory'}/${id}${
+        href={`/explore/${type === 'monitor' ? 'monitor' : 'geostory'}/${id}${
           type === 'monitor' ? '/datasets' : ''
         }`}
       >

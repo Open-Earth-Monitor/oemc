@@ -2,7 +2,7 @@ import { useEffect, useMemo, useCallback, useState } from 'react';
 import type { FC } from 'react';
 
 import { HiChevronDown } from 'react-icons/hi';
-import { HiPlay, HiPause } from 'react-icons/hi2';
+import { LuCirclePlay, LuCirclePause } from 'react-icons/lu';
 import { useInterval } from 'usehooks-ts';
 
 import cn from '@/lib/classnames';
@@ -70,14 +70,14 @@ const TimeSeries: FC<{
     isPlaying ? TIMEOUT_STEP_DURATION : null
   );
 
-  const startRangelabel = range && range[0].label;
-  const endRangelabel = range && range[range.length - 1].label;
+  const startRangelabel = useMemo(() => range && range[0]?.label, [range]);
+  const endRangelabel = useMemo(() => range && range[range.length - 1]?.label, [range]);
 
   return (
-    <div>
+    <div className="flex flex-col space-y-3.5">
       <div className="flex justify-between">
         {/* Select dates */}
-        <div className="flex flex-col text-secondary-500">
+        <div className="flex flex-col space-y-2 text-secondary-500">
           <span className="text-sm">Select date:</span>
           {currentRange && (
             <Select
@@ -88,14 +88,10 @@ const TimeSeries: FC<{
                 setContentVisibility(!contentVisibility);
               }}
             >
-              <SelectTrigger className="text-xs font-semibold underline">
-                <Button variant="outline">
-                  <SelectValue />
-                  <SelectIcon className="w-full">
-                    <HiChevronDown
-                      className={cn({ 'h-5 w-5': true, 'rotate-180': contentVisibility })}
-                    />
-                  </SelectIcon>
+              <SelectTrigger className="text-xs font-semibold">
+                <Button variant="outline" className="w-full justify-between" size="sm">
+                  <SelectValue>{currentRange?.label}</SelectValue>
+                  <SelectIcon />
                 </Button>
               </SelectTrigger>
               <SelectContent
@@ -107,7 +103,7 @@ const TimeSeries: FC<{
                 <ScrollArea className="max-h-[200px] w-full">
                   {range.map((r: LayerDateRange) => (
                     <SelectItem key={r.value} value={r.value} className="px-2">
-                      <span className="rounded-sm px-2 py-1 hover:bg-secondary-900">{r.label}</span>
+                      {r?.label}
                     </SelectItem>
                   ))}
                 </ScrollArea>
@@ -118,42 +114,29 @@ const TimeSeries: FC<{
       </div>
 
       {/* Timeline */}
-      <div className="flex w-full space-x-3">
-        <button
-          type="button"
-          className={cn(
-            'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-brand-50 hover:border-secondary-500',
-            {
-              'bg-secondary-500': isPlaying,
-            }
-          )}
-          onClick={handleTogglePlay}
-        >
+      <div className="flex w-full items-center space-x-3">
+        <button type="button" onClick={handleTogglePlay}>
           {isPlaying && isActive ? (
-            <HiPause
-              className={cn('h-4 w-4', {
-                'text-brand-50': isPlaying,
-              })}
-            />
+            <LuCirclePause className="h-6 w-6 text-accent-green" />
           ) : (
-            <HiPlay className="h-4 w-4 text-secondary-500" />
+            <LuCirclePlay className="h-6 w-6 text-secondary-500" />
           )}
         </button>
-        <div className="flex w-full flex-col space-y-2 sm:max-w-[218px]">
+        <div className="relative flex w-full flex-col space-y-2 bg-white-950 sm:max-w-[248px]">
           <div className="max-w flex w-full  overflow-hidden">
             {range.map((r) => (
               <div key={r.value} className="flex w-full items-center justify-center">
                 <div
-                  className={cn('h-[9px] w-[1px] bg-brand-50', {
-                    'bg-secondary-500': r.value === currentRange.value,
+                  className={cn('h-[6px] w-[1px] bg-white-800', {
+                    'bg-accent-green': r.value === currentRange.value,
                   })}
                 />
               </div>
             ))}
-          </div>
-          <div className="flex justify-between text-[10px] tracking-tight text-secondary-500">
-            <div>{startRangelabel}</div>
-            <div>{endRangelabel}</div>
+            <div className="absolute left-0 right-0 top-2 flex justify-between font-satoshi text-sm tracking-tight text-secondary-500">
+              <div>{startRangelabel}</div>
+              <div>{endRangelabel}</div>
+            </div>
           </div>
         </div>
       </div>

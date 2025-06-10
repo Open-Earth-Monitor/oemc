@@ -14,7 +14,7 @@ import { useSyncTheme, useSyncDatasetType } from '@/hooks/sync-query';
 import DatasetCardMonitor from './card-monitor-content';
 import DatasetCardGeostory from './card-geostory-content';
 
-function AppSidebar() {
+function MapSidebar() {
   const [datasetType] = useSyncDatasetType();
   const [theme] = useSyncTheme();
   const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
@@ -33,10 +33,10 @@ function AppSidebar() {
 
   return (
     <>
-      <SidebarHeader>
+      <SidebarHeader className="p-0">
         <div className="grid h-full w-full grid-cols-2 items-end justify-center gap-5">
           <h1 className="max-w-1/2 text-xl text-white-500">
-            Explore our{' '}
+            Explore our <br />
             <span className="bg-[linear-gradient(131.67deg,_#1EEDBF_0%,_#75A1FF_100%)] bg-clip-text text-transparent">
               Monitors & Geostories
             </span>
@@ -82,4 +82,4 @@ function AppSidebar() {
   );
 }
 
-export default AppSidebar;
+export default MapSidebar;
