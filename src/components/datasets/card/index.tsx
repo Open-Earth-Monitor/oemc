@@ -114,7 +114,9 @@ const DatasetCard: FC<DatasetCardProps> = ({
             type="button"
             variant={isActive ? 'gradient' : 'default'}
             onClick={handleToggleLayer}
-            className={cn('flex items-center space-x-2', { 'bg-accent-green': isActive })}
+            className={cn('flex items-center space-x-2 leading-[140%]', {
+              'bg-accent-green': isActive,
+            })}
           >
             <span className="text-sm">{isActive ? 'Hide' : 'Show'} layer on the map</span>
             <LuLayers2 className="h-6 w-6 shrink-0" title="layer" />
