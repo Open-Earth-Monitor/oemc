@@ -23,6 +23,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
+import KnowledgePackage from '@/components/monitors/dialog/knowledge-package';
 
 type GeostoryDialogProps = Partial<Geostory>;
 
@@ -54,6 +55,8 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
     [publications]
   );
 
+  const hasValidLink =
+    Array.isArray(use_case_link) && use_case_link.some(({ title, url }) => Boolean(title || url));
   return (
     <Dialog>
       <DialogTrigger
@@ -64,21 +67,21 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
         <span>More info</span>
       </DialogTrigger>
       <DialogContent
-        data-testid={`monitor-card-${id}`}
+        data-testid={`geostory-card-${id}`}
         className="w-full bg-secondary-500 text-brand-500 sm:w-[665px]"
       >
         <DialogHeader className="space-y-6">
           <DialogTitle asChild>
             <header className="space-y-6 py-6 sm:py-0">
               <h2
-                data-testid="monitor-title"
-                className="inline-block pr-6 text-2xl font-bold sm:text-6xl"
+                data-testid="geostory-title"
+                className="inline-block pr-6 text-[28px] font-medium"
               >
                 {title}
               </h2>
               <div
-                data-testid="monitor-description"
-                className="font-inter flex flex-wrap leading-[25px]"
+                data-testid="geostory-description"
+                className="flex flex-wrap font-inter leading-[25px]"
               >
                 {description}
               </div>
@@ -88,96 +91,54 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
             <div>
               <div className="border-t border-brand-500 py-6">
                 <dl className="space-y-2 py-2">
-                  <div className="flex space-x-2">
+                  <div className="flex  space-x-2">
                     <dt className="whitespace-nowrap font-bold">Author:</dt>
                     <dd>{author}</dd>
                   </div>
-                  <div className="flex space-x-2">
-                    <dt className="whitespace-nowrap font-bold">Computational notebook:</dt>
-                    <dd>
-                      {notebooks_url && (
+                  {notebooks_url && (
+                    <div className="flex space-x-2">
+                      <dt className="whitespace-nowrap font-bold">Computational notebook:</dt>
+                      <dd>
                         <a href={notebooks_url} className="break-all underline">
                           {notebooks_url}
                         </a>
-                      )}
-                    </dd>
-                  </div>
-                  <div className="flex space-x-2">
-                    <dt className="whitespace-nowrap font-bold">Metadata link:</dt>
-                    <dd className="grow-0">
-                      {metadata_url && (
+                      </dd>
+                    </div>
+                  )}
+                  {metadata_url && (
+                    <div className="flex space-x-2">
+                      <dt className="whitespace-nowrap font-bold">Metadata link:</dt>
+                      <dd className="grow-0">
                         <a href={metadata_url} className="break-all underline">
                           {metadata_url}
                         </a>
-                      )}
-                    </dd>
-                  </div>
+                      </dd>
+                    </div>
+                  )}
                 </dl>
               </div>
-              <div className="border-t border-brand-500 py-6">
-                <h3 className="flex items-center space-x-2">
-                  <HiOutlineNewspaper className="h-6 w-6" />
-                  <span className="text-2xl font-bold">Publications</span>
-                </h3>
-                {publicationsArray?.length > 0 && (
-                  <ul className="space-y-2 py-2 pl-8 font-bold">
-                    {publications?.map(({ url, title }) => (
-                      <li key={title}>
-                        <a href={url} className="underline">
-                          {title}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-              <div className="border-t border-brand-500 py-6">
-                <h3 className="flex items-center space-x-2">
-                  <HiOutlineGlobeAlt className="h-6 w-6" />
-                  <span className="text-2xl font-bold">Use cases</span>
-                </h3>
-                {isArray(use_case_link) && use_case_link?.length > 0 && (
-                  <ul className="space-y-2 py-2 pl-8 font-bold">
-                    {use_case_link.map(
-                      ({ url, title, doi }) =>
-                        !!url && (
-                          <li key={title} className="flex flex-col space-y-2">
-                            <a
-                              href={url}
-                              className="underline"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
+              {publicationsArray?.length > 0 && (
+                <div className="border-t border-brand-500 py-6">
+                  <div className="space-y-2 py-2">
+                    <div className="flex flex-col space-y-4">
+                      <h3 className="whitespace-nowrap text-xl font-medium">Publications:</h3>
+
+                      <ul className="space-y-2 py-2 pl-8 text-sm font-bold">
+                        {publications?.map(({ url, title }) => (
+                          <li key={title}>
+                            <a href={url} className="underline">
                               {title}
                             </a>
-                            <span className="flex flex-wrap gap-1">
-                              {doi &&
-                                !!doi.length &&
-                                doi.map((d) =>
-                                  d !== 'DOI NOT READY' ? <DoiBadge doi={d} key={d} /> : null
-                                )}
-                            </span>
                           </li>
-                        )
-                    )}
-                  </ul>
-                )}
-              </div>
-              {geostoryId !== id && (
-                <Link
-                  href={`/map/geostories/${id}`}
-                  data-testid="geostory-button"
-                  className={cn(
-                    'mt-3 flex min-h-[38px] w-full items-center justify-center space-x-2 border-2 border-brand-500 px-6 py-2 text-xs font-bold transition-colors hover:bg-secondary-500/20'
-                  )}
-                  onClick={handleClick}
-                >
-                  Launch geostory
-                </Link>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               )}
-              <DialogClose className="right-10 top-10 flex h-4 items-center space-x-2 text-xs font-medium uppercase tracking-[0.96px] text-brand-500">
-                Close
-              </DialogClose>
+              {hasValidLink && <KnowledgePackage items={use_case_link} />}
+
+              <DialogClose className="right-10 top-10 flex h-4 items-center space-x-2 text-xs font-medium uppercase tracking-[0.96px] text-brand-500" />
             </div>
           </DialogDescription>
         </DialogHeader>

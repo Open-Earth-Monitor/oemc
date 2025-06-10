@@ -164,24 +164,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
       className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500 p-4"
       style={{ minWidth: legendWidth }}
     >
-      <div
-        className="relative flex items-start justify-between space-x-4 text-secondary-500"
-        data-testid="map-legend-item"
-      >
-        <div data-testid="map-legend-item-title" className="text-xs font-bold" ref={titleRef}>
-          {title}
-        </div>
-        <div
-          className="flex space-x-2 divide-x divide-secondary-800"
-          data-testid="map-legend-item-toolbar"
-        >
-          <div className="flex space-x-2">
-            <OpacitySetting defaultValue={opacity} onChange={handleOpacity} />
-            {!isGeostory && <LayerVisibility />}
-          </div>
-          {!isGeostory && <RemoveLayer className="pl-2" />}
-        </div>
-      </div>
       <ScrollArea className={cn({ 'max-h-[216px]': !isLoading })}>
         {isLoading && (
           <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
@@ -233,17 +215,8 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
             </div>
           )}
       </ScrollArea>
-      {isGeostory && range?.length > 0 && (
-        <TimeSeries
-          range={range}
-          layerId={layerId}
-          autoPlay={true}
-          isActive={true}
-          defaultActive={true}
-        />
-      )}
 
-      {!isGeostory && range?.length > 1 && (
+      {/* {!isGeostory && range?.length > 1 && (
         <Tabs value={activeTab} onValueChange={handleTabChange} className="pt-2">
           <TabsList>
             <TabsTrigger value="timeSeries" className="h-10 sm:h-auto">
@@ -361,7 +334,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
             </div>
           </TabsContent>
         </Tabs>
-      )}
+      )} */}
       {isGeostory && compareLayerData && (
         <div
           className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
