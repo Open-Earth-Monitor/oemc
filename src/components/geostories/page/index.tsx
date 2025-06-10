@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo } from 'react';
 
+import Link from 'next/link';
 import Image from 'next/image';
 
 import { useGeostoryParsed, useGeostoryLayers } from '@/hooks/geostories';
@@ -12,6 +13,7 @@ import Loading from '@/components/loading';
 import CardHeader from '@/components/sidebar/card-header';
 import GeostoryDialog from '../dialog';
 import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geostories-button';
+import DatasetCard from '@/components/datasets/card';
 
 const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   const [layers, setLayers] = useSyncLayersSettings();
@@ -49,10 +51,10 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geostoryLayers, comparisonLayer]);
-  const { title, theme, color, id, description } = geostoryData || {};
-
+  const { title, theme, color, id, description, monitors } = geostoryData || {};
+  console.log({ geostoryData });
   return (
-    <div>
+    <div className="font-satoshi">
       <BackToMonitorsAndGeostories />
       {isGeostoryLoading && <Loading />}
       <div className="space-y-6 py-4">
@@ -75,6 +77,39 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
         width={300}
         height={200}
       />
+      <GeostoryDialog {...geostoryData} />
+      {/* Datasets/layers cards */}
+
+      {!!geostoryLayers?.length ? (
+        <div className="border-t border-white-900">
+          <h2 className="py-2 font-medium">Datasets</h2>
+          <ul className="space-y-4 sm:space-y-6" data-testid="datasets-list">
+            {geostoryLayers?.map((dataset) => {
+              return (
+                <li key={dataset.layer_id}>
+                  <DatasetCard {...dataset} id={dataset.layer_id} isGeostory={false} />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : (
+        <p>No layers available for this geostory.</p>
+      )}
+
+      {/* Monitors list */}
+      {!!monitors?.length && (
+        <div className="space-y-4 pt-1 text-xs">
+          <p>Monitors</p>
+          <ul className="space-y-2.5">
+            {monitors.map((monitor) => (
+              <li key={monitor.id} className="font-bold underline">
+                <Link href={`/explore/monitor/${monitor.id}`}>{monitor.title}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

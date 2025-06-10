@@ -181,11 +181,10 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
       <div
         className="relative flex items-start justify-between space-x-4 text-secondary-500"
         data-testid="map-legend-item"
+
       >
-        <div>
-          <div data-testid="map-legend-item-title" className="text-xs font-bold" ref={titleRef}>
-            {title}
-          </div>
+        <div data-testid="map-legend-item-title" className="text-xs font-bold" ref={titleRef}>
+          {title}
         </div>
         <div
           className="flex space-x-2 divide-x divide-secondary-800"
@@ -253,17 +252,8 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
             </div>
           )}
       </ScrollArea>
-      {isGeostory && range?.length > 0 && (
-        <TimeSeries
-          range={range}
-          layerId={layerId}
-          autoPlay={true}
-          isActive={true}
-          defaultActive={true}
-        />
-      )}
 
-      {!isGeostory && range?.length > 1 && (
+      {/* {!isGeostory && range?.length > 1 && (
         <Tabs value={activeTab} onValueChange={handleTabChange} className="pt-2">
           <TabsList>
             <TabsTrigger value="timeSeries" className="h-10 sm:h-auto">
@@ -382,7 +372,8 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           </TabsContent>
         </Tabs>
       )}
-      {isGeostory && layerDataCompare && (
+        
+      {isGeostory && compareLayerData && (
         <div
           className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
           style={{ minWidth: legendWidth }}
