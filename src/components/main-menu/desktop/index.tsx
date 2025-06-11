@@ -1,8 +1,7 @@
 'use client';
 
 import { Popover } from '@radix-ui/react-popover';
-import { PopoverClose, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { XIcon } from 'lucide-react';
+import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { LuMenu } from 'react-icons/lu';
 import CommunityDropdown from '@/components/main-menu//community-dropdown';
 import OtherResourcesLinks from '../menu-links-other-resources';
@@ -11,15 +10,15 @@ import NavLinks from '../nav-links';
 const MainMenuDesktop = () => (
   <Popover>
     <PopoverTrigger
-      className="flex h-full items-center space-x-3.5 rounded-full border-none px-5 py-2.5"
+      className="flex items-center space-x-3.5 rounded-full border-black-100 bg-black-300 px-5 py-2.5 font-satoshi"
       data-testid="themes-filter-desktop"
     >
       <span className="font-medium">Menu</span>
       <LuMenu className="h-6 w-6 text-accent-green" />
     </PopoverTrigger>
-    <PopoverContent className="font-inter min-w-fit bg-secondary-500 p-0" sideOffset={-1}>
+    <PopoverContent className="min-w-fit bg-secondary-500 p-0 font-inter" sideOffset={-1}>
       <NavLinks />
-      <div className="font-inter min-w-fit divide-y divide-yellow-500 bg-secondary-500 p-6">
+      <div className="min-w-fit divide-y divide-yellow-500 rounded-b-full bg-secondary-500 pt-0 font-inter">
         <CommunityDropdown />
         <OtherResourcesLinks />
       </div>

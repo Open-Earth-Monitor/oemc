@@ -14,7 +14,7 @@ const Header = ({ className }: { className?: string }) => {
         [className]: className,
       })}
     >
-      <div className="m-auto flex h-full items-center justify-between px-3 sm:container">
+      <div className="flex h-full items-center justify-between sm:container">
         <Link href="/">
           <Image
             alt="Open-earth-monitor"
@@ -32,7 +32,7 @@ const Header = ({ className }: { className?: string }) => {
         <div className="hidden h-full sm:block lg:hidden">
           <MainMenuTablet />
         </div>
-        <div className="hidden h-full lg:block">
+        <div className="hidden lg:block">
           <MainMenuDesktop />
         </div>
       </div>
