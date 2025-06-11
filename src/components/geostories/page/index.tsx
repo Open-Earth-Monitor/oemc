@@ -52,7 +52,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geostoryLayers, comparisonLayer]);
   const { title, theme, color, id, description, monitors } = geostoryData || {};
-  console.log({ geostoryData });
+
   return (
     <div className="font-satoshi">
       <BackToMonitorsAndGeostories />
