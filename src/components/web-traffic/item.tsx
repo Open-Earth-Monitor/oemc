@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { FC } from 'react';
 import type { Theme } from '@/constants/themes';
 
-export type ThemeQueryParam = Theme | `${Theme},${string}`;
+export type ThemeQueryParam = Theme[] | [];
 
 type ItemProps = {
   id: string;

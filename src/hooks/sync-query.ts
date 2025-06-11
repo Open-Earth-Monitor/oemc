@@ -34,7 +34,7 @@ export const useSyncBasemapLabelsSettings = () =>
     'basemap-labels',
     parseAsJson<'dark' | 'light' | 'no-label'>().withDefault('light')
   );
-export type ThemeQueryParam = Theme | `${Theme},${string}`;
+export type ThemeQueryParam = Theme[] | [] | Theme;
 export const useSyncTheme = () =>
   useQueryState<ThemeQueryParam>('theme', parseAsJson<ThemeQueryParam>());
 

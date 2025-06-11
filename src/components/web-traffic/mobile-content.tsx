@@ -48,7 +48,7 @@ const WebTrafficMobileContent = () => {
             value="web-graphic"
             className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=inactive]:border-y-0 data-[state=active]:border-b-2 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-b-brand-500 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
           >
-            <div className="font-inter whitespace-normal text-xs font-medium uppercase tracking-widest">
+            <div className="whitespace-normal font-inter text-xs font-medium uppercase tracking-widest">
               Web Geographic Activity
             </div>
           </TabsTrigger>
@@ -56,7 +56,7 @@ const WebTrafficMobileContent = () => {
             value="list"
             className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=inactive]:border-y-0 data-[state=active]:border-b-2 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-b-brand-500 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
           >
-            <div className="font-inter whitespace-normal text-xs font-medium uppercase tracking-widest">
+            <div className="whitespace-normal font-inter text-xs font-medium uppercase tracking-widest">
               Monitors and Geostories
             </div>
           </TabsTrigger>

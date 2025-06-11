@@ -16,9 +16,12 @@ const MainMenuDesktop = () => (
       <span className="font-medium">Menu</span>
       <LuMenu className="h-6 w-6 text-accent-green" />
     </PopoverTrigger>
-    <PopoverContent className="min-w-fit bg-secondary-500 p-0 font-inter" sideOffset={-1}>
+    <PopoverContent
+      className="min-w-fit overflow-hidden bg-secondary-500 px-0 py-2 font-inter"
+      sideOffset={-1}
+    >
       <NavLinks />
-      <div className="min-w-fit divide-y divide-yellow-500 rounded-b-full bg-secondary-500 pt-0 font-inter">
+      <div className="min-w-fit divide-y divide-black-500/10 rounded-b-full bg-secondary-500 pt-0 font-inter">
         <CommunityDropdown />
         <OtherResourcesLinks />
       </div>

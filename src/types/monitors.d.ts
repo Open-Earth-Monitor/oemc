@@ -28,7 +28,7 @@ export type MonitorParsed = Monitor & {
   color: string;
   colorOpacity?: string;
   colorHead?: string;
-  type: 'monitor';
+  type?: 'monitor';
 };
 
 export type MonitorsPaginated = {

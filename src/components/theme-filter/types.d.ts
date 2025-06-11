@@ -5,4 +5,4 @@ export type Themes =
   | 'Forest'
   | 'Biodiversity'
   | 'Soil'
-  | 'All';
+  | 'Unknown';

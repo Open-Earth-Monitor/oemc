@@ -23,7 +23,7 @@ const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'li
 type DataObject = Array<{ layer_id: string; label: string; value: number; unit?: string }>;
 
 type UseParams = {
-  type?: 'monitors' | 'geostories' | 'all';
+  type?: 'monitors' | 'geostories' | null;
   page?: number;
   theme?: ThemeQueryParam;
   monitor_id?: string;
@@ -52,7 +52,7 @@ export function useMonitorsAndGeostories<TData = MonitorsAndGeostoriesParsed>(
       method: 'GET',
       url: '/monitors-and-geostories/',
       params: {
-        ...(theme && theme.length > 0 && theme !== 'All' && { theme: themeQuery }),
+        ...(theme && theme.length > 0 && { theme: themeQuery }),
         ...restParams,
       },
     }).then((response) => response.data);
@@ -93,6 +93,7 @@ export function useMonitorsAndGeostoriesPaginated(
         ...(theme && theme.length > 0 && { theme: themeQuery }),
         ...restParams,
         pagination: true,
+        page_size: 8,
       },
       ...queryOptions,
     }).then((response) => response.data);

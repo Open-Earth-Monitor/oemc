@@ -117,7 +117,7 @@ const MapTooltip: FC<TooltipProps> = ({
           <Button
             variant="default"
             onClick={handleClick}
-            className="font-inter w-full text-xs"
+            className="w-full font-inter text-xs"
             disabled={!leftData.value}
           >
             See point-based summary
@@ -128,7 +128,7 @@ const MapTooltip: FC<TooltipProps> = ({
           <Button
             variant="default"
             onClick={handleHistogram}
-            className="font-inter p-2 text-xs"
+            className="p-2 font-inter text-xs"
             disabled={!leftData.value}
           >
             See regions-based summary

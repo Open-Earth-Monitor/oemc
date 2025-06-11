@@ -5,10 +5,10 @@ import Header from '@/components/header';
 
 const UsageStatsPage: NextPage = () => {
   return (
-    <div className="container m-auto h-screen font-medium">
+    <div className="container m-auto h-screen font-satoshi font-medium">
       <Header className="z-50 mx-0 px-0" />
       <div className="flex flex-col space-y-8 pt-56">
-        <h1 className="satoshi text-7xl ">
+        <h1 className="text-7xl ">
           Live{' '}
           <span className="bg-[linear-gradient(131.67deg,_#1EEDBF_0%,_#75A1FF_100%)] bg-clip-text text-transparent">
             Usage Statistics

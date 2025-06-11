@@ -25,7 +25,7 @@ const SocialMediaFeed = () => {
   });
 
   return (
-    <section className="font-satoshi relative grid h-screen w-full md:grid-cols-10 lg:grid-cols-12">
+    <section className="relative grid h-screen w-full font-satoshi md:grid-cols-10 lg:grid-cols-12">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[url(/images/landing/bg_social_media.svg)] bg-cover bg-center" />
       <div className="container col-span-12 m-auto flex flex-col items-center justify-center space-y-[18px] sm:space-y-10">
         <h3 className="max-w-xs py-12 text-center text-xl font-medium sm:max-w-sm sm:text-2xl md:max-w-xl lg:max-w-3xl">

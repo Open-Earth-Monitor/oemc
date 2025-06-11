@@ -30,12 +30,12 @@ const LandingDatasets = () => {
 
   // activeDatasetType is used to filter the datasets by type (monitors, geostories, or all)
   const [activeDatasetType, setActiveDatasetType] = useSyncDatasetType();
-  const [activeThemes, setActiveThemes] = useState<(Theme & 'All')[]>([]);
+  const [activeThemes, setActiveThemes] = useState<Theme[] | []>([]);
   const debouncedSearchValue = useDebounce(searchValue, 500);
 
   const params = useMemo(
     () => ({
-      ...(activeDatasetType !== 'all' && { type: activeDatasetType }),
+      ...(!!activeDatasetType && activeDatasetType !== 'all' && { type: activeDatasetType }),
       ...(activeThemes.length > 0 && { theme: activeThemes }),
       ...(debouncedSearchValue !== '' &&
         debouncedSearchValue.length >= 2 && { title: debouncedSearchValue }),
@@ -43,7 +43,7 @@ const LandingDatasets = () => {
       pagination: true,
       page,
     }),
-    [activeDatasetType, activeThemes, sortingCriteria]
+    [activeDatasetType, activeThemes, sortingCriteria, debouncedSearchValue, page]
   );
   const { data, isError, isLoading, isFetching } = useMonitorsAndGeostoriesPaginated(params, {
     keepPreviousData: true,
@@ -89,7 +89,7 @@ const LandingDatasets = () => {
   );
 
   return (
-    <Element className="relative z-10 -mt-52 w-full bg-black-500" name="datasetsGrid">
+    <div className="relative z-10 -mt-52 w-full bg-black-500" id="datasetsGrid">
       <div className="container mx-auto w-full px-5 py-32">
         <div className="py-8">
           <div className="flex items-center justify-between">
@@ -164,7 +164,7 @@ const LandingDatasets = () => {
           )}
         </div>
       </div>
-    </Element>
+    </div>
   );
 };
 

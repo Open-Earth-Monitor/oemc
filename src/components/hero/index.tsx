@@ -2,8 +2,7 @@ import Link from 'next/link';
 
 import { LuCircleArrowRight } from 'react-icons/lu';
 
-import { Button } from 'components/ui/button';
-
+import { Button } from '@/components/ui/button';
 import Video from '@/components/video';
 
 const Hero = () => {
@@ -14,7 +13,7 @@ const Hero = () => {
       {/* Main Content */}
       <div className="relative z-10 grid min-h-screen grid-cols-12 items-center px-4">
         <div className="col-span-12 flex flex-col items-center justify-center space-y-6 text-center sm:space-y-10">
-          <h1 className="font-satoshi text-white text-xl sm:text-3xl md:text-6xl lg:text-8xl">
+          <h1 className="text-white font-satoshi text-xl sm:text-3xl md:text-6xl lg:text-8xl">
             Discover and empower with monitoring solutions.
           </h1>
           <Link href="/explore">

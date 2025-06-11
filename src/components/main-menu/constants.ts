@@ -6,7 +6,7 @@ export const navLinks = [
   },
   {
     name: 'Explore Data',
-    href: '/map',
+    href: '/explore',
     'data-testid': 'map-link',
   },
 ];
@@ -40,17 +40,17 @@ export const otherResources = [
   },
   {
     name: 'Disclaimer',
-    href: '/usage-stats',
-    'data-testid': 'usage-stats-link',
+    href: '/disclaimer',
+    'data-testid': 'disclaimer-link',
   },
   {
     name: 'Privacy Policy',
-    href: '/usage-stats',
-    'data-testid': 'usage-stats-link',
+    href: 'https://earthmonitor.org/privacy-policy/',
+    'data-testid': 'privacy-policy-link',
   },
   {
     name: 'Contact us',
-    href: '/usage-stats',
-    'data-testid': 'usage-stats-link',
+    href: 'https://earthmonitor.org/contact-us/',
+    'data-testid': 'contact-us-link',
   },
 ];
