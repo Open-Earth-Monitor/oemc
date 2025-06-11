@@ -1,5 +1,5 @@
 type Basemap = {
-  id: 'world_imagery' | 'Esri_WorldGrayCanvas';
+  id: 'world_imagery' | 'gray_scale';
   label: string;
   attributions: string;
   url: string;
@@ -16,10 +16,10 @@ export const BASEMAPS: Basemap[] = [
     thumb: '',
   },
   {
-    id: 'Esri_WorldGrayCanvas',
+    id: 'gray_scale',
     label: 'Gray scale',
-    attributions: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attributions: '© OpenStreetMap contributors, © CartoDB',
+    url: 'https://basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
     thumb: 'https://ecodatacube.eu/images/osm_overview.png',
   },
 ];

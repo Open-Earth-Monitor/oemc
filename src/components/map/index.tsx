@@ -503,12 +503,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           />
         )}
 
-        {basemap === 'world_imagery' && (
-          <RLayerTile
-            zIndex={100}
-            url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-          />
-        )}
+        <RLayerTile
+          zIndex={100}
+          url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+        />
 
         <Controls>
           <LocationSearchComponent
