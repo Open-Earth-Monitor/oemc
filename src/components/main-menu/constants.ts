@@ -35,22 +35,22 @@ export const navSubLinksCommunity = [
 export const otherResources = [
   {
     name: 'Live usage statistics',
-    href: 'usage-stats/',
+    href: '/usage-stats',
     'data-testid': 'usage-stats-link',
   },
   {
     name: 'Disclaimer',
-    href: 'usage-stats/',
+    href: '/usage-stats',
     'data-testid': 'usage-stats-link',
   },
   {
     name: 'Privacy Policy',
-    href: 'usage-stats/',
+    href: '/usage-stats',
     'data-testid': 'usage-stats-link',
   },
   {
     name: 'Contact us',
-    href: 'usage-stats/',
+    href: '/usage-stats',
     'data-testid': 'usage-stats-link',
   },
 ];

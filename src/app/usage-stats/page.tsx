@@ -1,10 +1,12 @@
 import type { NextPage } from 'next';
 
 import WebTrafficContent from '@/components/web-traffic/content';
+import Header from '@/components/header';
 
 const UsageStatsPage: NextPage = () => {
   return (
     <div className="container m-auto h-screen font-medium">
+      <Header className="z-50 mx-0 px-0" />
       <div className="flex flex-col space-y-8 pt-56">
         <h1 className="satoshi text-7xl ">
           Live{' '}
@@ -14,7 +16,6 @@ const UsageStatsPage: NextPage = () => {
         </h1>
         <h2 className="py-4 text-2xl">Web geographic activity</h2>
       </div>
-
       <WebTrafficContent />
     </div>
   );

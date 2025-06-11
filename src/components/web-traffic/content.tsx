@@ -4,7 +4,7 @@ import WebTrafficRankingContent from './list';
 const WebTrafficContent = () => {
   return (
     <div className="relative flex w-full grow flex-col">
-      <div className="relative flex h-[500px] justify-between bg-green-500">
+      <div className="h-[600px]">
         <WebTrafficMapContent />
       </div>
       <div className="flex justify-between">

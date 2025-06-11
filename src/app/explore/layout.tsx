@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Map from '@/components/map';
 import SidebarThemeFilters from '@/components/theme-filter/map-sidebar';
 import { SidebarProvider, SidebarTrigger, Sidebar } from '@/components/ui/sidebar';
+import Header from '@/components/header';
 
 export const metadata: Metadata = {
   title: 'Explore',
@@ -23,9 +24,11 @@ export default function ExploreLayout({ children }: { children: React.ReactNode 
           </div>
         </div>
       </SidebarProvider>
-
-      <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
-        <Map />
+      <div className="relative h-screen w-full">
+        <Header className="z-50 mx-0 px-0 pl-[108px]" />
+        <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
+          <Map />
+        </div>
       </div>
     </div>
   );
