@@ -18,19 +18,26 @@ module.exports = {
       '3xl': '10rem', // Extra-extra-extra large screens
     },
     extend: {
-      font: {
-        inter: ['var(--font-inter)'],
-        satoshi: ['var(--font-satoshi)'],
+      fontFamily: {
+        inter: ['var(--font-inter)', 'sans-serif'],
+        satoshi: ['var(--font-satoshi)', 'sans-serif'],
       },
       colors: {
+        'accent-green': 'var(--accent-green)',
         black: {
+          100: '#13273C',
+          300: '#0E1D2D',
+          400: '#0B1825',
           500: '#09131D',
         },
         white: {
           50: '#FFFFFF',
           100: '#DFDFDF',
           500: '#FFFFE6',
-          700: '#FFFFE680',
+          700: 'hsla(60, 100%, 95%, 0.5)',
+          800: 'hsla(60, 100%, 95%, 0.2)',
+          900: 'hsla(60, 100%, 95%, 0.1)',
+          950: 'hsla(60, 100%, 95%, 0.05)',
         },
         gray: {
           600: 'hsl(220, 7%, 40%)',
@@ -115,6 +122,16 @@ module.exports = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
+    },
+    sidebar: {
+      DEFAULT: 'hsl(var(--sidebar-background))',
+      foreground: 'hsl(var(--sidebar-foreground))',
+      primary: 'hsl(var(--sidebar-primary))',
+      'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+      accent: 'hsl(var(--sidebar-accent))',
+      'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+      border: 'hsl(var(--sidebar-border))',
+      ring: 'hsl(var(--sidebar-ring))',
     },
   },
   plugins: [require('tailwindcss-animate'), forms, typography],

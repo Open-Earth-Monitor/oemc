@@ -14,7 +14,7 @@ import {
 import Loading from '@/components/loading';
 import { Post } from '@/components/social-media/post';
 
-const SocialMedia = () => {
+const SocialMediaFeed = () => {
   const { data, isLoading, isFetched } = useSocialMedia(null, {
     select: (data) => {
       const orderedData = orderBy(data, 'created_at', 'desc');
@@ -26,6 +26,7 @@ const SocialMedia = () => {
 
   return (
     <section className="font-satoshi relative grid h-screen w-full md:grid-cols-10 lg:grid-cols-12">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[url(/images/landing/bg_social_media.svg)] bg-cover bg-center" />
       <div className="container col-span-12 m-auto flex flex-col items-center justify-center space-y-[18px] sm:space-y-10">
         <h3 className="max-w-xs py-12 text-center text-xl font-medium sm:max-w-sm sm:text-2xl md:max-w-xl lg:max-w-3xl">
           <span className="text-[28px] text-white-500">
@@ -71,4 +72,4 @@ const SocialMedia = () => {
   );
 };
 
-export default SocialMedia;
+export default SocialMediaFeed;
