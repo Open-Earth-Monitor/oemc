@@ -25,6 +25,7 @@ module.exports = {
       colors: {
         'accent-green': 'var(--accent-green)',
         black: {
+          100: '#13273C',
           300: '#0E1D2D',
           400: '#0B1825',
           500: '#09131D',

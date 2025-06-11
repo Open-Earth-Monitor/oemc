@@ -9,7 +9,6 @@ import {
 
 import cn from '@/lib/classnames';
 
-import WebTrafficContent from './content';
 import WebTrafficMobileContent from './mobile-content';
 
 const WebTraffic = ({
@@ -59,7 +58,6 @@ const WebTraffic = ({
             </div>
           </DialogTitle>
         </DialogHeader>
-        <WebTrafficContent />
         {isMobile && <WebTrafficMobileContent />}
       </DialogContent>
     </Dialog>

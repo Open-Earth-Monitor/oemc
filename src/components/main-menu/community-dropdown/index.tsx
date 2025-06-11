@@ -16,17 +16,17 @@ const CommunityDropdown = ({ isMobile }: { isMobile?: boolean }) => {
     <Collapsible>
       <CollapsibleTrigger
         className={cn({
-          'mx-0 px-0 text-2xl': true,
+          'mx-0 px-5 py-4 text-2xl': true,
           'font-medium transition-colors hover:bg-white-100 data-[state=open]:bg-secondary-500 data-[state=open]:text-brand-500 lg:min-w-[180px]':
             !isMobile,
-          'border-t-0 py-4 text-center font-bold text-secondary-500 transition-colors hover:bg-white-100 hover:text-brand-500':
+          'border-t-0 text-center font-bold text-secondary-500 transition-colors hover:bg-white-100 hover:text-brand-500':
             isMobile,
         })}
       >
         Community
         <LuChevronDown className="h-5 w-6 fill-current font-bold group-data-[state=open]:rotate-180" />
       </CollapsibleTrigger>
-      <CollapsibleContent className="py-3">
+      <CollapsibleContent className="px-6 py-5">
         <nav className="flex w-full flex-col space-y-6" data-testid="main-navigation">
           {navSubLinksCommunity.map(({ name, ...props }) => {
             const isActive = `/${pathname.split('/')[1]}` === props.href;
