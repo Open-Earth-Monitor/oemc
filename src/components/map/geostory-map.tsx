@@ -23,6 +23,7 @@ import {
   useSyncCompareLayersSettings,
   useSyncBboxSettings,
   useSyncBasemapSettings,
+  useSyncBasemapLabelsSettings,
 } from '@/hooks/sync-query';
 
 import {
@@ -58,6 +59,7 @@ import { InitialViewport } from './constants';
 import BasemapControl from './controls/basemaps';
 import BasemapLayer from './basemap';
 import { RView } from 'rlayers/RMap';
+import { LABELS } from './controls/basemaps/constants';
 
 interface ClickEvent {
   bbox?: Extent;
@@ -136,6 +138,7 @@ const Map: FC<GeostoryMapProps> = ({
   const compareOpacity = compareLayers?.[0]?.opacity;
   const compareDate = compareLayers?.[0]?.date;
   const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
+  const [activeLabels] = useSyncBasemapLabelsSettings();
 
   // bbox that come defined in the geostory
   const predefinedBbox = geostoryData?.geostory_bbox;
@@ -480,6 +483,11 @@ const Map: FC<GeostoryMapProps> = ({
     [mapRef]
   );
 
+  const labelUrl = useMemo(
+    () => LABELS.find((label) => activeLabels === label.id)?.url,
+    [activeLabels]
+  );
+
   return (
     <>
       <RMap
@@ -567,10 +575,7 @@ const Map: FC<GeostoryMapProps> = ({
           />
         )}
 
-        <RLayerTile
-          zIndex={100}
-          url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-        />
+        <RLayerTile zIndex={100} url={labelUrl} />
 
         <Controls>
           <LocationSearchComponent
