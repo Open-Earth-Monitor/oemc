@@ -24,6 +24,7 @@ import {
   useSyncCompareLayersSettings,
   useSyncBboxSettings,
   useSyncBasemapSettings,
+  useSyncBasemapLabelsSettings,
 } from '@/hooks/sync-query';
 import PointHistogram from './stats/point-histogram';
 import RegionsHistogram from './stats/region-histogram';
@@ -56,6 +57,7 @@ import { getHistogramData } from './utils';
 import { Extent } from 'ol/extent';
 import BasemapControl from './controls/basemaps';
 import BasemapLayer from './basemap';
+import { LABELS } from './controls/basemaps/constants';
 
 interface ClickEvent {
   bbox?: Extent;
@@ -94,6 +96,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const [bbox, setBbox] = useSyncBboxSettings();
+  const [activeLabels] = useSyncBasemapLabelsSettings();
   const [nutsProperties, setNutsProperties] = useState(null);
   const [compareNutsProperties, setCompareNutsProperties] = useState(null);
   const setCoordinate = useSetAtom(coordinateAtom);
@@ -422,6 +425,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const layerData = useLayer({ layer_id: layerId });
 
+  const labelUrl = useMemo(
+    () => LABELS.find((label) => activeLabels === label.id)?.url,
+    [activeLabels]
+  );
+
   return (
     <>
       <RMap
@@ -503,10 +511,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           />
         )}
 
-        <RLayerTile
-          zIndex={100}
-          url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-        />
+        <RLayerTile zIndex={100} url={labelUrl} />
 
         <Controls>
           <LocationSearchComponent

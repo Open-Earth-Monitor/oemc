@@ -26,3 +26,9 @@ export const useSyncBasemapSettings = () =>
     'basemap',
     parseAsJson<'world_imagery' | 'gray_scale'>().withDefault('world_imagery')
   );
+
+export const useSyncBasemapLabelsSettings = () =>
+  useQueryState(
+    'basemap-labels',
+    parseAsJson<'dark' | 'light' | 'no-label'>().withDefault('light')
+  );
