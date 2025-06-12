@@ -46,7 +46,7 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
         <PopoverContent className="w-[200px] p-0" align="start" side="right">
           <div className="space-y-4 p-1">
             <div>
-              <span className="p-4 text-secondary-700 underline">Basemaps</span>
+              <span className="p-4 text-secondary-700 underline">Basemap settings</span>
               {BASEMAPS.map((basemap) => (
                 <button
                   key={basemap.label}
@@ -69,7 +69,7 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
               ))}
             </div>
             <div>
-              <span className="p-4 text-secondary-700 underline">Settings</span>
+              <span className="p-4 text-secondary-700 underline">Label settings</span>
 
               <RadioGroup
                 value={activeLabels}
