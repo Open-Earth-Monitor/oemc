@@ -1,3 +1,4 @@
+import Script from 'next/script';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 const mostVisitedMonitors = [
@@ -66,11 +67,15 @@ const WebTrafficMobileContent = () => {
           value="web-graphic"
           className="relative mt-0 box-content flex w-full flex-1 grow flex-col rounded-none"
         >
-          <iframe
-            style={{ background: 'transparent', position: 'absolute', left: 0, top: 0 }}
-            width="100%"
-            height="100%"
-            src="//rf.revolvermaps.com/w/8/a/a2.php?i=5ys2ccrnfty&amp;m=0c&amp;c=2becbf&amp;cr1=2becbf&amp;l=33&amp;cw=0b1825&amp;cb=28333d"
+          <script
+            type="text/javascript"
+            id="clustrmaps"
+            src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=a&t=tt&d=e9bF-yBRaYPXvvGpxTgq-74ob4nqMoaLjIgTO-UoDyQ&co=092539"
+          />
+
+          <Script
+            id="clustrmaps"
+            src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=a&t=tt&d=e9bF-yBRaYPXvvGpxTgq-74ob4nqMoaLjIgTO-UoDyQ&co=092539"
           />
         </TabsContent>
 
