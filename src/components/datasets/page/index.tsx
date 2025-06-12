@@ -13,7 +13,6 @@ import Loading from '@/components/loading';
 const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   const { data, error, isLoading, isError } = useMonitorLayers({ monitor_id });
   const [layers, setLayers] = useSyncLayersSettings();
-
   // Only at beginning set the first layer
   useEffect(() => {
     if (data?.length && !layers) {
