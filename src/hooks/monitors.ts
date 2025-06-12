@@ -79,14 +79,14 @@ export function useMonitorLayers(
   return useQuery(['monitor-datasets', params], fetchMonitorLayers, {
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) => {
-      // const dataParsed = data.flatMap((layer) => {
-      //   if ('extra_lyrs' in layer && Array.isArray(layer.extra_lyrs)) {
-      //     return [layer, ...layer.extra_lyrs];
-      //   }
-      //   return [layer];
-      // });
-      // console.log(dataParsed, data);
-      return data.map((d) => {
+      const dataParsed = data.flatMap((layer) => {
+        if ('extra_lyrs' in layer && Array.isArray(layer.extra_lyrs)) {
+          return [layer, ...layer.extra_lyrs];
+        }
+        return [layer];
+      });
+
+      return dataParsed.map((d) => {
         return {
           ...d,
           range:
