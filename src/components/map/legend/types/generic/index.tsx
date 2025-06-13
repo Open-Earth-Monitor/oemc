@@ -2,7 +2,7 @@ import { useLayer } from '@/hooks/layers';
 import { useSyncLayersSettings } from '@/hooks/sync-query';
 
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
-  const [layers, setLayers] = useSyncLayersSettings();
+  const [layers] = useSyncLayersSettings();
   const layerId = layers?.[0]?.id;
   const {
     data: layerData,

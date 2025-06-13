@@ -44,16 +44,33 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
-  const [layer] = useSyncLayersSettings();
+  const layerId = layers?.[0]?.id;
+  const opacity = layers?.[0]?.opacity;
+  const compareDate = compareLayers?.[0]?.date;
 
-  const { data: layerInfo, isLoading } = useLayer({ layer_id: layer[0]?.id || '' });
+  // Info for layer on the left side
+  const { data: layerData, isLoading, isError, isFetched } = useLayer({ layer_id: layerId || '' });
+
+  // Info for layer on the right side (comparison layer)
+  const {
+    data: compareLayerData,
+    isLoading: isLoadingCompare,
+    isError: isErrorCompare,
+    isFetched: isFetchedCompare,
+  } = useLayer({ layer_id: compareLayers?.[0]?.id }, { enabled: !!compareLayers });
 
   const { data: legendData, isError: error } = useLegendGraphic({
-    gs_name: layerInfo?.gs_name,
-    gs_base_wms: layerInfo?.gs_base_wms,
+    gs_name: layerData?.gs_name,
+    gs_base_wms: layerData?.gs_base_wms,
+  });
+
+  const { data: legendDataCompare, isError: errorCompare } = useLegendGraphic({
+    gs_base_wms: compareLayerData?.gs_base_wms,
+    gs_name: compareLayerData?.gs_name,
   });
 
   const { entries = [], type = 'unknown' } = legendData || {};
+  const { entries: entriesCompare = [], type: typeCompare = 'unknown' } = legendDataCompare || {};
 
   const handleTabChange = (value: ActiveTab) => {
     if (value === 'comparison') {
@@ -66,14 +83,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     }
     setActiveTab(value);
   };
-
-  const layerId = layers?.[0]?.id;
-  const opacity = layers?.[0]?.opacity;
-  const compareDate = compareLayers?.[0]?.date;
-  const { data: compareLayerData } = useLayer(
-    { layer_id: compareLayers?.[0]?.id },
-    { enabled: !!compareLayers }
-  );
 
   const [activeTab, setActiveTab] = useState<ActiveTab>(
     !!compareDate || isGeostory ? 'comparison' : 'timeSeries'
@@ -192,6 +201,61 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
         {!isLoading && !error && type === 'intervals' && <IntervalsLegend entries={entries} />}
 
         {!isLoading && !error && type === 'ramp' && <RampLegend entries={entries} />}
+
+        {!isLoading &&
+          !error &&
+          type !== 'intervals' &&
+          type !== 'ramp' &&
+          layerData?.gs_style &&
+          layerData?.gs_style.length > 8 &&
+          !isLoading &&
+          isFetched &&
+          !!isError && (
+            <div className="flex flex-col space-y-1 p-2">
+              <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
+
+              {layerData?.gs_style.map(({ color, label }) => (
+                <div
+                  key={label}
+                  className="flex items-baseline space-x-2"
+                  data-testid="dataset-legend-item"
+                >
+                  <div
+                    className="h-2 w-2"
+                    style={{
+                      backgroundColor: color,
+                    }}
+                  />
+                  <div className="text-left text-xs text-secondary-500 opacity-50">{label}</div>
+                </div>
+              ))}
+              <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />
+            </div>
+          )}
+
+        {!isLoading &&
+          !error &&
+          type !== 'intervals' &&
+          type !== 'ramp' &&
+          layerData?.gs_style &&
+          layerData?.gs_style.length <= 8 &&
+          !isError &&
+          !isLoading &&
+          isFetched && (
+            <div className="flex">
+              {layerData?.gs_style?.map(({ color, label }) => (
+                <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
+                  <div
+                    className="h-2 w-full"
+                    style={{
+                      backgroundColor: color,
+                    }}
+                  />
+                  <div className="text-center text-xs opacity-50">{label}</div>
+                </div>
+              ))}
+            </div>
+          )}
       </ScrollArea>
       {isGeostory && range?.length > 0 && (
         <TimeSeries
@@ -350,28 +414,44 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           </div>
 
           <ScrollArea className="max-h-[216px]">
-            {compareLayerData?.gs_style && compareLayerData?.gs_style.length > 8 && (
-              <div className="flex flex-col space-y-1 p-2">
-                <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
-
-                {compareLayerData?.gs_style.map(({ color, label }) => (
-                  <div
-                    key={label}
-                    className="flex items-baseline space-x-2"
-                    data-testid="dataset-legend-item"
-                  >
-                    <div
-                      className="h-2 w-2"
-                      style={{
-                        backgroundColor: color,
-                      }}
-                    />
-                    <div className="text-left text-xs opacity-50">{label}</div>
-                  </div>
-                ))}
-                <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />
-              </div>
+            {isLoadingCompare && (
+              <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
             )}
+            {!isLoadingCompare && !error && typeCompare === 'intervals' && (
+              <IntervalsLegend entries={entriesCompare} />
+            )}
+
+            {!isLoadingCompare && !error && typeCompare === 'ramp' && (
+              <RampLegend entries={entriesCompare} />
+            )}
+
+            {!isLoading &&
+              !error &&
+              typeCompare !== 'ramp' &&
+              typeCompare !== 'intervals' &&
+              compareLayerData?.gs_style &&
+              compareLayerData?.gs_style.length > 8 && (
+                <div className="flex flex-col space-y-1 p-2">
+                  <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
+
+                  {compareLayerData?.gs_style.map(({ color, label }) => (
+                    <div
+                      key={label}
+                      className="flex items-baseline space-x-2"
+                      data-testid="dataset-legend-item"
+                    >
+                      <div
+                        className="h-2 w-2"
+                        style={{
+                          backgroundColor: color,
+                        }}
+                      />
+                      <div className="text-left text-xs opacity-50">{label}</div>
+                    </div>
+                  ))}
+                  <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />
+                </div>
+              )}
 
             {compareLayerData?.gs_style && compareLayerData?.gs_style.length <= 8 && (
               <div className="flex">
