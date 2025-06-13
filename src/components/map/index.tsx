@@ -45,7 +45,7 @@ import Controls from './controls';
 import BookmarkControl from './controls/bookmark';
 import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
-import Legend from './legend';
+import { Legend } from './legend';
 import MapTooltip from './monitor-tooltip';
 import type { CustomMapProps, MonitorTooltipInfo } from './types';
 import { useParams } from 'next/navigation';

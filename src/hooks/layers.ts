@@ -1,7 +1,14 @@
+import axios from 'axios';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
-import type { Layer, LayerParsed } from '@/types/layers';
+import type {
+  Layer,
+  LayerParsed,
+  LegendGraphicResponse,
+  UseLegendGraphicOptions,
+  ParsedLegend,
+} from '@/types/layers';
 
 import { isValidJSON } from '@/utils/json';
 import API from 'services/api';
@@ -121,5 +128,24 @@ export function useNutsLayerData(
   return useQuery(['region-stats', params], fetchNutsLayerData, {
     ...DEFAULT_QUERY_OPTIONS,
     ...queryOptions,
+  });
+}
+
+export function useLegendGraphic({ gs_base_wms, gs_name }: UseLegendGraphicOptions) {
+  const url = `${gs_base_wms}?VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=${gs_name}&format=application/json`;
+
+  return useQuery<ParsedLegend>({
+    queryKey: ['legend-graphic', gs_name],
+    queryFn: async () => {
+      const res = await axios.get<LegendGraphicResponse>(url);
+      const colormap = res.data?.Legend?.[0]?.rules?.[0]?.symbolizers?.[0]?.Raster?.colormap;
+
+      return {
+        entries: colormap?.entries ?? [],
+        type: colormap?.type ?? 'unknown',
+      };
+    },
+    enabled: !!gs_base_wms && !!gs_name,
+    staleTime: 1000 * 60 * 10,
   });
 }

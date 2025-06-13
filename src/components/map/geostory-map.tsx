@@ -47,7 +47,7 @@ import BookmarkControl from './controls/bookmark';
 import ShareControl from './controls/share';
 import SwipeControl from './controls/swipe';
 import MapTooltip from './geostory-tooltip';
-import Legend from './legend';
+import { Legend } from './legend';
 import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse } from './types';
 import PointHistogram from './stats/point-histogram';
 import RegionsHistogram from './stats/region-histogram';
