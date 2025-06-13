@@ -70,33 +70,31 @@ export function useMonitorLayers(
   queryOptions?: UseQueryOptions<Layer[], AxiosError, LayerParsed[]>
 ) {
   const { monitor_id } = params;
-  const fetchMonitorLayers = () =>
-    API.request({
+
+  const fetchMonitorLayers = async (): Promise<Layer[]> => {
+    const response = await API.request<Layer[]>({
       method: 'GET',
       url: `/monitors/${monitor_id}/layers`,
-      ...queryOptions,
-    }).then((response: AxiosResponse<Layer[]>) => response.data);
+    });
+    return response.data;
+  };
+
   return useQuery(['monitor-datasets', params], fetchMonitorLayers, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => {
-      const dataParsed = data.flatMap((layer) => {
-        if ('extra_lyrs' in layer && Array.isArray(layer.extra_lyrs)) {
-          return [layer, ...layer.extra_lyrs];
-        }
-        return [layer];
-      });
-
-      return dataParsed.map((d) => {
-        return {
+    select: (data) =>
+      data
+        .flatMap((layer) =>
+          Array.isArray(layer.extra_lyrs) ? [layer, ...layer.extra_lyrs] : [layer]
+        )
+        .filter((l) => !l.extra_lyrs)
+        .map((d) => ({
           ...d,
           range:
-            d?.range?.map((r, index) => ({
+            d?.range?.map((r, i) => ({
               value: r,
-              label: d?.range_labels?.[index] || null,
-            })) || [],
-        };
-      });
-    },
+              label: d.range_labels?.[i] ?? null,
+            })) ?? [],
+        })),
     ...queryOptions,
   });
 }
