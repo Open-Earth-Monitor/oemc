@@ -32,6 +32,7 @@ export type Layer = {
   value_society: string;
   data_meaning: string;
   usage_examples: string;
+  extra_lyrs?: Layer[];
 };
 
 export type LayerParsed = Omit<Layer, 'range'> & {
