@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { HiCalendarDays } from 'react-icons/hi2';
 import { LuGitCompare } from 'react-icons/lu';
 
-import { useLayerParsedSource, useLayer, useLayers } from '@/hooks/layers';
+import { useLayerParsedSource, useLayer, useLegendGraphic } from '@/hooks/layers';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
 import TimeSeries from '@/components/timeseries';
@@ -30,6 +30,9 @@ import LayerVisibility from './visibility';
 import Loading from '@/components/loading';
 import cn from '@/lib/classnames';
 
+import { IntervalsLegend } from '@/components/map/legend/types/intervals';
+import { RampLegend } from '@/components/map/legend/types/gradient';
+
 type ActiveTab = 'timeSeries' | 'comparison';
 
 const findLabel = (value: string, range: { label: string; value: string | number }[]) =>
@@ -40,7 +43,17 @@ const findLabel = (value: string, range: { label: string; value: string | number
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
-  const { data: layersData } = useLayers();
+
+  const [layer] = useSyncLayersSettings();
+
+  const { data: layerInfo, isLoading } = useLayer({ layer_id: layer[0]?.id || '' });
+
+  const { data: legendData, isError: error } = useLegendGraphic({
+    gs_name: layerInfo?.gs_name,
+    gs_base_wms: layerInfo?.gs_base_wms,
+  });
+
+  const { entries = [], type = 'unknown' } = legendData || {};
 
   const handleTabChange = (value: ActiveTab) => {
     if (value === 'comparison') {
@@ -54,8 +67,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     setActiveTab(value);
   };
 
-  const layerInfo = layersData?.find((d) => d.layer_id === layers?.[0]?.id);
-
   const layerId = layers?.[0]?.id;
   const opacity = layers?.[0]?.opacity;
   const compareDate = compareLayers?.[0]?.date;
@@ -67,15 +78,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
   const [activeTab, setActiveTab] = useState<ActiveTab>(
     !!compareDate || isGeostory ? 'comparison' : 'timeSeries'
   );
-
-  const {
-    data: layerData,
-    isLoading,
-    isFetched,
-    isError,
-  } = useLayer({
-    layer_id: layerId,
-  });
 
   const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layers?.length });
   const { title, range } = data ?? {};
@@ -186,52 +188,10 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
         {isLoading && (
           <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
         )}
-        {layerData?.gs_style &&
-          layerData?.gs_style.length > 8 &&
-          !isLoading &&
-          isFetched &&
-          !!isError && (
-            <div className="flex flex-col space-y-1 p-2">
-              <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
 
-              {layerData?.gs_style.map(({ color, label }) => (
-                <div
-                  key={label}
-                  className="flex items-baseline space-x-2"
-                  data-testid="dataset-legend-item"
-                >
-                  <div
-                    className="h-2 w-2"
-                    style={{
-                      backgroundColor: color,
-                    }}
-                  />
-                  <div className="text-left text-xs text-secondary-500 opacity-50">{label}</div>
-                </div>
-              ))}
-              <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />
-            </div>
-          )}
+        {!isLoading && !error && type === 'intervals' && <IntervalsLegend entries={entries} />}
 
-        {layerData?.gs_style &&
-          layerData?.gs_style.length <= 8 &&
-          !isError &&
-          !isLoading &&
-          isFetched && (
-            <div className="flex">
-              {layerData?.gs_style?.map(({ color, label }) => (
-                <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
-                  <div
-                    className="h-2 w-full"
-                    style={{
-                      backgroundColor: color,
-                    }}
-                  />
-                  <div className="text-center text-xs opacity-50">{label}</div>
-                </div>
-              ))}
-            </div>
-          )}
+        {!isLoading && !error && type === 'ramp' && <RampLegend entries={entries} />}
       </ScrollArea>
       {isGeostory && range?.length > 0 && (
         <TimeSeries

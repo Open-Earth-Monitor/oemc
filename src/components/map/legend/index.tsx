@@ -13,6 +13,7 @@ import LegendComponent from './component';
 
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
   const isMobile = useMediaQuery(mobile);
+
   return (
     <div
       className={cn({
