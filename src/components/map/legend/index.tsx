@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
+
 import { useMediaQuery } from 'react-responsive';
 
 import { PopoverClose } from '@radix-ui/react-popover';
-import { ChevronDown } from 'lucide-react';
 
 import { cn } from '@/lib/classnames';
 import { mobile } from '@/lib/media-queries';
@@ -15,7 +15,7 @@ import { useSyncLayersSettings } from '@/hooks/sync-query';
 import OpacitySetting from './opacity';
 import LayerVisibility from './visibility';
 import RemoveLayer from './remove';
-import { useLayer, useLayerParsedSource } from '@/hooks/layers';
+import { useLayerParsedSource } from '@/hooks/layers';
 import { LuChevronDown } from 'react-icons/lu';
 
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
@@ -34,17 +34,8 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     [setLayers]
   );
 
-  const {
-    data: layerData,
-    isLoading,
-    isFetched,
-    isError,
-  } = useLayer({
-    layer_id: layerId,
-  });
-
   const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layers?.length });
-  const { title, range } = data ?? {};
+  const { title } = data ?? {};
 
   const handleCollapse = () => {
     setIsOpen((prev) => !prev);
@@ -107,7 +98,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           className="w-screen rounded-none border-none px-0 py-0"
         >
           <PopoverClose className="absolute left-0 top-0 block h-12 w-[60px] -translate-y-full border-none bg-brand-500 focus:text-secondary-500">
-            <ChevronDown className="mx-auto h-6 w-6 text-secondary-500" />
+            <LuChevronDown className="mx-auto h-6 w-6 text-secondary-500" />
           </PopoverClose>
           <LegendComponent isGeostory={isGeostory} />
         </PopoverContent>

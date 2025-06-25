@@ -2,10 +2,11 @@ import { FC, useMemo } from 'react';
 import { useSyncTheme } from '@/hooks/sync-query';
 
 import { cn } from '@/lib/classnames';
+import type { Theme } from '@/constants/themes';
 import { Themes } from './types';
 
 export type SidebarProps = {
-  type?: Themes;
+  type?: Theme | 'All';
   enabled?: boolean;
 };
 
@@ -22,8 +23,12 @@ export type SidebarItemProps = {
 const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
   const [theme, setTheme] = useSyncTheme();
 
-  const handleClick = (type: Themes) => {
-    setTheme(type);
+  const handleClick = (type: Theme | 'All') => {
+    if (type === 'All') {
+      setTheme([]);
+    } else {
+      setTheme(type);
+    }
   };
 
   const isActive = useMemo(() => {

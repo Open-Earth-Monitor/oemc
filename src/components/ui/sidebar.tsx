@@ -42,9 +42,10 @@ type SidebarMenuButtonProps = ComponentPropsWithoutRef<'button'> & {
   tooltip?: string | ComponentPropsWithoutRef<typeof TooltipContent>;
 } & VariantProps<typeof sidebarMenuButtonVariants>;
 
-type SidebarGroupActionProps = ComponentPropsWithoutRef<'button'> & {
+type SidebarGroupActionProps = Omit<React.ComponentProps<'button'>, 'ref'> & {
   asChild?: boolean;
 };
+
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = '16rem';
@@ -619,7 +620,7 @@ const SidebarMenuAction = forwardRef<
 
   return (
     <Comp
-      ref={ref}
+      {...(asChild ? {} : { ref })}
       data-sidebar="menu-action"
       className={cn(
         'text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 outline-none transition-transform focus-visible:ring-2 [&>svg]:shrink-0',

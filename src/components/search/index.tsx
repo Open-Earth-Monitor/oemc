@@ -43,7 +43,7 @@ const Search: FC<SearchProps> = ({
         onChange={(e) => setValue(e.target.value)}
         value={value}
         data-testid="search-input"
-        className="font-inter flex-1 truncate border-0 border-b-secondary-500 bg-transparent px-10 leading-4 text-secondary-700 placeholder-secondary-700 outline-none ring-0 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+        className="flex-1 truncate border-0 border-b-secondary-500 bg-transparent px-10 font-inter leading-4 text-secondary-700 placeholder-secondary-700 outline-none ring-0 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
       />
       {value !== '' && (
         <button
