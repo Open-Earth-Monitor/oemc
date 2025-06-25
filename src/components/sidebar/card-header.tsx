@@ -12,15 +12,7 @@ type CardHeaderProps = {
   loading?: boolean;
 };
 
-const CardHeader: React.FC<CardHeaderProps> = ({
-  theme,
-  title,
-  color,
-  id,
-  type,
-  className,
-  loading,
-}) => {
+const CardHeader: React.FC<CardHeaderProps> = ({ theme, title, color, id, type, className }) => {
   return (
     <div
       className={cn('flex flex-col space-y-4 font-medium', {

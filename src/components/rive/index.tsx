@@ -22,7 +22,7 @@ export default function Simple({
   riveParams?: UseRiveParameters;
   opts?: Partial<UseRiveOptions>;
 }) {
-  const { rive, RiveComponent } = useRive({
+  const { RiveComponent } = useRive({
     src,
     autoplay: true,
     stateMachines: 'State Machine 1',

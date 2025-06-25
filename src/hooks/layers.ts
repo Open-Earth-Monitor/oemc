@@ -3,7 +3,6 @@ import { AxiosResponse } from 'axios';
 
 import type { Layer, LayerParsed } from '@/types/layers';
 
-import { isValidJSON } from '@/utils/json';
 import API from 'services/api';
 
 const DEFAULT_QUERY_OPTIONS = {

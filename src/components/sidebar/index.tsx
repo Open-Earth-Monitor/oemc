@@ -23,7 +23,7 @@ function MapSidebar() {
 
   const params = useMemo(
     () => ({
-      ...(datasetType !== 'all' && { type: datasetType }),
+      ...(datasetType && datasetType !== 'all' && { type: datasetType }),
       ...(theme && { theme }),
       sort_by: sortingCriteria,
     }),

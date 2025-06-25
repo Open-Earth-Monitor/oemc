@@ -111,7 +111,7 @@ const PointHistogram: FC<HistogramTypes> = ({
           <XIcon size={14} />
         </button>
         <div className="relative space-y-2">
-          <div className="font-satoshi space-y-4 font-bold">
+          <div className="space-y-4 font-satoshi font-bold">
             <div>
               <h3 className="mb-2 text-sm">{leftData.title}</h3>
               <h4 className="text-2xl">

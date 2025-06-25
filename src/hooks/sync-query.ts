@@ -28,7 +28,7 @@ export const useSyncBasemapSettings = () =>
     'basemap',
     parseAsJson<'world_imagery' | 'Esri_WorldGrayCanvas'>().withDefault('world_imagery')
   );
-export type ThemeQueryParam = Theme | `${Theme},${string}`;
+export type ThemeQueryParam = Theme[] | [] | Theme;
 export const useSyncTheme = () =>
   useQueryState<ThemeQueryParam>('theme', parseAsJson<ThemeQueryParam>());
 
