@@ -79,6 +79,7 @@ const PointHistogram: FC<HistogramTypes> = ({
         (histogramData || [])?.map((d) => ({
           x: d.label,
           y: d.value,
+          unit: d.unit || '',
         })) || [],
     };
   }, [histogramData]);
@@ -91,6 +92,7 @@ const PointHistogram: FC<HistogramTypes> = ({
             layer_id: layerId,
             label: d.x,
             value: d.y,
+            unit: d.unit || '',
           }));
       downloadCSV(data, `data-${leftData.title}.csv`);
     } else {
