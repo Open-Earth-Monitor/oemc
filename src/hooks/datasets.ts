@@ -18,7 +18,7 @@ const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'li
   return THEMES_COLORS[theme][themeType] || THEMES_COLORS.Unknown[themeType];
 };
 
-type DataObject = Array<{ layer_id: string; label: string; value: number }>;
+type DataObject = Array<{ layer_id: string; label: string; value: number; unit?: string }>;
 
 type UseParams = {
   type?: 'monitors' | 'geostories' | 'all';
@@ -120,7 +120,7 @@ export const useDebounce = (value: string, delay: number) => {
 // Function to generate CSV content from JSON data
 function generateCSVContent(data: DataObject): string {
   // Define the columns for the CSV
-  const columns = ['layer_id', 'label', 'value'];
+  const columns = ['layer_id', 'label', 'value', 'unit'];
 
   // Create the CSV header row
   const headerRow = columns.join(',') + '\n';
@@ -134,7 +134,7 @@ function generateCSVContent(data: DataObject): string {
   // Create the CSV rows from the data
   const rows = data
     .map((rowData) => {
-      return `${rowData.layer_id},${rowData.label},${rowData.value}`;
+      return `${rowData.layer_id},${rowData.label},${rowData.value},${rowData.unit || ''}`;
     })
     .join('\n');
 
@@ -143,7 +143,7 @@ function generateCSVContent(data: DataObject): string {
 }
 
 // Function to download a CSV file
-export function downloadCSV(data: DataObject, filename: string = 'data.csv') {
+export function downloadCSV(data: DataObject, filename: string | 'data.csv') {
   // Generate CSV content
   const csvContent = generateCSVContent(data);
 
@@ -177,6 +177,7 @@ interface RegionData {
 interface DataObjectCompare {
   date: string;
   layer_id: string;
+  unit: string;
   regionA: RegionData;
   regionB: RegionData;
 }
@@ -187,6 +188,7 @@ function generateCSVContentCompare(data: DataObjectCompare[]): string {
   const columns = [
     'Date',
     'layer_id',
+    'unit',
     `${data[0].regionA.name} A Min`,
     `${data[0].regionA.name} A Max`,
     `${data[0].regionA.name} A Avg`,
@@ -207,7 +209,7 @@ function generateCSVContentCompare(data: DataObjectCompare[]): string {
   // Create the CSV rows from the data
   const rows = data
     .map((rowData) => {
-      return `${rowData.date},${rowData.layer_id},${rowData.regionA.min},${rowData.regionA.max},${rowData.regionA.avg},${rowData.regionB.min},${rowData.regionB.max},${rowData.regionB.avg}`;
+      return `${rowData.date},${rowData.layer_id},${rowData.unit},${rowData.regionA.min},${rowData.regionA.max},${rowData.regionA.avg},${rowData.regionB.min},${rowData.regionB.max},${rowData.regionB.avg}`;
     })
     .join('\n');
 

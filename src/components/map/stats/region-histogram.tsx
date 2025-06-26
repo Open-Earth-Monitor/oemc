@@ -112,6 +112,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
         layer_id: nutsDataParams.LAYER_ID,
         label: d.label,
         value: d.avg,
+        unit: leftData.unit || '',
       }));
       downloadCSV(data, `data-${leftData.title}.csv`);
     } else if (
@@ -121,6 +122,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
       const data = histogramDataRegionRaw.dataset.map((d, i) => ({
         date: d.label,
         layer_id: nutsDataParams.LAYER_ID,
+        unit: leftData.unit || '',
         regionA: {
           name: nutsProperties?.NAME_LATN,
           min: d.min,
@@ -134,6 +136,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
           avg: histogramDataRegionRawCompare.dataset[i].avg,
         },
       }));
+
       downloadCSVCompare(data, `data-${leftData.title}-compare.csv`);
     } else {
       console.error('No data available for download.');

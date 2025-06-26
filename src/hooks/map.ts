@@ -1,6 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
-
 import { getCenter } from 'ol/extent';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import View from 'ol/View';
@@ -17,6 +16,7 @@ type RegionData = {
   label: string;
   layer_id: string;
   value: number;
+  unit?: string;
 };
 
 const DEFAULT_QUERY_OPTIONS = {
