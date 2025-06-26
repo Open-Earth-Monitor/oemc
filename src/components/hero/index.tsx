@@ -2,8 +2,7 @@ import Link from 'next/link';
 
 import { LuCircleArrowRight } from 'react-icons/lu';
 
-import { Button } from 'components/ui/button';
-
+import { Button } from '@/components/ui/button';
 import Video from '@/components/video';
 
 const Hero = () => {

@@ -43,7 +43,7 @@ const LandingDatasets = () => {
       pagination: true,
       page,
     }),
-    [activeDatasetType, activeThemes, sortingCriteria]
+    [activeDatasetType, activeThemes, sortingCriteria, debouncedSearchValue, page]
   );
   const { data, isError, isLoading, isFetching } = useMonitorsAndGeostoriesPaginated(params, {
     keepPreviousData: true,
