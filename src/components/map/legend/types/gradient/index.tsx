@@ -1,4 +1,10 @@
-export const RampLegend: React.FC<{ entries }> = ({ entries = [] }) => {
+import { unescapeHtml } from '@/lib/format';
+
+import { ParsedLegend } from '@/types/layers';
+
+export const RampLegend: React.FC<{
+  entries: ParsedLegend['entries'];
+}> = ({ entries }) => {
   return (
     <div className="w-full">
       <div
@@ -8,8 +14,8 @@ export const RampLegend: React.FC<{ entries }> = ({ entries = [] }) => {
         }}
       />
       <div className="mt-1 flex justify-between text-xs text-gray-600">
-        <span>{entries[0]?.label}</span>
-        <span>{entries[entries?.length - 1]?.label}</span>
+        <span>{unescapeHtml(entries[0]?.label)}</span>
+        <span>{unescapeHtml(entries[entries?.length - 1]?.label)}</span>
       </div>
     </div>
   );

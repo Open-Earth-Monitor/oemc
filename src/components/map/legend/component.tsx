@@ -32,6 +32,7 @@ import cn from '@/lib/classnames';
 
 import { IntervalsLegend } from '@/components/map/legend/types/intervals';
 import { RampLegend } from '@/components/map/legend/types/gradient';
+import LegendGraphic from './graphic';
 
 type ActiveTab = 'timeSeries' | 'comparison';
 
@@ -53,7 +54,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
 
   // Info for layer on the right side (comparison layer)
   const {
-    data: compareLayerData,
+    data: layerDataCompare,
     isLoading: isLoadingCompare,
     isError: isErrorCompare,
     isFetched: isFetchedCompare,
@@ -64,9 +65,11 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     gs_base_wms: layerData?.gs_base_wms,
   });
 
+  const { unit } = layerData || {};
+  const { unit: compareLayerUnit } = layerDataCompare || {};
   const { data: legendDataCompare, isError: errorCompare } = useLegendGraphic({
-    gs_base_wms: compareLayerData?.gs_base_wms,
-    gs_name: compareLayerData?.gs_name,
+    gs_base_wms: layerDataCompare?.gs_base_wms,
+    gs_name: layerDataCompare?.gs_name,
   });
 
   const { entries = [], type = 'unknown' } = legendData || {};
@@ -116,7 +119,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
   }, []);
 
   useEffect(() => {
-    if (activeTab === 'comparison' && !compareLayerData && !isGeostory) {
+    if (activeTab === 'comparison' && !layerDataCompare && !isGeostory) {
       void setCompareLayers([
         {
           id: layerId,
@@ -127,7 +130,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     }
   }, [
     setCompareLayers,
-    compareLayerData,
+    layerDataCompare,
     opacity,
     compareDate,
     lastDateValue,
@@ -179,8 +182,10 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
         className="relative flex items-start justify-between space-x-4 text-secondary-500"
         data-testid="map-legend-item"
       >
-        <div data-testid="map-legend-item-title" className="text-xs font-bold" ref={titleRef}>
-          {title}
+        <div>
+          <div data-testid="map-legend-item-title" className="text-xs font-bold" ref={titleRef}>
+            {title}
+          </div>
         </div>
         <div
           className="flex space-x-2 divide-x divide-secondary-800"
@@ -197,65 +202,9 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
         {isLoading && (
           <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
         )}
-
-        {!isLoading && !error && type === 'intervals' && <IntervalsLegend entries={entries} />}
-
-        {!isLoading && !error && type === 'ramp' && <RampLegend entries={entries} />}
-
-        {!isLoading &&
-          !error &&
-          type !== 'intervals' &&
-          type !== 'ramp' &&
-          layerData?.gs_style &&
-          layerData?.gs_style.length > 8 &&
-          !isLoading &&
-          isFetched &&
-          !!isError && (
-            <div className="flex flex-col space-y-1 p-2">
-              <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
-
-              {layerData?.gs_style.map(({ color, label }) => (
-                <div
-                  key={label}
-                  className="flex items-baseline space-x-2"
-                  data-testid="dataset-legend-item"
-                >
-                  <div
-                    className="h-2 w-2"
-                    style={{
-                      backgroundColor: color,
-                    }}
-                  />
-                  <div className="text-left text-xs text-secondary-500 opacity-50">{label}</div>
-                </div>
-              ))}
-              <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />
-            </div>
-          )}
-
-        {!isLoading &&
-          !error &&
-          type !== 'intervals' &&
-          type !== 'ramp' &&
-          layerData?.gs_style &&
-          layerData?.gs_style.length <= 8 &&
-          !isError &&
-          !isLoading &&
-          isFetched && (
-            <div className="flex">
-              {layerData?.gs_style?.map(({ color, label }) => (
-                <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
-                  <div
-                    className="h-2 w-full"
-                    style={{
-                      backgroundColor: color,
-                    }}
-                  />
-                  <div className="text-center text-xs opacity-50">{label}</div>
-                </div>
-              ))}
-            </div>
-          )}
+        {!isLoading && !error && isFetched && (
+          <LegendGraphic dataLayer={layerData} dataLegend={legendData} />
+        )}
       </ScrollArea>
       {isGeostory && range?.length > 0 && (
         <TimeSeries
@@ -339,7 +288,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                   </DropdownMenuContent>
                 </DropdownMenu>
                 {isGeostory ? (
-                  <div className={DROPDOWN_TRIGGER_STYLES}>{compareLayerData?.title}</div>
+                  <div className={DROPDOWN_TRIGGER_STYLES}>{layerDataCompare?.title}</div>
                 ) : (
                   <DropdownMenu modal={false}>
                     <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
@@ -386,7 +335,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           </TabsContent>
         </Tabs>
       )}
-      {isGeostory && compareLayerData && (
+      {isGeostory && layerDataCompare && (
         <div
           className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
           style={{ minWidth: legendWidth }}
@@ -396,7 +345,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
             data-testid="map-legend-item"
           >
             <div data-testid="map-legend-item-title" className="text-xs font-bold" ref={titleRef}>
-              {compareLayerData.title}
+              {layerDataCompare.title}
             </div>
             <div
               className="flex space-x-2 divide-x divide-secondary-800"
@@ -417,56 +366,8 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
             {isLoadingCompare && (
               <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
             )}
-            {!isLoadingCompare && !error && typeCompare === 'intervals' && (
-              <IntervalsLegend entries={entriesCompare} />
-            )}
-
-            {!isLoadingCompare && !error && typeCompare === 'ramp' && (
-              <RampLegend entries={entriesCompare} />
-            )}
-
-            {!isLoading &&
-              !error &&
-              typeCompare !== 'ramp' &&
-              typeCompare !== 'intervals' &&
-              compareLayerData?.gs_style &&
-              compareLayerData?.gs_style.length > 8 && (
-                <div className="flex flex-col space-y-1 p-2">
-                  <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
-
-                  {compareLayerData?.gs_style.map(({ color, label }) => (
-                    <div
-                      key={label}
-                      className="flex items-baseline space-x-2"
-                      data-testid="dataset-legend-item"
-                    >
-                      <div
-                        className="h-2 w-2"
-                        style={{
-                          backgroundColor: color,
-                        }}
-                      />
-                      <div className="text-left text-xs opacity-50">{label}</div>
-                    </div>
-                  ))}
-                  <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />
-                </div>
-              )}
-
-            {compareLayerData?.gs_style && compareLayerData?.gs_style.length <= 8 && (
-              <div className="flex">
-                {compareLayerData?.gs_style.map(({ color, label }) => (
-                  <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
-                    <div
-                      className="h-2 w-full"
-                      style={{
-                        backgroundColor: color,
-                      }}
-                    />
-                    <div className="text-center text-xs opacity-50">{label}</div>
-                  </div>
-                ))}
-              </div>
+            {!isLoadingCompare && !isErrorCompare && isFetchedCompare && (
+              <LegendGraphic dataLayer={layerDataCompare} dataLegend={legendDataCompare} />
             )}
           </ScrollArea>
           {/* {range?.length > 0 && (
