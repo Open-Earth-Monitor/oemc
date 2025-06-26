@@ -1,23 +1,67 @@
-export const IntervalsLegend: React.FC<{ entries }> = ({ entries = [false] }) => {
+import { unescapeHtml } from '@/lib/format';
+
+import { ParsedLegend } from '@/types/layers';
+
+const legendBreakpoint = 16;
+export const IntervalsLegend: React.FC<{
+  entries: ParsedLegend['entries'];
+}> = ({ entries }) => {
   return (
-    <div className="flex flex-col items-center space-y-1">
+    <div>
       <div className="flex w-full overflow-hidden">
-        {entries.map((entry, i) => (
-          <div
-            key={i}
-            className="h-2 flex-1"
-            style={{ backgroundColor: entry?.color }}
-            title={entry?.label}
-          />
-        ))}
+        {entries.length <= legendBreakpoint &&
+          entries.map((entry, i) => (
+            <div
+              key={i}
+              className="h-2 flex-1"
+              style={{ backgroundColor: entry?.color }}
+              title={entry?.label}
+            />
+          ))}
       </div>
-      <div className="flex w-full justify-between text-[10px] text-gray-600">
-        {entries.map((entry, i) => (
-          <span key={i} className="w-full truncate text-center">
-            {entry?.label}
-          </span>
-        ))}
-      </div>
+      {entries.length > legendBreakpoint && (
+        <div className="grid grid-cols-2 gap-x-4 p-2">
+          <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
+
+          {/* First column */}
+          <div className="flex flex-col space-y-1">
+            {entries.slice(0, Math.ceil(entries.length / 2)).map((entry, i) => (
+              <div
+                key={`col1-${entry?.label}`}
+                className="flex items-baseline space-x-2"
+                data-testid="dataset-legend-item"
+              >
+                <div className="h-2 w-2" style={{ backgroundColor: entry?.color }} />
+                <div className="text-left text-xs text-gray-600">{unescapeHtml(entry?.label)}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Second column */}
+          <div className="flex flex-col space-y-1">
+            {entries.slice(Math.ceil(entries.length / 2)).map((entry, i) => (
+              <div
+                key={`col2-${entry?.label}`}
+                className="flex items-baseline space-x-2"
+                data-testid="dataset-legend-item"
+              >
+                <div className="h-2 w-2" style={{ backgroundColor: entry?.color }} />
+                <div className="text-left text-xs text-gray-600">{unescapeHtml(entry?.label)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {entries.length <= legendBreakpoint && (
+        <div className="flex w-full justify-between text-[10px] text-gray-200">
+          {entries.map((entry, i) => (
+            <span key={i} className="w-full truncate text-center">
+              {unescapeHtml(entry?.label)}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
