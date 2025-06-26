@@ -73,24 +73,23 @@ const PointHistogram: FC<HistogramTypes> = ({
       enabled: !!lonLat,
     }
   );
+
   const histogramPointData = useMemo(() => {
-    if (isLoadingHistogram || !histogramData) {
-      return [];
-    }
-    return (
-      (histogramData || [])?.map((d) => ({
-        x: d.label,
-        y: d.value,
-        unit: d.unit || '',
-      })) || []
-    );
-  }, [histogramData, isLoadingHistogram]);
+    return {
+      data:
+        (histogramData || [])?.map((d) => ({
+          x: d.label,
+          y: d.value,
+          unit: d.unit || '',
+        })) || [],
+    };
+  }, [histogramData]);
 
   const handleClick = useCallback(() => {
     if (histogramData) {
       const data = Array.isArray(histogramData)
         ? histogramData
-        : histogramPointData?.map((d) => ({
+        : histogramPointData?.data?.map((d) => ({
             layer_id: layerId,
             label: d.x,
             value: d.y,
