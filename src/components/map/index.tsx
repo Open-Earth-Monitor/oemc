@@ -326,6 +326,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         ...tooltipInfo,
         leftData: {
           ...tooltipInfo.leftData,
+          range,
           value: null,
         },
         coordinate: e.coordinate,
@@ -350,10 +351,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   useEffect(() => {
     if (monitorBbox && mapRef) {
-      setBbox(monitorBbox);
+      void setBbox(monitorBbox);
       mapRef?.current?.ol?.getView()?.fit(monitorBbox);
     }
-  }, [monitorBbox]);
+  }, [monitorBbox, setBbox]);
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
@@ -571,16 +572,15 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             />
           )
         ) : null}
-
-        {/* Interactivity */}
-        {data && (
-          <MapTooltip
-            {...tooltipInfo}
-            nutsProperties={nutsProperties}
-            onCloseTooltip={handleCloseTooltip}
-          />
-        )}
       </RMap>
+      {/* Interactivity */}
+      {data && (
+        <MapTooltip
+          {...tooltipInfo}
+          nutsProperties={nutsProperties}
+          onCloseTooltip={handleCloseTooltip}
+        />
+      )}
     </>
   );
 };

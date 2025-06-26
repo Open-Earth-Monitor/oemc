@@ -22,6 +22,7 @@ import Loading from '../../loading';
 
 import LineChart from '../../line-chart';
 import { useLayerParsedSource } from '@/hooks/layers';
+import { h } from 'next-usequerystate/dist/parsers-fd455cd5';
 
 const numberFormat = format(',.2f');
 
@@ -72,23 +73,24 @@ const PointHistogram: FC<HistogramTypes> = ({
       enabled: !!lonLat,
     }
   );
-
   const histogramPointData = useMemo(() => {
-    return {
-      data:
-        (histogramData || [])?.map((d) => ({
-          x: d.label,
-          y: d.value,
-          unit: d.unit || '',
-        })) || [],
-    };
-  }, [histogramData]);
+    if (isLoadingHistogram || !histogramData) {
+      return [];
+    }
+    return (
+      (histogramData || [])?.map((d) => ({
+        x: d.label,
+        y: d.value,
+        unit: d.unit || '',
+      })) || []
+    );
+  }, [histogramData, isLoadingHistogram]);
 
   const handleClick = useCallback(() => {
     if (histogramData) {
       const data = Array.isArray(histogramData)
         ? histogramData
-        : histogramPointData?.data?.map((d) => ({
+        : histogramPointData?.map((d) => ({
             layer_id: layerId,
             label: d.x,
             value: d.y,

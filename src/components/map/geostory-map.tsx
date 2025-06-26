@@ -110,12 +110,14 @@ const Map: FC<GeostoryMapProps> = ({
       date: null,
       title: null,
       value: null,
+      range: null,
     },
     rightData: {
       id: null,
       date: null,
       title: null,
       value: null,
+      range: null,
     },
   };
   const [tooltipInfo, setTooltipInfo] = useState<GeostoryTooltipInfo>(TooltipInitialState);
@@ -220,6 +222,7 @@ const Map: FC<GeostoryMapProps> = ({
 
       setTooltipInfo((prev) => ({
         ...prev,
+
         position: updatedPixelPosition, // Updated pixel position
       }));
     }
@@ -318,6 +321,7 @@ const Map: FC<GeostoryMapProps> = ({
               unit: layerData?.unit,
               value: valueLeft,
               isComparable: layerData?.range?.length > 1,
+              range: layerData?.range,
             },
             rightData: {
               id: compareLayerId,
@@ -325,6 +329,7 @@ const Map: FC<GeostoryMapProps> = ({
               date: compareDate || '',
               unit: compareLayerData?.unit,
               value: valueRight,
+              range: compareLayerData?.range,
             },
           };
         });
@@ -648,14 +653,14 @@ const Map: FC<GeostoryMapProps> = ({
           />
         )}
         {/* Interactivity */}
-        {layerData && (
-          <MapTooltip
-            onCloseTooltip={handleCloseTooltip}
-            {...tooltipInfo}
-            nutsProperties={nutsProperties}
-          />
-        )}
       </RMap>
+      {layerData && (
+        <MapTooltip
+          onCloseTooltip={handleCloseTooltip}
+          {...tooltipInfo}
+          nutsProperties={nutsProperties}
+        />
+      )}
     </>
   );
 };

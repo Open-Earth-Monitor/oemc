@@ -39,6 +39,8 @@ export type GeostoryTooltipInfo = {
     date: string;
     value: string | number;
     unit?: string;
+    range?: LayerDateRange[];
+    rangeLabels?: string[];
   };
   rightData: {
     id: string;
@@ -46,6 +48,8 @@ export type GeostoryTooltipInfo = {
     date: string;
     value: string | number;
     unit?: string;
+    range?: LayerDateRange[];
+    rangeLabels?: string[];
   };
 };
 

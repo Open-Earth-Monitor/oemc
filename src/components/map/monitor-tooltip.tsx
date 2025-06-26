@@ -114,7 +114,7 @@ const MapTooltip: FC<TooltipProps> = ({
             {dateLabel && ` for the selected date (${dateLabel})`}.
           </span>
         )}
-        {!!leftData?.value && !isRegionsLayerActive && (
+        {!!leftData?.value && !isRegionsLayerActive && leftData.range && (
           <Button
             variant="light"
             onClick={handleClick}
@@ -125,7 +125,7 @@ const MapTooltip: FC<TooltipProps> = ({
           </Button>
         )}
 
-        {!!leftData?.value && isRegionsLayerActive && (
+        {!!leftData?.value && isRegionsLayerActive && leftData.range && (
           <Button
             variant="light"
             onClick={handleHistogram}

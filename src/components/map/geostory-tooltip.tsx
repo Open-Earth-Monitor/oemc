@@ -1,7 +1,7 @@
 'use client';
 
 import React, { FC, useMemo, useCallback } from 'react';
-import axios from 'axios';
+
 import { format } from 'd3-format';
 import { XIcon } from 'lucide-react';
 import TileWMS from 'ol/source/TileWMS';
@@ -113,7 +113,7 @@ const MapTooltip: FC<TooltipProps> = ({
               <span>No data is available at this specific point.</span>
             )}
           </div>
-          {leftData?.value && !isRegionsLayerActive && (
+          {leftData?.value && !isRegionsLayerActive && leftData.range && (
             <Button
               variant="light"
               onClick={handleClick}
@@ -123,7 +123,7 @@ const MapTooltip: FC<TooltipProps> = ({
               See point-based summary
             </Button>
           )}
-          {leftData?.value && isRegionsLayerActive && (
+          {leftData?.value && isRegionsLayerActive && leftData.range && (
             <Button variant="light" onClick={handleHistogram} className="font-inter p-2 text-xs">
               See regions-based summary
             </Button>
@@ -140,7 +140,7 @@ const MapTooltip: FC<TooltipProps> = ({
                 {!!rightData.unit && rightData.unit}
               </div>
             </div>
-            {!isRegionsLayerActive && (
+            {!isRegionsLayerActive && rightData.range && (
               <Button
                 variant="light"
                 onClick={handleClick}
@@ -150,7 +150,7 @@ const MapTooltip: FC<TooltipProps> = ({
                 See point-based summary
               </Button>
             )}
-            {!!isRegionsLayerActive && (
+            {!!isRegionsLayerActive && rightData.range && (
               <Button
                 variant="light"
                 onClick={handleHistogram}

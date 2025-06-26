@@ -1,6 +1,7 @@
 export interface DataPoint {
   x: string | number;
   y: number;
+  unit?: string;
 }
 
 export interface TooltipData extends DataPoint {
