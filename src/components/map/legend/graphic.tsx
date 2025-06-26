@@ -58,7 +58,7 @@ export const LegendGraphic: React.FC<{
       )}
       {unit && (
         <div title={unit} className="w-full text-right text-xs text-gray-600">
-          ({unit})
+          {unit}
         </div>
       )}
     </div>

@@ -22,7 +22,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           <div className="flex flex-col space-y-1 p-2">
             <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
 
-            {layerData?.gs_style.map(({ color, label }) => (
+            {layerData?.gs_style?.map(({ color, label }) => (
               <div
                 key={label}
                 className="flex items-baseline space-x-2"

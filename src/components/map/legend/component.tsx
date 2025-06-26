@@ -60,20 +60,20 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     isFetched: isFetchedCompare,
   } = useLayer({ layer_id: compareLayers?.[0]?.id }, { enabled: !!compareLayers });
 
-  const { data: legendData, isError: error } = useLegendGraphic({
+  const {
+    data: legendData,
+    isError: error,
+    isLoading: isLoadingLegendData,
+    isFetched: isFetchedLegendData,
+  } = useLegendGraphic({
     gs_name: layerData?.gs_name,
     gs_base_wms: layerData?.gs_base_wms,
   });
 
-  const { unit } = layerData || {};
-  const { unit: compareLayerUnit } = layerDataCompare || {};
   const { data: legendDataCompare, isError: errorCompare } = useLegendGraphic({
     gs_base_wms: layerDataCompare?.gs_base_wms,
     gs_name: layerDataCompare?.gs_name,
   });
-
-  const { entries = [], type = 'unknown' } = legendData || {};
-  const { entries: entriesCompare = [], type: typeCompare = 'unknown' } = legendDataCompare || {};
 
   const handleTabChange = (value: ActiveTab) => {
     if (value === 'comparison') {
@@ -199,10 +199,11 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
         </div>
       </div>
       <ScrollArea className={cn({ 'max-h-[216px]': !isLoading })}>
-        {isLoading && (
-          <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
-        )}
-        {!isLoading && !error && isFetched && (
+        {isLoading ||
+          (isLoadingLegendData && (
+            <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
+          ))}
+        {!isLoading && !error && isFetched && !isLoadingLegendData && isFetchedLegendData && (
           <LegendGraphic dataLayer={layerData} dataLegend={legendData} />
         )}
       </ScrollArea>
