@@ -46,7 +46,7 @@ export const OpacitySetting: FC<{
         <div className="flex w-full flex-col space-y-2">
           <div
             data-testid="slider-current-value"
-            className="text-white m-auto w-[55px] rounded-xl border border-secondary-900 px-3 py-2 font-inter text-xs font-medium"
+            className="m-auto w-[55px] rounded-xl border border-secondary-900 px-3 py-2 font-inter text-xs font-medium text-white-500"
           >
             {Math.round(opacity * 100)}%
           </div>

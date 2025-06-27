@@ -1,79 +1,31 @@
 import { useState, useEffect, useCallback, createRef, useLayoutEffect } from 'react';
 
-import Image from 'next/image';
+import cn from '@/lib/classnames';
 
 import { HiCalendarDays } from 'react-icons/hi2';
+
 import { LuGitCompare } from 'react-icons/lu';
 
-import { useLayerParsedSource, useLayer, useLegendGraphic } from '@/hooks/layers';
+import { useLayerParsedSource, useLayer, useLayers } from '@/hooks/layers';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
-import TimeSeries from '@/components/timeseries';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown';
+import Loading from '@/components/loading';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsTrigger, TabsList } from '@/components/ui/tabs';
 
-import {
-  DROPDOWN_TRIGGER_STYLES,
-  DROPDOWN_TRIGGER_CONTENT_STYLES,
-  DROPDOWN_CONTENT_STYLES,
-  DROPDOWN_ITEM_STYLES,
-} from './constants';
+import LegendGraphic from './graphic';
 import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
 import LayerVisibility from './visibility';
 import Loading from '@/components/loading';
-import cn from '@/lib/classnames';
 
-import { IntervalsLegend } from '@/components/map/legend/types/intervals';
-import { RampLegend } from '@/components/map/legend/types/gradient';
-import LegendGraphic from './graphic';
+import cn from '@/lib/classnames';
 
 type ActiveTab = 'timeSeries' | 'comparison';
 
-const findLabel = (value: string, range: { label: string; value: string | number }[]) =>
-  range?.find((d: { label: string; value: string }) => d.value === value)?.label satisfies
-    | string
-    | number;
-
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
-  const [layers, setLayers] = useSyncLayersSettings();
+  const [layers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
-
-  const layerId = layers?.[0]?.id;
-  const opacity = layers?.[0]?.opacity;
-  const compareDate = compareLayers?.[0]?.date;
-
-  // Info for layer on the left side
-  const { data: layerData, isLoading, isError, isFetched } = useLayer({ layer_id: layerId || '' });
-
-  // Info for layer on the right side (comparison layer)
-  const {
-    data: layerDataCompare,
-    isLoading: isLoadingCompare,
-    isError: isErrorCompare,
-    isFetched: isFetchedCompare,
-  } = useLayer({ layer_id: compareLayers?.[0]?.id }, { enabled: !!compareLayers });
-
-  const {
-    data: legendData,
-    isError: error,
-    isLoading: isLoadingLegendData,
-    isFetched: isFetchedLegendData,
-  } = useLegendGraphic({
-    gs_name: layerData?.gs_name,
-    gs_base_wms: layerData?.gs_base_wms,
-  });
-
-  const { data: legendDataCompare, isError: errorCompare } = useLegendGraphic({
-    gs_base_wms: layerDataCompare?.gs_base_wms,
-    gs_name: layerDataCompare?.gs_name,
-  });
+  const { data: layersData } = useLayers();
 
   const handleTabChange = (value: ActiveTab) => {
     if (value === 'comparison') {
@@ -87,28 +39,51 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     setActiveTab(value);
   };
 
+  const layerInfo = layersData?.find((d) => d.layer_id === layers?.[0]?.id);
+
+  const layerId = layers?.[0]?.id;
+  const opacity = layers?.[0]?.opacity;
+  const compareDate = compareLayers?.[0]?.date;
+  const { data: compareLayerData } = useLayer(
+    { layer_id: compareLayers?.[0]?.id },
+    { enabled: !!compareLayers }
+  );
+
   const [activeTab, setActiveTab] = useState<ActiveTab>(
     !!compareDate || isGeostory ? 'comparison' : 'timeSeries'
   );
 
-  const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layers?.length });
-  const { title, range } = data ?? {};
+  const {
+    data: layerData,
+    isLoading,
+    isFetched,
+    isError,
+  } = useLayer({
+    layer_id: layerId,
+  });
 
-  const handleBaseDate = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      void setLayers([{ id: layerId, opacity, date: e.currentTarget.value }]);
-    },
-    [layerId, opacity, setLayers]
-  );
+  // Info for layer on the right side (comparison layer)
+  const {
+    data: layerDataCompare,
+    isLoading: isLoadingCompare,
+    isError: isErrorCompare,
+    isFetched: isFetchedCompare,
+  } = useLayer({ layer_id: compareLayers?.[0]?.id }, { enabled: !!compareLayers });
 
-  const lastDateValue = range && range?.[range?.length - 1]?.value;
+  const {
+    data: legendData,
+    isError: isErrorLegendData,
+    isLoading: isLoadingLegendData,
+    isFetched: isFetchedLegendData,
+  } = useLegendGraphic({
+    gs_name: layerData?.gs_name,
+    gs_base_wms: layerData?.gs_base_wms,
+  });
 
-  useEffect(() => {
-    if (activeTab === 'comparison' && !compareDate && !isGeostory) {
-      setActiveTab('timeSeries');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [compareDate]);
+  const { data: legendDataCompare, isError: isErrorCompareLegendData } = useLegendGraphic({
+    gs_base_wms: layerDataCompare?.gs_base_wms,
+    gs_name: layerDataCompare?.gs_name,
+  });
 
   // Enable compare legend if compare layer is in the URL
   useEffect(() => {
@@ -124,13 +99,14 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
         {
           id: layerId,
           opacity,
-          date: compareDate || lastDateValue,
+          date: compareDate,
         },
       ]);
     }
   }, [
     setCompareLayers,
-    layerDataCompare,
+
+    compareLayerData,
     opacity,
     compareDate,
     lastDateValue,
@@ -170,40 +146,15 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
       setLegendWith(width);
     }
   }, [titleRef, setLegendWith]);
-  const baseDateLabel = findLabel(layers?.[0]?.date, range);
-  const CompareDateLabel = findLabel(compareLayers?.[0]?.date, range);
 
   return (
     <div
       className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500 p-4"
       style={{ minWidth: legendWidth }}
     >
-      <div
-        className="relative flex items-start justify-between space-x-4 text-secondary-500"
-        data-testid="map-legend-item"
-
-      >
-        <div data-testid="map-legend-item-title" className="text-xs font-bold" ref={titleRef}>
-          {title}
-        </div>
-        <div
-          className="flex space-x-2 divide-x divide-secondary-800"
-          data-testid="map-legend-item-toolbar"
-        >
-          <div className="flex space-x-2">
-            <OpacitySetting defaultValue={opacity} onChange={handleOpacity} />
-            {!isGeostory && <LayerVisibility />}
-          </div>
-          {!isGeostory && <RemoveLayer className="pl-2" />}
-        </div>
-      </div>
       <ScrollArea className={cn({ 'max-h-[216px]': !isLoading })}>
-        {isLoading ||
-          (isLoadingLegendData && (
-            <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
-          ))}
-        {!isLoading && !error && isFetched && !isLoadingLegendData && isFetchedLegendData && (
-          <LegendGraphic dataLayer={layerData} dataLegend={legendData} />
+        {isLoading && (
+          <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
         )}
         {layerData?.gs_style &&
           layerData?.gs_style.length > 8 &&
@@ -265,6 +216,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
             <TabsTrigger
               className="h-10 sm:h-auto"
               value="comparison"
+
               disabled={!range || range.length < 1}
             >
               <div className="flex items-center space-x-2">
@@ -325,7 +277,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                   </DropdownMenuContent>
                 </DropdownMenu>
                 {isGeostory ? (
-                  <div className={DROPDOWN_TRIGGER_STYLES}>{layerDataCompare?.title}</div>
+                  <div className={DROPDOWN_TRIGGER_STYLES}>{compareLayerData?.title}</div>
                 ) : (
                   <DropdownMenu modal={false}>
                     <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
@@ -371,8 +323,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
             </div>
           </TabsContent>
         </Tabs>
-      )}
-        
+      )} */}
       {isGeostory && compareLayerData && (
         <div
           className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
@@ -423,20 +374,23 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
                 <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black-500 via-transparent to-transparent" />
               </div>
             )}
-            {!isLoadingCompare && !isErrorCompare && isFetchedCompare && (
-              <LegendGraphic dataLayer={layerDataCompare} dataLegend={legendDataCompare} />
+
+            {compareLayerData?.gs_style && compareLayerData?.gs_style.length <= 8 && (
+              <div className="flex">
+                {compareLayerData?.gs_style.map(({ color, label }) => (
+                  <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
+                    <div
+                      className="h-2 w-full"
+                      style={{
+                        backgroundColor: color,
+                      }}
+                    />
+                    <div className="text-center text-xs opacity-50">{label}</div>
+                  </div>
+                ))}
+              </div>
             )}
           </ScrollArea>
-          {/* {range?.length > 0 && (
-                  <TimeSeries
-                    type="legend"
-                    range={range}
-                    layerId={layerId}
-                    autoPlay={true}
-                    isActive={true}
-                    defaultActive={true}
-                  />
-                )} */}
         </div>
       )}
     </div>
