@@ -1,63 +1,27 @@
 import { useState, useEffect, useCallback, createRef, useLayoutEffect } from 'react';
 
-import Image from 'next/image';
+import cn from '@/lib/classnames';
 
-import { HiCalendarDays } from 'react-icons/hi2';
-import { LuGitCompare } from 'react-icons/lu';
-
-import { useLayerParsedSource, useLayer, useLayers } from '@/hooks/layers';
+import { useLayer, useLegendGraphic } from '@/hooks/layers';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
-import TimeSeries from '@/components/timeseries';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown';
+import Loading from '@/components/loading';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsTrigger, TabsList } from '@/components/ui/tabs';
 
-import {
-  DROPDOWN_TRIGGER_STYLES,
-  DROPDOWN_TRIGGER_CONTENT_STYLES,
-  DROPDOWN_CONTENT_STYLES,
-  DROPDOWN_ITEM_STYLES,
-} from './constants';
+import LegendGraphic from './graphic';
 import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
 import LayerVisibility from './visibility';
-import Loading from '@/components/loading';
-import cn from '@/lib/classnames';
 
 type ActiveTab = 'timeSeries' | 'comparison';
 
-const findLabel = (value: string, range: { label: string; value: string | number }[]) =>
-  range?.find((d: { label: string; value: string }) => d.value === value)?.label satisfies
-    | string
-    | number;
-
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
-  const [layers, setLayers] = useSyncLayersSettings();
+  const [layers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
-  const { data: layersData } = useLayers();
-
-  const handleTabChange = (value: ActiveTab) => {
-    if (value === 'comparison') {
-      void setCompareLayers([
-        { id: layerId, opacity, date: compareDate || range[range?.length - 1].value },
-      ]);
-    }
-    if (value === 'timeSeries') {
-      void setCompareLayers(null);
-    }
-    setActiveTab(value);
-  };
-
-  const layerInfo = layersData?.find((d) => d.layer_id === layers?.[0]?.id);
 
   const layerId = layers?.[0]?.id;
   const opacity = layers?.[0]?.opacity;
+
   const compareDate = compareLayers?.[0]?.date;
   const { data: compareLayerData } = useLayer(
     { layer_id: compareLayers?.[0]?.id },
@@ -68,33 +32,38 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     !!compareDate || isGeostory ? 'comparison' : 'timeSeries'
   );
 
+  // Info for layer on the left side
   const {
     data: layerData,
-    isLoading,
-    isFetched,
-    isError,
+    isLoading: isLoadingLayerData,
+    isFetched: isFetchedLayerData,
+    isError: isErrorLayerData,
   } = useLayer({
     layer_id: layerId,
   });
 
-  const { data } = useLayerParsedSource({ layer_id: layerId }, { enabled: !!layers?.length });
-  const { title, range } = data ?? {};
+  // Info for layer on the right side (comparison layer)
+  const {
+    data: layerDataCompare,
+    isLoading: isLoadingCompare,
+    isError: isErrorCompare,
+    isFetched: isFetchedCompare,
+  } = useLayer({ layer_id: compareLayers?.[0]?.id }, { enabled: !!compareLayers });
 
-  const handleBaseDate = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      void setLayers([{ id: layerId, opacity, date: e.currentTarget.value }]);
-    },
-    [layerId, opacity, setLayers]
-  );
+  const {
+    data: legendData,
+    isError: isErrorLegendData,
+    isLoading: isLoadingLegendData,
+    isFetched: isFetchedLegendData,
+  } = useLegendGraphic({
+    gs_name: layerData?.gs_name,
+    gs_base_wms: layerData?.gs_base_wms,
+  });
 
-  const lastDateValue = range && range?.[range?.length - 1]?.value;
-
-  useEffect(() => {
-    if (activeTab === 'comparison' && !compareDate && !isGeostory) {
-      setActiveTab('timeSeries');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [compareDate]);
+  const { data: legendDataCompare, isError: isErrorCompareLegendData } = useLegendGraphic({
+    gs_base_wms: layerDataCompare?.gs_base_wms,
+    gs_name: layerDataCompare?.gs_name,
+  });
 
   // Enable compare legend if compare layer is in the URL
   useEffect(() => {
@@ -110,34 +79,11 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
         {
           id: layerId,
           opacity,
-          date: compareDate || lastDateValue,
+          date: compareDate,
         },
       ]);
     }
-  }, [
-    setCompareLayers,
-    compareLayerData,
-    opacity,
-    compareDate,
-    lastDateValue,
-    layerId,
-    activeTab,
-    isGeostory,
-  ]);
-
-  const handleCompareDate = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      void setCompareLayers([{ id: layerId, opacity, date: e.currentTarget.value }]);
-    },
-    [layerId, opacity, setCompareLayers]
-  );
-
-  const handleOpacity = useCallback(
-    (nexOpacity: number) => {
-      void setLayers((prevState) => [{ ...prevState?.[0], opacity: nexOpacity }]);
-    },
-    [setLayers]
-  );
+  }, [setCompareLayers, compareLayerData, opacity, compareDate, layerId, activeTab, isGeostory]);
 
   const handleCompareOpacity = useCallback(
     (nexOpacity: number) => {
@@ -156,185 +102,24 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
       setLegendWith(width);
     }
   }, [titleRef, setLegendWith]);
-  const baseDateLabel = findLabel(layers?.[0]?.date, range);
-  const CompareDateLabel = findLabel(compareLayers?.[0]?.date, range);
 
   return (
     <div
       className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500 p-4"
       style={{ minWidth: legendWidth }}
     >
-      <ScrollArea className={cn({ 'max-h-[216px]': !isLoading })}>
-        {isLoading && (
-          <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
-        )}
-        {layerData?.gs_style &&
-          layerData?.gs_style.length > 8 &&
-          !isLoading &&
-          isFetched &&
-          !!isError && (
-            <div className="flex flex-col space-y-1 p-2">
-              <div className="absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent via-black-500 to-black-500" />
-
-              {layerData?.gs_style.map(({ color, label }) => (
-                <div
-                  key={label}
-                  className="flex items-baseline space-x-2"
-                  data-testid="dataset-legend-item"
-                >
-                  <div
-                    className="h-2 w-2"
-                    style={{
-                      backgroundColor: color,
-                    }}
-                  />
-                  <div className="text-left text-xs text-secondary-500 opacity-50">{label}</div>
-                </div>
-              ))}
-              <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black-500 via-transparent to-transparent" />
-            </div>
-          )}
-
-        {layerData?.gs_style &&
-          layerData?.gs_style.length <= 8 &&
-          !isError &&
-          !isLoading &&
-          isFetched && (
-            <div className="flex">
-              {layerData?.gs_style?.map(({ color, label }) => (
-                <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
-                  <div
-                    className="h-2 w-full"
-                    style={{
-                      backgroundColor: color,
-                    }}
-                  />
-                  <div className="text-center text-xs opacity-50">{label}</div>
-                </div>
-              ))}
-            </div>
-          )}
+      <ScrollArea className={cn({ 'max-h-[216px]': !isLoadingLayerData })}>
+        {isLoadingLayerData ||
+          (isLoadingLegendData && (
+            <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
+          ))}
+        {!isLoadingLayerData &&
+          !isErrorLayerData &&
+          isFetchedLayerData &&
+          !isLoadingLegendData &&
+          isFetchedLegendData && <LegendGraphic dataLayer={layerData} dataLegend={legendData} />}
       </ScrollArea>
 
-      {/* {!isGeostory && range?.length > 1 && (
-        <Tabs value={activeTab} onValueChange={handleTabChange} className="pt-2">
-          <TabsList>
-            <TabsTrigger value="timeSeries" className="h-10 sm:h-auto">
-              <div className="flex items-center space-x-2 font-bold">
-                <HiCalendarDays className="h-[19px] w-[19px]" />
-                <span>Timeline</span>
-              </div>
-            </TabsTrigger>
-            <TabsTrigger
-              className="h-10 sm:h-auto"
-              value="comparison"
-              disabled={!range || range.length < 1}
-            >
-              <div className="flex items-center space-x-2">
-                <LuGitCompare className="h-[19px] w-[19px]" />
-                <span>Compare</span>
-              </div>
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="timeSeries">
-            {range?.length > 0 && (
-              <TimeSeries
-                range={range}
-                layerId={layerId}
-                autoPlay={false}
-                isActive={true}
-                defaultActive={false}
-              />
-            )}
-          </TabsContent>
-          <TabsContent value="comparison">
-            <div className="flex w-full flex-col items-start">
-              <div className="w-full divide-x-0 divide-y divide-dashed">
-                <DropdownMenu modal={false}>
-                  <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
-                    <div className={DROPDOWN_TRIGGER_CONTENT_STYLES}>
-                      <Image
-                        src={`/svgs/active-layer-position.svg`}
-                        width={21}
-                        height={17}
-                        alt="left layer active"
-                      />
-                      <div>
-                        Selected year:{' '}
-                        <span className="font-bold tracking-tight">{baseDateLabel}</span>
-                      </div>
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="start"
-                    alignOffset={0}
-                    sideOffset={0}
-                    className={DROPDOWN_CONTENT_STYLES}
-                  >
-                    <ScrollArea className="max-h-[200px] w-full">
-                      {range?.map((d) => (
-                        <DropdownMenuItem key={d.value} className={DROPDOWN_ITEM_STYLES}>
-                          <button
-                            type="button"
-                            value={d.value}
-                            onClick={handleBaseDate}
-                            className="rounded-sm px-2.5 py-1 hover:bg-secondary-900"
-                          >
-                            {d.label}
-                          </button>
-                        </DropdownMenuItem>
-                      ))}
-                    </ScrollArea>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                {isGeostory ? (
-                  <div className={DROPDOWN_TRIGGER_STYLES}>{compareLayerData?.title}</div>
-                ) : (
-                  <DropdownMenu modal={false}>
-                    <DropdownMenuTrigger className={DROPDOWN_TRIGGER_STYLES}>
-                      <div className={DROPDOWN_TRIGGER_CONTENT_STYLES}>
-                        <Image
-                          src={`/svgs/active-layer-position.svg`}
-                          width={20}
-                          height={20}
-                          alt="right layer active"
-                          className="rotate-180 transform"
-                        />
-
-                        <div>
-                          Selected year:{' '}
-                          <span className="font-bold tracking-tight">{CompareDateLabel}</span>
-                        </div>
-                      </div>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="start"
-                      alignOffset={0}
-                      sideOffset={0}
-                      className={DROPDOWN_CONTENT_STYLES}
-                    >
-                      <ScrollArea className="max-h-[200px] w-full">
-                        {range?.map((d) => (
-                          <DropdownMenuItem key={d.value} className={DROPDOWN_ITEM_STYLES}>
-                            <button
-                              type="button"
-                              value={d.value}
-                              onClick={handleCompareDate}
-                              className="rounded-sm px-2.5 py-1 hover:bg-secondary-900"
-                            >
-                              {d.label}
-                            </button>
-                          </DropdownMenuItem>
-                        ))}
-                      </ScrollArea>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
-      )} */}
       {isGeostory && compareLayerData && (
         <div
           className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
@@ -363,55 +148,13 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           </div>
 
           <ScrollArea className="max-h-[216px]">
-            {compareLayerData?.gs_style && compareLayerData?.gs_style.length > 8 && (
-              <div className="flex flex-col space-y-1 p-2">
-                <div className="absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent via-black-500 to-black-500" />
-
-                {compareLayerData?.gs_style.map(({ color, label }) => (
-                  <div
-                    key={label}
-                    className="flex items-baseline space-x-2"
-                    data-testid="dataset-legend-item"
-                  >
-                    <div
-                      className="h-2 w-2"
-                      style={{
-                        backgroundColor: color,
-                      }}
-                    />
-                    <div className="text-left text-xs opacity-50">{label}</div>
-                  </div>
-                ))}
-                <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black-500 via-transparent to-transparent" />
-              </div>
+            {isLoadingCompare && (
+              <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
             )}
-
-            {compareLayerData?.gs_style && compareLayerData?.gs_style.length <= 8 && (
-              <div className="flex">
-                {compareLayerData?.gs_style.map(({ color, label }) => (
-                  <div key={label} className="grow space-y-2" data-testid="dataset-legend-item">
-                    <div
-                      className="h-2 w-full"
-                      style={{
-                        backgroundColor: color,
-                      }}
-                    />
-                    <div className="text-center text-xs opacity-50">{label}</div>
-                  </div>
-                ))}
-              </div>
+            {!isLoadingCompare && !isErrorCompare && isFetchedCompare && (
+              <LegendGraphic dataLayer={layerDataCompare} dataLegend={legendDataCompare} />
             )}
           </ScrollArea>
-          {/* {range?.length > 0 && (
-                  <TimeSeries
-                    type="legend"
-                    range={range}
-                    layerId={layerId}
-                    autoPlay={true}
-                    isActive={true}
-                    defaultActive={true}
-                  />
-                )} */}
         </div>
       )}
     </div>
