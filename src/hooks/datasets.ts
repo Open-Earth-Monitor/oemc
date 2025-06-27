@@ -10,8 +10,10 @@ import type {
 } from '@/types/monitors-and-geostories';
 
 import { Theme, THEMES_COLORS } from '@/constants/themes';
-
+import { SortingCriteria } from '@/components/datasets-grid/types';
+import type { ThemeQueryParam } from '@/hooks/sync-query';
 import API from 'services/api';
+import { isArray } from 'lodash-es';
 
 const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'light') => {
   if (!ready) return 'hsla(0, 0%, 79%, 1)';
@@ -21,12 +23,13 @@ const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'li
 type DataObject = Array<{ layer_id: string; label: string; value: number }>;
 
 type UseParams = {
-  type?: 'monitors' | 'geostories' | 'all';
+  type?: 'monitors' | 'geostories' | null;
   page?: number;
-  theme?: Theme[];
+  theme?: ThemeQueryParam;
   monitor_id?: string;
   pagination?: boolean;
-  sort_by?: 'title' | 'date';
+  count?: number;
+  sort_by?: SortingCriteria;
 };
 
 const DEFAULT_QUERY_OPTIONS = {
@@ -37,30 +40,38 @@ const DEFAULT_QUERY_OPTIONS = {
   staleTime: Infinity,
 };
 
-const columns = ['id', 'label', 'value'];
-
-export function useMonitorsAndGeostories(
+export function useMonitorsAndGeostories<TData = MonitorsAndGeostoriesParsed>(
   params?: UseParams,
-  queryOptions?: UseQueryOptions<MonitorsAndGeostories, Error, MonitorsAndGeostoriesParsed>
+  queryOptions?: UseQueryOptions<MonitorsAndGeostories, Error, TData>
 ) {
+  const { theme, ...restParams } = params || { theme: undefined };
+
+  const themeQuery = isArray(theme) && theme.length > 0 ? `${theme.join(',')}` : theme;
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostories>({
       method: 'GET',
       url: '/monitors-and-geostories/',
-      params,
-      ...queryOptions,
+      params: {
+        ...(theme && theme.length > 0 && { theme: themeQuery }),
+        ...restParams,
+      },
     }).then((response) => response.data);
 
-  return useQuery(['monitor-and-geostories', params], fetchMonitorAndGeostories, {
+  return useQuery({
+    queryKey: ['monitor-and-geostories', params],
+    queryFn: fetchMonitorAndGeostories,
     ...DEFAULT_QUERY_OPTIONS,
     ...queryOptions,
-    select: (data): MonitorsAndGeostoriesParsed =>
-      data.map((d) => ({
-        ...d,
-        color: THEMES_COLORS[d.theme].base || THEMES_COLORS.Unknown.base,
-        colorHead: THEMES_COLORS[d.theme].dark || THEMES_COLORS.Unknown.dark,
-        colorOpacity: THEMES_COLORS[d.theme].light || THEMES_COLORS.Unknown.light,
-      })),
+    select:
+      queryOptions?.select ??
+      (((data) =>
+        data.map((d) => ({
+          ...d,
+          type: d.type || d.id.startsWith('g') ? 'geostory' : 'monitor',
+          color: THEMES_COLORS[d.theme]?.base ?? THEMES_COLORS.Unknown.base,
+          colorHead: THEMES_COLORS[d.theme]?.dark ?? THEMES_COLORS.Unknown.dark,
+          colorOpacity: THEMES_COLORS[d.theme]?.light ?? THEMES_COLORS.Unknown.light,
+        }))) as unknown as (data: MonitorsAndGeostories) => TData),
   });
 }
 
@@ -73,7 +84,7 @@ export function useMonitorsAndGeostoriesPaginated(
   >
 ) {
   const { theme, ...restParams } = params || { theme: undefined };
-  const themeQuery = theme && theme.length > 0 ? `${theme.join(',')}` : '';
+  const themeQuery = isArray(theme) && theme.length > 0 ? `${theme.join(',')}` : '';
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostoriesPaginated>({
       method: 'GET',
@@ -82,6 +93,7 @@ export function useMonitorsAndGeostoriesPaginated(
         ...(theme && theme.length > 0 && { theme: themeQuery }),
         ...restParams,
         pagination: true,
+        page_size: 8,
       },
       ...queryOptions,
     }).then((response) => response.data);

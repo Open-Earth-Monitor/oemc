@@ -6,8 +6,8 @@ import type { Layer, LayerParsed } from '@/types/layers';
 
 import { Theme, THEMES_COLORS } from '@/constants/themes';
 
-import API from 'services/api';
 import { parseBBox } from '@/utils/bbox';
+import API from 'services/api';
 
 type UseParams = {
   geostory_id?: string;

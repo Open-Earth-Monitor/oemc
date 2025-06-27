@@ -91,13 +91,13 @@ const MapTooltip: FC<TooltipProps> = ({
         <XIcon size={14} className="text-brand-500" />
       </button>
       <div className="relative space-y-2">
-        <div className="font-satoshi space-y-4 font-bold text-brand-500">
+        <div className="space-y-4 font-satoshi font-bold text-brand-500">
           <div className="space-y-2">
             <h3 className="break-word mt-4 flex flex-wrap text-left text-sm">{leftData.title}</h3>
             {leftData.value !== 0 && (
               <div className="flex flex-col items-start">
                 {isRegionsLayerActive && !!nutsProperties?.NAME_LATN && (
-                  <div className="font-satoshi flex flex-wrap text-left text-2xl font-bold">
+                  <div className="flex flex-wrap text-left font-satoshi text-2xl font-bold">
                     {nutsProperties?.NAME_LATN}
                   </div>
                 )}
@@ -117,20 +117,20 @@ const MapTooltip: FC<TooltipProps> = ({
             <Button
               variant="default"
               onClick={handleClick}
-              className="font-inter w-full p-2 text-xs"
+              className="w-full p-2 font-inter text-xs"
               disabled={!leftData.value}
             >
               See point-based summary
             </Button>
           )}
           {leftData?.value && isRegionsLayerActive && (
-            <Button variant="default" onClick={handleHistogram} className="font-inter p-2 text-xs">
+            <Button variant="default" onClick={handleHistogram} className="p-2 font-inter text-xs">
               See regions-based summary
             </Button>
           )}
         </div>
         {!!rightData.value && (
-          <div className="border-brand-800 font-satoshi space-y-4 border-t pt-2.5 font-bold text-brand-500 ">
+          <div className="border-brand-800 space-y-4 border-t pt-2.5 font-satoshi font-bold text-brand-500 ">
             <div>
               <h3 className="mt-4 text-left text-sm">{rightData.title}</h3>
               <div className="text-xl">
