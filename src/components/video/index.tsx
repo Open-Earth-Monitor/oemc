@@ -1,13 +1,14 @@
-export function Video({ src, type = 'video/mp4' }: { src?: string; type?: string }) {
+export function Video({
+  src,
+  type = 'video/mp4',
+  className,
+}: {
+  src?: string;
+  type?: string;
+  className: string;
+}) {
   return (
-    <video
-      autoPlay
-      loop
-      muted
-      playsInline
-      preload="auto"
-      className="absolute left-0 top-0 z-0 h-screen w-screen object-cover"
-    >
+    <video autoPlay loop muted playsInline preload="auto" className={className}>
       <source src={src} type={type} />
       Your browser does not support the video tag.
     </video>

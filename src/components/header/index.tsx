@@ -10,11 +10,11 @@ import MainMenuTablet from '../main-menu/tablet';
 const Header = ({ className }: { className?: string }) => {
   return (
     <div
-      className={cn('content-box absolute z-[1000] h-[60px] w-full items-center sm:h-[70px]', {
+      className={cn('container z-[1000] m-auto h-[60px] w-full items-center sm:h-[70px]', {
         [className]: className,
       })}
     >
-      <div className="flex h-full items-center justify-between sm:container">
+      <div className=" flex h-full items-center justify-between">
         <Link href="/">
           <Image
             alt="Open-earth-monitor"
@@ -26,15 +26,14 @@ const Header = ({ className }: { className?: string }) => {
           />
         </Link>
 
-        <div className="flex h-full items-center sm:hidden">
+        {/* <div className="flex h-full items-center sm:hidden">
           <MainMenuMobile />
         </div>
         <div className="hidden h-full sm:block lg:hidden">
           <MainMenuTablet />
-        </div>
-        <div className="hidden lg:block">
-          <MainMenuDesktop />
-        </div>
+        </div> */}
+
+        <MainMenuDesktop />
       </div>
     </div>
   );
