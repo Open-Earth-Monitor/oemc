@@ -1,18 +1,18 @@
 'use client';
 
+import * as React from 'react';
+
+import { useMediaQuery } from 'react-responsive';
+
 import { orderBy } from 'lodash-es';
 
+import { mobile } from '@/lib/media-queries';
+
 import { useSocialMedia } from '@/hooks/social-media';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
 
 import Loading from '@/components/loading';
-import { Post } from '@/components/social-media/post';
+import SocialMediaDesktop from '@/components/social-media/carousel-desktop';
+import SocialMediaMobile from '@/components/social-media/carousel-mobile';
 
 const SocialMediaFeed = () => {
   const { data, isLoading, isFetched } = useSocialMedia(null, {
@@ -24,11 +24,13 @@ const SocialMediaFeed = () => {
     },
   });
 
+  const isMobile = useMediaQuery(mobile);
+
   return (
-    <section className="relative grid h-screen w-full font-satoshi md:grid-cols-10 lg:grid-cols-12">
+    <section className="container relative min-h-screen w-full font-satoshi">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[url(/images/landing/bg_social_media.svg)] bg-cover bg-center" />
-      <div className="container col-span-12 m-auto flex flex-col items-center justify-center space-y-[18px] sm:space-y-10">
-        <h3 className="max-w-xs py-12 text-center text-xl font-medium sm:max-w-sm sm:text-2xl md:max-w-xl lg:max-w-3xl">
+      <div className="col-span-12 m-auto flex flex-col items-center justify-center space-y-[18px] sm:space-y-10">
+        <h3 className="max-w-xs py-28 text-center text-xl font-medium sm:max-w-sm sm:text-2xl md:max-w-xl lg:max-w-3xl">
           <span className="text-[28px] text-white-500">
             Open Earth Monitor connects people, data, and technology to drive global sustainability.
           </span>{' '}
@@ -41,32 +43,8 @@ const SocialMediaFeed = () => {
             <Loading />
           </div>
         )}
-        {isFetched && (
-          <Carousel
-            className="w-full"
-            opts={{
-              align: 'center',
-              loop: true,
-              slidesToScroll: 1,
-              active: true,
-            }}
-          >
-            <CarouselContent>
-              {data?.map((post) => {
-                return (
-                  <CarouselItem
-                    key={post.id}
-                    className="flex h-full w-full basis-1/3 items-center justify-center"
-                  >
-                    <Post post={post} />
-                  </CarouselItem>
-                );
-              })}
-            </CarouselContent>
-            <CarouselPrevious variant="background" />
-            <CarouselNext variant="background" />
-          </Carousel>
-        )}
+        {isFetched && !isLoading && isMobile && <SocialMediaMobile data={data} />}
+        {isFetched && !isLoading && !isMobile && <SocialMediaDesktop data={data} />}
       </div>
     </section>
   );
