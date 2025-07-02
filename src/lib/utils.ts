@@ -1,6 +1,6 @@
 import { Coordinate } from 'ol/coordinate';
 import { TileWMS } from 'ol/source';
-import { FeatureInfoResponse, NuqsData } from './types';
+import { FeatureInfoResponse, NuqsData } from '../components/map/types';
 import axios from 'axios';
 
 export const getHistogramData = async (

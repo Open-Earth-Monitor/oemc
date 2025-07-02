@@ -29,7 +29,7 @@ import Loading from '../../loading';
 import LineChart from '../../line-chart';
 import CompareGeolocationInfoPopup from '../compare-geolocation-info';
 import { useNutsLayerData } from '@/hooks/layers';
-import { transformNuqsData } from '../utils';
+import { transformNuqsData } from '../../../lib/utils';
 
 export type AnnotationProps = {
   width: number;

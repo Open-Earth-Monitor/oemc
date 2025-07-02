@@ -52,7 +52,7 @@ import type { GeostoryMapProps, GeostoryTooltipInfo, FeatureInfoResponse } from 
 import PointHistogram from './stats/point-histogram';
 import RegionsHistogram from './stats/region-histogram';
 import CompareRegionsStatistics from './controls/compare-regions';
-import { getHistogramData } from './utils';
+import { getHistogramData } from '../../lib/utils';
 
 import { Extent } from 'ol/extent';
 import { InitialViewport } from './constants';

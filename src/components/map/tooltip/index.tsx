@@ -3,10 +3,9 @@
 import React, { FC, useCallback, useMemo } from 'react';
 
 import { format } from 'd3-format';
-import { XIcon } from 'lucide-react';
 import { useAtom, useSetAtom } from 'jotai';
-import { Button } from '@/components/ui/button';
-
+import GeostoryTooltip from './geostory-tooltip';
+import MonitorTooltip from './monitor-tooltip';
 import {
   coordinateAtom,
   histogramLayerLeftVisibilityAtom,
@@ -15,11 +14,14 @@ import {
   resolutionAtom,
 } from '@/app/store';
 
-import type { MonitorTooltipInfo, NutsProperties } from './types';
+import type { MonitorTooltipInfo, NutsProperties } from '../types';
 import cn from '@/lib/classnames';
-import { getHistogramData } from './utils';
+import { getHistogramData } from '../../../lib/utils';
 import { TileWMS } from 'ol/source';
 import { Coordinate } from 'ol/coordinate';
+import { Button } from '@/components/ui/button';
+
+import { LuChartColumnBig, LuX } from 'react-icons/lu';
 
 const numberFormat = format(',.2f');
 
@@ -80,7 +82,7 @@ const MapTooltip: FC<TooltipProps> = ({
   return (
     <div
       className={cn({
-        'text-2xs absolute z-50 max-w-[300px] translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-5 font-bold text-brand-500 shadow-md':
+        'absolute z-50 max-w-[300px] translate-x-[-50%] translate-y-[-100%] rounded-[20px] bg-white-500 p-5 font-satoshi font-medium text-black-500 shadow-md':
           true,
         hidden: leftLayerHistogramVisibility,
       })}
@@ -89,66 +91,48 @@ const MapTooltip: FC<TooltipProps> = ({
         top: `${position[1] - 10}px`,
       }}
     >
-      <button className="absolute right-4 top-4 z-50" onClick={onCloseTooltip}>
-        <XIcon size={14} className="text-brand-500" />
-      </button>
-      <div className="relative space-y-4">
-        <h3 className="mt-4 text-left text-sm font-bold">{leftData.title}</h3>
+      <div className="space-y-5">
+        <div className="flex w-full items-start justify-between">
+          <h3 className="break-word flex flex-wrap text-left">{leftData.title}</h3>
 
-        {!!leftData.value && (
-          <div className="flex flex-col items-start">
+          <button type="button" onClick={onCloseTooltip}>
+            <LuX className="h-6 w-6" />
+          </button>
+        </div>
+        {leftData.value !== 0 && (
+          <div className="flex flex-col items-start space-y-3">
             {isRegionsLayerActive && !!nutsProperties?.NAME_LATN && (
-              <div className="font-satoshi text-2xl font-bold">{nutsProperties?.NAME_LATN}</div>
+              <div className="flex flex-wrap space-x-2.5 divide-x-2 divide-white-900 text-left font-satoshi text-xs font-bold">
+                <span>{nutsProperties?.NAME_LATN}</span>
+                <span className="ml-2.5">Region name</span>
+              </div>
             )}
-            <div className="space-x-2 text-xl">
+            <div className="space-x-2 text-[22px]">
               {typeof leftData.value === 'number' ? numberFormat(leftData.value) : leftData.value}
               {!!leftData.unit && leftData.unit}
             </div>
-            {leftData.isComparable && <span className="text-sm">({dateLabel})</span>}
           </div>
         )}
         {!leftData.value && (!!rightData.value || !rightData.date) && (
-          <span className="pt-2 text-sm font-light">
-            No data is available at this specific point
-            {dateLabel && ` for the selected date (${dateLabel})`}.
-          </span>
+          <span>No data is available at this specific point.</span>
         )}
-        {!!leftData?.value && !isRegionsLayerActive && leftData.range && (
+        {leftData?.value && !isRegionsLayerActive && (
           <Button
             variant="default"
             onClick={handleClick}
-            className="w-full font-inter text-xs"
+            className="space-x-2 p-2 text-sm"
             disabled={!leftData.value}
           >
-            See point-based summary
+            <LuChartColumnBig className="h-6 w-6" />
+            <span>See point-based summary</span>
           </Button>
         )}
-
-        {!!leftData?.value && isRegionsLayerActive && leftData.range && (
-          <Button
-            variant="default"
-            onClick={handleHistogram}
-            className="p-2 font-inter text-xs"
-            disabled={!leftData.value}
-          >
-            See regions-based summary
+        {leftData?.value && isRegionsLayerActive && (
+          <Button variant="default" onClick={handleHistogram} className="space-x-2 p-2  text-sm">
+            <LuChartColumnBig className="h-6 w-6" />
+            <span> See regions-based summary</span>
           </Button>
         )}
-
-        {!!rightData.date && rightData.value !== 0 && (
-          <div className="border-brand-800 mt-4 border-t pt-4 text-right text-xl">
-            {typeof rightData.value === 'number' ? numberFormat(rightData.value) : rightData.value}
-            {!!rightData.unit && rightData.unit}{' '}
-            <span className="pt-4 text-sm">({compareDateLabel})</span>
-          </div>
-        )}
-        {!!rightData.date && !rightData.value && !leftData.value && (
-          <span className="pt-4 text-sm font-light">
-            No data is available at this specific point for the selected dates ({dateLabel} and{' '}
-            {compareDateLabel}).
-          </span>
-        )}
-        <div className="arrow absolute -bottom-5 left-1/2 -translate-x-1/2 rotate-45" />
       </div>
     </div>
   );
