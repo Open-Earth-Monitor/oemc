@@ -12,8 +12,6 @@ import { cn } from '@/lib/classnames';
 import { lonLatAtom } from '@/app/store';
 import { usePointData } from '@/hooks/map';
 
-import type { GeostoryTooltipInfo } from '../types';
-
 import { useAtomValue } from 'jotai';
 import { useSyncSidebarState } from '@/hooks/sync-query';
 
@@ -31,20 +29,13 @@ export type AnnotationProps = {
   compact?: boolean;
 };
 
-interface HistogramTypes extends GeostoryTooltipInfo {
-  onCloseTooltip: () => void;
+type GeostoryTooltipInfo = {
   layerId: string;
   compareLayerId: string;
   isRegionsLayerActive?: boolean;
-}
+};
 
-const PointHistogram: FC<HistogramTypes> = ({
-  onCloseTooltip = () => null,
-  layerId,
-  leftData,
-}: HistogramTypes) => {
-  const [isSidebarOpen] = useSyncSidebarState();
-
+const PointHistogram: FC<GeostoryTooltipInfo> = ({ layerId, leftData }: GeostoryTooltipInfo) => {
   const lonLat = useAtomValue(lonLatAtom);
 
   const { data } = useLayerParsedSource(
@@ -99,17 +90,8 @@ const PointHistogram: FC<HistogramTypes> = ({
   }, [histogramData, histogramPointData, layerId, leftData]);
 
   return (
-    <div
-      className={cn({
-        'absolute top-[81px] z-50 min-w-[420px] space-y-5 text-secondary-500 shadow-md': true,
-        'left-2.5': !isSidebarOpen,
-        'left-[570px]': isSidebarOpen,
-      })}
-    >
+    <div className="relative">
       <div className="first-letter:text-2xs border border-secondary-900 bg-brand-500 p-5 shadow-md">
-        <button className="absolute right-4 top-4 z-50" onClick={onCloseTooltip}>
-          <XIcon size={14} />
-        </button>
         <div className="relative space-y-2">
           <div className="space-y-4 font-satoshi font-bold">
             <div>
