@@ -15,9 +15,9 @@ import {
   resolutionAtom,
 } from '@/app/store';
 
-import type { MonitorTooltipInfo, NutsProperties } from './types';
+import type { MonitorTooltipInfo, NutsProperties } from '../types';
 import cn from '@/lib/classnames';
-import { getHistogramData } from './utils';
+import { getHistogramData } from '../../../lib/utils';
 import { TileWMS } from 'ol/source';
 import { Coordinate } from 'ol/coordinate';
 
@@ -28,7 +28,7 @@ interface TooltipProps extends MonitorTooltipInfo {
   nutsProperties?: NutsProperties;
 }
 
-const MapTooltip: FC<TooltipProps> = ({
+const MonitorTooltip: FC<TooltipProps> = ({
   position,
   onCloseTooltip = () => null,
   leftData,
@@ -78,20 +78,7 @@ const MapTooltip: FC<TooltipProps> = ({
     rightData.date && leftData.range?.find(({ value }) => value === rightData.date)?.label;
   if (!position || (!leftData?.value && leftData?.value !== 0)) return null;
   return (
-    <div
-      className={cn({
-        'text-2xs absolute z-50 max-w-[300px] translate-x-[-50%] translate-y-[-100%] bg-secondary-500 p-5 font-bold text-brand-500 shadow-md':
-          true,
-        hidden: leftLayerHistogramVisibility,
-      })}
-      style={{
-        left: `${position[0]}px`,
-        top: `${position[1] - 10}px`,
-      }}
-    >
-      <button className="absolute right-4 top-4 z-50" onClick={onCloseTooltip}>
-        <XIcon size={14} className="text-brand-500" />
-      </button>
+    <>
       <div className="relative space-y-4">
         <h3 className="mt-4 text-left text-sm font-bold">{leftData.title}</h3>
 
@@ -150,8 +137,8 @@ const MapTooltip: FC<TooltipProps> = ({
         )}
         <div className="arrow absolute -bottom-5 left-1/2 -translate-x-1/2 rotate-45" />
       </div>
-    </div>
+    </>
   );
 };
 
-export default MapTooltip;
+export default MonitorTooltip;

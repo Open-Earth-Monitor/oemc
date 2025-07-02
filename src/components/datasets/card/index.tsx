@@ -21,6 +21,7 @@ import { useSyncCompareLayersSettings, useSyncLayersSettings } from '../../../ho
 import { Monitor, MonitorParsed } from '@/types/monitors';
 import { Geostory } from '@/types/geostories';
 import TimeSeries from '@/components/timeseries';
+import PointHistogram from '@/components/map/stats/point-histogram';
 
 type DatasetCardProps = LayerParsed & {
   id: string;
@@ -155,6 +156,13 @@ const DatasetCard: FC<DatasetCardProps> = ({
               alt="left layer active"
             />
           </div>
+        )}
+        {id && !regionsLayerVisibility && (
+          <PointHistogram
+            layerId={id}
+            compareLayerId={id}
+            isRegionsLayerActive={regionsLayerVisibility}
+          />
         )}
       </div>
     </div>
