@@ -3,12 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { LuChevronDown } from 'react-icons/lu';
+
 import cn from '@/lib/classnames';
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-
 import { navSubLinksCommunity } from '@/components/main-menu/constants';
-import { LuChevronDown } from 'react-icons/lu';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const CommunityDropdown = ({ isMobile }: { isMobile?: boolean }) => {
   const pathname = usePathname();
