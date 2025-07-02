@@ -14,9 +14,7 @@ export const metadata: Metadata = {
 
 const Hub: NextPage = () => (
   <>
-    <div className="container m-auto font-satoshi font-medium">
-      <Header className="z-50 mx-0 px-0" />
-    </div>
+    <Header className="content-box absolute left-0 right-0 z-50 m-auto w-full" />
     <Hero />
     <SocialMediaFeed />
     <LandingDatasets />

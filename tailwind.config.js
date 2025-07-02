@@ -9,13 +9,16 @@ module.exports = {
   content: ['./src/app/**/*.{ts,tsx}', './src/components/**/*.{ts,tsx}'],
   theme: {
     container: {
-      DEFAULT: '1rem', // Default padding for medium screens
-      sm: '1rem', // Small screens
-      md: '1rem', // Medium screens
-      lg: '2rem', // Large screens
-      xl: '4rem', // Extra large screens
-      '2xl': '6rem', // Extra-extra large screens
-      '3xl': '10rem', // Extra-extra-extra large screens
+      center: true,
+      padding: {
+        DEFAULT: '1rem', // Default padding for medium screens
+        sm: '1rem', // Small screens
+        md: '1rem', // Medium screens
+        lg: '2rem', // Large screens
+        xl: '4rem', // Extra large screens
+        '2xl': '6rem', // Extra-extra large screens
+        '3xl': '10rem', // Extra-extra-extra large screens
+      },
     },
     extend: {
       fontFamily: {
