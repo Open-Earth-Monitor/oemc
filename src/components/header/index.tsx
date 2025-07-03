@@ -1,19 +1,25 @@
+'use client';
+
+import { useMediaQuery } from 'react-responsive';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
-import MainMenuDesktop from '../main-menu/desktop';
-import MainMenuMobile from '../main-menu/mobile';
-import MainMenuTablet from '../main-menu/tablet';
 import cn from '@/lib/classnames';
+import { mobile } from '@/lib/media-queries';
+
+import MainMenuDesktop from '@/components/main-menu/desktop';
+import MainMenuMobile from '@/components/main-menu/mobile';
 
 const Header = ({ className }: { className?: string }) => {
+  const isMobile = useMediaQuery(mobile);
   return (
     <div
-      className={cn('content-box absolute z-[1000] h-[60px] w-full items-center sm:h-[70px]', {
+      className={cn('container z-[1000] m-auto h-[60px] w-full items-center sm:h-[70px]', {
         [className]: className,
       })}
     >
-      <div className="m-auto flex h-full items-center justify-between px-3 sm:container">
+      <div className=" flex h-full items-center justify-between">
         <Link href="/">
           <Image
             alt="Open-earth-monitor"
@@ -24,16 +30,8 @@ const Header = ({ className }: { className?: string }) => {
             priority
           />
         </Link>
-
-        <div className="flex h-full items-center sm:hidden">
-          <MainMenuMobile />
-        </div>
-        <div className="hidden h-full sm:block lg:hidden">
-          <MainMenuTablet />
-        </div>
-        <div className="hidden h-full lg:block">
-          <MainMenuDesktop />
-        </div>
+        {!isMobile && <MainMenuDesktop />}
+        {isMobile && <MainMenuMobile />}
       </div>
     </div>
   );
