@@ -1,14 +1,20 @@
-import { Post as PostTypes } from '@/hooks/social-media';
 import Image from 'next/image';
-import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
+
+import { Post as PostTypes } from '@/hooks/social-media';
+
 import { PostHeader } from '@/components/social-media/post-header';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+
 import { PostHero } from './post-hero';
 
 export const Post = ({ post }: { post: PostTypes }) => {
   const data = post?.reblog || post;
 
   return (
-    <div className="h-full min-h-[400px] max-w-xs bg-black-500 bg-opacity-30 " key={post.id}>
+    <div
+      className="h-80 max-w-xs bg-black-500 bg-opacity-30 lg:h-full lg:min-h-[400px]"
+      key={post.id}
+    >
       <div className="p-5">
         <PostHeader post={post} />
         <PostHero post={post} />

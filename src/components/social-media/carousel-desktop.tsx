@@ -13,7 +13,7 @@ import {
 
 const SocialMediaDesktop = ({ data }) => (
   <Carousel
-    className="w-full bg-green-900 px-28 2xl:px-20"
+    className="w-full lg:px-28 xl:px-24 2xl:px-20"
     opts={{
       align: 'center',
       loop: true,
@@ -26,8 +26,8 @@ const SocialMediaDesktop = ({ data }) => (
         return (
           <CarouselItem
             key={post.id}
-            className="flex basis-full items-center justify-center transition-all
-             duration-300 sm:basis-1/2 lg:basis-1/3 2xl:basis-1/4"
+            className="flex items-center justify-center transition-all
+             duration-300 lg:basis-1/2 xl:basis-1/3"
           >
             <Post post={post} />
           </CarouselItem>
