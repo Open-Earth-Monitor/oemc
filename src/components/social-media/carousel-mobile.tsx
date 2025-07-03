@@ -36,9 +36,9 @@ const SocialMediaMobile = ({ data }) => (
     </CarouselContent>
     <CarouselPrevious
       variant="background"
-      className="-bottom-5 left-1/2 top-auto translate-x-[calc(50%-72px)]"
+      className="-bottom-20 left-1/2 top-auto translate-x-[calc(50%-72px)]"
     />
-    <CarouselNext variant="background" className="-bottom-5 left-1/2 top-auto translate-x-1/2" />
+    <CarouselNext variant="background" className="-bottom-20 left-1/2 top-auto translate-x-1/2" />
   </Carousel>
 );
 
