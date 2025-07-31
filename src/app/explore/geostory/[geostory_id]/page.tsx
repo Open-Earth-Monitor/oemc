@@ -11,7 +11,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // read route params
-  const id = params.geostory_id;
+  const id = params?.geostory_id;
 
   // fetch data
   const geostoryData = await axios

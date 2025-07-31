@@ -50,7 +50,7 @@ const ChartTooltip = ({
                 <p className="font-inter text-xs">{dataTitle}</p>
               </>
             )}
-            <p className="font-inter flex-1 text-end text-xs font-bold">
+            <p className="flex-1 text-end font-inter text-xs font-bold">
               {!!tooltipData && numberFormat(tooltipData.y)}
             </p>
           </div>
@@ -66,7 +66,7 @@ const ChartTooltip = ({
                 <p className="font-inter text-xs">{dataCompareTitle}</p>
               </>
 
-              <p className="font-inter flex-1 text-end text-xs font-bold">
+              <p className="flex-1 text-end font-inter text-xs font-bold">
                 {!!tooltipData.compare && numberFormat(tooltipData.compare.y)}
               </p>
             </div>
