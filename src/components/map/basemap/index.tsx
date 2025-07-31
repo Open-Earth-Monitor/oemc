@@ -3,7 +3,9 @@
 import { useMemo } from 'react';
 
 import { RLayerTile } from 'rlayers';
+
 import { useSyncBasemapSettings } from '@/hooks/sync-query';
+
 import { BASEMAPS } from '@/components/map/controls/basemaps/constants';
 
 const BasemapLayer = () => {

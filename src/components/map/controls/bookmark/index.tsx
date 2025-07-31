@@ -3,18 +3,16 @@ import type { FC, FormEvent, MouseEvent } from 'react';
 
 import { usePathname } from 'next/navigation';
 
+import { getWidth } from 'ol/extent';
+import { get as getProjection } from 'ol/proj';
+
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { useLocalStorage } from 'usehooks-ts';
 
-import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
+import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-
-import { get as getProjection } from 'ol/proj';
-import { getWidth } from 'ol/extent';
-
-import type { MobileProps } from '../types';
 
 const PREFIX = 'OEMC';
 
@@ -37,7 +35,11 @@ const createBBox = (center, zoom) => {
   return bbox;
 };
 
-export const BookmarkControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
+export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
+  isMobile,
+}: {
+  isMobile?: boolean;
+}) => {
   const [bookmarkName, setBookmarkName] = useState('');
   const [bookmarks, setBookmarks] = useLocalStorage<{ name: string; value: string }[]>(
     `${PREFIX}-bookmarks`,

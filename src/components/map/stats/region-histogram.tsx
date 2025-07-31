@@ -29,7 +29,7 @@ import Loading from '../../loading';
 import LineChart from '../../line-chart';
 import CompareGeolocationInfoPopup from '../compare-geolocation-info';
 import { useNutsLayerData } from '@/hooks/layers';
-import { transformNuqsData } from '../utils';
+import { transformNuqsData } from '../../../lib/utils';
 
 export type AnnotationProps = {
   width: number;
@@ -37,22 +37,24 @@ export type AnnotationProps = {
   compact?: boolean;
 };
 
-interface HistogramTypes extends GeostoryTooltipInfo {
-  onCloseTooltip: () => void;
-  layerId: string;
-  compareLayerId: string;
+type HistogramTypes = {
+  onCloseTooltip?: () => void;
+  compareLayerId?: string;
   isRegionsLayerActive?: boolean;
   nutsProperties?: NutsProperties;
   compareNutProperties?: NutsProperties;
-  onCompareClose: () => void;
-}
+  onCompareClose?: () => void;
+  color?: string;
+  title;
+};
 
 const RegionHistogram: FC<HistogramTypes> = ({
   onCloseTooltip = () => null,
-  leftData,
+  title,
   compareNutProperties,
   nutsProperties,
   onCompareClose,
+  color,
 }: HistogramTypes) => {
   const [isSidebarOpen] = useSyncSidebarState();
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
@@ -113,7 +115,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
         label: d.label,
         value: d.avg,
       }));
-      downloadCSV(data, `data-${leftData.title}.csv`);
+      downloadCSV(data, `data-${title}.csv`);
     } else if (
       histogramDataRegionRaw?.dataset?.length &&
       histogramDataRegionRawCompare?.dataset?.length
@@ -134,7 +136,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
           avg: histogramDataRegionRawCompare.dataset[i].avg,
         },
       }));
-      downloadCSVCompare(data, `data-${leftData.title}-compare.csv`);
+      downloadCSVCompare(data, `data-${title}-compare.csv`);
     } else {
       console.error('No data available for download.');
     }
@@ -161,9 +163,9 @@ const RegionHistogram: FC<HistogramTypes> = ({
           <XIcon size={14} />
         </button>
         <div className="relative space-y-2">
-          <div className="font-satoshi space-y-4 font-bold">
+          <div className="space-y-4 font-satoshi font-bold">
             <div>
-              <h3 className="mb-2 text-sm">{leftData.title}</h3>
+              <h3 className="mb-2 text-sm">{title}</h3>
               <h4 className="text-2xl">
                 {nutsProperties?.NAME_LATN} - {nutsProperties?.CNTR_CODE}
               </h4>
@@ -196,6 +198,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
                   <LineChart
                     data={histogramDataRegion}
                     dataCompare={isRegionsLayerActive && compareHistogramDataRegion}
+                    color={color}
                   />
                 </div>
               )}

@@ -1,20 +1,20 @@
 'use client';
 
+import * as React from 'react';
+
+import { useMediaQuery } from 'react-responsive';
+
 import { orderBy } from 'lodash-es';
 
+import { mobile, tablet } from '@/lib/media-queries';
+
 import { useSocialMedia } from '@/hooks/social-media';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
 
 import Loading from '@/components/loading';
-import { Post } from '@/components/social-media/post';
+import SocialMediaDesktop from '@/components/social-media/carousel-desktop';
+import SocialMediaMobile from '@/components/social-media/carousel-mobile';
 
-const SocialMedia = () => {
+const SocialMediaFeed = () => {
   const { data, isLoading, isFetched } = useSocialMedia(null, {
     select: (data) => {
       const orderedData = orderBy(data, 'created_at', 'desc');
@@ -24,11 +24,14 @@ const SocialMedia = () => {
     },
   });
 
+  const isMobile = useMediaQuery(mobile);
+  const isTablet = useMediaQuery(tablet);
   return (
-    <section className="font-satoshi relative grid h-screen w-full md:grid-cols-10 lg:grid-cols-12">
-      <div className="container col-span-12 m-auto flex flex-col items-center justify-center space-y-[18px] sm:space-y-10">
-        <h3 className="max-w-xs py-12 text-center text-xl font-medium sm:max-w-sm sm:text-2xl md:max-w-xl lg:max-w-3xl">
-          <span className="text-[28px] text-white-500">
+    <section className="relative w-screen font-satoshi">
+      <div className=" pointer-events-none absolute inset-0 -z-10 bg-[url(/images/landing/bg_social_media.svg)] bg-cover bg-center" />
+      <div className="col-span-12 m-auto flex flex-col items-center justify-center space-y-[18px] sm:space-y-10">
+        <h3 className="max-w-md py-6 text-center font-medium sm:text-2xl md:max-w-xl md:pb-12 md:pt-20 lg:max-w-3xl lg:py-28 lg:text-[28px]">
+          <span className="text-white-500 sm:text-2xl lg:text-[28px]">
             Open Earth Monitor connects people, data, and technology to drive global sustainability.
           </span>{' '}
           <span className="bg-[linear-gradient(131.67deg,_#1EEDBF_0%,_#75A1FF_100%)] bg-clip-text text-transparent">
@@ -40,35 +43,11 @@ const SocialMedia = () => {
             <Loading />
           </div>
         )}
-        {isFetched && (
-          <Carousel
-            className="w-full"
-            opts={{
-              align: 'center',
-              loop: true,
-              slidesToScroll: 1,
-              active: true,
-            }}
-          >
-            <CarouselContent>
-              {data?.map((post) => {
-                return (
-                  <CarouselItem
-                    key={post.id}
-                    className="flex h-full w-full basis-1/3 items-center justify-center"
-                  >
-                    <Post post={post} />
-                  </CarouselItem>
-                );
-              })}
-            </CarouselContent>
-            <CarouselPrevious variant="background" />
-            <CarouselNext variant="background" />
-          </Carousel>
-        )}
+        {isFetched && !isLoading && (isMobile || isTablet) && <SocialMediaMobile data={data} />}
+        {isFetched && !isLoading && !isMobile && !isTablet && <SocialMediaDesktop data={data} />}
       </div>
     </section>
   );
 };
 
-export default SocialMedia;
+export default SocialMediaFeed;

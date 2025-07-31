@@ -111,7 +111,7 @@ function LocationSearchComponent({
           </div>
           <div
             className={cn({
-              'font-inter right-0 top-[17px] z-50 max-h-[40vh] flex-1 overflow-y-auto rounded-b-2xl bg-white-500 leading-4 text-secondary-700 shadow-lg':
+              'right-0 top-[17px] z-50 max-h-[40vh] flex-1 overflow-y-auto rounded-b-2xl bg-white-500 font-inter leading-4 text-secondary-700 shadow-lg':
                 true,
             })}
           >
