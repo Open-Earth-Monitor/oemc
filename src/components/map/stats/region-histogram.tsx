@@ -37,20 +37,20 @@ export type AnnotationProps = {
   compact?: boolean;
 };
 
-interface HistogramTypes extends GeostoryTooltipInfo {
-  onCloseTooltip: () => void;
-  layerId: string;
-  compareLayerId: string;
+type HistogramTypes = {
+  onCloseTooltip?: () => void;
+  compareLayerId?: string;
   isRegionsLayerActive?: boolean;
   nutsProperties?: NutsProperties;
   compareNutProperties?: NutsProperties;
-  onCompareClose: () => void;
+  onCompareClose?: () => void;
   color?: string;
-}
+  title;
+};
 
 const RegionHistogram: FC<HistogramTypes> = ({
   onCloseTooltip = () => null,
-  leftData,
+  title,
   compareNutProperties,
   nutsProperties,
   onCompareClose,
@@ -115,7 +115,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
         label: d.label,
         value: d.avg,
       }));
-      downloadCSV(data, `data-${leftData.title}.csv`);
+      downloadCSV(data, `data-${title}.csv`);
     } else if (
       histogramDataRegionRaw?.dataset?.length &&
       histogramDataRegionRawCompare?.dataset?.length
@@ -136,7 +136,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
           avg: histogramDataRegionRawCompare.dataset[i].avg,
         },
       }));
-      downloadCSVCompare(data, `data-${leftData.title}-compare.csv`);
+      downloadCSVCompare(data, `data-${title}-compare.csv`);
     } else {
       console.error('No data available for download.');
     }
@@ -165,7 +165,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
         <div className="relative space-y-2">
           <div className="space-y-4 font-satoshi font-bold">
             <div>
-              <h3 className="mb-2 text-sm">{leftData.title}</h3>
+              <h3 className="mb-2 text-sm">{title}</h3>
               <h4 className="text-2xl">
                 {nutsProperties?.NAME_LATN} - {nutsProperties?.CNTR_CODE}
               </h4>
