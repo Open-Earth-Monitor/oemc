@@ -1,9 +1,10 @@
 import { useQuery, useQueries, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { sortBy } from 'lodash';
-import API from 'services/api';
 
 import { THEMES_COLORS, DEFAULT_COLOR } from '@/constants/themes';
+
+import API from 'services/api';
 
 type TrackingType = 'geostory_id' | 'monitor_id' | 'layer_id';
 

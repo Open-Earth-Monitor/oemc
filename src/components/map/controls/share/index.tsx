@@ -14,11 +14,11 @@ import { cn } from '@/lib/classnames';
 import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-import type { MobileProps } from '../types';
-
 const TIMEOUT_RESET_COPY_STATE = 3000;
 
-const ShareControl: FC<MobileProps> = ({ isMobile }: MobileProps) => {
+const ShareControl: FC<{
+  isMobile?: boolean;
+}> = ({ isMobile }: { isMobile?: boolean }) => {
   const [hasCopiedText, setHasCopiedText] = useState(false);
   const [, copyToClipboard] = useCopyToClipboard();
   const urlCopy = window.location.href;

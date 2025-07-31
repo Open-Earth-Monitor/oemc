@@ -461,16 +461,18 @@ const SidebarGroupLabel = forwardRef<HTMLDivElement, ComponentProps<'div'> & { a
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'div';
 
+    // Only pass ref if Comp is not a string (i.e., not a DOM element)
+    const compProps = asChild ? { ...props, ref } : { ...props, ref };
+
     return (
       <Comp
-        ref={ref}
+        {...compProps}
         data-sidebar="group-label"
         className={cn(
           'text-sidebar-foreground/70 ring-sidebar-ring [&>svg]:size-4 flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium outline-none transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:shrink-0',
           'group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0',
           className
         )}
-        {...props}
       />
     );
   }
@@ -607,38 +609,38 @@ const SidebarMenuButton = forwardRef<ElementRef<'button'>, SidebarMenuButtonProp
 
 SidebarMenuButton.displayName = 'SidebarMenuButton';
 
-export default SidebarMenuButton;
+// export default SidebarMenuButton;
 
-const SidebarMenuAction = forwardRef<
-  HTMLButtonElement,
-  ComponentProps<'button'> & {
-    asChild?: boolean;
-    showOnHover?: boolean;
-  }
->(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
-  const Comp = asChild ? Slot : 'button';
+// const SidebarMenuAction = forwardRef<
+//   ElementRef<typeof Slot>,
+//   ComponentProps<'button'> & {
+//     asChild?: boolean;
+//     showOnHover?: boolean;
+//   }
+// >(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
+//   const Comp = asChild ? Slot : 'button';
 
-  return (
-    <Comp
-      {...(asChild ? {} : { ref })}
-      data-sidebar="menu-action"
-      className={cn(
-        'text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 outline-none transition-transform focus-visible:ring-2 [&>svg]:shrink-0',
-        // Increases the hit area of the button on mobile.
-        'after:absolute after:-inset-2 after:md:hidden',
-        'peer-data-[size=sm]/menu-button:top-1',
-        'peer-data-[size=default]/menu-button:top-1.5',
-        'peer-data-[size=lg]/menu-button:top-2.5',
-        'group-data-[collapsible=icon]:hidden',
-        showOnHover &&
-          'peer-data-[active=true]/menu-button:text-sidebar-accent-foreground group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 md:opacity-0',
-        className
-      )}
-      {...props}
-    />
-  );
-});
-SidebarMenuAction.displayName = 'SidebarMenuAction';
+//   return (
+//     <Comp
+//       ref={ref}
+//       data-sidebar="menu-action"
+//       className={cn(
+//         'text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 outline-none transition-transform focus-visible:ring-2 [&>svg]:shrink-0',
+//         'after:absolute after:-inset-2 after:md:hidden',
+//         'peer-data-[size=sm]/menu-button:top-1',
+//         'peer-data-[size=default]/menu-button:top-1.5',
+//         'peer-data-[size=lg]/menu-button:top-2.5',
+//         'group-data-[collapsible=icon]:hidden',
+//         showOnHover &&
+//           'peer-data-[active=true]/menu-button:text-sidebar-accent-foreground group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 md:opacity-0',
+//         className
+//       )}
+//       {...props}
+//     />
+//   );
+// });
+
+// SidebarMenuAction.displayName = 'SidebarMenuAction';
 
 const SidebarMenuBadge = forwardRef<HTMLDivElement, ComponentProps<'div'>>(
   ({ className, ...props }, ref) => (
@@ -726,7 +728,7 @@ export {
   SidebarInput,
   SidebarInset,
   SidebarMenu,
-  SidebarMenuAction,
+  // SidebarMenuAction,
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
