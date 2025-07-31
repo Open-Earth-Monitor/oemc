@@ -11,10 +11,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
   const data = post?.reblog || post;
 
   return (
-    <div
-      className="h-80 max-w-xs bg-black-500 bg-opacity-30 lg:h-full lg:min-h-[400px]"
-      key={post.id}
-    >
+    <div className="h-80 max-w-xs bg-black-500 bg-opacity-30" key={post.id}>
       <div className="p-5">
         <PostHeader post={post} />
         <PostHero post={post} />
@@ -27,7 +24,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
                 <CarouselItem key={index}>
                   <Image
                     src={_.preview_url}
-                    alt={_.description || data?.card?.title}
+                    alt={_.description || data?.card?.title || 'post'}
                     width={_.meta.small.width}
                     height={_.meta.small.height}
                   />

@@ -1,10 +1,13 @@
 import React, { useCallback } from 'react';
-import { Group } from '@visx/group';
-import { Line, LinePath } from '@visx/shape';
-import { scaleLinear, scaleTime } from '@visx/scale';
+
 import { AxisLeft, AxisBottom } from '@visx/axis';
-import { useTooltip } from '@visx/tooltip';
 import { localPoint } from '@visx/event';
+import { Group } from '@visx/group';
+import { scaleLinear, scaleTime } from '@visx/scale';
+import { Line, LinePath } from '@visx/shape';
+import { useTooltip } from '@visx/tooltip';
+
+import ChartLegend from './legend';
 import ChartTooltip from './tooltip';
 import { DataPoint, LineChartProps, TooltipData } from './types';
 import {
@@ -18,9 +21,8 @@ import {
   tickProps,
   width,
 } from './utils';
-import ChartLegend from './legend';
 
-const LineChart: React.FC<LineChartProps> = ({ data: chartData, dataCompare }) => {
+const LineChart: React.FC<LineChartProps> = ({ data: chartData, dataCompare, color }) => {
   const compare = dataCompare?.data || [];
   const data = chartData?.data || [];
   const x = (d: DataPoint) => new Date(d.x).valueOf();
@@ -109,7 +111,7 @@ const LineChart: React.FC<LineChartProps> = ({ data: chartData, dataCompare }) =
               data={data}
               x={(d) => xScale(x(d))}
               y={(d) => yScale(y(d))}
-              stroke={DATA_COLOR}
+              stroke={color || DATA_COLOR}
               strokeWidth={2}
             />
 
@@ -151,7 +153,7 @@ const LineChart: React.FC<LineChartProps> = ({ data: chartData, dataCompare }) =
                 cx={tooltipLeft}
                 cy={tooltipTop}
                 r={4}
-                fill={DATA_COLOR}
+                fill={color}
                 stroke="white"
                 strokeWidth={2}
                 pointerEvents="none"

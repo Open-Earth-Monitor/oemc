@@ -5,7 +5,6 @@ import { FC, useCallback, useMemo } from 'react';
 import { FiDownload } from 'react-icons/fi';
 
 import { format } from 'd3-format';
-import { XIcon } from 'lucide-react';
 
 import { cn } from '@/lib/classnames';
 
@@ -13,7 +12,6 @@ import { lonLatAtom } from '@/app/store';
 import { usePointData } from '@/hooks/map';
 
 import { useAtomValue } from 'jotai';
-import { useSyncSidebarState } from '@/hooks/sync-query';
 
 import { downloadCSV } from '@/hooks/datasets';
 import Loading from '../../loading';
@@ -30,26 +28,22 @@ export type AnnotationProps = {
 };
 
 type GeostoryTooltipInfo = {
-  layerId: string;
-  compareLayerId: string;
+  id: string;
+  compareLayerId?: string;
   isRegionsLayerActive?: boolean;
-  title?: string;
-  color?: string;
+  title: string;
+  color: string;
 };
 
-const PointHistogram: FC<GeostoryTooltipInfo> = ({
-  layerId,
-  title,
-  color,
-}: GeostoryTooltipInfo) => {
+const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryTooltipInfo) => {
   const lonLat = useAtomValue(lonLatAtom);
 
   const { data } = useLayerParsedSource(
     {
-      layer_id: layerId,
+      layer_id: id,
     },
     {
-      enabled: !!layerId,
+      enabled: !!id,
     }
   );
 
@@ -58,7 +52,7 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({
   const layerPointInfoPayload = {
     lon: lonLat?.[0] || 0,
     lat: lonLat?.[1] || 0,
-    layer_id: layerId,
+    layer_id: id,
     srv_path,
     regex,
   };
@@ -85,7 +79,7 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({
       const data = Array.isArray(histogramData)
         ? histogramData
         : histogramPointData?.data?.map((d) => ({
-            layer_id: layerId,
+            layer_id: id,
             label: d.x,
             value: d.y,
           }));
@@ -93,8 +87,8 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({
     } else {
       console.error('No data available for download.');
     }
-  }, [histogramData, histogramPointData, layerId, title]);
-  console.log(histogramData, 'histogramData');
+  }, [histogramData, histogramPointData, id, title]);
+
   return (
     <div className="relative space-y-2">
       <div className="space-y-4 font-satoshi">
@@ -118,7 +112,7 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({
         {isLoadingHistogram && <Loading />}
         {!isLoadingHistogram && (
           <div className="relative h-full w-full">
-            <LineChart data={histogramPointData} />
+            <LineChart data={histogramPointData} color={color} />
           </div>
         )}
       </div>

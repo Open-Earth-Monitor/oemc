@@ -22,7 +22,7 @@ export const PostHeader = ({ post }: { post: PostTypes }) => {
     <div className="flex items-center space-x-4">
       <Image
         src={data?.account.avatar_static}
-        alt={data?.account.display_name || data.id}
+        alt={data?.account.display_name || data.id || 'Open Earth Monitor post'}
         width={56}
         height={56}
         className="shrink-0 rounded-full"

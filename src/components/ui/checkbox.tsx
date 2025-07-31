@@ -13,7 +13,7 @@ const Checkbox = forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn({
-      'data-[state=checked]border-accent-green bg-transparent shadow focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed data-[state=checked]:text-accent-green data-[state=checked]:ring-0 data-[state=checked]:ring-offset-0':
+      'bg-transparent shadow focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed data-[state=checked]:border-accent-green data-[state=checked]:text-accent-green data-[state=checked]:ring-0 data-[state=checked]:ring-offset-0':
         true,
       [className]: !!className,
     })}
@@ -32,11 +32,10 @@ const CheckboxIndicator = forwardRef<
   <CheckboxPrimitive.Indicator
     ref={ref}
     {...props}
-    className={cn({
-      'h-4 w-4 rounded-full border-2 border-transparent bg-white-500 p-1 text-current data-[state=checked]:bg-accent-green':
-        true,
-      className,
-    })}
+    className={cn(
+      'block h-4 w-4 rounded-full bg-white-500 text-current data-[state=checked]:bg-accent-green',
+      className
+    )}
   >
     {children}
   </CheckboxPrimitive.Indicator>

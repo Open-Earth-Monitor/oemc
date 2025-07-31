@@ -89,7 +89,7 @@ const LandingDatasets = () => {
   );
 
   return (
-    <div className="relative z-10 -mt-52 w-full bg-black-500" id="datasetsGrid">
+    <div className="relative z-10 w-full bg-black-500" id="datasetsGrid">
       <div className="container mx-auto w-full px-5 py-32">
         <div className="py-8">
           <div className="flex items-center justify-between">
