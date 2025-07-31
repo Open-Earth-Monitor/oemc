@@ -2,25 +2,16 @@
 
 import { useState, useRef, useMemo, FC, useCallback, useEffect } from 'react';
 
+import { useParams } from 'next/navigation';
+
 import axios from 'axios';
+import { useAtom, useSetAtom } from 'jotai';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import { toLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile } from 'rlayers';
-
-import { useParams } from 'next/navigation';
-
-import { useAtom, useSetAtom } from 'jotai';
-import { useLayer, useLayerParsedSource } from '@/hooks/layers';
-import { useMonitors } from '@/hooks/monitors';
-import {
-  useSyncLayersSettings,
-  useSyncCompareLayersSettings,
-  useSyncBboxSettings,
-  useSyncBasemapSettings,
-} from '@/hooks/sync-query';
 
 import {
   compareFunctionalityAtom,
@@ -30,6 +21,19 @@ import {
   nutsDataParamsCompareAtom,
   regionsLayerVisibilityAtom,
 } from '@/app/store';
+
+import { useLayer, useLayerParsedSource } from '@/hooks/layers';
+import { useMonitors } from '@/hooks/monitors';
+import {
+  useSyncLayersSettings,
+  useSyncCompareLayersSettings,
+  useSyncBboxSettings,
+  useSyncBasemapSettings,
+  useSyncBasemapLabelsSettings,
+} from '@/hooks/sync-query';
+
+import { LABELS } from '@/components/map/controls/basemaps/constants';
+
 import { Size } from 'ol/size';
 import Attributions from './attributions';
 import { DEFAULT_VIEWPORT, InitialViewport } from './constants';
@@ -45,7 +49,6 @@ import type { FeatureInfoResponse } from './types';
 import { getHistogramData } from '../../lib/utils';
 
 import BasemapLayer from './basemap';
-import Histogram from '@/containers/histogram';
 
 const TooltipInitialState = {
   position: null,
@@ -69,7 +72,7 @@ const TooltipInitialState = {
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
-
+  const [activeLabels] = useSyncBasemapLabelsSettings();
   const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
   const [basemap] = useSyncBasemapSettings();
   const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
@@ -347,6 +350,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const layerData = useLayer({ layer_id: layerId });
 
+  const labelUrl = useMemo(
+    () => LABELS.find((label) => activeLabels === label.id)?.url,
+    [activeLabels]
+  );
+
   return (
     <div className="relative h-full w-full">
       <RMap
@@ -435,6 +443,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           />
         )}
 
+        <RLayerTile zIndex={100} url={labelUrl} />
         <Controls
           mapRef={mapRef}
           layerLeftRef={layerLeftRef}

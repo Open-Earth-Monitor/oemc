@@ -35,3 +35,9 @@ export const useSyncTheme = () =>
 //  Filter view in monitors, geostories or everything
 export const useSyncDatasetType = () =>
   useQueryState('datasetType', parseAsJson<'all' | 'monitors' | 'geostories'>().withDefault('all'));
+
+export const useSyncBasemapLabelsSettings = () =>
+  useQueryState(
+    'basemap-labels',
+    parseAsJson<'dark' | 'light' | 'no-label'>().withDefault('light')
+  );
