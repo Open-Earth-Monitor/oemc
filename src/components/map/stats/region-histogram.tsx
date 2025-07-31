@@ -201,6 +201,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
                   <LineChart
                     data={histogramDataRegion}
                     dataCompare={isRegionsLayerActive && compareHistogramDataRegion}
+                    color={color}
                   />
                 </div>
               )}

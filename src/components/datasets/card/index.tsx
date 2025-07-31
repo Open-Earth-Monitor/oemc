@@ -84,7 +84,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
   const isValidUrlDownload = isValidUrl(download_url);
 
   const handleRegionsLayerVisibility = () => setIsRegionsLayerActive(!regionsLayerVisibility);
-  console.log(title, 'histogram');
+
   return (
     <div className="space-y-3 bg-brand-300 p-3.5 font-medium" data-testid={`dataset-item-${id}`}>
       <h2 data-testid="dataset-title" className="font-satoshi text-secondary-500" style={{ color }}>

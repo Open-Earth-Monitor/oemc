@@ -72,7 +72,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
 
       <Image
         src={`/images/geostories/${geostoryData?.id}.jpg`}
-        alt={geostoryData?.title}
+        alt={geostoryData?.title || 'geostory'}
         className="h-auto w-full pb-8"
         width={300}
         height={200}
