@@ -54,7 +54,7 @@ const Histogram: FC = ({ title, color, id }: { title: string; color: string; id:
       )} */}
       {isRegionsLayerActive && (
         <div>
-          {/* <RegionsHistogram color={color} /> */}
+          <RegionsHistogram color={color} />
           <div className="flex w-full justify-center">
             <Button variant="outline" size="sm" onClick={onCompareActive}>
               <span className="text-xs">Compare with another region</span>

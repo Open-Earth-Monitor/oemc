@@ -10,7 +10,7 @@ import type { LayerDateRange, LayerParsed } from '@/types/layers';
 
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
@@ -113,14 +113,15 @@ const TimeSeries: FC<{
               }}
             >
               <SelectTrigger className="w-fit text-xs font-semibold">
-                <Button
-                  variant="outline"
-                  className="w-full justify-between hover:bg-transparent"
-                  size="sm"
+                <div
+                  className={cn(
+                    buttonVariants({ variant: 'gradient', size: 'sm' }),
+                    'w-full justify-between hover:bg-transparent'
+                  )}
                 >
                   <SelectValue>{currentRange?.label}</SelectValue>
                   <SelectIcon />
-                </Button>
+                </div>
               </SelectTrigger>
               <SelectContent
                 className="z-[1000] flex max-h-56 w-full min-w-fit items-center text-center"
@@ -149,14 +150,15 @@ const TimeSeries: FC<{
               }}
             >
               <SelectTrigger className="w-fit text-xs font-semibold ">
-                <Button
-                  variant="outline"
-                  className="w-full justify-between hover:bg-transparent"
-                  size="sm"
+                <div
+                  className={cn(
+                    buttonVariants({ variant: 'outline', size: 'sm' }),
+                    'w-full justify-between hover:bg-transparent'
+                  )}
                 >
                   <SelectValue>{compareCurrentRange?.label || range[0].label}</SelectValue>
                   <SelectIcon />
-                </Button>
+                </div>
               </SelectTrigger>
               <SelectContent
                 className="z-[1000] flex max-h-56 w-full min-w-fit items-center text-center"
