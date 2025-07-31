@@ -29,7 +29,7 @@ import {
   coordinateAtom,
   lonLatAtom,
   regionsLayerVisibilityAtom,
-  histogramLayerLeftVisibilityAtom,
+  histogramVisibilityAtom,
   nutsDataParamsCompareAtom,
   compareFunctionalityAtom,
 } from '@/app/store';
@@ -74,9 +74,7 @@ const Map: FC<GeostoryMapProps> = ({
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
   const isDesktop = !isMobile && !isTablet;
-  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
-    histogramLayerLeftVisibilityAtom
-  );
+  const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
 
   const setCoordinate = useSetAtom(coordinateAtom);
 
@@ -396,7 +394,7 @@ const Map: FC<GeostoryMapProps> = ({
   const handleCloseTooltip = useCallback(() => {
     const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
     setTooltipInfo(newTooltipInfo);
-    setLeftLayerHistogramVisibility(false);
+    isHistogramVisibility(false);
     setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -621,7 +619,7 @@ const Map: FC<GeostoryMapProps> = ({
         )}
 
         <Attributions className="absolute z-40 sm:bottom-0 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
-        {layerData && leftLayerHistogramVisibility && !isRegionsLayerActive && (
+        {layerData && isHistogramActive && !isRegionsLayerActive && (
           <PointHistogram
             onCloseTooltip={handleCloseTooltip}
             layerId={layerId}
@@ -630,7 +628,7 @@ const Map: FC<GeostoryMapProps> = ({
           />
         )}
 
-        {layerData && leftLayerHistogramVisibility && isRegionsLayerActive && (
+        {layerData && isHistogramActive && isRegionsLayerActive && (
           <RegionsHistogram
             onCloseTooltip={handleCloseTooltip}
             layerId={layerId}

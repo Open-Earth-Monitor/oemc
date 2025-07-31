@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { RMap, RControl, RLayerTile } from 'rlayers';
 
-import { Controls } from '@/components/map/controls';
 import { BookmarkControl } from '@/components/map/controls/bookmark';
 
 import { DEFAULT_VIEWPORT } from '../constants';
@@ -21,9 +20,9 @@ const StaticMapComponent: FC = () => (
       url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
       attributions="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
     />
-    <Controls className="absolute bottom-3 left-3 top-auto z-50">
+    <div className="absolute bottom-3 left-3 top-auto z-50">
       <BookmarkControl />
-    </Controls>
+    </div>
   </RMap>
 );
 

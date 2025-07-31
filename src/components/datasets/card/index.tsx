@@ -4,12 +4,12 @@ import Image from 'next/image';
 
 import { FC, useCallback, useMemo } from 'react';
 
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { LuLayers2 } from 'react-icons/lu';
 
-import { regionsLayerVisibilityAtom } from '@/app/store';
+import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 
@@ -21,7 +21,7 @@ import { useSyncCompareLayersSettings, useSyncLayersSettings } from '../../../ho
 import { Monitor, MonitorParsed } from '@/types/monitors';
 import { Geostory } from '@/types/geostories';
 import TimeSeries from '@/components/timeseries';
-import PointHistogram from '@/components/map/stats/point-histogram';
+import Histogram from '@/containers/histogram';
 
 type DatasetCardProps = LayerParsed & {
   id: string;
@@ -46,6 +46,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
 }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
+  const isHistogramActive = useAtomValue(histogramVisibilityAtom);
 
   // isActive is based on the url
   const isActive = useMemo(() => layers?.[0]?.id === id, [id, layers]);
@@ -83,7 +84,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
   const isValidUrlDownload = isValidUrl(download_url);
 
   const handleRegionsLayerVisibility = () => setIsRegionsLayerActive(!regionsLayerVisibility);
-
+  console.log(title, 'histogram');
   return (
     <div className="space-y-3 bg-brand-300 p-3.5 font-medium" data-testid={`dataset-item-${id}`}>
       <h2 data-testid="dataset-title" className="font-satoshi text-secondary-500" style={{ color }}>
@@ -157,13 +158,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
             />
           </div>
         )}
-        {id && !regionsLayerVisibility && (
-          <PointHistogram
-            layerId={id}
-            compareLayerId={id}
-            isRegionsLayerActive={regionsLayerVisibility}
-          />
-        )}
+        {id && isHistogramActive && <Histogram color={color} title={title} id={id} />}
       </div>
     </div>
   );

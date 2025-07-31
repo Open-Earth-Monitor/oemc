@@ -2,7 +2,7 @@
 
 import { atom } from 'jotai';
 
-export const histogramLayerLeftVisibilityAtom = atom<boolean>(false);
+export const histogramVisibilityAtom = atom<boolean>(false);
 export const regionsLayerVisibilityAtom = atom<boolean>(false);
 
 export const lonLatAtom = atom<number[]>([null, null]);

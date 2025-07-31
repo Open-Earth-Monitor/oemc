@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 
 import {
   coordinateAtom,
-  histogramLayerLeftVisibilityAtom,
+  histogramVisibilityAtom,
   nutsDataParamsAtom,
   regionsLayerVisibilityAtom,
   resolutionAtom,
@@ -35,9 +35,7 @@ const MonitorTooltip: FC<TooltipProps> = ({
   rightData,
   nutsProperties,
 }: TooltipProps) => {
-  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
-    histogramLayerLeftVisibilityAtom
-  );
+  const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
   const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
 
   const [coordinate] = useAtom(coordinateAtom);
@@ -65,12 +63,12 @@ const MonitorTooltip: FC<TooltipProps> = ({
       leftData.id
     );
     setNutsDataParams(nutsDataParams);
-    setLeftLayerHistogramVisibility(true);
-  }, [coordinate, resolution, leftData.id, setLeftLayerHistogramVisibility]);
+    isHistogramVisibility(true);
+  }, [coordinate, resolution, leftData.id, isHistogramVisibility]);
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
   const handleClick = () => {
-    setLeftLayerHistogramVisibility(true);
+    isHistogramVisibility(true);
   };
 
   const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
