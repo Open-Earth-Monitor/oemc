@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Coordinate } from 'ol/coordinate';
 import {
   coordinateAtom,
-  histogramLayerLeftVisibilityAtom,
+  histogramVisibilityAtom,
   regionsLayerVisibilityAtom,
   resolutionAtom,
   nutsDataParamsAtom,
@@ -40,12 +40,10 @@ const GeostoryTooltip: FC<TooltipProps> = ({
   const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
 
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
-  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
-    histogramLayerLeftVisibilityAtom
-  );
+  const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
 
   const handleClick = () => {
-    setLeftLayerHistogramVisibility(true);
+    isHistogramVisibility(true);
   };
 
   const handleHistogram = useCallback(async () => {
@@ -57,8 +55,8 @@ const GeostoryTooltip: FC<TooltipProps> = ({
     );
 
     setNutsDataParams(nutsDataParams);
-    setLeftLayerHistogramVisibility(true);
-  }, [coordinate, resolution, leftData.id, setLeftLayerHistogramVisibility]);
+    isHistogramVisibility(true);
+  }, [coordinate, resolution, leftData.id, isHistogramVisibility]);
 
   const wmsNutsSource = useMemo(() => {
     return new TileWMS({

@@ -8,7 +8,7 @@ import GeostoryTooltip from './geostory-tooltip';
 import MonitorTooltip from './monitor-tooltip';
 import {
   coordinateAtom,
-  histogramLayerLeftVisibilityAtom,
+  histogramVisibilityAtom,
   nutsDataParamsAtom,
   regionsLayerVisibilityAtom,
   resolutionAtom,
@@ -37,9 +37,7 @@ const MapTooltip: FC<TooltipProps> = ({
   rightData,
   nutsProperties,
 }: TooltipProps) => {
-  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
-    histogramLayerLeftVisibilityAtom
-  );
+  const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
   const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
 
   const [coordinate] = useAtom(coordinateAtom);
@@ -67,12 +65,12 @@ const MapTooltip: FC<TooltipProps> = ({
       leftData.id
     );
     setNutsDataParams(nutsDataParams);
-    setLeftLayerHistogramVisibility(true);
-  }, [coordinate, resolution, leftData.id, setLeftLayerHistogramVisibility]);
+    isHistogramVisibility(true);
+  }, [coordinate, resolution, leftData.id, isHistogramVisibility]);
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
   const handleClick = () => {
-    setLeftLayerHistogramVisibility(true);
+    isHistogramVisibility(true);
   };
 
   const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
@@ -84,7 +82,7 @@ const MapTooltip: FC<TooltipProps> = ({
       className={cn({
         'absolute z-50 max-w-[300px] translate-x-[-50%] translate-y-[-100%] rounded-[20px] bg-white-500 p-5 font-satoshi font-medium text-black-500 shadow-md':
           true,
-        hidden: leftLayerHistogramVisibility,
+        hidden: isHistogramActive,
       })}
       style={{
         left: `${position[0]}px`,

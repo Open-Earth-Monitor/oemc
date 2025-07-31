@@ -4,13 +4,18 @@ import { FC, useCallback } from 'react';
 
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { XIcon } from 'lucide-react';
-
-import { compareFunctionalityAtom, histogramAtom, regionsLayerVisibilityAtom } from '@/app/store';
+import PointHistogram from '@/components/map/stats/point-histogram';
+import RegionsHistogram from '@/components/map/stats/region-histogram';
+import {
+  compareFunctionalityAtom,
+  histogramVisibilityAtom,
+  regionsLayerVisibilityAtom,
+} from '@/app/store';
 
 import { Button } from '@/components/ui/button';
 
-const Histogram: FC = () => {
-  const setHistogramVisibility = useSetAtom(histogramAtom);
+const Histogram: FC = ({ title, color, id }: { title: string; color: string; id: string }) => {
+  const setHistogramVisibility = useSetAtom(histogramVisibilityAtom);
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const isRegionsLayerActive = useAtomValue(regionsLayerVisibilityAtom);
 
@@ -25,7 +30,7 @@ const Histogram: FC = () => {
   const onCloseCompareInfo = useCallback(() => {
     setCompareFunctionalityInfo(false);
   }, []);
-
+  console.log(color);
   return (
     <div>
       <div className="flex w-full items-center justify-between border-t border-white-900 py-3">
@@ -47,16 +52,17 @@ const Histogram: FC = () => {
           <LineChart data={histogramPointData} color={color} />
         </div>
       )} */}
-      {isRegionsLayerActive && (
+      {/* {isRegionsLayerActive && (
         <div>
-          <RegionHistogram />
+          <RegionsHistogram color={color} />
           <div className="flex w-full justify-center">
             <Button variant="outline" size="sm" onClick={onCompareActive}>
               <span className="text-xs">Compare with another region</span>
             </Button>
           </div>
         </div>
-      )}
+      )} */}
+      {!isRegionsLayerActive && <PointHistogram color={color} title={title} id={id} />}
     </div>
   );
 };

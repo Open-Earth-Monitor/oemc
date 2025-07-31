@@ -1,8 +1,6 @@
 'use client';
 
-import React, { useMemo, FC, useCallback, useEffect, useRef, useState, ChangeEvent } from 'react';
-
-import { useMediaQuery } from 'react-responsive';
+import { useState, useRef, useMemo, FC, useCallback, useEffect } from 'react';
 
 import axios from 'axios';
 import type { MapBrowserEvent } from 'ol';
@@ -11,6 +9,8 @@ import type { Coordinate } from 'ol/coordinate';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
+
+import { useParams } from 'next/navigation';
 
 import { useAtom, useSetAtom } from 'jotai';
 import { useLayer, useLayerParsedSource } from '@/hooks/layers';
@@ -21,12 +21,11 @@ import {
   useSyncBboxSettings,
   useSyncBasemapSettings,
 } from '@/hooks/sync-query';
-import PointHistogram from './stats/point-histogram';
-import RegionsHistogram from './stats/region-histogram';
+
 import {
   compareFunctionalityAtom,
   coordinateAtom,
-  histogramLayerLeftVisibilityAtom,
+  histogramVisibilityAtom,
   lonLatAtom,
   nutsDataParamsCompareAtom,
   regionsLayerVisibilityAtom,
@@ -34,13 +33,13 @@ import {
 import { Size } from 'ol/size';
 import Attributions from './attributions';
 import { DEFAULT_VIEWPORT, InitialViewport } from './constants';
+
 // map controls
 import Controls from './controls';
-
-import Legend from './legend';
 import MapTooltip from './tooltip';
+import Legend from './legend';
+
 import type { CustomMapProps, MonitorTooltipInfo } from './types';
-import { useParams } from 'next/navigation';
 
 import type { FeatureInfoResponse } from './types';
 import { getHistogramData } from '../../lib/utils';
@@ -48,6 +47,7 @@ import { getHistogramData } from '../../lib/utils';
 import { Extent } from 'ol/extent';
 import BasemapControl from './controls/basemaps';
 import BasemapLayer from './basemap';
+import Histogram from '@/containers/histogram';
 
 interface ClickEvent {
   bbox?: Extent;
@@ -76,12 +76,8 @@ const TooltipInitialState = {
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [locationSearch, setLocationSearch] = useState('');
   const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
-  const isMobile = useMediaQuery(mobile);
-  const isTablet = useMediaQuery(tablet);
-  const isDesktop = !isMobile && !isTablet;
-  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
-    histogramLayerLeftVisibilityAtom
-  );
+
+  const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
   const [basemap] = useSyncBasemapSettings();
   const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
@@ -330,7 +326,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const handleCloseTooltip = useCallback(() => {
     const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
     setTooltipInfo(newTooltipInfo);
-    setLeftLayerHistogramVisibility(false);
+    isHistogramVisibility(false);
     setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -505,7 +501,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
       <Controls>
         <LocationSearchComponent
-          locationSearch={locationSearch}
+          locationSearch={locationSearch} 
           OPTIONS={OPTIONS}
           handleLocationSearchChange={handleLocationSearchChange}
           handleClick={handleClick}
@@ -515,52 +511,33 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           className="absolute right-0 top-[-134px]"
         />
 
-        <RControl.RZoom className="ol-zoom" key="ol-zoom" zoomOutLabel="-" zoomInLabel="+" />
-
-        <div
-          className={cn({
-            'absolute top-4 flex w-full flex-col items-end justify-end space-y-1.5 sm:top-[-26px]':
-              true,
-          })}
-        >
-          <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
-          <BasemapControl isMobile={isMobile} />
-          <BookmarkControl isMobile={isMobile} />
-          <ShareControl isMobile={isMobile} />
-        </div>
-        {isCompareLayerActive && data && !isLoading && (
-          <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
-        )}
-      </Controls>
-
-      {isLayerActive && <Legend />}
-      <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
-
-      {layerData && leftLayerHistogramVisibility ? (
-        !isRegionsLayerActive ? (
-          <PointHistogram
-            onCloseTooltip={handleCloseTooltip}
-            layerId={layerId}
-            compareLayerId={compareLayerId}
-            isRegionsLayerActive={isRegionsLayerActive}
-            {...tooltipInfo}
-          />
-        ) : (
-          <RegionsHistogram
-            onCloseTooltip={handleCloseTooltip}
-            layerId={layerId}
-            compareLayerId={compareLayerId}
-            onCompareClose={() => {
-              setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
-              setCompareNutsProperties(null);
-            }}
-            {...tooltipInfo}
-            nutsProperties={nutsProperties}
-            compareNutProperties={compareNutsProperties}
-          />
-        )
-      ) : null}
-
+        {isLayerActive && <Legend />}
+        <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
+        {/* {layerData && isHistogramActive ? (
+          !isRegionsLayerActive ? (
+            <PointHistogram
+              onCloseTooltip={handleCloseTooltip}
+              layerId={layerId}
+              compareLayerId={compareLayerId}
+              isRegionsLayerActive={isRegionsLayerActive}
+              {...tooltipInfo}
+            />
+          ) : (
+            <RegionsHistogram
+              onCloseTooltip={handleCloseTooltip}
+              layerId={layerId}
+              compareLayerId={compareLayerId}
+              onCompareClose={() => {
+                setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
+                setCompareNutsProperties(null);
+              }}
+              {...tooltipInfo}
+              nutsProperties={nutsProperties}
+              compareNutProperties={compareNutsProperties}
+            />
+          )
+        ) : null} */}
+      </RMap>
       {/* Interactivity */}
       {data && (
         <MapTooltip

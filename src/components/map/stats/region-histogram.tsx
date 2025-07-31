@@ -45,6 +45,7 @@ interface HistogramTypes extends GeostoryTooltipInfo {
   nutsProperties?: NutsProperties;
   compareNutProperties?: NutsProperties;
   onCompareClose: () => void;
+  color?: string;
 }
 
 const RegionHistogram: FC<HistogramTypes> = ({
@@ -53,6 +54,7 @@ const RegionHistogram: FC<HistogramTypes> = ({
   compareNutProperties,
   nutsProperties,
   onCompareClose,
+  color,
 }: HistogramTypes) => {
   const [isSidebarOpen] = useSyncSidebarState();
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
