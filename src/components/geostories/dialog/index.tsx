@@ -1,19 +1,11 @@
 import { useMemo } from 'react';
 
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-
-import { compact, isArray } from 'lodash-es';
-import { HiOutlineNewspaper, HiOutlineGlobeAlt } from 'react-icons/hi';
+import { compact } from 'lodash-es';
 import { LuInfo } from 'react-icons/lu';
-
-import cn from '@/lib/classnames';
 
 import type { Geostory } from '@/types/geostories';
 
-import { postWebTraffic } from '@/hooks/web-traffic';
-
-import DoiBadge from '@/components/doi-badge';
+import KnowledgePackage from '@/components/monitors/dialog/knowledge-package';
 import {
   Dialog,
   DialogContent,
@@ -23,7 +15,6 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-import KnowledgePackage from '@/components/monitors/dialog/knowledge-package';
 
 type GeostoryDialogProps = Partial<Geostory>;
 
@@ -37,16 +28,6 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
   use_case_link,
   publications,
 }) => {
-  const params = useParams();
-  const geostoryId = params.geostory_id;
-
-  const handleClick = () => {
-    postWebTraffic({
-      geostory_id: geostoryId,
-    });
-    console.info('WT2 -', 'geostories', id);
-  };
-
   const publicationsArray = useMemo(
     () =>
       Array.isArray(publications)

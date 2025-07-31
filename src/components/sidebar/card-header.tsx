@@ -1,6 +1,9 @@
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 import cn from '@/lib/classnames';
+
+import { postWebTraffic } from '@/hooks/web-traffic';
 
 type CardHeaderProps = {
   theme: string;
@@ -13,6 +16,16 @@ type CardHeaderProps = {
 };
 
 const CardHeader: React.FC<CardHeaderProps> = ({ theme, title, color, id, type, className }) => {
+  const params = useParams();
+  const geostoryId = params.geostory_id;
+
+  const handleClick = () => {
+    postWebTraffic({
+      geostory_id: geostoryId,
+    });
+    console.info('WT2 -', 'geostories', id);
+  };
+
   return (
     <div
       className={cn('flex flex-col space-y-4 font-medium', {
@@ -29,6 +42,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({ theme, title, color, id, type, 
         href={`/explore/${type === 'monitor' ? 'monitor' : 'geostory'}/${id}${
           type === 'monitor' ? '/datasets' : ''
         }`}
+        onClick={handleClick}
       >
         <h2 style={{ color }} className="text-[22px]">
           {title}

@@ -68,16 +68,20 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
           loading={isGeostoryLoading}
         />
         <p>{description}</p>
+
+        <div className="space-y-4">
+          {/* Geostory image */}
+          <Image
+            src={`/images/geostories/${geostoryData?.id}.jpg`}
+            alt={geostoryData?.title || 'geostory'}
+            className="h-auto w-full py-4"
+            width={300}
+            height={200}
+          />
+          <GeostoryDialog {...geostoryData} />
+        </div>
       </div>
 
-      <Image
-        src={`/images/geostories/${geostoryData?.id}.jpg`}
-        alt={geostoryData?.title || 'geostory'}
-        className="h-auto w-full pb-8"
-        width={300}
-        height={200}
-      />
-      <GeostoryDialog {...geostoryData} />
       {/* Datasets/layers cards */}
 
       {!!geostoryLayers?.length ? (

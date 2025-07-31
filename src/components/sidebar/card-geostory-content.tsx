@@ -27,4 +27,3 @@ function DatasetCardGeostory({ showMore, theme, title, color, publications, id }
 }
 
 export default DatasetCardGeostory;
-//

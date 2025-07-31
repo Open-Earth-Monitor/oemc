@@ -1,4 +1,5 @@
 'use client';
+
 import { useCallback, useEffect } from 'react';
 
 import type BaseEvent from 'ol/events/Event';
