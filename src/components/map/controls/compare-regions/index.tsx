@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/classnames';
 import { useAtom } from 'jotai';
 
-import { regionsLayerVisibilityAtom, histogramLayerLeftVisibilityAtom } from '@/app/store';
+import { regionsLayerVisibilityAtom, histogramVisibilityAtom } from '@/app/store';
 import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import { TooltipPortal } from '@radix-ui/react-tooltip';
 
@@ -17,9 +17,7 @@ const CompareRegionsStatistics = ({
   onClick: () => void;
 }) => {
   const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
-  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
-    histogramLayerLeftVisibilityAtom
-  );
+  const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
 
   return (
     <Tooltip delayDuration={100}>
@@ -34,7 +32,7 @@ const CompareRegionsStatistics = ({
             'bg-secondary-500 text-brand-500': isRegionsLayerActive,
           })}
           onClick={() => setIsRegionsLayerActive((prev) => !prev)}
-          disabled={leftLayerHistogramVisibility}
+          disabled={isHistogramActive}
         >
           {
             <svg
@@ -80,9 +78,9 @@ const CompareRegionsStatistics = ({
       <TooltipPortal>
         <TooltipContent sideOffset={0} side="left" align="center">
           <div className="text-sm">
-            {!isRegionsLayerActive && !leftLayerHistogramVisibility && 'Enable the regions layer'}
+            {!isRegionsLayerActive && !isHistogramActive && 'Enable the regions layer'}
             {!isRegionsLayerActive &&
-              leftLayerHistogramVisibility &&
+              isHistogramActive &&
               'Activate the regions layer to view statistics based on the selected region'}
             {isRegionsLayerActive && 'Disable regions layer'}
           </div>

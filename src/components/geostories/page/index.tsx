@@ -87,7 +87,12 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
             {geostoryLayers?.map((dataset) => {
               return (
                 <li key={dataset.layer_id}>
-                  <DatasetCard {...dataset} id={dataset.layer_id} isGeostory={false} />
+                  <DatasetCard
+                    {...dataset}
+                    id={dataset.layer_id}
+                    isGeostory={false}
+                    color={color}
+                  />
                 </li>
               );
             })}

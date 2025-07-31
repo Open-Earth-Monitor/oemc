@@ -30,7 +30,7 @@ import RegionsHistogram from './stats/region-histogram';
 import {
   compareFunctionalityAtom,
   coordinateAtom,
-  histogramLayerLeftVisibilityAtom,
+  histogramVisibilityAtom,
   lonLatAtom,
   nutsDataParamsCompareAtom,
   regionsLayerVisibilityAtom,
@@ -87,9 +87,7 @@ const MonitorMap: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT })
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
   const isDesktop = !isMobile && !isTablet;
-  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
-    histogramLayerLeftVisibilityAtom
-  );
+  const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
   const [basemap] = useSyncBasemapSettings();
   const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
@@ -338,7 +336,7 @@ const MonitorMap: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT })
   const handleCloseTooltip = useCallback(() => {
     const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
     setTooltipInfo(newTooltipInfo);
-    setLeftLayerHistogramVisibility(false);
+    isHistogramVisibility(false);
     setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -544,7 +542,7 @@ const MonitorMap: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT })
       {isLayerActive && <Legend />}
       <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
 
-      {layerData && leftLayerHistogramVisibility ? (
+      {layerData && isHistogramActive ? (
         !isRegionsLayerActive ? (
           <PointHistogram
             onCloseTooltip={handleCloseTooltip}

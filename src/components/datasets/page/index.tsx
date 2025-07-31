@@ -49,7 +49,7 @@ const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) 
   if (error?.code === '400') return redirect('/not-found');
 
   const { title, theme, color, id, description, geostories } = monitor || {};
-
+  console.log(color, 'pagina');
   return (
     <div>
       <BackToMonitorsAndGeostories />
@@ -77,7 +77,12 @@ const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) 
               {data?.map((dataset) => {
                 return (
                   <li key={dataset.layer_id}>
-                    <DatasetCard {...dataset} id={dataset.layer_id} isGeostory={false} />
+                    <DatasetCard
+                      {...dataset}
+                      id={dataset.layer_id}
+                      isGeostory={false}
+                      color={color}
+                    />
                   </li>
                 );
               })}
