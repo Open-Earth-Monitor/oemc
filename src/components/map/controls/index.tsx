@@ -2,15 +2,12 @@ import { useState, useMemo, FC, useCallback, ChangeEvent } from 'react';
 
 import { useMediaQuery } from 'react-responsive';
 
-import { useSetAtom } from 'jotai';
 import { Extent } from 'ol/extent';
 import { fromLonLat } from 'ol/proj';
 import { RControl } from 'rlayers';
 
 import { cn } from '@/lib/classnames';
 import { mobile, tablet } from '@/lib/media-queries';
-
-import { regionsLayerVisibilityAtom } from '@/app/store';
 
 import { useDebounce } from '@/hooks/datasets';
 import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
@@ -19,7 +16,6 @@ import { useSyncBboxSettings, useSyncCompareLayersSettings } from '@/hooks/sync-
 import LocationSearchComponent from '@/components/location-search';
 import BasemapControl from '@/components/map/controls/basemaps';
 import BookmarkControl from '@/components/map/controls/bookmark';
-import CompareRegionsStatistics from '@/components/map/controls/compare-regions';
 import ShareControl from '@/components/map/controls/share';
 import SwipeControl from '@/components/map/controls/swipe';
 
@@ -48,9 +44,6 @@ export const Controls: FC<ControlsProps> = ({
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
   const isDesktop = !isMobile && !isTablet;
-
-  // Jotai atoms
-  const setIsRegionsLayerActive = useSetAtom(regionsLayerVisibilityAtom);
 
   // Compare layer from the URL
   const [compareLayers] = useSyncCompareLayersSettings();
@@ -113,9 +106,6 @@ export const Controls: FC<ControlsProps> = ({
     [isDesktop, isMobile, mapRef, setBbox]
   );
 
-  const handleRegionsLayer = useCallback(() => {
-    setIsRegionsLayerActive((prev) => !prev);
-  }, [setIsRegionsLayerActive]);
   return (
     <div
       className={cn({
@@ -143,7 +133,6 @@ export const Controls: FC<ControlsProps> = ({
             true,
         })}
       >
-        <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
         <BasemapControl isMobile={isMobile} />
         <BookmarkControl isMobile={isMobile} />
         <ShareControl isMobile={isMobile} />
