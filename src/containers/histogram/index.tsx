@@ -14,7 +14,8 @@ import {
 
 import { Button } from '@/components/ui/button';
 
-const Histogram: FC = ({ title, color, id }: { title: string; color: string; id: string }) => {
+type HistogramProps = { title: string; color: string; id: string };
+const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => {
   const setHistogramVisibility = useSetAtom(histogramVisibilityAtom);
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const isRegionsLayerActive = useAtomValue(regionsLayerVisibilityAtom);
@@ -54,7 +55,7 @@ const Histogram: FC = ({ title, color, id }: { title: string; color: string; id:
       )} */}
       {isRegionsLayerActive && (
         <div>
-          <RegionsHistogram color={color} />
+          <RegionsHistogram color={color} title={title} />
           <div className="flex w-full justify-center">
             <Button variant="outline" size="sm" onClick={onCompareActive}>
               <span className="text-xs">Compare with another region</span>

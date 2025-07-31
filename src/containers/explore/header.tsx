@@ -7,7 +7,7 @@ import cn from '@/lib/classnames';
 
 import MainMenuDesktop from '@/components/main-menu/desktop';
 import MainMenuMobile from '@/components/main-menu/mobile';
-import MainMenuTablet from '@/components/main-menu/tablet';
+// import MainMenuTablet from '@/components/main-menu/tablet';
 
 export default function MapHeader({ className }: { className?: string }) {
   const isSidebarOpen = true;
@@ -32,9 +32,9 @@ export default function MapHeader({ className }: { className?: string }) {
         <div className="flex h-full items-center sm:hidden">
           <MainMenuMobile />
         </div>
-        <div className="hidden h-full sm:block lg:hidden">
+        {/* <div className="hidden h-full sm:block lg:hidden">
           <MainMenuTablet />
-        </div>
+        </div> */}
         <div className="hidden lg:block">
           <MainMenuDesktop />
         </div>

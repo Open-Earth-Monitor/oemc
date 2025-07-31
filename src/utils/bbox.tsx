@@ -14,7 +14,7 @@ export function parseBBox(value: string | number[], label: 'monitor' | 'geostory
       return parts;
     }
   }
-
+  // eslint-disable-next-line no-console
   console.warn(`Invalid ${label} bbox:`, value);
   return null;
 }
