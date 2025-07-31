@@ -83,7 +83,7 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ layerId, leftData }: Geostory
             label: d.x,
             value: d.y,
           }));
-      downloadCSV(data, `data-${leftData.title}.csv`);
+      downloadCSV(data, `data-${leftData?.title}.csv`);
     } else {
       console.error('No data available for download.');
     }
@@ -95,7 +95,7 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ layerId, leftData }: Geostory
         <div className="relative space-y-2">
           <div className="space-y-4 font-satoshi font-bold">
             <div>
-              <h3 className="mb-2 text-sm">{leftData.title}</h3>
+              <h3 className="mb-2 text-sm">{leftData?.title}</h3>
               <h4 className="text-2xl">
                 Location {numberFormat(lonLat[0])}, {numberFormat(lonLat[1])}
               </h4>
