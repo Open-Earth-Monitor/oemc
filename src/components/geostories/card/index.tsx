@@ -11,7 +11,7 @@ import { DatasetCard, CardHeader, CardFooter } from '@/components/card-landing';
 import GeostoryDialog from '../dialog';
 
 const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string }> = (geostory) => {
-  const { id, monitors } = geostory;
+  const { id, monitors, geostory_bbox } = geostory;
 
   const handleClick = (key) => {
     postWebTraffic({
@@ -22,7 +22,7 @@ const GeostoryCard: FC<Partial<Geostory> & { color?: string; colorHead?: string 
 
   return (
     <Link
-      href={`/map/geostories/${id}`}
+      href={`/map/geostories/${id}?bbox=${geostory_bbox}`}
       data-value="geostory_id"
       data-testid={`card-${id}`}
       className="group flex h-[456px] transform cursor-pointer flex-col justify-between bg-white-950 text-white-500 transition-transform duration-300 hover:-translate-y-4"

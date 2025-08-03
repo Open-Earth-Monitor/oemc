@@ -36,7 +36,7 @@ export const MonitorLink = ({
     <Link
       data-testid={`monitor-item-${id}`}
       key={id}
-      href={`/map/${id}/datasets${urlParams}`}
+      href={`/map/${id}/${urlParams}`}
       onClick={handleClick}
       className={cn({
         'flex items-center px-2 text-left font-bold sm:px-4': true,

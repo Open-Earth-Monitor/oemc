@@ -20,12 +20,14 @@ const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) 
     isLoading: isLoadingMonitor,
     isError: isMonitorError,
   } = useMonitor({ monitor_id });
+
   const {
     data,
     error,
     isLoading: isLoadingMonitorLayers,
     isError: isMonitorLayersError,
   } = useMonitorLayers({ monitor_id });
+
   const [layers, setLayers] = useSyncLayersSettings();
 
   // Only at beginning set the first layer
@@ -58,11 +60,12 @@ const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) 
         <CardHeader
           theme={theme}
           title={title}
-          type="geostory"
+          type="monitor"
           color={color}
           id={id}
           className="space-y-4"
           loading={isLoadingMonitor}
+          bbox={monitor?.monitor_bbox}
         />
         <p>{description}</p>
       </div>

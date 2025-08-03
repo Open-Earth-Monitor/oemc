@@ -21,7 +21,7 @@ const MonitorCard: FC<Partial<Monitor> & { color?: string }> = (monitor) => {
 
   return (
     <Link
-      href={`/map/${id}/datasets`}
+      href={`/map/${id}`}
       data-testid={`card-link-${id}`}
       className="group flex h-[456px] transform cursor-pointer flex-col justify-between bg-white-950 text-white-500 transition-transform duration-300 hover:-translate-y-4"
       style={{ borderTop: `2px solid ${monitor.color || '#000'}` }}

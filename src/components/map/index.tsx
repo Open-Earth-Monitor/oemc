@@ -2,7 +2,7 @@
 
 import { useState, useRef, useMemo, FC, useCallback, useEffect } from 'react';
 
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 
 import axios from 'axios';
 import { useAtom, useSetAtom } from 'jotai';
@@ -22,8 +22,9 @@ import {
   regionsLayerVisibilityAtom,
 } from '@/app/store';
 
+import { useGeostory, useGeostoryLayers } from '@/hooks/geostories';
 import { useLayer, useLayerParsedSource } from '@/hooks/layers';
-import { useMonitors } from '@/hooks/monitors';
+import { useMonitor, useMonitorLayers } from '@/hooks/monitors';
 import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
@@ -90,12 +91,65 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const setCoordinate = useSetAtom(coordinateAtom);
 
   const [lonLat, setLonLat] = useAtom(lonLatAtom);
+
+  // info from URL
   const params = useParams();
+  const pathname = usePathname();
+
+  const match = pathname.match(/^\/explore\/(geostory|monitor)(?:\/|$)/);
+  const type = match?.[1] as 'monitor' | 'geostory' | undefined;
   const monitorId = params.monitor_id as string;
 
-  const { data: monitorsData } = useMonitors();
-  const monitorData = monitorsData?.find((d) => d.id === monitorId);
-  const debouncedSearchValue = useDebounce(locationSearch, 500);
+  const { data: monitorData } = useMonitor(
+    {
+      monitor_id: params.monitor_id as string,
+    },
+    {
+      enabled: type === 'monitor' && !!monitorId,
+    }
+  );
+
+  const { data: geostoryData } = useGeostory(
+    {
+      geostory_id: params.geostory_id as string,
+    },
+    {
+      enabled: type === 'geostory' && !!params.geostory_id,
+    }
+  );
+
+  const monitorLayer = useMonitorLayers(
+    {
+      monitor_id: params.monitor_id as string,
+    },
+    {
+      enabled: type === 'monitor' && !!monitorId,
+    }
+  );
+
+  const geostoryLayer = useGeostoryLayers(
+    {
+      geostory_id: params.geostory_id as string,
+    },
+    {
+      enabled: type === 'geostory' && !!params.geostory_id,
+    }
+  );
+
+  const data = useMemo(() => {
+    if (type === 'monitor') {
+      return monitorData;
+    }
+    if (type === 'geostory') {
+      return geostoryData;
+    }
+    return null;
+  }, [type, monitorData, geostoryData]);
+
+  // bbox that come defined in the monitor/geostory itself
+  const predefinedBbox =
+    type === 'monitor' ? monitorData?.monitor_bbox : geostoryData?.geostory_bbox;
+
   const mapRef: React.MutableRefObject<{
     map: ol.Map;
     ol: {
@@ -126,11 +180,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const { data: compareData } = useLayer({ layer_id: compareLayerId });
 
-  // bbox that come defined in the monitor itself
-  const predefinedBbox = monitorData?.monitor_bbox;
-
   // check URL in case the site has been shared, if not get predefined bbox if not use the default one
-  const monitorBbox = useMemo(() => {
+  const dataBbox = useMemo(() => {
     if (bbox) return bbox;
     if (predefinedBbox) return predefinedBbox;
     return initialViewState.bbox;
@@ -142,13 +193,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const initialViewport = {
     zoom: initialViewState.zoom,
     center: initialViewState.center,
-    bbox: monitorBbox,
+    bbox: dataBbox,
   } satisfies InitialViewport;
 
   /**
    * Get the layer source from the API
    */
-  const { data, isLoading } = useLayerParsedSource(
+  const { data: layerFromURL, isLoading } = useLayerParsedSource(
     {
       layer_id: layerId,
     },
@@ -156,7 +207,17 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       enabled: !!layerId,
     }
   );
-  const { gs_base_wms, gs_name, title, unit, range, range_labels } = data || {};
+
+  const layerData = useMemo(() => {
+    if (layerFromURL) return layerFromURL;
+
+    if (type === 'monitor') return monitorLayer?.data?.[0];
+    if (type === 'geostory') return geostoryLayer?.data?.[0];
+
+    return undefined;
+  }, [layerFromURL, monitorLayer, geostoryLayer, type]);
+
+  const { gs_base_wms, gs_name, title, unit, range, range_labels } = layerData || {};
 
   /* Interactivity */
   const wmsSource = useMemo(() => {
@@ -339,11 +400,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   }, [setIsRegionsLayerActive]);
 
   useEffect(() => {
-    if (monitorBbox && mapRef) {
-      setBbox(monitorBbox);
-      mapRef?.current?.ol?.getView()?.fit(monitorBbox);
+    if (dataBbox && mapRef) {
+      setBbox(dataBbox);
+      mapRef?.current?.ol?.getView()?.fit(dataBbox);
     }
-  }, [monitorBbox]);
+  }, [dataBbox, setBbox, mapRef]);
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
@@ -360,60 +421,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date, tooltipInfo.position, compareDate]);
-
-  const handleLocationSearchChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setLocationSearch(e.target.value);
-    },
-    [setLocationSearch]
-  );
-
-  const {
-    data: locationData = [],
-    isLoading: isLoadingLocationData = false,
-    isFetching: isFetchingLocationData = false,
-  } = useOpenStreetMapsLocations(
-    {
-      q: debouncedSearchValue,
-      format: 'json',
-    },
-    {
-      enabled: debouncedSearchValue !== '' && debouncedSearchValue.length >= 2,
-      select: (data) => data,
-    }
-  );
-
-  const OPTIONS = useMemo(() => {
-    if (!Array.isArray(locationData)) return [];
-    return locationData.map((d) => ({
-      value: d.place_id ?? undefined,
-      label: d.display_name ?? '',
-      // transforming bbox from "nominatim" to "overpass" and to "ESPG:3857 projection"
-      bbox: [
-        ...fromLonLat([+d.boundingbox[2], +d.boundingbox[0]]),
-        ...fromLonLat([+d.boundingbox[3], +d.boundingbox[1]]),
-      ] as Extent,
-    }));
-  }, [locationData]);
-
-  const handleClick = useCallback(
-    (e: ClickEvent) => {
-      if (mapRef?.current) {
-        const view = mapRef.current.ol.getView();
-        const padding = isDesktop ? [150, 0, 0, 300] : [150, 0, 0, 50];
-        view?.fit(e.bbox, {
-          duration: 2000,
-          ...(!isMobile && { padding }),
-        });
-      }
-
-      // Center the map
-      setBbox(e.bbox);
-    },
-    [isDesktop, isMobile]
-  );
-
-  const layerData = useLayer({ layer_id: layerId });
 
   const labelUrl = useMemo(
     () => LABELS.find((label) => activeLabels === label.id)?.url,
@@ -505,32 +512,20 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           zIndex={100}
           url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
         />
-      )}
+      )} 
 
-<<<<<<< HEAD
-      <Controls>
-        <LocationSearchComponent
-          locationSearch={locationSearch} 
-          OPTIONS={OPTIONS}
-          handleLocationSearchChange={handleLocationSearchChange}
-          handleClick={handleClick}
-          isLoading={isLoadingLocationData}
-          isFetching={isFetchingLocationData}
-          isMobile={isMobile}
-          className="absolute right-0 top-[-134px]"
-=======
+
         <RLayerTile zIndex={100} url={labelUrl} />
-        <Controls
+        <Controls  
           mapRef={mapRef}
           layerLeftRef={layerLeftRef}
           layerRightRef={layerRightRef}
           data={data}
           isLoading={isLoading}
->>>>>>> f726546 (map settings)
-        />
-
+        />  
+ 
         {isLayerActive && <Legend />}
-        <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
+        <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" /> 
         {/* {layerData && isHistogramActive ? (
           !isRegionsLayerActive ? (
             <PointHistogram

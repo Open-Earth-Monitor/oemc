@@ -12,7 +12,7 @@ import { Popover, PopoverContent } from '@/components/ui/popover';
 import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
-import { BASEMAPS, LABELS, LabelProps } from './constants';
+import { BASEMAPS, LABELS, LabelProps, BasemapProps } from './constants';
 
 const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
   const [selectedBasemap, setBasemap] = useSyncBasemapSettings();
@@ -80,7 +80,7 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
           </PopoverTrigger>
         </TooltipTrigger>
         <PopoverContent
-          className="divide flex w-fit flex-col divide-y divide-dashed divide-white-900 overflow-hidden bg-black-100 px-2 py-3 text-sm text-white-500"
+          className="divide flex w-fit flex-col divide-y divide-dashed divide-white-900 overflow-hidden bg-black-100 px-2 py-5 text-sm text-white-500"
           align="start"
           side="right"
         >
