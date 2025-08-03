@@ -2,18 +2,19 @@
 
 import { useEffect, useMemo } from 'react';
 
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { useGeostoryParsed, useGeostoryLayers } from '@/hooks/geostories';
 import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
 
-import Loading from '@/components/loading';
-
-import CardHeader from '@/components/sidebar/card-header';
-import GeostoryDialog from '../dialog';
 import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geostories-button';
+
 import DatasetCard from '@/components/datasets/card';
+import Loading from '@/components/loading';
+import CardHeader from '@/components/sidebar/card-header';
+
+import GeostoryDialog from '../dialog';
 
 const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   const [layers, setLayers] = useSyncLayersSettings();
@@ -66,18 +67,21 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
           id={id}
           className="space-y-4"
           loading={isGeostoryLoading}
+          bbox={geostoryData?.geostory_bbox}
         />
         <p>{description}</p>
 
         <div className="space-y-4">
           {/* Geostory image */}
-          <Image
-            src={`/images/geostories/${geostoryData?.id}.jpg`}
-            alt={geostoryData?.title || 'geostory'}
-            className="h-auto w-full py-4"
-            width={300}
-            height={200}
-          />
+          {geostoryData?.id && (
+            <Image
+              src={`/images/geostories/${geostoryData?.id}.jpg`}
+              alt={geostoryData?.title || 'geostory'}
+              className="h-auto w-full py-4"
+              width={300}
+              height={200}
+            />
+          )}
           <GeostoryDialog {...geostoryData} />
         </div>
       </div>
@@ -90,10 +94,10 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
           <ul className="space-y-4 sm:space-y-6" data-testid="datasets-list">
             {geostoryLayers?.map((dataset) => {
               return (
-                <li key={dataset.layer_id}>
+                <li key={dataset?.layer_id}>
                   <DatasetCard
                     {...dataset}
-                    id={dataset.layer_id}
+                    id={dataset?.layer_id}
                     isGeostory={false}
                     color={color}
                   />

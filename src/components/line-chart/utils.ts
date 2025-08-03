@@ -10,9 +10,9 @@ export const formatDate = (value: number | string) =>
 
 export const DATA_COLOR = '#35B6D8';
 export const COMPARE_DATA_COLOR = '#F06BAF';
-export const margin = { top: 25, right: 20, bottom: 30, left: 20 };
+export const margin = { top: 25, right: 20, bottom: 30, left: 30 };
 export const height = 200;
-export const width = 384;
+export const width = 280;
 export const colorAxis = '#2E3333';
 export const tickProps = {
   hideTicks: true,

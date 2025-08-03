@@ -21,7 +21,6 @@ import { Button } from '@/components/ui/button';
 import type { GeostoryTooltipInfo, NutsProperties } from '../types';
 
 import { useAtomValue } from 'jotai';
-import { useSyncSidebarState } from '@/hooks/sync-query';
 
 import { downloadCSV, downloadCSVCompare } from '@/hooks/datasets';
 import Loading from '../../loading';
@@ -56,7 +55,6 @@ const RegionHistogram: FC<HistogramTypes> = ({
   onCompareClose,
   color,
 }: HistogramTypes) => {
-  const [isSidebarOpen] = useSyncSidebarState();
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const nutsDataParams = useAtomValue(nutsDataParamsAtom);
   const nutsDataParamsCompare = useAtomValue(nutsDataParamsCompareAtom);
@@ -151,68 +149,54 @@ const RegionHistogram: FC<HistogramTypes> = ({
   }, []);
 
   return (
-    <div
-      className={cn({
-        'absolute top-[81px] z-50 min-w-[420px] space-y-5 text-secondary-500 shadow-md': true,
-        'left-2.5 ': !isSidebarOpen,
-        'left-[570px]': isSidebarOpen,
-      })}
-    >
-      <div className="first-letter:text-2xs border border-secondary-900 bg-brand-500 p-5 shadow-md">
-        <button className="absolute right-4 top-4 z-50" onClick={onCloseTooltip}>
-          <XIcon size={14} />
-        </button>
-        <div className="relative space-y-2">
-          <div className="space-y-4 font-satoshi font-bold">
-            <div>
-              <h3 className="mb-2 text-sm">{title}</h3>
+    <div className="relative space-y-2">
+      <div className="space-y-4 font-satoshi font-bold">
+        <div>
+          <h3 className="mb-2 text-sm">{title}</h3>
+          <h4 className="text-2xl">
+            {nutsProperties?.NAME_LATN} - {nutsProperties?.CNTR_CODE}
+          </h4>
+          {compareNutProperties && (
+            <div className="mt-3 flex  items-center gap-2">
               <h4 className="text-2xl">
-                {nutsProperties?.NAME_LATN} - {nutsProperties?.CNTR_CODE}
+                {compareNutProperties.NAME_LATN} - {compareNutProperties.CNTR_CODE}
               </h4>
-              {compareNutProperties && (
-                <div className="mt-3 flex  items-center gap-2">
-                  <h4 className="text-2xl">
-                    {compareNutProperties.NAME_LATN} - {compareNutProperties.CNTR_CODE}
-                  </h4>
-                  <button className="py-0" onClick={onCompareClose}>
-                    <XIcon size={24} />
-                  </button>
-                </div>
-              )}
-              <button
-                type="button"
-                onClick={handleClick}
-                className={cn({
-                  'flex w-full items-center justify-end space-x-2': true,
-                  'opacity-50': !histogramDataRegion,
-                })}
-                disabled={!histogramDataRegion}
-              >
-                <FiDownload className="h-6 w-6" />
-                <span className="font-inter text-xs">CSV</span>
+              <button className="py-0" onClick={onCompareClose}>
+                <XIcon size={24} />
               </button>
-              {isLoadingDataHistogram || isLoadingDataCompareHistogram ? (
-                <Loading />
-              ) : (
-                <div className="relative h-full w-full">
-                  <LineChart
-                    data={histogramDataRegion}
-                    dataCompare={isRegionsLayerActive && compareHistogramDataRegion}
-                    color={color}
-                  />
-                </div>
-              )}
             </div>
-            {isRegionsLayerActive &&
-              !compareFunctionalityInfo &&
-              !compareHistogramDataRegion?.data?.length && (
-                <Button variant="default" size="sm" onClick={onCompareActive}>
-                  Compare
-                </Button>
-              )}
-          </div>
+          )}
+          <button
+            type="button"
+            onClick={handleClick}
+            className={cn({
+              'flex w-full items-center justify-end space-x-2': true,
+              'opacity-50': !histogramDataRegion,
+            })}
+            disabled={!histogramDataRegion}
+          >
+            <FiDownload className="h-6 w-6" />
+            <span className="font-inter text-xs">CSV</span>
+          </button>
+          {isLoadingDataHistogram || isLoadingDataCompareHistogram ? (
+            <Loading />
+          ) : (
+            <div className="relative h-full w-full">
+              {/* <LineChart
+                  data={histogramDataRegion}
+                  dataCompare={isRegionsLayerActive && compareHistogramDataRegion}
+                  color={color}
+                /> */}
+            </div>
+          )}
+        </div>
+        <div className="flex w-full justify-center">
+          <Button variant="outline" size="sm" onClick={onCompareActive}>
+            <span className="text-xs">Compare with another region</span>
+          </Button>
         </div>
       </div>
+
       {compareFunctionalityInfo && isRegionsLayerActive && (
         <CompareGeolocationInfoPopup onClick={onCloseCompareInfo} />
       )}
