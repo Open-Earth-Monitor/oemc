@@ -6,6 +6,8 @@ import type { Layer, LayerParsed } from '@/types/layers';
 
 import { Theme, THEMES_COLORS } from '@/constants/themes';
 
+import { cleanLayer } from '@/hooks/layers';
+
 import { parseBBox } from '@/utils/bbox';
 import API from 'services/api';
 
@@ -67,24 +69,28 @@ export function useGeostoryLayers(
   queryOptions?: UseQueryOptions<Layer[], Error, LayerParsed[]>
 ) {
   const { geostory_id } = params;
+
   const fetchGeostoryLayers = () =>
     API.request({
       method: 'GET',
       url: `/geostories/${geostory_id}/layers`,
       ...queryOptions,
     }).then((response: AxiosResponse<Layer[]>) => response.data);
+
   return useQuery(['geostory-layers', params], fetchGeostoryLayers, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) =>
-      data.map((d) => {
-        return {
-          ...d,
-          range: d?.range?.map((r, index) => ({
-            value: r,
-            label: d?.range_labels?.[index] || null,
-          })),
-        };
-      }),
+    select: (layers) => {
+      const flattenAndCleanLayers = layers.flatMap((layer) => {
+        const { extra_lyrs = [], ...baseLayer } = layer;
+
+        const cleanedBase = cleanLayer(baseLayer);
+        const cleanedExtras = extra_lyrs.map(cleanLayer);
+
+        return [cleanedBase, ...cleanedExtras];
+      });
+
+      return flattenAndCleanLayers;
+    },
     ...queryOptions,
   });
 }

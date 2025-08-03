@@ -53,16 +53,7 @@ const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => 
           <LineChart data={histogramPointData} color={color} />
         </div>
       )} */}
-      {isRegionsLayerActive && (
-        <div>
-          <RegionsHistogram color={color} title={title} />
-          <div className="flex w-full justify-center">
-            <Button variant="outline" size="sm" onClick={onCompareActive}>
-              <span className="text-xs">Compare with another region</span>
-            </Button>
-          </div>
-        </div>
-      )}
+      {isRegionsLayerActive && <RegionsHistogram color={color} title={title} />}
       {!isRegionsLayerActive && <PointHistogram color={color} title={title} id={id} />}
     </div>
   );

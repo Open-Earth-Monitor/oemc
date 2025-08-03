@@ -2,7 +2,7 @@
 
 import { useState, useRef, useMemo, FC, useCallback, useEffect } from 'react';
 
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 
 import axios from 'axios';
 import { useAtom, useSetAtom } from 'jotai';
@@ -22,8 +22,9 @@ import {
   regionsLayerVisibilityAtom,
 } from '@/app/store';
 
+import { useGeostory, useGeostoryLayers } from '@/hooks/geostories';
 import { useLayer, useLayerParsedSource } from '@/hooks/layers';
-import { useMonitors } from '@/hooks/monitors';
+import { useMonitor, useMonitorLayers } from '@/hooks/monitors';
 import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
@@ -83,11 +84,65 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const setCoordinate = useSetAtom(coordinateAtom);
 
   const [lonLat, setLonLat] = useAtom(lonLatAtom);
+
+  // info from URL
   const params = useParams();
+  const pathname = usePathname();
+
+  const match = pathname.match(/^\/explore\/(geostory|monitor)(?:\/|$)/);
+  const type = match?.[1] as 'monitor' | 'geostory' | undefined;
   const monitorId = params.monitor_id as string;
 
-  const { data: monitorsData } = useMonitors();
-  const monitorData = monitorsData?.find((d) => d.id === monitorId);
+  const { data: monitorData } = useMonitor(
+    {
+      monitor_id: params.monitor_id as string,
+    },
+    {
+      enabled: type === 'monitor' && !!monitorId,
+    }
+  );
+
+  const { data: geostoryData } = useGeostory(
+    {
+      geostory_id: params.geostory_id as string,
+    },
+    {
+      enabled: type === 'geostory' && !!params.geostory_id,
+    }
+  );
+
+  const monitorLayer = useMonitorLayers(
+    {
+      monitor_id: params.monitor_id as string,
+    },
+    {
+      enabled: type === 'monitor' && !!monitorId,
+    }
+  );
+
+  const geostoryLayer = useGeostoryLayers(
+    {
+      geostory_id: params.geostory_id as string,
+    },
+    {
+      enabled: type === 'geostory' && !!params.geostory_id,
+    }
+  );
+
+  const data = useMemo(() => {
+    if (type === 'monitor') {
+      return monitorData;
+    }
+    if (type === 'geostory') {
+      return geostoryData;
+    }
+    return null;
+  }, [type, monitorData, geostoryData]);
+
+  // bbox that come defined in the monitor/geostory itself
+  const predefinedBbox =
+    type === 'monitor' ? monitorData?.monitor_bbox : geostoryData?.geostory_bbox;
+
   const mapRef: React.MutableRefObject<{
     map: ol.Map;
     ol: {
@@ -117,11 +172,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const { data: compareData } = useLayer({ layer_id: compareLayerId });
 
-  // bbox that come defined in the monitor itself
-  const predefinedBbox = monitorData?.monitor_bbox;
-
   // check URL in case the site has been shared, if not get predefined bbox if not use the default one
-  const monitorBbox = useMemo(() => {
+  const dataBbox = useMemo(() => {
     if (bbox) return bbox;
     if (predefinedBbox) return predefinedBbox;
     return initialViewState.bbox;
@@ -133,13 +185,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const initialViewport = {
     zoom: initialViewState.zoom,
     center: initialViewState.center,
-    bbox: monitorBbox,
+    bbox: dataBbox,
   } satisfies InitialViewport;
 
   /**
    * Get the layer source from the API
    */
-  const { data, isLoading } = useLayerParsedSource(
+  const { data: layerFromURL, isLoading } = useLayerParsedSource(
     {
       layer_id: layerId,
     },
@@ -147,7 +199,17 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       enabled: !!layerId,
     }
   );
-  const { gs_base_wms, gs_name, title, unit, range, range_labels } = data || {};
+
+  const layerData = useMemo(() => {
+    if (layerFromURL) return layerFromURL;
+
+    if (type === 'monitor') return monitorLayer?.data?.[0];
+    if (type === 'geostory') return geostoryLayer?.data?.[0];
+
+    return undefined;
+  }, [layerFromURL, monitorLayer, geostoryLayer, type]);
+
+  const { gs_base_wms, gs_name, title, unit, range, range_labels } = layerData || {};
 
   /* Interactivity */
   const wmsSource = useMemo(() => {
@@ -326,11 +388,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   }, []);
 
   useEffect(() => {
-    if (monitorBbox && mapRef) {
-      setBbox(monitorBbox);
-      mapRef?.current?.ol?.getView()?.fit(monitorBbox);
+    if (dataBbox && mapRef) {
+      setBbox(dataBbox);
+      mapRef?.current?.ol?.getView()?.fit(dataBbox);
     }
-  }, [monitorBbox]);
+  }, [dataBbox, setBbox, mapRef]);
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
@@ -347,8 +409,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date, tooltipInfo.position, compareDate]);
-
-  const layerData = useLayer({ layer_id: layerId });
 
   const labelUrl = useMemo(
     () => LABELS.find((label) => activeLabels === label.id)?.url,

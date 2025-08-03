@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import cn from '@/lib/classnames';
 
 import { postWebTraffic } from '@/hooks/web-traffic';
+import { BBox } from 'ol/render/canvas/Executor';
 
 type CardHeaderProps = {
   theme: string;
@@ -13,9 +14,18 @@ type CardHeaderProps = {
   type: 'monitor' | 'geostory';
   className?: string;
   loading?: boolean;
+  bbox?: BBox;
 };
 
-const CardHeader: React.FC<CardHeaderProps> = ({ theme, title, color, id, type, className }) => {
+const CardHeader: React.FC<CardHeaderProps> = ({
+  theme,
+  title,
+  color,
+  id,
+  type,
+  className,
+  bbox,
+}) => {
   const params = useParams();
   const geostoryId = params.geostory_id;
 
@@ -39,9 +49,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({ theme, title, color, id, type, 
         </span>
       </div>
       <Link
-        href={`/explore/${type === 'monitor' ? 'monitor' : 'geostory'}/${id}${
-          type === 'monitor' ? '/datasets' : ''
-        }`}
+        href={`/explore/${type === 'monitor' ? 'monitor' : 'geostory'}/${id}?bbox=${bbox}`}
         onClick={handleClick}
       >
         <h2 style={{ color }} className="text-[22px]">

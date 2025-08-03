@@ -66,7 +66,7 @@ const SheetContent = React.forwardRef<
     <SheetPrimitive.Content
       ref={ref}
       className={cn(sheetVariants({ side }), className, {
-        'absolute bottom-0 top-[70px] max-h-[calc(100vh-70px)] backdrop-blur-sm': true,
+        'absolute bottom-0 top-0 h-screen backdrop-blur-sm': true,
       })}
       {...props}
     >
