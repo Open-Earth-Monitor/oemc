@@ -52,42 +52,42 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geostoryLayers, comparisonLayer]);
-  const { title, theme, color, id, description, monitors } = geostoryData || {};
+  const { title, theme, color, id, description, monitors, geostory_bbox } = geostoryData || {};
 
   return (
     <div className="font-satoshi">
       <BackToMonitorsAndGeostories />
       {isGeostoryLoading && <Loading />}
-      <div className="space-y-6 py-4">
-        <CardHeader
-          theme={theme}
-          title={title}
-          type="geostory"
-          color={color}
-          id={id}
-          className="space-y-4"
-          loading={isGeostoryLoading}
-          bbox={geostoryData?.geostory_bbox}
-        />
-        <p>{description}</p>
+      {!isGeostoryLoading && (
+        <div className="space-y-6 py-4">
+          <CardHeader
+            theme={theme}
+            title={title}
+            type="geostory"
+            color={color}
+            id={id}
+            className="space-y-4"
+            loading={isGeostoryLoading}
+            bbox={geostory_bbox}
+          />
 
-        <div className="space-y-4">
-          {/* Geostory image */}
-          {geostoryData?.id && (
-            <Image
-              src={`/images/geostories/${geostoryData?.id}.jpg`}
-              alt={geostoryData?.title || 'geostory'}
-              className="h-auto w-full py-4"
-              width={300}
-              height={200}
-            />
-          )}
-          <GeostoryDialog {...geostoryData} />
+          <p>{description}</p>
+          <div className="space-y-4">
+            {/* Geostory image */}
+            {geostoryData?.id && (
+              <Image
+                src={`/images/geostories/${geostoryData?.id}.jpg`}
+                alt={geostoryData?.title || 'geostory'}
+                className="h-auto w-full py-4"
+                width={300}
+                height={200}
+              />
+            )}
+            <GeostoryDialog {...geostoryData} />
+          </div>
         </div>
-      </div>
-
+      )}
       {/* Datasets/layers cards */}
-
       {!!geostoryLayers?.length ? (
         <div className="border-t border-white-900">
           <h2 className="py-2 font-medium">Datasets</h2>
@@ -109,7 +109,6 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
       ) : (
         <p>No layers available for this geostory.</p>
       )}
-
       {/* Monitors list */}
       {!!monitors?.length && (
         <div className="space-y-4 pt-1 text-xs">

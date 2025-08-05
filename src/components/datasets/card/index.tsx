@@ -52,7 +52,6 @@ const DatasetCard: FC<DatasetCardProps> = ({
   const isActive = useMemo(() => layers?.[0]?.id === id, [id, layers]);
   const isCompareActive = useMemo(() => compareLayers?.[1]?.id === id, [id, compareLayers]);
   const [regionsLayerVisibility, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
-
   /**
    * Handle click on the toggle button
    */
@@ -131,7 +130,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
           range={range}
           isActive={isActive}
           defaultActive={isActive}
-          autoPlay={true}
+          autoPlay={!isHistogramActive}
         />
       )}
       <div className="flex flex-col space-y-2.5 border-t border-dashed border-white-900 pt-3.5">
@@ -158,7 +157,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
             />
           </div>
         )}
-        {id && isHistogramActive && <Histogram color={color} title={title} id={id} />}
+        {id && isHistogramActive && isActive && <Histogram color={color} title={title} id={id} />}
       </div>
     </div>
   );

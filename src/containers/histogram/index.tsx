@@ -24,13 +24,13 @@ const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => 
     setHistogramVisibility(false);
   };
 
-  const onCompareActive = useCallback(() => {
-    setCompareFunctionalityInfo(true);
-  }, []);
+  // const onCompareActive = useCallback(() => {
+  //   setCompareFunctionalityInfo(true);
+  // }, []);
 
-  const onCloseCompareInfo = useCallback(() => {
-    setCompareFunctionalityInfo(false);
-  }, []);
+  // const onCloseCompareInfo = useCallback(() => {
+  //   setCompareFunctionalityInfo(false);
+  // }, []);
 
   return (
     <div>

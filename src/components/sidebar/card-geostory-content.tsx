@@ -4,11 +4,18 @@ import CardHeader from '@/components/sidebar/card-header';
 
 import { getValidPublications } from '@/utils/geostories';
 
-function DatasetCardGeostory({ showMore, theme, title, color, publications, id }) {
+function DatasetCardGeostory({ showMore, theme, title, color, publications, id, geostory_bbox }) {
   const validPublications = useMemo(() => getValidPublications(publications), [publications]);
   return (
     <div className="space-y-2.5 divide-y divide-white-900">
-      <CardHeader theme={theme} title={title} type="geostory" color={color} id={id} />
+      <CardHeader
+        theme={theme}
+        title={title}
+        type="geostory"
+        color={color}
+        id={id}
+        bbox={geostory_bbox}
+      />
 
       {!showMore && validPublications && !!validPublications.length && (
         <div className="space-y-4 pt-1 text-xs">
