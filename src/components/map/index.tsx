@@ -52,6 +52,7 @@ import { getHistogramData } from '../../lib/utils';
 import { Extent } from 'ol/extent';
 import BasemapControl from './controls/basemaps';
 import BasemapLayer from './basemap';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ClickEvent {
   bbox?: Extent;
@@ -78,7 +79,7 @@ const TooltipInitialState = {
 };
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
-  const [locationSearch, setLocationSearch] = useState('');
+  const queryClient = useQueryClient();
   const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
   const [activeLabels] = useSyncBasemapLabelsSettings();
   const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
@@ -87,6 +88,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const [bbox, setBbox] = useSyncBboxSettings();
   const [nutsProperties, setNutsProperties] = useState(null);
+
   const [compareNutsProperties, setCompareNutsProperties] = useState(null);
   const setCoordinate = useSetAtom(coordinateAtom);
 
@@ -358,6 +360,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
+      handleCancelAnalysis();
       if (compareFunctionalityInfo) {
         const resolution = e.map.getView()?.getResolution();
         getHistogramData(wmsNutsSource, e.coordinate, resolution, layerId).then((data) => {
@@ -395,9 +398,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleRegionsLayer = useCallback(() => {
-    setIsRegionsLayerActive((prev) => !prev);
-  }, [setIsRegionsLayerActive]);
+  const handleCancelAnalysis = useCallback(async () => {
+    await queryClient.cancelQueries({
+      predicate: ({ queryKey }) => queryKey && queryKey[0] === 'region-data',
+      fetchStatus: 'fetching',
+    });
+  }, [queryClient]);
 
   useEffect(() => {
     if (dataBbox && mapRef) {
@@ -433,6 +439,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       projection="EPSG:3857"
       width="100%"
       height="100%"
+
       className="relative"
       initial={initialViewport}
       onMoveEnd={handleMapMove}
@@ -442,78 +449,76 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     >
       <BasemapLayer />
 
-      {isRegionsLayerActive && (
-        <RLayerWMS
-          ref={nutsLayer}
-          properties={{ label: 'NUTS' }}
-          url="https://geoserver.earthmonitor.org/geoserver/oem/wms"
-          opacity={0.2}
-          params={{
-            FORMAT: 'image/png',
-            WIDTH: 768,
-            HEIGHT: 566,
-            SERVICE: 'WMS',
-            VERSION: '1.1.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: 'oem:NUTS_RG_01M_2021_3035',
-            SRS: 'EPSG:3857', // Changing projection to EPSG:3857 (for WMS 1.1.0)
-            BBOX: [-20037508.34, -20037508.34, 20037508.34, 20037508.34], // BBOX for EPSG:3857 (World extent)
-            NAME: 'NUTS',
-          }}
-        />
-      )}
+        {data && !isLoading && isLayerActive && ( 
+          <RLayerWMS
+            ref={layerLeftRef}
+            properties={{ label: gs_name, date }}
+            url={gs_base_wms}
+            opacity={opacity ?? 1}
+            params={{
+              FORMAT: 'image/png',
+              SERVICE: 'WMS',
+              VERSION: '1.3.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: gs_name,
+              DIM_DATE: date,
+              CRS: 'EPSG:3857',
+              BBOX: 'bbox-epsg-3857',
+            }}
+          />
+        )}
 
-      {data && !isLoading && isLayerActive && (
-        <RLayerWMS
-          ref={layerLeftRef}
-          properties={{ label: gs_name, date }}
-          url={gs_base_wms}
-          opacity={opacity ?? 1}
-          params={{
-            FORMAT: 'image/png',
-            SERVICE: 'WMS',
-            VERSION: '1.3.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: gs_name,
-            DIM_DATE: date,
-            CRS: 'EPSG:3857',
-            BBOX: 'bbox-epsg-3857',
-          }}
-        />
-      )}
+        {compareDate && data && !isLoading && isCompareLayerActive && (
+          <RLayerWMS
+            ref={layerRightRef} 
+            properties={{ label: gs_name, date: compareDate }}
+            url={gs_base_wms}
+            opacity={opacity ?? 1}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 256,
+              HEIGHT: 256,
+              SERVICE: 'WMS',
+              VERSION: '1.3.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: gs_name,
+              DIM_DATE: compareDate,
+              CRS: 'EPSG:3857',
+              BBOX: 'bbox-epsg-3857',
+            }}
+            visible={isCompareLayerActive}
+          />
+        )}
 
-      {compareDate && data && !isLoading && isCompareLayerActive && (
-        <RLayerWMS
-          ref={layerRightRef}
-          properties={{ label: gs_name, date: compareDate }}
-          url={gs_base_wms}
-          opacity={opacity ?? 1}
-          params={{
-            FORMAT: 'image/png',
-            WIDTH: 256,
-            HEIGHT: 256,
-            SERVICE: 'WMS',
-            VERSION: '1.3.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: gs_name,
-            DIM_DATE: compareDate,
-            CRS: 'EPSG:3857',
-            BBOX: 'bbox-epsg-3857',
-          }}
-          visible={isCompareLayerActive}
-        />
-      )}
-
-      {basemap === 'world_imagery' && (
-        <RLayerTile
-          zIndex={100}
-          url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-        />
-      )} 
-
+        {isRegionsLayerActive && (
+          <RLayerWMS
+            ref={nutsLayer}
+            properties={{ label: 'NUTS' }}
+            url="https://geoserver.earthmonitor.org/geoserver/oem/wms"
+            opacity={0.2}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 768,
+              HEIGHT: 566,
+              SERVICE: 'WMS',
+              VERSION: '1.1.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+              SRS: 'EPSG:3857', // Changing projection to EPSG:3857 (for WMS 1.1.0)
+              BBOX: [-20037508.34, -20037508.34, 20037508.34, 20037508.34], // BBOX for EPSG:3857 (World extent)
+              NAME: 'NUTS',
+            }}
+          />
+        )}
+        {basemap === 'world_imagery' && (
+          <RLayerTile
+            zIndex={100}
+            url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+          />
+        )}
 
         <RLayerTile zIndex={100} url={labelUrl} />
         <Controls  
@@ -525,31 +530,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         />  
  
         {isLayerActive && <Legend />}
-        <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" /> 
-        {/* {layerData && isHistogramActive ? (
-          !isRegionsLayerActive ? (
-            <PointHistogram
-              onCloseTooltip={handleCloseTooltip}
-              layerId={layerId}
-              compareLayerId={compareLayerId}
-              isRegionsLayerActive={isRegionsLayerActive}
-              {...tooltipInfo}
-            />
-          ) : (
-            <RegionsHistogram
-              onCloseTooltip={handleCloseTooltip}
-              layerId={layerId}
-              compareLayerId={compareLayerId}
-              onCompareClose={() => {
-                setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
-                setCompareNutsProperties(null);
-              }}
-              {...tooltipInfo}
-              nutsProperties={nutsProperties}
-              compareNutProperties={compareNutsProperties}
-            />
-          )
-        ) : null} */}
+        <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
       </RMap>
       {/* Interactivity */}
       {data && (

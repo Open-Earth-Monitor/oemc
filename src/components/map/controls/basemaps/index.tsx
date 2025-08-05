@@ -1,6 +1,5 @@
 import { PopoverTrigger } from '@radix-ui/react-popover';
 import { TooltipPortal } from '@radix-ui/react-tooltip';
-import { LuMap } from 'react-icons/lu';
 
 import { cn } from '@/lib/classnames';
 

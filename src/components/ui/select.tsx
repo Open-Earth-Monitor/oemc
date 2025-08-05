@@ -4,6 +4,7 @@ import { forwardRef, ElementRef, ComponentPropsWithoutRef, PropsWithChildren } f
 
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { LuChevronDown } from 'react-icons/lu';
+
 import { cn } from 'lib/classnames';
 
 const SelectGroup = SelectPrimitive.Group;
@@ -38,7 +39,7 @@ const SelectIcon = forwardRef<
   <SelectPrimitive.Icon
     ref={ref}
     className={cn(
-      'flex w-fit bg-transparent text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 group-data-[state=open]:rotate-180 group-data-[state=open]:text-accent-green',
+      'group flex w-fit bg-transparent text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground hover:text-accent-green focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 group-data-[state=open]:rotate-180 group-data-[state=open]:text-accent-green',
       className
     )}
     {...props}

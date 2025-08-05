@@ -4,7 +4,6 @@ import { useParams } from 'next/navigation';
 import cn from '@/lib/classnames';
 
 import { postWebTraffic } from '@/hooks/web-traffic';
-import { BBox } from 'ol/render/canvas/Executor';
 
 type CardHeaderProps = {
   theme: string;
@@ -14,7 +13,7 @@ type CardHeaderProps = {
   type: 'monitor' | 'geostory';
   className?: string;
   loading?: boolean;
-  bbox?: BBox;
+  bbox?: number[];
 };
 
 const CardHeader: React.FC<CardHeaderProps> = ({
@@ -33,7 +32,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({
     postWebTraffic({
       geostory_id: geostoryId,
     });
-    console.info('WT2 -', 'geostories', id);
+    console.info('WT2 -', type, id);
   };
 
   return (
