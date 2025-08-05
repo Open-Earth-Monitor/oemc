@@ -13,6 +13,7 @@ import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geos
 import DatasetCard from '@/components/datasets/card';
 import Loading from '@/components/loading';
 import CardHeader from '@/components/sidebar/card-header';
+import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
 
 import GeostoryDialog from '../dialog';
 
@@ -55,73 +56,84 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   const { title, theme, color, id, description, monitors, geostory_bbox } = geostoryData || {};
 
   return (
-    <div className="font-satoshi">
-      <BackToMonitorsAndGeostories />
-      {isGeostoryLoading && <Loading />}
-      {!isGeostoryLoading && (
-        <div className="space-y-6 py-4">
-          <CardHeader
-            theme={theme}
-            title={title}
-            type="geostory"
-            color={color}
-            id={id}
-            className="space-y-4"
-            loading={isGeostoryLoading}
-            bbox={geostory_bbox}
-          />
-
-          <p>{description}</p>
-          <div className="space-y-4">
-            {/* Geostory image */}
-            {geostoryData?.id && (
-              <Image
-                src={`/images/geostories/${geostoryData?.id}.jpg`}
-                alt={geostoryData?.title || 'geostory'}
-                className="h-auto w-full py-4"
-                width={300}
-                height={200}
+    <div>
+      <Sidebar className="w-96 bg-black-400 px-9 py-12">
+        <div className="font-satoshi">
+          <BackToMonitorsAndGeostories />
+          {isGeostoryLoading && <Loading />}
+          {!isGeostoryLoading && (
+            <div className="space-y-6 py-4">
+              <CardHeader
+                theme={theme}
+                title={title}
+                type="geostory"
+                color={color}
+                id={id}
+                className="space-y-4"
+                loading={isGeostoryLoading}
+                bbox={geostory_bbox}
               />
-            )}
-            <GeostoryDialog {...geostoryData} />
-          </div>
-        </div>
-      )}
-      {/* Datasets/layers cards */}
-      {!!geostoryLayers?.length ? (
-        <div className="border-t border-white-900">
-          <h2 className="py-2 font-medium">Datasets</h2>
-          <ul className="space-y-4 sm:space-y-6" data-testid="datasets-list">
-            {geostoryLayers?.map((dataset) => {
-              return (
-                <li key={dataset?.layer_id}>
-                  <DatasetCard
-                    {...dataset}
-                    id={dataset?.layer_id}
-                    isGeostory={false}
-                    color={color}
+
+              <p>{description}</p>
+              <div className="space-y-4">
+                {/* Geostory image */}
+                {geostoryData?.id && (
+                  <Image
+                    src={`/images/geostories/${geostoryData?.id}.jpg`}
+                    alt={geostoryData?.title || 'geostory'}
+                    className="h-auto w-full py-4"
+                    width={300}
+                    height={200}
                   />
-                </li>
-              );
-            })}
-          </ul>
+                )}
+                <GeostoryDialog {...geostoryData} />
+              </div>
+            </div>
+          )}
+          {/* Datasets/layers cards */}
+          {!!geostoryLayers?.length ? (
+            <div className="border-t border-white-900">
+              <h2 className="py-2 font-medium">Datasets</h2>
+              <ul className="space-y-4 sm:space-y-6" data-testid="datasets-list">
+                {geostoryLayers?.map((dataset) => {
+                  return (
+                    <li key={dataset?.layer_id}>
+                      <DatasetCard
+                        {...dataset}
+                        id={dataset?.layer_id}
+                        isGeostory={false}
+                        color={color}
+                      />
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ) : (
+            <p>No layers available for this geostory.</p>
+          )}
+          {/* Monitors list */}
+          {!!monitors?.length && (
+            <div className="space-y-4 pt-1 text-xs">
+              <p>Monitors</p>
+              <ul className="space-y-2.5">
+                {monitors.map((monitor) => (
+                  <li key={monitor.id} className="font-bold underline">
+                    <Link href={`/explore/monitor/${monitor.id}`}>{monitor.title}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-      ) : (
-        <p>No layers available for this geostory.</p>
-      )}
-      {/* Monitors list */}
-      {!!monitors?.length && (
-        <div className="space-y-4 pt-1 text-xs">
-          <p>Monitors</p>
-          <ul className="space-y-2.5">
-            {monitors.map((monitor) => (
-              <li key={monitor.id} className="font-bold underline">
-                <Link href={`/explore/monitor/${monitor.id}`}>{monitor.title}</Link>
-              </li>
-            ))}
-          </ul>
+      </Sidebar>
+      <div className="w-full">
+        <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
+          {/* Map + Trigger */}
+
+          <SidebarTrigger />
         </div>
-      )}
+      </div>
     </div>
   );
 };

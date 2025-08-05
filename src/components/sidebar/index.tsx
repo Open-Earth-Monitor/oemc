@@ -1,18 +1,19 @@
 'use client';
+
 import { useState, useMemo } from 'react';
 
-import SortBy from '../sort-by';
-import { SidebarContent, SidebarHeader } from '@/components/ui/sidebar';
 import { useMonitorsAndGeostories } from '@/hooks/datasets';
-import SidebarSelect from './select';
-
-import SidebarCheckbox from './checkbox';
-import SidebarDatasetCard from './card';
-import { SortingCriteria } from '../datasets-grid/types';
-import Loading from '../loading';
 import { useSyncTheme, useSyncDatasetType } from '@/hooks/sync-query';
-import DatasetCardMonitor from './card-monitor-content';
-import DatasetCardGeostory from './card-geostory-content';
+
+import { SortingCriteria } from '@/components/datasets-grid/types';
+import Loading from '@/components/loading';
+import SidebarDatasetCard from '@/components/sidebar/card';
+import DatasetCardGeostory from '@/components/sidebar/card-geostory-content';
+import DatasetCardMonitor from '@/components/sidebar/card-monitor-content';
+import SidebarCheckbox from '@/components/sidebar/checkbox';
+import SidebarSelect from '@/components/sidebar/select';
+import SortBy from '@/components/sort-by';
+import { SidebarContent, SidebarHeader } from '@/components/ui/sidebar';
 
 function MapSidebar() {
   const [datasetType] = useSyncDatasetType();
@@ -24,7 +25,7 @@ function MapSidebar() {
   const params = useMemo(
     () => ({
       ...(datasetType && datasetType !== 'all' && { type: datasetType }),
-      ...(theme && { theme }),
+      ...(theme && theme !== 'All' && { theme }),
       sort_by: sortingCriteria,
     }),
     [datasetType, theme, sortingCriteria]

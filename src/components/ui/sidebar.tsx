@@ -262,7 +262,7 @@ const Sidebar = forwardRef<
           className={cn(
             'h-svh fixed inset-y-0 z-10 hidden w-[--sidebar-width] overflow-y-auto transition-[left,right,width] duration-200 ease-linear md:flex',
             side === 'left'
-              ? 'left-[88px] group-data-[collapsible=offcanvas]:left-[calc((var(--sidebar-width)+132px)*-1)]'
+              ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc((var(--sidebar-width)+132px)*-1)]'
               : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
             // Adjust the padding for floating and inset variants.
             variant === 'floating' || variant === 'inset'

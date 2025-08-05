@@ -7,8 +7,8 @@ import SidebarItem from './map-sidebar-item';
 
 const SidebarThemeFilters = () => {
   return (
-    <div className="fixed bottom-0 left-0 top-0 z-10 h-screen w-[88px] bg-black-500">
-      <div className={cn('flex w-full flex-col items-start space-y-2 py-8 text-sm')}>
+    <div className="fixed bottom-0 left-0 top-0 z-10 h-screen w-[88px] bg-black-500 text-white-500">
+      <div className={cn('flex w-full flex-col items-start space-y-2 py-8 text-sm text-white-500')}>
         {THEMES.map((theme) => {
           const Icon = theme.Icon;
 
