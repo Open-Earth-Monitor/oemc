@@ -31,7 +31,7 @@ const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
   const isActive = useMemo(() => {
     return theme === button.id;
   }, [theme, button.id]);
-  console.log(button.id, theme, isActive);
+
   return (
     <button
       key={button.id}

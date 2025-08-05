@@ -23,6 +23,15 @@ import { LuCircleArrowRight } from 'react-icons/lu';
 import { cn } from '@/lib/classnames';
 import { mobile } from '@/lib/media-queries';
 
+import {
+  SIDEBAR_COOKIE_NAME,
+  SIDEBAR_COOKIE_MAX_AGE,
+  SIDEBAR_WIDTH,
+  SIDEBAR_WIDTH_MOBILE,
+  SIDEBAR_WIDTH_ICON,
+  SIDEBAR_KEYBOARD_SHORTCUT,
+} from '@/constants/sidebar';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -45,13 +54,6 @@ type SidebarMenuButtonProps = ComponentPropsWithoutRef<'button'> & {
 type SidebarGroupActionProps = Omit<React.ComponentProps<'button'>, 'ref'> & {
   asChild?: boolean;
 };
-
-const SIDEBAR_COOKIE_NAME = 'sidebar_state';
-const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = '16rem';
-const SIDEBAR_WIDTH_MOBILE = '18rem';
-const SIDEBAR_WIDTH_ICON = '3rem';
-const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 
 type SidebarContextProps = {
   state: 'expanded' | 'collapsed';
@@ -296,7 +298,8 @@ const SidebarTrigger = forwardRef<ElementRef<typeof Button>, ComponentProps<type
         size="icon"
         className={cn(
           {
-            'absolute bottom-2 z-10 h-8 w-8 border-none bg-black-300': true,
+            'absolute bottom-2 z-10 h-8 w-8 border-none bg-black-300 transition-[left] duration-300 ease-in-out':
+              true,
             'left-[482px]': open,
             'left-[98px]': !open,
           },
