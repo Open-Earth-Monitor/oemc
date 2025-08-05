@@ -1,9 +1,10 @@
 import { FC, useMemo } from 'react';
-import { useSyncTheme } from '@/hooks/sync-query';
 
 import { cn } from '@/lib/classnames';
+
 import type { Theme } from '@/constants/themes';
-import { Themes } from './types';
+
+import { useSyncTheme } from '@/hooks/sync-query';
 
 export type SidebarProps = {
   type?: Theme | 'All';

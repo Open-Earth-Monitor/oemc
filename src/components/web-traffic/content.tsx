@@ -1,5 +1,5 @@
-import WebTrafficMapContent from './map';
 import WebTrafficRankingContent from './list';
+import WebTrafficMapContent from './map';
 
 const WebTrafficContent = () => {
   return (

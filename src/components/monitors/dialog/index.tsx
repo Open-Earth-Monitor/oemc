@@ -19,7 +19,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 
-import KnowledgePackage from './knowledge-package';
+import UseCases from './knowledge-package';
 
 type MonitorDialogProps = Partial<Monitor>;
 
@@ -83,7 +83,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
                 </dl>
               </div>
 
-              {hasValidLink && <KnowledgePackage items={use_case_link} />}
+              {hasValidLink && <UseCases items={use_case_link} />}
 
               <DialogClose className="right-4 top-4 flex h-4 items-center space-x-2 text-xs font-medium uppercase tracking-[0.96px] text-brand-500 sm:right-10 sm:top-10" />
             </div>

@@ -5,7 +5,7 @@ import { LuInfo } from 'react-icons/lu';
 
 import type { Geostory } from '@/types/geostories';
 
-import KnowledgePackage from '@/components/monitors/dialog/knowledge-package';
+import UseCases from '@/components/monitors/dialog/knowledge-package';
 import {
   Dialog,
   DialogContent,
@@ -117,7 +117,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
                   </div>
                 </div>
               )}
-              {hasValidLink && <KnowledgePackage items={use_case_link} />}
+              {hasValidLink && <UseCases items={use_case_link} />}
 
               <DialogClose className="right-10 top-10 flex h-4 items-center space-x-2 text-xs font-medium uppercase tracking-[0.96px] text-brand-500" />
             </div>

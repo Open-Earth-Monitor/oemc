@@ -1,8 +1,11 @@
 import { LuLink } from 'react-icons/lu';
+
+import cn from '@/lib/classnames';
+
 import type { Monitor } from '@/types/monitors';
 import { UseCase } from '@/types/monitors-and-geostories';
+
 import DoiBadge from '@/components/doi-badge';
-import cn from '@/lib/classnames';
 
 const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }: UseCase) => (
   <div
@@ -35,7 +38,7 @@ const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }: UseCase) => (
   </div>
 );
 
-const KnowledgePackage: React.FC<{ items: Monitor['use_case_link'] }> = ({ items }) => {
+const UseCases: React.FC<{ items: Monitor['use_case_link'] }> = ({ items }) => {
   if (!Array.isArray(items) || items.length === 0) {
     return null;
   }
@@ -43,7 +46,7 @@ const KnowledgePackage: React.FC<{ items: Monitor['use_case_link'] }> = ({ items
   return (
     <div className="border-t border-brand-500 py-4">
       <div className="flex flex-col space-y-6">
-        <p className="whitespace-nowrap text-xl font-medium">Knowledge Package:</p>
+        <p className="whitespace-nowrap text-xl font-medium">Use cases:</p>
         <div className="space-y-2 py-2 font-bold">
           {items.map((props, index) => (
             <UseCasesUnit key={index} {...props} />
@@ -54,4 +57,4 @@ const KnowledgePackage: React.FC<{ items: Monitor['use_case_link'] }> = ({ items
   );
 };
 
-export default KnowledgePackage;
+export default UseCases;
