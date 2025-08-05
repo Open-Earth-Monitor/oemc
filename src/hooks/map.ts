@@ -1,6 +1,5 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { AxiosError, AxiosResponse } from 'axios';
-
+import { CancelledError, useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse, CanceledError } from 'axios';
 import { getCenter } from 'ol/extent';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import View from 'ol/View';
@@ -31,17 +30,16 @@ export function usePointData(
   params: UseParams,
   queryOptions?: UseQueryOptions<RegionData[], AxiosError, RegionData[]>
 ) {
-  const fetchRegionData = () =>
+  const fetchRegionData = ({ signal }: { signal?: AbortSignal }) =>
     API.request({
       method: 'GET',
       url: '/point-query',
       params,
+      signal,
       ...queryOptions,
     })
-      .then((response: AxiosResponse<RegionData[]>) => {
-        return response.data;
-      })
-      .catch((error) => {
+      .then((response: AxiosResponse<RegionData[]>) => response.data)
+      .catch((error: CanceledError<unknown> | AxiosError) => {
         console.error('Error fetching region data:', error);
       });
 

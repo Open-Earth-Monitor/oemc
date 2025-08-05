@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useCallback, useState } from 'react';
 import type { FC } from 'react';
 
-import { LuCirclePlay, LuCirclePause } from 'react-icons/lu';
+import { TooltipPortal } from '@radix-ui/react-tooltip';
+import { LuCirclePlay, LuCirclePause, LuX } from 'react-icons/lu';
 import { useInterval } from 'usehooks-ts';
 
 import cn from '@/lib/classnames';
@@ -20,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const TIMEOUT_STEP_DURATION = 2500;
 
@@ -115,7 +117,7 @@ const TimeSeries: FC<{
               <SelectTrigger className="w-fit text-xs font-semibold">
                 <div
                   className={cn(
-                    buttonVariants({ variant: 'gradient', size: 'sm' }),
+                    buttonVariants({ variant: 'outline', size: 'sm' }),
                     'w-full justify-between hover:bg-transparent'
                   )}
                 >
@@ -139,7 +141,20 @@ const TimeSeries: FC<{
               </SelectContent>
             </Select>
           )}
-          {currentRange && (
+          {!isCompareActive && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs font-semibold"
+              onClick={() => {
+                setPlaying(false);
+                setCompareLayers([{ id: layerId, opacity, date: range[0].value }]);
+              }}
+            >
+              Compare
+            </Button>
+          )}
+          {compareCurrentRange && (
             <Select
               value={compareCurrentRange?.value || range[0].value}
               disabled={isPlaying}
@@ -157,7 +172,13 @@ const TimeSeries: FC<{
                   )}
                 >
                   <SelectValue>{compareCurrentRange?.label || range[0].label}</SelectValue>
-                  <SelectIcon />
+                  <div className="flex items-center space-x-2">
+                    <LuX
+                      className="pointer-events-auto h-4 w-4 text-accent-green"
+                      onClick={() => setCompareLayers(null)}
+                    />
+                    <SelectIcon />
+                  </div>
                 </div>
               </SelectTrigger>
               <SelectContent
@@ -178,36 +199,63 @@ const TimeSeries: FC<{
           )}
         </div>
       </div>
-
       {/* Timeline */}
-      {!isCompareActive && (
-        <div className="flex w-full items-center space-x-3 py-3.5">
-          <button type="button" onClick={handleTogglePlay}>
-            {isPlaying && isActive ? (
-              <LuCirclePause className="h-6 w-6 text-accent-green" />
-            ) : (
-              <LuCirclePlay className="h-6 w-6 text-secondary-500" />
-            )}
-          </button>
-          <div className="relative flex w-full flex-col space-y-2 bg-white-950 sm:max-w-[248px]">
-            <div className="max-w flex w-full  overflow-hidden">
-              {range.map((r) => (
-                <div key={r.value} className="flex w-full items-center justify-center">
-                  <div
-                    className={cn('h-[6px] w-[1px] bg-white-800', {
-                      'bg-accent-green': r.value === currentRange.value,
-                    })}
-                  />
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger disabled={isCompareActive} asChild>
+          <div className="flex w-full items-center space-x-3 py-3.5">
+            <button
+              type="button"
+              onClick={handleTogglePlay}
+              disabled={isCompareActive}
+              className="pointer-events-auto"
+            >
+              {isPlaying && isActive ? (
+                <LuCirclePause className="h-6 w-6 text-accent-green" />
+              ) : (
+                <LuCirclePlay className="h-6 w-6 text-secondary-500" />
+              )}
+            </button>
+            <div className="relative flex w-full flex-col space-y-2 bg-white-950 sm:max-w-[248px]">
+              <div className="max-w flex w-full  overflow-hidden">
+                {range.map((r) => (
+                  <div key={r.value} className="flex w-full items-center justify-center">
+                    <div
+                      className={cn('h-[6px] w-[1px] bg-white-800', {
+                        'bg-accent-green': r.value === compareDate,
+                      })}
+                    />
+                  </div>
+                ))}
+                <div className="absolute left-0 right-0 top-2 flex justify-between font-satoshi text-sm tracking-tight text-secondary-500">
+                  <div>{startRangelabel}</div>
+                  <div>{endRangelabel}</div>
                 </div>
-              ))}
-              <div className="absolute left-0 right-0 top-2 flex justify-between font-satoshi text-sm tracking-tight text-secondary-500">
-                <div>{startRangelabel}</div>
-                <div>{endRangelabel}</div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        </TooltipTrigger>
+
+        <TooltipPortal>
+          <TooltipContent
+            sideOffset={20}
+            side="left"
+            align="center"
+            className={cn({
+              'border-none bg-black-400 text-white-500': true,
+              hidden: !isCompareActive,
+            })}
+          >
+            <div className="max-w-xs text-sm">
+              <p>
+                When the layer comparison functionality is enabled, the timeline is automatically
+                paused .
+              </p>
+              <p>To activate the timeline again, comparison mode must first be disabled.</p>
+            </div>
+            <TooltipArrow />
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
     </div>
   );
 };

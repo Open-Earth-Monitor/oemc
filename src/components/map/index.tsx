@@ -50,6 +50,7 @@ import type { FeatureInfoResponse } from './types';
 import { getHistogramData } from '../../lib/utils';
 
 import BasemapLayer from './basemap';
+import { useQueryClient } from '@tanstack/react-query';
 
 const TooltipInitialState = {
   position: null,
@@ -72,6 +73,7 @@ const TooltipInitialState = {
 };
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
+  const queryClient = useQueryClient();
   const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
   const [activeLabels] = useSyncBasemapLabelsSettings();
   const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
@@ -80,6 +82,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const [bbox, setBbox] = useSyncBboxSettings();
   const [nutsProperties, setNutsProperties] = useState(null);
+
   const [compareNutsProperties, setCompareNutsProperties] = useState(null);
   const setCoordinate = useSetAtom(coordinateAtom);
 
@@ -169,6 +172,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [compareLayers] = useSyncCompareLayersSettings();
   const compareLayerId = compareLayers?.[0]?.id;
   const compareDate = compareLayers?.[0]?.date;
+  const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
 
   const { data: compareData } = useLayer({ layer_id: compareLayerId });
 
@@ -350,6 +354,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
+      handleCancelAnalysis();
       if (compareFunctionalityInfo) {
         const resolution = e.map.getView()?.getResolution();
         getHistogramData(wmsNutsSource, e.coordinate, resolution, layerId).then((data) => {
@@ -386,6 +391,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleCancelAnalysis = useCallback(async () => {
+    await queryClient.cancelQueries({
+      predicate: ({ queryKey }) => queryKey && queryKey[0] === 'region-data',
+      fetchStatus: 'fetching',
+    });
+  }, [queryClient]);
 
   useEffect(() => {
     if (dataBbox && mapRef) {
@@ -431,6 +443,49 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       >
         <BasemapLayer />
 
+        {data && !isLoading && isLayerActive && (
+          <RLayerWMS
+            ref={layerLeftRef}
+            properties={{ label: gs_name, date }}
+            url={gs_base_wms}
+            opacity={opacity ?? 1}
+            params={{
+              FORMAT: 'image/png',
+              SERVICE: 'WMS',
+              VERSION: '1.3.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: gs_name,
+              DIM_DATE: date,
+              CRS: 'EPSG:3857',
+              BBOX: 'bbox-epsg-3857',
+            }}
+          />
+        )}
+
+        {compareDate && data && !isLoading && isCompareLayerActive && (
+          <RLayerWMS
+            ref={layerRightRef}
+            properties={{ label: gs_name, date: compareDate }}
+            url={gs_base_wms}
+            opacity={opacity ?? 1}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 256,
+              HEIGHT: 256,
+              SERVICE: 'WMS',
+              VERSION: '1.3.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: gs_name,
+              DIM_DATE: compareDate,
+              CRS: 'EPSG:3857',
+              BBOX: 'bbox-epsg-3857',
+            }}
+            visible={isCompareLayerActive}
+          />
+        )}
+
         {isRegionsLayerActive && (
           <RLayerWMS
             ref={nutsLayer}
@@ -452,50 +507,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
             }}
           />
         )}
-
-        {data && !isLoading && isLayerActive && (
-          <RLayerWMS
-            ref={layerLeftRef}
-            properties={{ label: gs_name, date }}
-            url={gs_base_wms}
-            opacity={opacity ?? 1}
-            params={{
-              FORMAT: 'image/png',
-              SERVICE: 'WMS',
-              VERSION: '1.3.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: gs_name,
-              DIM_DATE: date,
-              CRS: 'EPSG:3857',
-              BBOX: 'bbox-epsg-3857',
-            }}
-          />
-        )}
-
-        {/* {compareDate && data && !isLoading && isCompareLayerActive && (
-        <RLayerWMS
-          ref={layerRightRef}
-          properties={{ label: gs_name, date: compareDate }}
-          url={gs_base_wms}
-          opacity={opacity ?? 1}
-          params={{
-            FORMAT: 'image/png',
-            WIDTH: 256,
-            HEIGHT: 256,
-            SERVICE: 'WMS',
-            VERSION: '1.3.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: gs_name,
-            DIM_DATE: compareDate,
-            CRS: 'EPSG:3857',
-            BBOX: 'bbox-epsg-3857',
-          }}
-          visible={isCompareLayerActive}
-        />
-      )} */}
-
         {basemap === 'world_imagery' && (
           <RLayerTile
             zIndex={100}
@@ -514,30 +525,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
         {isLayerActive && <Legend />}
         <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
-        {/* {layerData && isHistogramActive ? (
-          !isRegionsLayerActive ? (
-            <PointHistogram
-              onCloseTooltip={handleCloseTooltip}
-              layerId={layerId}
-              compareLayerId={compareLayerId}
-              isRegionsLayerActive={isRegionsLayerActive}
-              {...tooltipInfo}
-            />
-          ) : (
-            <RegionsHistogram
-              onCloseTooltip={handleCloseTooltip}
-              layerId={layerId}
-              compareLayerId={compareLayerId}
-              onCompareClose={() => {
-                setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
-                setCompareNutsProperties(null);
-              }}
-              {...tooltipInfo}
-              nutsProperties={nutsProperties}
-              compareNutProperties={compareNutsProperties}
-            />
-          )
-        ) : null} */}
       </RMap>
       {/* Interactivity */}
       {data && (
