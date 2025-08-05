@@ -20,9 +20,6 @@ import { LuChevronDown } from 'react-icons/lu';
 
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
   const isMobile = useMediaQuery(mobile);
-<<<<<<< HEAD
-
-=======
   const [isOpen, setIsOpen] = useState(true);
 
   const [layers, setLayers] = useSyncLayersSettings();
@@ -43,7 +40,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
   const handleCollapse = () => {
     setIsOpen((prev) => !prev);
   };
->>>>>>> 0519eb4 (compare timeline)
   return (
     <div
       className={cn({

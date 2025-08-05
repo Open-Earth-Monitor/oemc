@@ -21,7 +21,7 @@ export const IntervalsLegend: React.FC<{
       </div>
       {entries.length > legendBreakpoint && (
         <div className="grid grid-cols-2 gap-x-4 p-2">
-          <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
+          <div className="absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent via-black-500 to-black-500" />
 
           {/* First column */}
           <div className="flex flex-col space-y-1">

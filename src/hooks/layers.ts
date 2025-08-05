@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios, { AxiosResponse } from 'axios';
 

@@ -9,9 +9,9 @@ import { useAtom, useSetAtom } from 'jotai';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
-import { fromLonLat, toLonLat } from 'ol/proj';
+import { toLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
-import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
+import { RLayerWMS, RMap, RLayerTile } from 'rlayers';
 
 import {
   compareFunctionalityAtom,
@@ -49,14 +49,8 @@ import type { CustomMapProps, MonitorTooltipInfo } from './types';
 import type { FeatureInfoResponse } from './types';
 import { getHistogramData } from '../../lib/utils';
 
-import { Extent } from 'ol/extent';
-import BasemapControl from './controls/basemaps';
 import BasemapLayer from './basemap';
 import { useQueryClient } from '@tanstack/react-query';
-
-interface ClickEvent {
-  bbox?: Extent;
-}
 
 const TooltipInitialState = {
   position: null,
@@ -161,8 +155,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     };
   }> = useRef<null>(null);
 
-  const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
+  const layerRightRef = useRef(null);
   const nutsLayer = useRef(null);
 
   const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TooltipInitialState);
@@ -434,22 +428,22 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   );
 
   return (
-    <RMap
-      ref={mapRef as unknown as React.RefObject<null>}
-      projection="EPSG:3857"
-      width="100%"
-      height="100%"
+    <div className="relative h-full w-full">
+      <RMap
+        ref={mapRef as unknown as React.RefObject<null>}
+        projection="EPSG:3857"
+        width="100%"
+        height="100%"
+        className="relative"
+        initial={initialViewport}
+        onMoveEnd={handleMapMove}
+        onPointerDrag={handleMapDrag}
+        onSingleClick={handleSingleClick}
+        noDefaultControls
+      >
+        <BasemapLayer />
 
-      className="relative"
-      initial={initialViewport}
-      onMoveEnd={handleMapMove}
-      onPointerDrag={handleMapDrag}
-      onSingleClick={handleSingleClick}
-      noDefaultControls
-    >
-      <BasemapLayer />
-
-        {data && !isLoading && isLayerActive && ( 
+        {data && !isLoading && isLayerActive && (
           <RLayerWMS
             ref={layerLeftRef}
             properties={{ label: gs_name, date }}
@@ -471,7 +465,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
         {compareDate && data && !isLoading && isCompareLayerActive && (
           <RLayerWMS
-            ref={layerRightRef} 
+            ref={layerRightRef}
             properties={{ label: gs_name, date: compareDate }}
             url={gs_base_wms}
             opacity={opacity ?? 1}
@@ -521,14 +515,14 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         )}
 
         <RLayerTile zIndex={100} url={labelUrl} />
-        <Controls  
+        <Controls
           mapRef={mapRef}
           layerLeftRef={layerLeftRef}
           layerRightRef={layerRightRef}
           data={data}
           isLoading={isLoading}
-        />  
- 
+        />
+
         {isLayerActive && <Legend />}
         <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
       </RMap>
@@ -540,7 +534,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           onCloseTooltip={handleCloseTooltip}
         />
       )}
-    </RMap>
+    </div>
   );
 };
 

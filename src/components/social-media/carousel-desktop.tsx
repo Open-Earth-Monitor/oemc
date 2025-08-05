@@ -34,8 +34,8 @@ const SocialMediaDesktop = ({ data }) => (
         );
       })}
     </CarouselContent>
-    <CarouselPrevious variant="background" className="right-12" />
-    <CarouselNext variant="background" className="right-0" />
+    <CarouselPrevious variant="background" className="bottom-8 right-12" />
+    <CarouselNext variant="background" className="bottom-8 right-0" />
   </Carousel>
 );
 
