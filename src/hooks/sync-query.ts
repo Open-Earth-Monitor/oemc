@@ -28,7 +28,7 @@ export const useSyncBasemapSettings = () =>
     'basemap',
     parseAsJson<'world_imagery' | 'gray_scale'>().withDefault('world_imagery')
   );
-export type ThemeQueryParam = Theme[] | [] | Theme;
+export type ThemeQueryParam = Theme[] | 'All' | Theme;
 export const useSyncTheme = () =>
   useQueryState<ThemeQueryParam>('theme', parseAsJson<ThemeQueryParam>());
 

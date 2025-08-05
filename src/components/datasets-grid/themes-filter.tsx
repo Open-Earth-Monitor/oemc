@@ -2,8 +2,9 @@ import { useCallback } from 'react';
 
 import cn from '@/lib/classnames';
 
-import { ThemeID, THEMES } from '@/components/theme-filter/constants';
 import type { Theme } from '@/constants/themes';
+
+import { ThemeID, THEMES } from '@/components/theme-filter/constants';
 import { Button } from '@/components/ui/button';
 
 const ThemesFilter = ({
