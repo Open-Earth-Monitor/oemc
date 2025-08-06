@@ -3,10 +3,9 @@ import type { FC, FormEvent, MouseEvent } from 'react';
 
 import { usePathname } from 'next/navigation';
 
+import { Cross2Icon } from '@radix-ui/react-icons';
 import { getWidth } from 'ol/extent';
 import { get as getProjection } from 'ol/proj';
-
-import { Cross2Icon } from '@radix-ui/react-icons';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { useLocalStorage } from 'usehooks-ts';
 

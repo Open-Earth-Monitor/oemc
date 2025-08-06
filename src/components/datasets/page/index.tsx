@@ -7,19 +7,17 @@ import { redirect } from 'next/navigation';
 
 import { useMonitor, useMonitorLayers } from '@/hooks/monitors';
 import { useSyncLayersSettings } from '@/hooks/sync-query';
-import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
-import DatasetCard from '@/components/datasets/card';
-import Loading from '@/components/loading';
-import CardHeader from '@/components/sidebar/card-header';
-import MonitorDialog from '@/components/monitors/dialog';
+
 import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geostories-button';
 
+import DatasetCard from '@/components/datasets/card';
+import Loading from '@/components/loading';
+import MonitorDialog from '@/components/monitors/dialog';
+import CardHeader from '@/components/sidebar/card-header';
+import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
+
 const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
-  const {
-    data: monitor,
-    isLoading: isLoadingMonitor,
-    isError: isMonitorError,
-  } = useMonitor({ monitor_id });
+  const { data: monitor, isLoading: isLoadingMonitor } = useMonitor({ monitor_id });
 
   const {
     data,

@@ -1,10 +1,11 @@
+import { Bbox } from 'ol/extent';
 import type { RMapProps } from 'rlayers/RMap';
 import type { RView } from 'rlayers/RMap';
 
 import type { GeostoryParsed } from '@/types/geostories';
 import type { LayerDateRange, LayerParsed } from '@/types/layers';
+
 import { InitialViewport } from './constants';
-import { Bbox } from 'ol/extent';
 
 export interface CustomMapProps extends Omit<RMapProps, 'initial'> {
   /** A function that returns the map instance */

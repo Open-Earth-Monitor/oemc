@@ -4,14 +4,15 @@ import { FC, useCallback } from 'react';
 
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { XIcon } from 'lucide-react';
-import PointHistogram from '@/components/map/stats/point-histogram';
-import RegionsHistogram from '@/components/map/stats/region-histogram';
+
 import {
   compareFunctionalityAtom,
   histogramVisibilityAtom,
   regionsLayerVisibilityAtom,
 } from '@/app/store';
 
+import PointHistogram from '@/components/map/stats/point-histogram';
+import RegionsHistogram from '@/components/map/stats/region-histogram';
 import { Button } from '@/components/ui/button';
 
 type HistogramProps = { title: string; color: string; id: string };

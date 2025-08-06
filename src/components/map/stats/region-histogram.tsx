@@ -2,11 +2,11 @@
 
 import React, { FC, useCallback, useMemo } from 'react';
 
+import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
+import { XIcon } from 'lucide-react';
 import { FiDownload } from 'react-icons/fi';
 
-import { XIcon } from 'lucide-react';
-
-import { useAtom } from 'jotai';
 import { cn } from '@/lib/classnames';
 
 import {
@@ -16,19 +16,16 @@ import {
   regionsLayerVisibilityAtom,
 } from '@/app/store';
 
+import { downloadCSV, downloadCSVCompare } from '@/hooks/datasets';
+import { useNutsLayerData } from '@/hooks/layers';
+
 import { Button } from '@/components/ui/button';
 
-import type { GeostoryTooltipInfo, NutsProperties } from '../types';
-
-import { useAtomValue } from 'jotai';
-
-import { downloadCSV, downloadCSVCompare } from '@/hooks/datasets';
-import Loading from '../../loading';
-
-import LineChart from '../../line-chart';
-import CompareGeolocationInfoPopup from '../compare-geolocation-info';
-import { useNutsLayerData } from '@/hooks/layers';
 import { transformNuqsData } from '../../../lib/utils';
+import LineChart from '../../line-chart';
+import Loading from '../../loading';
+import CompareGeolocationInfoPopup from '../compare-geolocation-info';
+import type { GeostoryTooltipInfo, NutsProperties } from '../types';
 
 export type AnnotationProps = {
   width: number;

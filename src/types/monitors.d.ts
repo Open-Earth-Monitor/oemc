@@ -1,7 +1,6 @@
 import type { Theme } from '@/constants/themes';
 
 import type { Geostory } from './geostories';
-
 import { UseCase } from './monitors-and-geostories';
 
 export type Monitor = {

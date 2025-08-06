@@ -2,12 +2,12 @@
 
 import { useCallback, useState, useMemo } from 'react';
 
-import { Element, scroller } from 'react-scroll';
+import { scroller } from 'react-scroll';
 
-import { THEMES, type Theme } from '@/constants/themes';
+import { type Theme } from '@/constants/themes';
 
 import { useMonitorsAndGeostoriesPaginated, useDebounce } from '@/hooks/datasets';
-import { useSyncDatasetType, useSyncTheme } from '@/hooks/sync-query';
+import { useSyncDatasetType } from '@/hooks/sync-query';
 
 import GeostoryCard from '@/components/geostories/card';
 import Loading from '@/components/loading';

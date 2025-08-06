@@ -1,13 +1,12 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
+import compact from 'lodash/compact';
 
 import type { Geostory } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
 import type { Monitor, MonitorParsed } from '@/types/monitors';
 
 import { THEMES_COLORS, DEFAULT_COLOR } from '@/constants/themes';
-
-import compact from 'lodash/compact';
 
 import { parseBBox } from '@/utils/bbox';
 import API from 'services/api';

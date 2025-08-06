@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 
-import WebTrafficContent from '@/components/web-traffic/content';
 import Header from '@/components/header';
+import WebTrafficContent from '@/components/web-traffic/content';
 
 const UsageStatsPage: NextPage = () => {
   return (
