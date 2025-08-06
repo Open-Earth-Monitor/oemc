@@ -5,7 +5,9 @@ import { FC } from 'react';
 import Link from 'next/link';
 
 import { ArrowLeft } from 'lucide-react';
+
 import cn from '@/lib/classnames';
+
 import { buttonVariants } from '@/components/ui/button';
 
 const BackToMonitorsAndGeostories: FC = () => {

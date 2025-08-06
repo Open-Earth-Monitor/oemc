@@ -4,8 +4,12 @@ import React, { FC, useCallback, useMemo } from 'react';
 
 import { format } from 'd3-format';
 import { useAtom, useSetAtom } from 'jotai';
-import GeostoryTooltip from './geostory-tooltip';
-import MonitorTooltip from './monitor-tooltip';
+import { Coordinate } from 'ol/coordinate';
+import { TileWMS } from 'ol/source';
+import { LuChartColumnBig, LuX } from 'react-icons/lu';
+
+import cn from '@/lib/classnames';
+
 import {
   coordinateAtom,
   histogramVisibilityAtom,
@@ -14,14 +18,13 @@ import {
   resolutionAtom,
 } from '@/app/store';
 
-import type { MonitorTooltipInfo, NutsProperties } from '../types';
-import cn from '@/lib/classnames';
-import { getHistogramData } from '../../../lib/utils';
-import { TileWMS } from 'ol/source';
-import { Coordinate } from 'ol/coordinate';
 import { Button } from '@/components/ui/button';
 
-import { LuChartColumnBig, LuX } from 'react-icons/lu';
+import { getHistogramData } from '../../../lib/utils';
+import type { MonitorTooltipInfo, NutsProperties } from '../types';
+
+import GeostoryTooltip from './geostory-tooltip';
+import MonitorTooltip from './monitor-tooltip';
 
 const numberFormat = format(',.2f');
 

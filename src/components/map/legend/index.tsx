@@ -3,20 +3,21 @@ import { useCallback, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
 import { PopoverClose } from '@radix-ui/react-popover';
+import { LuChevronDown } from 'react-icons/lu';
 
 import { cn } from '@/lib/classnames';
 import { mobile } from '@/lib/media-queries';
+
+import { useLayerParsedSource } from '@/hooks/layers';
+import { useSyncLayersSettings } from '@/hooks/sync-query';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import LegendComponent from './component';
-import { useSyncLayersSettings } from '@/hooks/sync-query';
 import OpacitySetting from './opacity';
-import LayerVisibility from './visibility';
 import RemoveLayer from './remove';
-import { useLayerParsedSource } from '@/hooks/layers';
-import { LuChevronDown } from 'react-icons/lu';
+import LayerVisibility from './visibility';
 
 export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
   const isMobile = useMediaQuery(mobile);

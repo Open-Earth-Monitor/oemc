@@ -4,12 +4,14 @@ import { useState, useRef, useMemo, FC, useCallback, useEffect } from 'react';
 
 import { useParams, usePathname } from 'next/navigation';
 
+import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAtom, useSetAtom } from 'jotai';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import { toLonLat } from 'ol/proj';
+import { Size } from 'ol/size';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerWMS, RMap, RLayerTile } from 'rlayers';
 
@@ -35,22 +37,18 @@ import {
 
 import { LABELS } from '@/components/map/controls/basemaps/constants';
 
-import { Size } from 'ol/size';
+import { getHistogramData } from '../../lib/utils';
+
 import Attributions from './attributions';
+import BasemapLayer from './basemap';
 import { DEFAULT_VIEWPORT, InitialViewport } from './constants';
 
 // map controls
 import Controls from './controls';
-import MapTooltip from './tooltip';
 import Legend from './legend';
-
+import MapTooltip from './tooltip';
 import type { CustomMapProps, MonitorTooltipInfo } from './types';
-
 import type { FeatureInfoResponse } from './types';
-import { getHistogramData } from '../../lib/utils';
-
-import BasemapLayer from './basemap';
-import { useQueryClient } from '@tanstack/react-query';
 
 const TooltipInitialState = {
   position: null,

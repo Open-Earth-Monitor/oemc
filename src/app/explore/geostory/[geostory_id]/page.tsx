@@ -1,7 +1,9 @@
-import axios from 'axios';
 import type { Metadata } from 'next';
 
+import axios from 'axios';
+
 import type { Geostory } from '@/types/geostories';
+
 import GeostoryPageComponent from '@/components/geostories/page';
 
 type Props = {

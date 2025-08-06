@@ -1,5 +1,7 @@
-import Link from 'next/link';
 import { FC } from 'react';
+
+import Link from 'next/link';
+
 import type { Theme } from '@/constants/themes';
 
 export type ThemeQueryParam = Theme[] | [];
