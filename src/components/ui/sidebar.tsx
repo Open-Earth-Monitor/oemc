@@ -30,6 +30,7 @@ import {
   SIDEBAR_WIDTH_MOBILE,
   SIDEBAR_WIDTH_ICON,
   SIDEBAR_KEYBOARD_SHORTCUT,
+  SIDEBAR_THEME_FILTERS,
 } from '@/constants/sidebar';
 
 import { Button } from '@/components/ui/button';
@@ -159,7 +160,7 @@ const SidebarProvider = forwardRef<
           <div
             style={
               {
-                '--sidebar-width': SIDEBAR_WIDTH,
+                '--sidebar-width': `calc(${SIDEBAR_WIDTH} + ${SIDEBAR_THEME_FILTERS}px)`,
                 '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
                 ...style,
               } as CSSProperties

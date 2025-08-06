@@ -13,23 +13,15 @@ const LOGO_PADDING = 10;
 
 export default function MapLogo() {
   const { open } = useSidebar();
-
+  const left = open
+    ? `calc(${SIDEBAR_WIDTH} + ${SIDEBAR_THEME_FILTERS}px + ${LOGO_PADDING}px)`
+    : `calc(${SIDEBAR_THEME_FILTERS}px + ${LOGO_PADDING}px)`;
   return (
     <>
       <Link
         href="/"
-        className={cn('absolute top-7 z-10 transition-[left] duration-300 ease-in-out', {
-          'left-[98px]': !open,
-        })}
-        style={
-          open
-            ? {
-                left: `calc(${SIDEBAR_WIDTH} + ${SIDEBAR_THEME_FILTERS}px +  ${LOGO_PADDING}px)`,
-              }
-            : {
-                left: `calc(${SIDEBAR_THEME_FILTERS} + ${LOGO_PADDING}px)`,
-              }
-        }
+        className="absolute top-7 z-10 transition-[left] duration-300 ease-in-out"
+        style={{ left }}
       >
         <Image
           alt="Open-earth-monitor"
