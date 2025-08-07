@@ -3,7 +3,7 @@
 import type { NextPage } from 'next';
 
 import DesktopExploreToolbar from '@/containers/explore/toolbar/desktop';
-import MobileExploreToolbar from '@/containers/explore/toolbar/mobile';
+import MobileExploreNavbar from '@/containers/explore/toolbar/mobile/nav-bar';
 
 const MapSidebarPage: NextPage = () => {
   return (
@@ -12,7 +12,7 @@ const MapSidebarPage: NextPage = () => {
         <DesktopExploreToolbar />
       </div>
       <div className="block md:hidden">
-        <MobileExploreToolbar />
+        <MobileExploreNavbar />
       </div>
     </>
   );

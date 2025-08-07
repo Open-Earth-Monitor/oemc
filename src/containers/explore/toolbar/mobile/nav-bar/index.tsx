@@ -20,7 +20,7 @@ import { THEMES } from '@/components/theme-filter/constants';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-export default function MobileExploreToolbar() {
+const MobileExploreNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentDataset, setDatasetType] = useSyncDatasetType();
   const [theme, setTheme] = useSyncTheme();
@@ -141,7 +141,7 @@ export default function MobileExploreToolbar() {
 
       <Button
         className={cn({
-          'z-60 relative flex w-full justify-between rounded-none border-none bg-black-500 px-6 py-2 text-sm text-white-500':
+          'z-60 relative flex h-[60px] w-full justify-between rounded-none border-none bg-black-500 px-6 py-2 text-sm text-white-500':
             true,
           'bg-accent-green text-black-500': isOpen,
         })}
@@ -158,4 +158,6 @@ export default function MobileExploreToolbar() {
       </Button>
     </div>
   );
-}
+};
+
+export default MobileExploreNavbar;

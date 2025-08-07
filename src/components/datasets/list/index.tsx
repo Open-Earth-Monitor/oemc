@@ -13,13 +13,12 @@ import CardHeader from '@/components/sidebar/card-header';
 interface DataSetListProps {
   data: LayerParsed[];
   monitorId: string;
-  className?: HTMLDivElement['className'];
 }
-const DatasetList: FC<DataSetListProps> = ({ data, monitorId, className }) => {
+const DatasetList: FC<DataSetListProps> = ({ data, monitorId }) => {
   const { data: monitor, isLoading: isLoadingMonitor } = useMonitor({ monitor_id: monitorId });
   const { title, theme, color, id, description, geostories } = monitor || {};
   return (
-    <div className={className}>
+    <>
       <div className="space-y-6 py-4">
         <CardHeader
           theme={theme}
@@ -73,7 +72,7 @@ const DatasetList: FC<DataSetListProps> = ({ data, monitorId, className }) => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
