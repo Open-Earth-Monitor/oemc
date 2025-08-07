@@ -1,14 +1,15 @@
+import { useMemo } from 'react';
+
 import Link from 'next/link';
 
-import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 import { cn } from '@/lib/classnames';
 
 import { MonitorParsed } from '@/types/monitors';
 
-import { postWebTraffic } from '@/hooks/web-traffic';
 import { useMonitors } from '@/hooks/monitors';
+import { postWebTraffic } from '@/hooks/web-traffic';
 
 export const MonitorLink = ({
   id,

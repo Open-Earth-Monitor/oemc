@@ -1,13 +1,14 @@
 import React, { useCallback, useState } from 'react';
 
+import { Extent } from 'ol/extent';
 import { LuSearch, LuX } from 'react-icons/lu';
 
 import { cn } from '@/lib/classnames';
 
 import Loading from '@/components/loading';
 import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
-import { Extent } from 'ol/extent';
 import { Input } from '@/components/ui/input';
+
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 function LocationSearchComponent({

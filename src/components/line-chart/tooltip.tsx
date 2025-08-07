@@ -1,6 +1,7 @@
 import { Tooltip, defaultStyles } from '@visx/tooltip';
-import { TooltipData } from './types';
 import { format } from 'd3-format';
+
+import { TooltipData } from './types';
 import { COMPARE_DATA_COLOR, DATA_COLOR, formatDate } from './utils';
 
 const numberFormat = format(',.0f');

@@ -3,11 +3,13 @@
 import React, { FC, useMemo, useCallback } from 'react';
 
 import { format } from 'd3-format';
+import { useAtom, useSetAtom } from 'jotai';
 import { XIcon } from 'lucide-react';
+import { Coordinate } from 'ol/coordinate';
 import TileWMS from 'ol/source/TileWMS';
 
-import { Button } from '@/components/ui/button';
-import { Coordinate } from 'ol/coordinate';
+import cn from '@/lib/classnames';
+
 import {
   coordinateAtom,
   histogramVisibilityAtom,
@@ -17,8 +19,8 @@ import {
 } from '@/app/store';
 
 import type { GeostoryTooltipInfo, NutsProperties } from '@/components/map/types';
-import { useAtom, useSetAtom } from 'jotai';
-import cn from '@/lib/classnames';
+import { Button } from '@/components/ui/button';
+
 import { getHistogramData } from '../../../lib/utils';
 
 const numberFormat = format(',.2f');

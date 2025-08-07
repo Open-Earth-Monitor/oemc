@@ -2,23 +2,21 @@
 
 import { FC, useCallback, useMemo } from 'react';
 
-import { FiDownload } from 'react-icons/fi';
-
 import { format } from 'd3-format';
+import { useAtomValue } from 'jotai';
+import { h } from 'next-usequerystate/dist/parsers-fd455cd5';
+import { FiDownload } from 'react-icons/fi';
 
 import { cn } from '@/lib/classnames';
 
 import { lonLatAtom } from '@/app/store';
-import { usePointData } from '@/hooks/map';
-
-import { useAtomValue } from 'jotai';
 
 import { downloadCSV } from '@/hooks/datasets';
-import Loading from '../../loading';
+import { useLayerParsedSource } from '@/hooks/layers';
+import { usePointData } from '@/hooks/map';
 
 import LineChart from '../../line-chart';
-import { useLayerParsedSource } from '@/hooks/layers';
-import { h } from 'next-usequerystate/dist/parsers-fd455cd5';
+import Loading from '../../loading';
 
 const numberFormat = format(',.2f');
 

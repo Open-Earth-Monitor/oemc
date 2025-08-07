@@ -1,5 +1,6 @@
-import axios from 'axios';
 import type { Metadata, NextPage } from 'next';
+
+import axios from 'axios';
 
 import type { Monitor } from '@/types/monitors';
 

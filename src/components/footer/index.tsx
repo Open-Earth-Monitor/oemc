@@ -2,10 +2,12 @@
 
 import { FC } from 'react';
 
+import { useMediaQuery } from 'react-responsive';
+
+import { mobile } from '@/lib/media-queries';
+
 import { FooterDesktop } from './desktop';
 import { FooterMobile } from './mobile';
-import { useMediaQuery } from 'react-responsive';
-import { mobile } from '@/lib/media-queries';
 
 export const Footer: FC = () => {
   const isMobile = useMediaQuery(mobile);

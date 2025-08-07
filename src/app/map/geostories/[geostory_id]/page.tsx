@@ -1,9 +1,8 @@
-import axios from 'axios';
 import type { Metadata, NextPage } from 'next';
 
-import type { Geostory } from '@/types/geostories';
+import axios from 'axios';
 
-import GeostoryPageComponent from '@/components/geostories/page';
+import type { Geostory } from '@/types/geostories';
 
 type Props = {
   params: { geostory_id: string };

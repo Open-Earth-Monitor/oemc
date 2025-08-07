@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { isArray } from 'lodash-es';
 
 import type {
   MonitorsAndGeostories,
@@ -10,10 +11,12 @@ import type {
 } from '@/types/monitors-and-geostories';
 
 import { Theme, THEMES_COLORS } from '@/constants/themes';
+
+import { useSyncDatasetType, useSyncTheme, type ThemeQueryParam } from '@/hooks/sync-query';
+
 import { SortingCriteria } from '@/components/datasets-grid/types';
-import type { ThemeQueryParam } from '@/hooks/sync-query';
+
 import API from 'services/api';
-import { isArray } from 'lodash-es';
 
 const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'light') => {
   if (!ready) return 'hsla(0, 0%, 79%, 1)';
@@ -250,4 +253,32 @@ export function downloadCSVCompare(data: DataObjectCompare[], filename: string) 
   // Clean up by removing the link and revoking the URL
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+}
+
+export function useDatasets() {
+  const [datasetType] = useSyncDatasetType();
+  const [theme] = useSyncTheme();
+  const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
+  // Show more/fewer details about the datasets
+  const [showDetail, setShowDetail] = useState(false);
+
+  const params = useMemo(
+    () => ({
+      ...(datasetType && datasetType !== 'all' && { type: datasetType }),
+      ...(theme && theme !== 'All' && { theme }),
+      sort_by: sortingCriteria,
+    }),
+    [datasetType, theme, sortingCriteria]
+  );
+  const { data: results, isLoading, isFetched } = useMonitorsAndGeostories(params);
+
+  return {
+    results,
+    isLoading,
+    isFetched,
+    sortingCriteria,
+    showDetail,
+    setSortingCriteria,
+    setShowDetail,
+  };
 }

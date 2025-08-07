@@ -1,8 +1,10 @@
 'use client';
 
 import { useGetWebTraffic } from '@/hooks/web-traffic';
-import WebTrafficRankingContentItem from './item';
+
 import Loading from '../loading';
+
+import WebTrafficRankingContentItem from './item';
 
 const WebTrafficRankingContent = ({ type }) => {
   const { isLoadingGeostories, isLoadingMonitors, geostoriesInfo, monitorsInfo } =

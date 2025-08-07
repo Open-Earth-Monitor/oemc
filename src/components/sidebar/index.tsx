@@ -1,36 +1,25 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useDatasets } from '@/hooks/datasets';
 
-import { useMonitorsAndGeostories } from '@/hooks/datasets';
-import { useSyncTheme, useSyncDatasetType } from '@/hooks/sync-query';
-
-import { SortingCriteria } from '@/components/datasets-grid/types';
+import Badge from '@/components/badge';
 import Loading from '@/components/loading';
-import SidebarDatasetCard from '@/components/sidebar/card';
-import DatasetCardGeostory from '@/components/sidebar/card-geostory-content';
-import DatasetCardMonitor from '@/components/sidebar/card-monitor-content';
+import CardList from '@/components/sidebar/card-list';
 import SidebarCheckbox from '@/components/sidebar/checkbox';
 import SidebarSelect from '@/components/sidebar/select';
 import SortBy from '@/components/sort-by';
 import { SidebarContent, SidebarHeader } from '@/components/ui/sidebar';
 
 function MapSidebar() {
-  const [datasetType] = useSyncDatasetType();
-  const [theme] = useSyncTheme();
-  const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
-  // Show more/fewer details about the datasets
-  const [showDetail, setShowDetail] = useState(false);
-
-  const params = useMemo(
-    () => ({
-      ...(datasetType && datasetType !== 'all' && { type: datasetType }),
-      ...(theme && theme !== 'All' && { theme }),
-      sort_by: sortingCriteria,
-    }),
-    [datasetType, theme, sortingCriteria]
-  );
-  const { data: results, isLoading, isFetched } = useMonitorsAndGeostories(params);
+  const {
+    results,
+    isLoading,
+    isFetched,
+    sortingCriteria,
+    showDetail,
+    setShowDetail,
+    setSortingCriteria,
+  } = useDatasets();
 
   return (
     <>
@@ -43,15 +32,15 @@ function MapSidebar() {
             </span>
           </h1>
 
-          <span className="flex w-fit justify-end space-x-1 place-self-end rounded-full bg-white-500 bg-opacity-5 px-2 text-sm font-medium">
+          <Badge className="justify-end place-self-end">
             <span>{results?.length}</span>
             {}
             {!isLoading && isFetched && <span>{results?.length === 1 ? 'result' : 'results'}</span>}
-          </span>
+          </Badge>
         </div>
       </SidebarHeader>
       <SidebarContent>
-        <div className="py-6">
+        <div className="w-60 py-6">
           <SidebarSelect />
         </div>
         <div className="flex items-center justify-between">
@@ -60,24 +49,7 @@ function MapSidebar() {
         </div>
         {/* Cards - Monitors & Geostories */}
         {isLoading && !isFetched && <Loading />}
-        {!isLoading && isFetched && (
-          <ul>
-            {results?.map((result) => {
-              return (
-                <li key={result.id} className="mb-4">
-                  <SidebarDatasetCard {...result}>
-                    {result.type === 'monitor' && (
-                      <DatasetCardMonitor showMore={showDetail} {...result} />
-                    )}
-                    {result.type === 'geostory' && (
-                      <DatasetCardGeostory showMore={showDetail} {...result} />
-                    )}
-                  </SidebarDatasetCard>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+        {!isLoading && isFetched && <CardList data={results} showMore={showDetail} />}
       </SidebarContent>
     </>
   );

@@ -1,8 +1,8 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
 import { FC } from 'react';
+
+import dynamic from 'next/dynamic';
 
 const StaticMapComponent = dynamic(() => import('@/components/map/static'), {
   ssr: false,

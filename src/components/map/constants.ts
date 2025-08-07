@@ -1,7 +1,6 @@
+import type { Extent } from 'ol/extent';
 import { fromLonLat } from 'ol/proj';
 import { RView } from 'rlayers/RMap';
-
-import type { Extent } from 'ol/extent';
 
 export type InitialViewport = {
   bbox: Extent;

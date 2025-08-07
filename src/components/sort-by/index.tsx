@@ -1,3 +1,6 @@
+import { SetStateAction } from 'jotai';
+import { LuListFilter } from 'react-icons/lu';
+
 import {
   Select,
   SelectContent,
@@ -5,8 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { SetStateAction } from 'jotai';
-import { LuListFilter } from 'react-icons/lu';
 
 export type SortingCriteria = 'title' | 'date';
 

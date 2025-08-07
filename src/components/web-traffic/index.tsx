@@ -1,3 +1,5 @@
+import cn from '@/lib/classnames';
+
 import {
   Dialog,
   DialogTrigger,
@@ -6,8 +8,6 @@ import {
   DialogTitle,
   DialogClose,
 } from '@/components/ui/dialog';
-
-import cn from '@/lib/classnames';
 
 import WebTrafficMobileContent from './mobile-content';
 

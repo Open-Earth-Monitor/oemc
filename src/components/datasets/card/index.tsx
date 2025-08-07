@@ -1,27 +1,29 @@
 'use client';
 
-import Image from 'next/image';
-
 import { FC, useCallback, useMemo } from 'react';
 
-import { useAtom, useAtomValue } from 'jotai';
+import Image from 'next/image';
 
+import { useAtom, useAtomValue } from 'jotai';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { LuLayers2 } from 'react-icons/lu';
-
-import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
 
 import cn from '@/lib/classnames';
 import { isValidUrl } from '@/lib/url';
 
-import type { LayerParsed } from '@/types/layers';
-import { useSyncCompareLayersSettings, useSyncLayersSettings } from '../../../hooks/sync-query';
-import { Monitor, MonitorParsed } from '@/types/monitors';
 import { Geostory } from '@/types/geostories';
-import TimeSeries from '@/components/timeseries';
+import type { LayerParsed } from '@/types/layers';
+import { Monitor, MonitorParsed } from '@/types/monitors';
+
+import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
+
 import Histogram from '@/containers/histogram';
+
+import TimeSeries from '@/components/timeseries';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+
+import { useSyncCompareLayersSettings, useSyncLayersSettings } from '../../../hooks/sync-query';
 
 type DatasetCardProps = LayerParsed & {
   id: string;
@@ -40,9 +42,6 @@ const DatasetCard: FC<DatasetCardProps> = ({
   range,
   color,
   isGeostory = false,
-  data_meaning,
-  value_society,
-  usage_examples,
 }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();

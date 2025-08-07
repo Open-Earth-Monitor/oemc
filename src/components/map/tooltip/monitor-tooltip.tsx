@@ -3,9 +3,12 @@
 import React, { FC, useCallback, useMemo } from 'react';
 
 import { format } from 'd3-format';
-import { XIcon } from 'lucide-react';
 import { useAtom, useSetAtom } from 'jotai';
-import { Button } from '@/components/ui/button';
+import { XIcon } from 'lucide-react';
+import { Coordinate } from 'ol/coordinate';
+import { TileWMS } from 'ol/source';
+
+import cn from '@/lib/classnames';
 
 import {
   coordinateAtom,
@@ -15,11 +18,10 @@ import {
   resolutionAtom,
 } from '@/app/store';
 
-import type { MonitorTooltipInfo, NutsProperties } from '../types';
-import cn from '@/lib/classnames';
+import { Button } from '@/components/ui/button';
+
 import { getHistogramData } from '../../../lib/utils';
-import { TileWMS } from 'ol/source';
-import { Coordinate } from 'ol/coordinate';
+import type { MonitorTooltipInfo, NutsProperties } from '../types';
 
 const numberFormat = format(',.2f');
 
