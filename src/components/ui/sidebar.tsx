@@ -301,8 +301,6 @@ const SidebarTrigger = forwardRef<ElementRef<typeof Button>, ComponentProps<type
           {
             'absolute bottom-2 z-10 h-8 w-8 border-none bg-black-300 transition-[left] duration-300 ease-in-out':
               true,
-            'left-[482px]': open,
-            'left-[98px]': !open,
           },
           className
         )}

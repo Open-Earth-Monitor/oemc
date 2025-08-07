@@ -134,7 +134,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
       )}
       <div className="flex flex-col space-y-2.5 border-t border-dashed border-white-900 pt-3.5">
         <div className="flex items-center space-x-2">
-          <Switch onClick={handleRegionsLayerVisibility} />
+          <Switch onClick={handleRegionsLayerVisibility} checked={regionsLayerVisibility} />
           <span
             className={cn('text-sm', {
               'text-accent-green': regionsLayerVisibility,

@@ -6,7 +6,7 @@ import { useParams, usePathname } from 'next/navigation';
 
 import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
@@ -37,8 +37,6 @@ import {
 
 import { LABELS } from '@/components/map/controls/basemaps/constants';
 
-import { getHistogramData } from '../../lib/utils';
-
 import Attributions from './attributions';
 import BasemapLayer from './basemap';
 import { DEFAULT_VIEWPORT, InitialViewport } from './constants';
@@ -47,8 +45,15 @@ import { DEFAULT_VIEWPORT, InitialViewport } from './constants';
 import Controls from './controls';
 import Legend from './legend';
 import MapTooltip from './tooltip';
-import type { CustomMapProps, MonitorTooltipInfo } from './types';
-import type { FeatureInfoResponse } from './types';
+
+import type {
+  CustomMapProps,
+  MonitorTooltipInfo,
+  NutsProperties,
+  FeatureInfoResponse,
+} from '@/components/map/types';
+
+import { getHistogramData } from '@/lib/utils';
 
 const TooltipInitialState = {
   position: null,
@@ -72,19 +77,20 @@ const TooltipInitialState = {
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const queryClient = useQueryClient();
-  const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
-  const [activeLabels] = useSyncBasemapLabelsSettings();
-  const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
-  const [basemap] = useSyncBasemapSettings();
-  const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
-  const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
-  const [bbox, setBbox] = useSyncBboxSettings();
-  const [nutsProperties, setNutsProperties] = useState(null);
 
-  const [compareNutsProperties, setCompareNutsProperties] = useState(null);
+  const [nutsProperties, setNutsProperties] = useState<NutsProperties | null>(null);
+  const setCompareNutsProperties = useSetAtom(null);
+  const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
+  const isRegionsLayerActive = useAtomValue(regionsLayerVisibilityAtom);
+  const isHistogramVisibility = useSetAtom(histogramVisibilityAtom);
+  const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
+  const [activeLabels] = useSyncBasemapLabelsSettings();
+  const [basemap] = useSyncBasemapSettings();
+  const [bbox, setBbox] = useSyncBboxSettings();
+
   const setCoordinate = useSetAtom(coordinateAtom);
 
-  const [lonLat, setLonLat] = useAtom(lonLatAtom);
+  const setLonLat = useSetAtom(lonLatAtom);
 
   // info from URL
   const params = useParams();
