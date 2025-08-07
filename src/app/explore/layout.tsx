@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 
-import MobileExploreToolbar from '@/containers/explore/toolbar/mobile';
-
+import MainMenuDesktop from '@/components/main-menu/desktop';
 import Map from '@/components/map';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
@@ -14,11 +13,13 @@ export default function ExploreLayout({ children }: { children: React.ReactNode 
   return (
     <div className="relative">
       <SidebarProvider>{children}</SidebarProvider>
-      {/* <MapHeader /> */}
-      <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
-        <Map />
-        <div className="block md:hidden">
-          <MobileExploreToolbar />
+      <div className="relative">
+        <div className="absolute right-5 top-7 z-50">
+          <MainMenuDesktop />
+        </div>
+
+        <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
+          <Map />
         </div>
       </div>
     </div>
