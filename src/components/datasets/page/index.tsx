@@ -113,13 +113,6 @@ const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) 
           </div>
         </div>
       </Sidebar>
-      <div className="w-full">
-        <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
-          {/* Map + Trigger */}
-
-          <SidebarTrigger />
-        </div>
-      </div>
     </div>
   );
 };

@@ -14,7 +14,7 @@ import {
   resolutionAtom,
 } from '@/app/store';
 
-import type { MonitorTooltipInfo, NutsProperties } from '../types';
+import type { MonitorTooltipInfo, NutsProperties } from '@/components/map/types';
 import cn from '@/lib/classnames';
 import { getHistogramData } from '../../../lib/utils';
 import { TileWMS } from 'ol/source';
@@ -27,7 +27,7 @@ const numberFormat = format(',.2f');
 
 interface TooltipProps extends MonitorTooltipInfo {
   onCloseTooltip: () => void;
-  nutsProperties?: NutsProperties;
+  nutsProperties?: NutsProperties | null;
 }
 
 const MapTooltip: FC<TooltipProps> = ({
@@ -72,7 +72,6 @@ const MapTooltip: FC<TooltipProps> = ({
   const handleClick = () => {
     isHistogramVisibility(true);
   };
-
   const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
   const compareDateLabel =
     rightData.date && leftData.range?.find(({ value }) => value === rightData.date)?.label;

@@ -47,7 +47,7 @@ type HistogramTypes = {
   title;
 };
 
-const RegionHistogram: FC<HistogramTypes> = ({
+const RegionsHistogram: FC<HistogramTypes> = ({
   onCloseTooltip = () => null,
   title,
   compareNutProperties,
@@ -178,17 +178,17 @@ const RegionHistogram: FC<HistogramTypes> = ({
             <FiDownload className="h-6 w-6" />
             <span className="font-inter text-xs">CSV</span>
           </button>
-          {isLoadingDataHistogram || isLoadingDataCompareHistogram ? (
-            <Loading />
-          ) : (
-            <div className="relative h-full w-full">
-              {/* <LineChart
+          {isLoadingDataHistogram || (isLoadingDataCompareHistogram && <Loading />)}
+          {!isLoadingDataHistogram ||
+            (!isLoadingDataCompareHistogram && (
+              <div className="relative h-full w-full">
+                {/* <LineChart
                   data={histogramDataRegion}
-                  dataCompare={isRegionsLayerActive && compareHistogramDataRegion}
+                  // dataCompare={isRegionsLayerActive && compareHistogramDataRegion}
                   color={color}
                 /> */}
-            </div>
-          )}
+              </div>
+            ))}
         </div>
         <div className="flex w-full justify-center">
           <Button variant="outline" size="sm" onClick={onCompareActive}>
@@ -204,4 +204,4 @@ const RegionHistogram: FC<HistogramTypes> = ({
   );
 };
 
-export default RegionHistogram;
+export default RegionsHistogram;
