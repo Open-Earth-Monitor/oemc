@@ -15,7 +15,6 @@ import FilterByDatasetType from '@/components/datasets-grid/filters';
 import Loading from '@/components/loading';
 import CardList from '@/components/sidebar/card-list';
 import SidebarCheckbox from '@/components/sidebar/checkbox';
-import SidebarSelect from '@/components/sidebar/select';
 import SortBy from '@/components/sort-by';
 import { THEMES } from '@/components/theme-filter/constants';
 import { Button } from '@/components/ui/button';
@@ -23,9 +22,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function MobileExploreToolbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [showTheme, setShowTheme] = useState(false);
   const [currentDataset, setDatasetType] = useSyncDatasetType();
-  const [, setTheme] = useSyncTheme();
+  const [theme, setTheme] = useSyncTheme();
   const {
     results,
     isLoading,
@@ -38,9 +36,9 @@ export default function MobileExploreToolbar() {
 
   const handleClick = (type: Theme | 'All') => {
     setTheme(type);
-    setShowTheme(true);
   };
   const toggle = () => setIsOpen(!isOpen);
+  const showTheme = !!theme;
 
   return (
     <div className="fixed bottom-0 left-0 z-50 w-full text-sm">
@@ -60,7 +58,7 @@ export default function MobileExploreToolbar() {
           {/* Theme Panel */}
           <div
             className={cn(
-              'absolute inset-0 min-h-[80vh] overflow-hidden transition-all duration-300 ease-in-out',
+              'absolute inset-0 overflow-hidden transition-all duration-300 ease-in-out',
               showTheme
                 ? 'pointer-events-auto z-10 scale-100 opacity-100'
                 : 'pointer-events-none z-0 scale-95 opacity-0'
@@ -71,7 +69,7 @@ export default function MobileExploreToolbar() {
                 <Button
                   variant="background"
                   className="bg-transparent p-0 hover:bg-transparent"
-                  onClick={() => setShowTheme(false)}
+                  onClick={() => setTheme(null)}
                 >
                   <ChevronLeftIcon className="text-accent-green" />
                   <span>Catalogue</span>
