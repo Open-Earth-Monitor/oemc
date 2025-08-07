@@ -44,7 +44,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
   return (
     <div
       className={cn({
-        'm:block absolute bottom-0 right-0 flex w-1/2 justify-end border-t border-secondary-900 bg-brand-500 sm:w-fit sm:space-y-1 sm:border-0 sm:bg-transparent sm:shadow-lg md:max-w-md':
+        'absolute bottom-0 right-0  hidden w-1/2 justify-end border-t border-secondary-900 bg-brand-500 sm:w-fit sm:space-y-1 sm:border-0 sm:bg-transparent sm:shadow-lg md:flex md:max-w-md':
           true,
         'z-[700]': isMobile,
         'z-[50]': !isMobile,
