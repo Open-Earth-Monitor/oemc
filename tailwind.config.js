@@ -10,17 +10,38 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      padding: '2rem',
-      screens: {
-        '2xl': '1400px',
+      padding: {
+        DEFAULT: '1rem', // Default padding for medium screens
+        sm: '1rem', // Small screens
+        md: '1rem', // Medium screens
+        lg: '2rem', // Large screens
+        xl: '4rem', // Extra large screens
+        '2xl': '6rem', // Extra-extra large screens
+        '3xl': '10rem', // Extra-extra-extra large screens
       },
     },
     extend: {
-      font: {
-        inter: ['var(--font-inter)'],
-        satoshi: ['var(--font-satoshi)'],
+      fontFamily: {
+        inter: ['var(--font-inter)', 'sans-serif'],
+        satoshi: ['var(--font-satoshi)', 'sans-serif'],
       },
       colors: {
+        'accent-green': 'var(--accent-green)',
+        black: {
+          100: '#13273C',
+          300: '#0E1D2D',
+          400: '#0B1825',
+          500: '#09131D',
+        },
+        white: {
+          50: '#FFFFFF',
+          100: '#DFDFDF',
+          500: '#FFFFE6',
+          700: 'hsla(60, 100%, 95%, 0.5)',
+          800: 'hsla(60, 100%, 95%, 0.2)',
+          900: 'hsla(60, 100%, 95%, 0.1)',
+          950: 'hsla(60, 100%, 95%, 0.05)',
+        },
         gray: {
           600: 'hsl(220, 7%, 40%)',
         },
@@ -68,7 +89,7 @@ module.exports = {
         },
         accent: {
           DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+          green: 'hsl(var(--accent-green))',
         },
         popover: {
           DEFAULT: 'hsl(var(--popover))',
@@ -78,6 +99,9 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+      },
+      backgroundImage: {
+        'custom-gradient': 'linear-gradient(131.67deg, #1EEDBF 0%, #75A1FF 100%)',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -101,6 +125,16 @@ module.exports = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
+    },
+    sidebar: {
+      DEFAULT: 'hsl(var(--sidebar-background))',
+      foreground: 'hsl(var(--sidebar-foreground))',
+      primary: 'hsl(var(--sidebar-primary))',
+      'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+      accent: 'hsl(var(--sidebar-accent))',
+      'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+      border: 'hsl(var(--sidebar-border))',
+      ring: 'hsl(var(--sidebar-ring))',
     },
   },
   plugins: [require('tailwindcss-animate'), forms, typography],

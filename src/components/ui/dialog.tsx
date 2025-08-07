@@ -14,6 +14,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
+
 import { cn } from 'lib/classnames';
 
 const Dialog = ({ open, defaultOpen, onOpenChange, ...props }: DialogPrimitive.DialogProps) => {
@@ -68,7 +69,7 @@ const DialogContent = forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn({
-        'fixed left-2 right-2 top-[50%] z-[1000] flex max-h-full w-full max-w-[calc(100vw-16px)] translate-x-0 translate-y-[-50%] flex-col overflow-y-scroll bg-brand-400 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:bottom-auto sm:left-[50%]  sm:max-h-[80%] sm:max-w-lg sm:translate-x-[-50%] md:max-w-2xl':
+        'fixed left-2 right-2 top-[50%] z-[1000] flex max-h-full w-full max-w-[calc(100vw-16px)] translate-x-0 translate-y-[-50%] flex-col overflow-y-scroll rounded-3xl bg-brand-400 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:bottom-auto sm:left-[50%]  sm:max-h-[80%] sm:max-w-lg sm:translate-x-[-50%] md:max-w-2xl':
           true,
         [className]: !!className,
       })}

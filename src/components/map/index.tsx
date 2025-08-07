@@ -1,24 +1,30 @@
 'use client';
 
-import React, { useMemo, FC, useCallback, useEffect, useRef, useState, ChangeEvent } from 'react';
+import { useState, useRef, useMemo, FC, useCallback, useEffect } from 'react';
 
-import { useMediaQuery } from 'react-responsive';
+import { useParams, usePathname } from 'next/navigation';
 
 import axios from 'axios';
+import { useAtom, useSetAtom } from 'jotai';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
-import { fromLonLat, toLonLat } from 'ol/proj';
+import { toLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
-import { RLayerWMS, RMap, RLayerTile, RControl } from 'rlayers';
+import { RLayerWMS, RMap, RLayerTile } from 'rlayers';
 
-import cn from '@/lib/classnames';
-import { mobile, tablet } from '@/lib/media-queries';
-import { useAtom, useSetAtom } from 'jotai';
-import { useDebounce } from '@/hooks/datasets';
+import {
+  compareFunctionalityAtom,
+  coordinateAtom,
+  histogramVisibilityAtom,
+  lonLatAtom,
+  nutsDataParamsCompareAtom,
+  regionsLayerVisibilityAtom,
+} from '@/app/store';
+
+import { useGeostory, useGeostoryLayers } from '@/hooks/geostories';
 import { useLayer, useLayerParsedSource } from '@/hooks/layers';
-import { useMonitors } from '@/hooks/monitors';
-import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
+import { useMonitor, useMonitorLayers } from '@/hooks/monitors';
 import {
   useSyncLayersSettings,
   useSyncCompareLayersSettings,
@@ -26,42 +32,25 @@ import {
   useSyncBasemapSettings,
   useSyncBasemapLabelsSettings,
 } from '@/hooks/sync-query';
-import PointHistogram from './stats/point-histogram';
-import RegionsHistogram from './stats/region-histogram';
-import {
-  compareFunctionalityAtom,
-  coordinateAtom,
-  histogramLayerLeftVisibilityAtom,
-  lonLatAtom,
-  nutsDataParamsCompareAtom,
-  regionsLayerVisibilityAtom,
-} from '@/app/store';
-import LocationSearchComponent from '@/components/location-search';
+
+import { LABELS } from '@/components/map/controls/basemaps/constants';
+
 import { Size } from 'ol/size';
 import Attributions from './attributions';
 import { DEFAULT_VIEWPORT, InitialViewport } from './constants';
+
 // map controls
 import Controls from './controls';
-import BookmarkControl from './controls/bookmark';
-import ShareControl from './controls/share';
-import SwipeControl from './controls/swipe';
-import { Legend } from './legend';
-import MapTooltip from './monitor-tooltip';
+import MapTooltip from './tooltip';
+import Legend from './legend';
+
 import type { CustomMapProps, MonitorTooltipInfo } from './types';
-import { useParams } from 'next/navigation';
-import CompareRegionsStatistics from './controls/compare-regions';
 
 import type { FeatureInfoResponse } from './types';
-import { getHistogramData } from './utils';
+import { getHistogramData } from '../../lib/utils';
 
-import { Extent } from 'ol/extent';
-import BasemapControl from './controls/basemaps';
 import BasemapLayer from './basemap';
-import { LABELS } from './controls/basemaps/constants';
-
-interface ClickEvent {
-  bbox?: Extent;
-}
+import { useQueryClient } from '@tanstack/react-query';
 
 const TooltipInitialState = {
   position: null,
@@ -84,30 +73,79 @@ const TooltipInitialState = {
 };
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
-  const [locationSearch, setLocationSearch] = useState('');
+  const queryClient = useQueryClient();
   const [isRegionsLayerActive, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
-  const isMobile = useMediaQuery(mobile);
-  const isTablet = useMediaQuery(tablet);
-  const isDesktop = !isMobile && !isTablet;
-  const [leftLayerHistogramVisibility, setLeftLayerHistogramVisibility] = useAtom(
-    histogramLayerLeftVisibilityAtom
-  );
+  const [activeLabels] = useSyncBasemapLabelsSettings();
+  const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
   const [basemap] = useSyncBasemapSettings();
   const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const [bbox, setBbox] = useSyncBboxSettings();
-  const [activeLabels] = useSyncBasemapLabelsSettings();
   const [nutsProperties, setNutsProperties] = useState(null);
+
   const [compareNutsProperties, setCompareNutsProperties] = useState(null);
   const setCoordinate = useSetAtom(coordinateAtom);
 
   const [lonLat, setLonLat] = useAtom(lonLatAtom);
+
+  // info from URL
   const params = useParams();
+  const pathname = usePathname();
+
+  const match = pathname.match(/^\/explore\/(geostory|monitor)(?:\/|$)/);
+  const type = match?.[1] as 'monitor' | 'geostory' | undefined;
   const monitorId = params.monitor_id as string;
 
-  const { data: monitorsData } = useMonitors();
-  const monitorData = monitorsData?.find((d) => d.id === monitorId);
-  const debouncedSearchValue = useDebounce(locationSearch, 500);
+  const { data: monitorData } = useMonitor(
+    {
+      monitor_id: params.monitor_id as string,
+    },
+    {
+      enabled: type === 'monitor' && !!monitorId,
+    }
+  );
+
+  const { data: geostoryData } = useGeostory(
+    {
+      geostory_id: params.geostory_id as string,
+    },
+    {
+      enabled: type === 'geostory' && !!params.geostory_id,
+    }
+  );
+
+  const monitorLayer = useMonitorLayers(
+    {
+      monitor_id: params.monitor_id as string,
+    },
+    {
+      enabled: type === 'monitor' && !!monitorId,
+    }
+  );
+
+  const geostoryLayer = useGeostoryLayers(
+    {
+      geostory_id: params.geostory_id as string,
+    },
+    {
+      enabled: type === 'geostory' && !!params.geostory_id,
+    }
+  );
+
+  const data = useMemo(() => {
+    if (type === 'monitor') {
+      return monitorData;
+    }
+    if (type === 'geostory') {
+      return geostoryData;
+    }
+    return null;
+  }, [type, monitorData, geostoryData]);
+
+  // bbox that come defined in the monitor/geostory itself
+  const predefinedBbox =
+    type === 'monitor' ? monitorData?.monitor_bbox : geostoryData?.geostory_bbox;
+
   const mapRef: React.MutableRefObject<{
     map: ol.Map;
     ol: {
@@ -117,8 +155,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     };
   }> = useRef<null>(null);
 
-  const layerRightRef = useRef(null);
   const layerLeftRef = useRef(null);
+  const layerRightRef = useRef(null);
   const nutsLayer = useRef(null);
 
   const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TooltipInitialState);
@@ -138,10 +176,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const { data: compareData } = useLayer({ layer_id: compareLayerId });
 
-  // bbox that come defined in the monitor itself
-  const predefinedBbox = monitorData?.monitor_bbox;
   // check URL in case the site has been shared, if not get predefined bbox if not use the default one
-  const monitorBbox = useMemo(() => {
+  const dataBbox = useMemo(() => {
     if (bbox) return bbox;
     if (predefinedBbox) return predefinedBbox;
     return initialViewState.bbox;
@@ -153,13 +189,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const initialViewport = {
     zoom: initialViewState.zoom,
     center: initialViewState.center,
-    bbox: monitorBbox,
+    bbox: dataBbox,
   } satisfies InitialViewport;
 
   /**
    * Get the layer source from the API
    */
-  const { data, isLoading } = useLayerParsedSource(
+  const { data: layerFromURL, isLoading } = useLayerParsedSource(
     {
       layer_id: layerId,
     },
@@ -167,7 +203,17 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       enabled: !!layerId,
     }
   );
-  const { gs_base_wms, gs_name, title, unit, range, range_labels } = data || {};
+
+  const layerData = useMemo(() => {
+    if (layerFromURL) return layerFromURL;
+
+    if (type === 'monitor') return monitorLayer?.data?.[0];
+    if (type === 'geostory') return geostoryLayer?.data?.[0];
+
+    return undefined;
+  }, [layerFromURL, monitorLayer, geostoryLayer, type]);
+
+  const { gs_base_wms, gs_name, title, unit, range, range_labels } = layerData || {};
 
   /* Interactivity */
   const wmsSource = useMemo(() => {
@@ -281,6 +327,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         setTooltipInfo((prev) => ({
           ...prev,
           leftData: {
+            // This info is coming from the API instead of the layer, as requested
             id: layerId,
             title,
             date,
@@ -307,6 +354,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<UIEvent>) => {
+      handleCancelAnalysis();
       if (compareFunctionalityInfo) {
         const resolution = e.map.getView()?.getResolution();
         getHistogramData(wmsNutsSource, e.coordinate, resolution, layerId).then((data) => {
@@ -326,7 +374,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         ...tooltipInfo,
         leftData: {
           ...tooltipInfo.leftData,
-          range,
           value: null,
         },
         coordinate: e.coordinate,
@@ -340,21 +387,24 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const handleCloseTooltip = useCallback(() => {
     const newTooltipInfo = { ...tooltipInfo, value: null, position: null };
     setTooltipInfo(newTooltipInfo);
-    setLeftLayerHistogramVisibility(false);
+    isHistogramVisibility(false);
     setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleRegionsLayer = useCallback(() => {
-    setIsRegionsLayerActive((prev) => !prev);
-  }, [setIsRegionsLayerActive]);
+  const handleCancelAnalysis = useCallback(async () => {
+    await queryClient.cancelQueries({
+      predicate: ({ queryKey }) => queryKey && queryKey[0] === 'region-data',
+      fetchStatus: 'fetching',
+    });
+  }, [queryClient]);
 
   useEffect(() => {
-    if (monitorBbox && mapRef) {
-      void setBbox(monitorBbox);
-      mapRef?.current?.ol?.getView()?.fit(monitorBbox);
+    if (dataBbox && mapRef) {
+      setBbox(dataBbox);
+      mapRef?.current?.ol?.getView()?.fit(dataBbox);
     }
-  }, [monitorBbox, setBbox]);
+  }, [dataBbox, setBbox, mapRef]);
 
   useEffect(() => {
     // Reset tooltip value whenever layerId changes
@@ -372,67 +422,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date, tooltipInfo.position, compareDate]);
 
-  const handleLocationSearchChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setLocationSearch(e.target.value);
-    },
-    [setLocationSearch]
-  );
-
-  const {
-    data: locationData = [],
-    isLoading: isLoadingLocationData = false,
-    isFetching: isFetchingLocationData = false,
-  } = useOpenStreetMapsLocations(
-    {
-      q: debouncedSearchValue,
-      format: 'json',
-    },
-    {
-      enabled: debouncedSearchValue !== '' && debouncedSearchValue.length >= 2,
-      select: (data) => data,
-    }
-  );
-
-  const OPTIONS = useMemo(() => {
-    if (!Array.isArray(locationData)) return [];
-    return locationData.map((d) => ({
-      value: d.place_id ?? undefined,
-      label: d.display_name ?? '',
-      // transforming bbox from "nominatim" to "overpass" and to "ESPG:3857 projection"
-      bbox: [
-        ...fromLonLat([+d.boundingbox[2], +d.boundingbox[0]]),
-        ...fromLonLat([+d.boundingbox[3], +d.boundingbox[1]]),
-      ] as Extent,
-    }));
-  }, [locationData]);
-
-  const handleClick = useCallback(
-    (e: ClickEvent) => {
-      if (mapRef?.current) {
-        const view = mapRef.current.ol.getView();
-        const padding = isDesktop ? [150, 0, 0, 300] : [150, 0, 0, 50];
-        view?.fit(e.bbox, {
-          duration: 2000,
-          ...(!isMobile && { padding }),
-        });
-      }
-
-      // Center the map
-      setBbox(e.bbox);
-    },
-    [isDesktop, isMobile]
-  );
-
-  const layerData = useLayer({ layer_id: layerId });
-
   const labelUrl = useMemo(
     () => LABELS.find((label) => activeLabels === label.id)?.url,
     [activeLabels]
   );
 
   return (
-    <>
+    <div className="relative h-full w-full">
       <RMap
         ref={mapRef as unknown as React.RefObject<null>}
         projection="EPSG:3857"
@@ -446,28 +442,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         noDefaultControls
       >
         <BasemapLayer />
-
-        {isRegionsLayerActive && (
-          <RLayerWMS
-            ref={nutsLayer}
-            properties={{ label: 'NUTS' }}
-            url="https://geoserver.earthmonitor.org/geoserver/oem/wms"
-            opacity={0.2}
-            params={{
-              FORMAT: 'image/png',
-              WIDTH: 768,
-              HEIGHT: 566,
-              SERVICE: 'WMS',
-              VERSION: '1.1.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: 'oem:NUTS_RG_01M_2021_3035',
-              SRS: 'EPSG:3857', // Changing projection to EPSG:3857 (for WMS 1.1.0)
-              BBOX: [-20037508.34, -20037508.34, 20037508.34, 20037508.34], // BBOX for EPSG:3857 (World extent)
-              NAME: 'NUTS',
-            }}
-          />
-        )}
 
         {data && !isLoading && isLayerActive && (
           <RLayerWMS
@@ -512,66 +486,45 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           />
         )}
 
-        <RLayerTile zIndex={100} url={labelUrl} />
-
-        <Controls>
-          <LocationSearchComponent
-            locationSearch={locationSearch}
-            OPTIONS={OPTIONS}
-            handleLocationSearchChange={handleLocationSearchChange}
-            handleClick={handleClick}
-            isLoading={isLoadingLocationData}
-            isFetching={isFetchingLocationData}
-            isMobile={isMobile}
+        {isRegionsLayerActive && (
+          <RLayerWMS
+            ref={nutsLayer}
+            properties={{ label: 'NUTS' }}
+            url="https://geoserver.earthmonitor.org/geoserver/oem/wms"
+            opacity={0.2}
+            params={{
+              FORMAT: 'image/png',
+              WIDTH: 768,
+              HEIGHT: 566,
+              SERVICE: 'WMS',
+              VERSION: '1.1.0',
+              REQUEST: 'GetMap',
+              TRANSPARENT: true,
+              LAYERS: 'oem:NUTS_RG_01M_2021_3035',
+              SRS: 'EPSG:3857', // Changing projection to EPSG:3857 (for WMS 1.1.0)
+              BBOX: [-20037508.34, -20037508.34, 20037508.34, 20037508.34], // BBOX for EPSG:3857 (World extent)
+              NAME: 'NUTS',
+            }}
           />
-          {!isMobile && (
-            <RControl.RZoom className="ol-zoom" key="ol-zoom" zoomOutLabel="-" zoomInLabel="+" />
-          )}
+        )}
+        {basemap === 'world_imagery' && (
+          <RLayerTile
+            zIndex={100}
+            url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+          />
+        )}
 
-          <div
-            className={cn({
-              'absolute flex w-full flex-col items-end justify-end space-y-1.5': true,
-              'top-12': isMobile,
-              'top-[108px]': !isMobile,
-            })}
-          >
-            <CompareRegionsStatistics isMobile={isMobile} onClick={handleRegionsLayer} />
-            <BasemapControl isMobile={isMobile} />
-            <BookmarkControl isMobile={isMobile} />
-            <ShareControl isMobile={isMobile} />
-          </div>
-          {isCompareLayerActive && data && !isLoading && (
-            <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
-          )}
-        </Controls>
+        <RLayerTile zIndex={100} url={labelUrl} />
+        <Controls
+          mapRef={mapRef}
+          layerLeftRef={layerLeftRef}
+          layerRightRef={layerRightRef}
+          data={data}
+          isLoading={isLoading}
+        />
 
         {isLayerActive && <Legend />}
         <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
-
-        {layerData && leftLayerHistogramVisibility ? (
-          !isRegionsLayerActive ? (
-            <PointHistogram
-              onCloseTooltip={handleCloseTooltip}
-              layerId={layerId}
-              compareLayerId={compareLayerId}
-              isRegionsLayerActive={isRegionsLayerActive}
-              {...tooltipInfo}
-            />
-          ) : (
-            <RegionsHistogram
-              onCloseTooltip={handleCloseTooltip}
-              layerId={layerId}
-              compareLayerId={compareLayerId}
-              onCompareClose={() => {
-                setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
-                setCompareNutsProperties(null);
-              }}
-              {...tooltipInfo}
-              nutsProperties={nutsProperties}
-              compareNutProperties={compareNutsProperties}
-            />
-          )
-        ) : null}
       </RMap>
       {/* Interactivity */}
       {data && (
@@ -581,7 +534,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           onCloseTooltip={handleCloseTooltip}
         />
       )}
-    </>
+    </div>
   );
 };
 

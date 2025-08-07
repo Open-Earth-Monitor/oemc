@@ -7,6 +7,8 @@ import type { Monitor, MonitorParsed } from '@/types/monitors';
 
 import { THEMES_COLORS, DEFAULT_COLOR } from '@/constants/themes';
 
+import compact from 'lodash/compact';
+
 import { parseBBox } from '@/utils/bbox';
 import API from 'services/api';
 
@@ -71,30 +73,38 @@ export function useMonitorLayers(
 ) {
   const { monitor_id } = params;
 
-  const fetchMonitorLayers = async (): Promise<Layer[]> => {
-    const response = await API.request<Layer[]>({
+  const fetchMonitorLayers = () =>
+    API.request({
       method: 'GET',
       url: `/monitors/${monitor_id}/layers`,
-    });
-    return response.data;
-  };
+      ...queryOptions,
+    }).then((response: AxiosResponse<Layer[]>) => response.data);
 
-  return useQuery(['monitor-datasets', params], fetchMonitorLayers, {
+  return useQuery(['monitor-layers', params], fetchMonitorLayers, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) =>
-      data
-        .flatMap((layer) =>
-          Array.isArray(layer.extra_lyrs) ? [layer, ...layer.extra_lyrs] : [layer]
-        )
-        .filter((l) => !l.extra_lyrs)
-        .map((d) => ({
-          ...d,
-          range:
-            d?.range?.map((r, i) => ({
-              value: r,
-              label: d.range_labels?.[i] ?? null,
-            })) ?? [],
-        })),
+    select: (layers) => {
+      return layers.flatMap((layer) => {
+        const toParsed = (l: Layer): LayerParsed => {
+          return {
+            ...l,
+            range:
+              l.range?.map((r, i) => ({
+                value: r,
+                label: l.range_labels?.[i] ?? null,
+              })) ?? [],
+          };
+        };
+
+        const parsedExtraLayers =
+          Array.isArray(layer.extra_lyrs) && layer.extra_lyrs.length > 0
+            ? layer.extra_lyrs.map(toParsed)
+            : [];
+
+        const includeBaseLayer = !Array.isArray(layer.extra_lyrs) || layer.extra_lyrs.length === 0;
+
+        return [...(includeBaseLayer ? [toParsed(layer)] : []), ...parsedExtraLayers];
+      });
+    },
     ...queryOptions,
   });
 }

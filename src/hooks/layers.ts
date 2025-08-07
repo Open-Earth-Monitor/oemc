@@ -1,16 +1,14 @@
-import axios from 'axios';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
+
+import type { Layer, LayerParsed } from '@/types/layers';
 
 import type {
-  Layer,
-  LayerParsed,
   LegendGraphicResponse,
   UseLegendGraphicOptions,
-  ParsedLegend,
-} from '@/types/layers';
+  LegendProps,
+} from '@/components/map/legend/types';
 
-import { isValidJSON } from '@/utils/json';
 import API from 'services/api';
 
 const DEFAULT_QUERY_OPTIONS = {
@@ -84,18 +82,29 @@ export function useLayerParsedSource(
       url: `/layers`,
       params,
       ...queryOptions,
-    }).then((response: AxiosResponse<Layer[]>) => response.data[0]);
+    }).then((response: AxiosResponse<Layer[]>) => {
+      return response.data[0];
+    });
 
-  return useQuery(['layer', params], fetchLayer, {
+  return useQuery(['layer-parsed', params], fetchLayer, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => {
-      return {
-        ...data,
-        range: data?.range?.map((r, index) => ({
+    select: (layer) => {
+      const transformLayer = (l: Layer): LayerParsed => ({
+        ...l,
+        range: l?.range?.map((r, index) => ({
           value: r,
-          label: data?.range_labels?.[index] || null,
+          label: l?.range_labels?.[index] || null,
         })),
-      };
+      });
+
+      const parsed = transformLayer(layer);
+
+      // También transforma extra_lyrs si existen
+      if (layer?.extra_lyrs && Array.isArray(layer.extra_lyrs)) {
+        parsed.extra_lyrs = layer.extra_lyrs.map(transformLayer);
+      }
+
+      return parsed;
     },
     ...queryOptions,
   });
@@ -134,7 +143,7 @@ export function useNutsLayerData(
 export function useLegendGraphic({ gs_base_wms, gs_name }: UseLegendGraphicOptions) {
   const url = `${gs_base_wms}?VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=${gs_name}&format=application/json`;
 
-  return useQuery<ParsedLegend>({
+  return useQuery<LegendProps>({
     queryKey: ['legend-graphic', gs_name],
     queryFn: async () => {
       const res = await axios.get<LegendGraphicResponse>(url);
@@ -148,4 +157,16 @@ export function useLegendGraphic({ gs_base_wms, gs_name }: UseLegendGraphicOptio
     enabled: !!gs_base_wms && !!gs_name,
     staleTime: 1000 * 60 * 10,
   });
+}
+
+export function cleanLayer(layer: Omit<Layer, 'extra_lyrs'>): LayerParsed {
+  return {
+    ...layer,
+    range_labels: layer.range_labels,
+    range:
+      layer.range?.map((r, i) => ({
+        value: r,
+        label: layer.range_labels?.[i] || null,
+      })) || [],
+  };
 }

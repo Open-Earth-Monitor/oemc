@@ -7,7 +7,7 @@ import { cn } from '@/lib/classnames';
 
 import { MonitorParsed } from '@/types/monitors';
 
-import { usePostWebTraffic } from '@/hooks/web-traffic';
+import { postWebTraffic } from '@/hooks/web-traffic';
 import { useMonitors } from '@/hooks/monitors';
 
 export const MonitorLink = ({
@@ -17,7 +17,7 @@ export const MonitorLink = ({
   isMobile,
 }: MonitorParsed & { isMobile?: boolean }) => {
   const handleClick = () => {
-    usePostWebTraffic({
+    postWebTraffic({
       monitor_id: id,
     });
     console.info('WT4 -', 'monitors', id);
@@ -36,7 +36,7 @@ export const MonitorLink = ({
     <Link
       data-testid={`monitor-item-${id}`}
       key={id}
-      href={`/map/${id}/datasets${urlParams}`}
+      href={`/map/${id}/${urlParams}`}
       onClick={handleClick}
       className={cn({
         'flex items-center px-2 text-left font-bold sm:px-4': true,

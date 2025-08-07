@@ -1,4 +1,4 @@
-type Basemap = {
+export type BasemapProps = {
   id: 'world_imagery' | 'gray_scale';
   label: string;
   attributions: string;
@@ -14,7 +14,7 @@ export type LabelProps = {
   thumb: string;
 };
 
-export const BASEMAPS: Basemap[] = [
+export const BASEMAPS: BasemapProps[] = [
   {
     id: 'world_imagery',
     label: 'Satellite',

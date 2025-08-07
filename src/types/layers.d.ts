@@ -3,6 +3,7 @@ export type LayerDateRange = { value: string; label: string };
 export type LegendStyle = { color: string; label: string };
 
 export type Layer = {
+  extra_lyrs?: layer[];
   gs_base_wms: string;
   gs_name: string;
   gs_dimension: string;
