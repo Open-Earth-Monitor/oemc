@@ -18,19 +18,15 @@ import {
   resolutionAtom,
 } from '@/app/store';
 
-import { Button } from '@/components/ui/button';
-
+import type { MonitorTooltipInfo, NutsProperties } from '@/components/map/types';
 import { getHistogramData } from '../../../lib/utils';
-import type { MonitorTooltipInfo, NutsProperties } from '../types';
-
-import GeostoryTooltip from './geostory-tooltip';
-import MonitorTooltip from './monitor-tooltip';
+import { Button } from '@/components/ui/button';
 
 const numberFormat = format(',.2f');
 
 interface TooltipProps extends MonitorTooltipInfo {
   onCloseTooltip: () => void;
-  nutsProperties?: NutsProperties;
+  nutsProperties?: NutsProperties | null;
 }
 
 const MapTooltip: FC<TooltipProps> = ({
@@ -75,7 +71,6 @@ const MapTooltip: FC<TooltipProps> = ({
   const handleClick = () => {
     isHistogramVisibility(true);
   };
-
   const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
   const compareDateLabel =
     rightData.date && leftData.range?.find(({ value }) => value === rightData.date)?.label;
