@@ -78,6 +78,9 @@ export type MonitorTooltipInfo = {
 
 interface FeatureProperties {
   [key: string]: number | string;
+  NUTS_NAME: string;
+  NAME_LATN: string;
+  CNTR_CODE: string;
 }
 
 interface Feature {
@@ -97,6 +100,7 @@ export type GeostoryMapProps = CustomMapProps & {
 export type NutsProperties = {
   CNTR_CODE: string;
   NAME_LATN: string;
+  NUTS_NAME: string;
 };
 
 export type NutsDataset = {

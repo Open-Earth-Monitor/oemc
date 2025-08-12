@@ -111,30 +111,27 @@ export function useLayerParsedSource(
 }
 
 export function useNutsLayerData(
-  params: { NUTS_ID: string; LAYER_ID: string },
+  params: { NUTS_ID?: string; LAYER_ID?: string; key: 'regular' | 'compare' } | undefined,
   queryOptions?: UseQueryOptions<
-    {
-      dataset: {
-        avg: number;
-        label: string;
-        max: number;
-        min: number;
-      }[];
-    },
+    { dataset: { avg: number; label: string; max: number; min: number }[] },
     Error
   >
 ) {
-  const fetchNutsLayerData = () => {
-    return API.request({
-      method: 'GET',
-      url: '/stats',
-      params,
-    }).then((response) => {
-      return response.data;
-    });
-  };
+  const NUTS_ID = params?.NUTS_ID ?? '';
+  const LAYER_ID = params?.LAYER_ID ?? '';
 
-  return useQuery(['region-stats', params], fetchNutsLayerData, {
+  return useQuery({
+    queryKey: ['region-stats', NUTS_ID, LAYER_ID, params.key],
+    queryFn: async ({ queryKey }) => {
+      const [, id, layer] = queryKey as [string, string, string];
+      const res = await API.request({
+        method: 'GET',
+        url: '/stats',
+        params: { NUTS_ID: id, LAYER_ID: layer },
+      });
+      return res.data;
+    },
+    enabled: Boolean(NUTS_ID && LAYER_ID) && (queryOptions?.enabled ?? true),
     ...DEFAULT_QUERY_OPTIONS,
     ...queryOptions,
   });

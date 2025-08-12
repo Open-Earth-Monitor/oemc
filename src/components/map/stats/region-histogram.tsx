@@ -14,18 +14,21 @@ import {
   compareFunctionalityAtom,
   nutsDataParamsAtom,
   regionsLayerVisibilityAtom,
+  nutsDataResponseAtom,
+  nutsDataResponseCompareAtom,
 } from '@/app/store';
 
 import { downloadCSV, downloadCSVCompare } from '@/hooks/datasets';
 import { useNutsLayerData } from '@/hooks/layers';
 
+import Loading from '@/components/loading';
 import { Button } from '@/components/ui/button';
 
-import { transformNuqsData } from '../../../lib/utils';
+import type { NutsProperties } from '../types';
+
 import LineChart from '../../line-chart';
-import Loading from '../../loading';
 import CompareGeolocationInfoPopup from '../compare-geolocation-info';
-import type { GeostoryTooltipInfo, NutsProperties } from '../types';
+import { transformNuqsData } from '../../../lib/utils';
 
 export type AnnotationProps = {
   width: number;
@@ -37,8 +40,8 @@ type HistogramTypes = {
   onCloseTooltip?: () => void;
   compareLayerId?: string;
   isRegionsLayerActive?: boolean;
-  nutsProperties?: NutsProperties;
-  compareNutProperties?: NutsProperties;
+  nutsResponse?: NutsProperties;
+  compareNutsProperties?: NutsProperties;
   onCompareClose?: () => void;
   color?: string;
   title;
@@ -47,40 +50,45 @@ type HistogramTypes = {
 const RegionsHistogram: FC<HistogramTypes> = ({
   onCloseTooltip = () => null,
   title,
-  compareNutProperties,
-  nutsProperties,
   onCompareClose,
   color,
 }: HistogramTypes) => {
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const nutsDataParams = useAtomValue(nutsDataParamsAtom);
   const nutsDataParamsCompare = useAtomValue(nutsDataParamsCompareAtom);
+  const [nutsResponse] = useAtom(nutsDataResponseAtom);
+  const [compareNutsResponse] = useAtom(nutsDataResponseCompareAtom);
   const isRegionsLayerActive = useAtomValue(regionsLayerVisibilityAtom);
-
   const {
     data: histogramDataRegionRaw,
     isFetching: isLoadingDataHistogram,
     isError: isErrorDataHistogram,
-  } = useNutsLayerData(nutsDataParams, {
-    enabled: !!nutsDataParams?.NUTS_ID && !!nutsDataParams?.LAYER_ID,
-  });
+  } = useNutsLayerData(
+    { ...nutsDataParams, key: 'regular' },
+    {
+      enabled: !!nutsDataParams?.NUTS_ID && !!nutsDataParams?.LAYER_ID,
+    }
+  );
 
   const {
     data: histogramDataRegionRawCompare,
     isFetching: isLoadingDataCompareHistogram,
     isError: isErrorDataCompareHistogram,
-  } = useNutsLayerData(nutsDataParamsCompare, {
-    enabled: !!nutsDataParamsCompare?.NUTS_ID && !!nutsDataParamsCompare?.LAYER_ID,
-  });
+  } = useNutsLayerData(
+    { ...nutsDataParamsCompare, key: 'compare' },
+    {
+      enabled: !!nutsDataParamsCompare?.NUTS_ID && !!nutsDataParamsCompare?.LAYER_ID,
+    }
+  );
 
   const histogramDataRegion = useMemo(() => {
     if (histogramDataRegionRaw && !isLoadingDataHistogram && !isErrorDataHistogram) {
       return {
-        title: nutsProperties?.NAME_LATN,
+        title: nutsResponse?.NAME_LATN,
         data: transformNuqsData(histogramDataRegionRaw),
       };
     }
-  }, [histogramDataRegionRaw, isLoadingDataHistogram, isErrorDataHistogram, nutsProperties]);
+  }, [histogramDataRegionRaw, isLoadingDataHistogram, isErrorDataHistogram, nutsResponse]);
 
   const compareHistogramDataRegion = useMemo(() => {
     if (
@@ -89,7 +97,7 @@ const RegionsHistogram: FC<HistogramTypes> = ({
       !isErrorDataCompareHistogram
     ) {
       return {
-        title: compareNutProperties?.NAME_LATN,
+        title: compareNutsResponse?.NAME_LATN,
         data: transformNuqsData(histogramDataRegionRawCompare),
       };
     }
@@ -97,7 +105,7 @@ const RegionsHistogram: FC<HistogramTypes> = ({
     histogramDataRegionRawCompare,
     isLoadingDataCompareHistogram,
     isErrorDataCompareHistogram,
-    compareNutProperties,
+    compareNutsResponse,
   ]);
 
   const handleClick = () => {
@@ -119,13 +127,13 @@ const RegionsHistogram: FC<HistogramTypes> = ({
         date: d.label,
         layer_id: nutsDataParams.LAYER_ID,
         regionA: {
-          name: nutsProperties?.NAME_LATN,
+          name: nutsResponse?.NAME_LATN,
           min: d.min,
           max: d.max,
           avg: d.avg,
         },
         regionB: {
-          name: compareNutProperties?.NAME_LATN,
+          name: compareNutsResponse?.NAME_LATN,
           min: histogramDataRegionRawCompare.dataset[i].min,
           max: histogramDataRegionRawCompare.dataset[i].max,
           avg: histogramDataRegionRawCompare.dataset[i].avg,
@@ -139,7 +147,7 @@ const RegionsHistogram: FC<HistogramTypes> = ({
 
   const onCompareActive = useCallback(() => {
     setCompareFunctionalityInfo(true);
-  }, []);
+  }, [setCompareFunctionalityInfo]);
 
   const onCloseCompareInfo = useCallback(() => {
     setCompareFunctionalityInfo(false);
@@ -150,13 +158,13 @@ const RegionsHistogram: FC<HistogramTypes> = ({
       <div className="space-y-4 font-satoshi font-bold">
         <div>
           <h3 className="mb-2 text-sm">{title}</h3>
-          <h4 className="text-2xl">
-            {nutsProperties?.NAME_LATN} - {nutsProperties?.CNTR_CODE}
+          <h4 className="font-medium" style={{ color }}>
+            {nutsResponse?.NAME_LATN} - {nutsResponse?.CNTR_CODE}
           </h4>
-          {compareNutProperties && (
+          {compareNutsResponse?.NAME_LATN && (
             <div className="mt-3 flex  items-center gap-2">
-              <h4 className="text-2xl">
-                {compareNutProperties.NAME_LATN} - {compareNutProperties.CNTR_CODE}
+              <h4 className="font-medium text-white-500">
+                {compareNutsResponse?.NAME_LATN} - {compareNutsResponse?.CNTR_CODE}
               </h4>
               <button className="py-0" onClick={onCompareClose}>
                 <XIcon size={24} />
@@ -176,16 +184,15 @@ const RegionsHistogram: FC<HistogramTypes> = ({
             <span className="font-inter text-xs">CSV</span>
           </button>
           {isLoadingDataHistogram || (isLoadingDataCompareHistogram && <Loading />)}
-          {!isLoadingDataHistogram ||
-            (!isLoadingDataCompareHistogram && (
-              <div className="relative h-full w-full">
-                {/* <LineChart
-                  data={histogramDataRegion}
-                  // dataCompare={isRegionsLayerActive && compareHistogramDataRegion}
-                  color={color}
-                /> */}
-              </div>
-            ))}
+          {!isLoadingDataHistogram && !isLoadingDataCompareHistogram && (
+            <div className="relative h-full w-full text-white-500">
+              <LineChart
+                data={histogramDataRegion}
+                dataCompare={compareFunctionalityInfo ? compareHistogramDataRegion : undefined}
+                color={color}
+              />
+            </div>
+          )}
         </div>
         <div className="flex w-full justify-center">
           <Button variant="outline" size="sm" onClick={onCompareActive}>

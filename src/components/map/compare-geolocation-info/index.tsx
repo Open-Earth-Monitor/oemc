@@ -1,11 +1,8 @@
 import { FC } from 'react';
 
-import { useMediaQuery } from 'react-responsive';
-
 import { Cross2Icon } from '@radix-ui/react-icons';
 
 import { cn } from '@/lib/classnames';
-import { tablet } from '@/lib/media-queries';
 
 interface CompareGeolocationInfoPopupProps {
   onClick: () => void;
@@ -14,7 +11,6 @@ interface CompareGeolocationInfoPopupProps {
 export const CompareGeolocationInfoPopup: FC<CompareGeolocationInfoPopupProps> = ({
   onClick,
 }: CompareGeolocationInfoPopupProps) => {
-  const isTablet = useMediaQuery(tablet);
   return (
     <div
       className={cn({

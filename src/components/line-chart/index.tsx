@@ -1,9 +1,20 @@
 import { useMemo } from 'react';
 
+import { Label } from '@visx/annotation';
 import { ParentSize } from '@visx/responsive';
 import { Line } from '@visx/shape';
 import { useTooltipInPortal } from '@visx/tooltip';
-import { AnimatedAxis, AnimatedGrid, AnimatedLineSeries, XYChart, Tooltip } from '@visx/xychart';
+import {
+  AnimatedAxis,
+  AnimatedGrid,
+  AnimatedLineSeries,
+  XYChart,
+  Tooltip,
+  buildChartTheme,
+} from '@visx/xychart';
+import { format } from 'd3-format';
+
+const numberFormat = format(',.2f');
 
 function formatDate(value: unknown): string {
   const date = new Date(value as string);
@@ -23,15 +34,21 @@ export const LineChart = ({
   dataCompare,
   color,
 }: {
-  data: { data: { x: string | number | Date; y: number; unit: string }[] };
-  dataCompare?: { x: string | number | Date; y: number; unit: string }[];
+  data: { title?: string; data: { x: string | number | Date; y: number; unit: string }[] };
+  dataCompare?: { title?: string; data: { x: string | number | Date; y: number; unit: string }[] };
   color: string;
 }) => {
   const { TooltipInPortal, containerRef } = useTooltipInPortal({
     scroll: true,
     detectBounds: true,
   });
-
+  const theme = buildChartTheme({
+    backgroundColor: 'transparent',
+    gridColor: '#9CA3AF',
+    gridColorDark: '#9CA3AF',
+    colors: [color, '#ffffe6'],
+    tickLength: 5,
+  });
   const xSample = data?.data?.[0]?.x;
   const isDate = !isNaN(Date.parse(String(xSample)));
   const isNumber = typeof xSample === 'number';
@@ -44,40 +61,48 @@ export const LineChart = ({
   };
 
   const allY = useMemo(
-    () => [...data.data.map(accessors.yAccessor), ...(dataCompare || []).map(accessors.yAccessor)],
+    () => [
+      ...data.data.map(accessors.yAccessor),
+      ...(dataCompare?.data ?? []).map(accessors.yAccessor),
+    ],
     [data, dataCompare, accessors.yAccessor]
   );
   const yMin = useMemo(() => Math.min(...allY), [allY]);
   const yMax = useMemo(() => Math.max(...allY), [allY]);
-
   const unit = data.data[0]?.unit || '';
-
   return (
-    <div ref={containerRef} className="relative h-80 min-h-[300px] w-full">
+    <div ref={containerRef} className="relative h-72 w-full text-white-500">
       <ParentSize>
         {({ width, height }) => (
           <XYChart
+            theme={theme}
             width={width}
             height={height}
             xScale={{ type: xScaleType }}
             yScale={{ type: 'linear', domain: [yMin, yMax] }}
             margin={{ top: 30, right: 20, bottom: 60, left: 60 }}
           >
+            <Label
+              x={90}
+              y={30}
+              title={unit}
+              titleFontSize={12}
+              fontColor="#dfdfdf"
+              backgroundFill="transparent"
+            />
             <AnimatedAxis
               orientation="bottom"
               tickLabelProps={() => ({
                 angle: -45,
                 textAnchor: 'end',
                 dx: '-0.5em',
-                dy: '0.25em',
+                dy: '0',
                 fontSize: 12,
                 fill: '#dfdfdf',
               })}
             />
             <AnimatedAxis
               orientation="left"
-              label={unit}
-              labelOffset={25}
               tickLabelProps={() => ({
                 dx: '-0.25em',
                 dy: '0.25em',
@@ -85,17 +110,12 @@ export const LineChart = ({
                 fill: '#dfdfdf',
                 textAnchor: 'end',
               })}
-              labelProps={{
-                fontSize: 12,
-                fill: '#dfdfdf',
-                textAnchor: 'start',
-              }}
             />
 
             <AnimatedGrid columns={false} numTicks={5} stroke="#13273c" strokeWidth={0.5} />
 
             <AnimatedLineSeries
-              dataKey="Line 1"
+              dataKey={data?.title}
               data={data.data}
               xAccessor={accessors.xAccessor}
               yAccessor={accessors.yAccessor}
@@ -103,10 +123,11 @@ export const LineChart = ({
             />
             {dataCompare && (
               <AnimatedLineSeries
-                dataKey="Line 2"
-                data={dataCompare}
+                dataKey={dataCompare.title}
+                data={dataCompare.data}
                 xAccessor={accessors.xAccessor}
                 yAccessor={accessors.yAccessor}
+                colorAccessor={() => '#ffffe6'}
               />
             )}
 
@@ -119,8 +140,10 @@ export const LineChart = ({
               renderTooltip={({ tooltipData, tooltipTop = 0, tooltipLeft = 0 }) => {
                 const nearest = tooltipData?.nearestDatum;
                 if (!nearest) return null;
-
                 const d = nearest.datum;
+
+                const info = tooltipData.datumByKey[data?.title];
+                const compareInfo = tooltipData.datumByKey[dataCompare?.title];
 
                 return (
                   <>
@@ -128,7 +151,7 @@ export const LineChart = ({
                       <Line
                         from={{ x: tooltipLeft, y: 0 }}
                         to={{ x: tooltipLeft, y: height }}
-                        stroke="#dfdfdf"
+                        stroke="red"
                         strokeWidth={1}
                         pointerEvents="none"
                       />
@@ -147,10 +170,26 @@ export const LineChart = ({
                         fontSize: '0.875rem',
                       }}
                     >
-                      <div>{formatDate(accessors.xAccessor(d))}</div>
                       <div>
-                        {accessors.yAccessor(d)} {unit}
+                        <span>{formatDate(accessors.xAccessor(d))}</span>
+                        <span>{unit && ` (${unit})`}</span>
                       </div>
+                      {!dataCompare && (
+                        <div>
+                          {numberFormat(accessors.yAccessor(d))} {unit}
+                        </div>
+                      )}
+                      {dataCompare && (
+                        <div>
+                          <div>
+                            {info.key} - {numberFormat((info.datum as { y: number }).y)}
+                          </div>
+                          <div>
+                            {compareInfo.key} -{' '}
+                            {numberFormat((compareInfo.datum as { y: number }).y)}
+                          </div>
+                        </div>
+                      )}
                     </TooltipInPortal>
                   </>
                 );

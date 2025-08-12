@@ -29,7 +29,6 @@ export type AnnotationProps = {
 type GeostoryTooltipInfo = {
   id: string;
   compareLayerId?: string;
-  isRegionsLayerActive?: boolean;
   title: string;
   color: string;
 };

@@ -55,7 +55,6 @@ const GeostoryTooltip: FC<TooltipProps> = ({
       resolution,
       leftData.id
     );
-
     setNutsDataParams(nutsDataParams);
     isHistogramVisibility(true);
   }, [coordinate, resolution, leftData.id, isHistogramVisibility]);
