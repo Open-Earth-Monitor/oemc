@@ -2,36 +2,60 @@
 
 import { FC, useCallback } from 'react';
 
-import { useAtom, useSetAtom, useAtomValue } from 'jotai';
+import { useSetAtom, useAtomValue } from 'jotai';
 import { XIcon } from 'lucide-react';
 
 import {
   compareFunctionalityAtom,
   histogramVisibilityAtom,
   regionsLayerVisibilityAtom,
+  nutsDataParamsAtom,
+  nutsDataParamsCompareAtom,
+  nutsDataResponseCompareAtom,
 } from '@/app/store';
 
 import PointHistogram from '@/components/map/stats/point-histogram';
 import RegionsHistogram from '@/components/map/stats/region-histogram';
+import { useNutsLayerData } from '@/hooks/layers';
+
 import { Button } from '@/components/ui/button';
+import { NUTS_INITIAL_STATE } from '@/components/map/constants';
 
 type HistogramProps = { title: string; color: string; id: string };
 const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => {
   const setHistogramVisibility = useSetAtom(histogramVisibilityAtom);
-  const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
+  const setCompareMode = useSetAtom(compareFunctionalityAtom);
+  const nutsDataParams = useAtomValue(nutsDataParamsAtom);
+  const setNutsCompareDataParams = useSetAtom(nutsDataParamsCompareAtom);
+  const setNutsCompareResponse = useSetAtom(nutsDataResponseCompareAtom);
+
   const isRegionsLayerActive = useAtomValue(regionsLayerVisibilityAtom);
+
+  const {
+    data: histogramDataRegionRaw,
+    isFetching: isLoadingDataHistogram,
+    isError: isErrorDataHistogram,
+  } = useNutsLayerData(
+    { ...nutsDataParams, key: 'regular' },
+    {
+      enabled: !!nutsDataParams?.NUTS_ID && !!nutsDataParams?.LAYER_ID,
+    }
+  );
 
   const handleClick = () => {
     setHistogramVisibility(false);
+    setCompareMode(false);
   };
 
   // const onCompareActive = useCallback(() => {
-  //   setCompareFunctionalityInfo(true);
+  //   setCompareMode(true);
   // }, []);
 
-  // const onCloseCompareInfo = useCallback(() => {
-  //   setCompareFunctionalityInfo(false);
-  // }, []);
+  const onCloseCompareInfo = useCallback(() => {
+    setNutsCompareResponse(null);
+    setNutsCompareDataParams(NUTS_INITIAL_STATE);
+    setCompareMode(false);
+  }, [setCompareMode, setNutsCompareDataParams, setNutsCompareResponse]);
 
   return (
     <div>
@@ -48,14 +72,12 @@ const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => 
         </Button>
       </div>
 
-      {/* {isLoadingHistogram && <Loading />}
-      {!isLoadingHistogram && (
-        <div className="relative h-full w-full">
-          <LineChart data={histogramPointData} color={color} />
-        </div>
-      )} */}
-      {isRegionsLayerActive && <RegionsHistogram color={color} title={title} />}
-      {!isRegionsLayerActive && <PointHistogram color={color} title={title} id={id} />}
+      {isRegionsLayerActive && histogramDataRegionRaw && (
+        <RegionsHistogram color={color} title={title} onCompareClose={onCloseCompareInfo} />
+      )}
+      {(!isRegionsLayerActive || (isRegionsLayerActive && !histogramDataRegionRaw)) && (
+        <PointHistogram color={color} title={title} id={id} />
+      )}
     </div>
   );
 };

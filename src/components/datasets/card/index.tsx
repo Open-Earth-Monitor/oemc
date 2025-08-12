@@ -45,7 +45,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
 }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
-  const isHistogramActive = useAtomValue(histogramVisibilityAtom);
+  const [isHistogramActive, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
 
   // isActive is based on the url
   const isActive = useMemo(() => layers?.[0]?.id === id, [id, layers]);
@@ -81,7 +81,10 @@ const DatasetCard: FC<DatasetCardProps> = ({
 
   const isValidUrlDownload = isValidUrl(download_url);
 
-  const handleRegionsLayerVisibility = () => setIsRegionsLayerActive(!regionsLayerVisibility);
+  const handleRegionsLayerVisibility = () => {
+    setIsRegionsLayerActive((prev) => !prev);
+    setHistogramVisibility(false);
+  };
 
   return (
     <div className="space-y-3 bg-brand-300 p-3.5 font-medium" data-testid={`dataset-item-${id}`}>

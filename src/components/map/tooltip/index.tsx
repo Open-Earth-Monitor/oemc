@@ -3,7 +3,7 @@
 import React, { FC, useCallback, useMemo } from 'react';
 
 import { format } from 'd3-format';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { Coordinate } from 'ol/coordinate';
 import { TileWMS } from 'ol/source';
 import { LuChartColumnBig, LuX } from 'react-icons/lu';
@@ -14,19 +14,19 @@ import {
   coordinateAtom,
   histogramVisibilityAtom,
   nutsDataParamsAtom,
+  nutsDataResponseAtom,
   regionsLayerVisibilityAtom,
   resolutionAtom,
 } from '@/app/store';
 
-import type { MonitorTooltipInfo, NutsProperties } from '@/components/map/types';
 import { getHistogramData } from '../../../lib/utils';
+import type { MonitorTooltipInfo } from '@/components/map/types';
 import { Button } from '@/components/ui/button';
 
 const numberFormat = format(',.2f');
 
 interface TooltipProps extends MonitorTooltipInfo {
   onCloseTooltip: () => void;
-  nutsProperties?: NutsProperties | null;
 }
 
 const MapTooltip: FC<TooltipProps> = ({
@@ -34,9 +34,9 @@ const MapTooltip: FC<TooltipProps> = ({
   onCloseTooltip = () => null,
   leftData,
   rightData,
-  nutsProperties,
 }: TooltipProps) => {
   const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
+  const nutsDataResponse = useAtomValue(nutsDataResponseAtom);
   const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
 
   const [coordinate] = useAtom(coordinateAtom);
@@ -65,7 +65,15 @@ const MapTooltip: FC<TooltipProps> = ({
     );
     setNutsDataParams(nutsDataParams);
     isHistogramVisibility(true);
-  }, [coordinate, resolution, leftData.id, isHistogramVisibility]);
+  }, [
+    coordinate,
+    resolution,
+    leftData.id,
+    isHistogramVisibility,
+    setNutsDataParams,
+    wmsNutsSource,
+  ]);
+
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
   const handleClick = () => {
@@ -97,10 +105,10 @@ const MapTooltip: FC<TooltipProps> = ({
         </div>
         {leftData.value !== 0 && (
           <div className="flex flex-col items-start space-y-3">
-            {isRegionsLayerActive && !!nutsProperties?.NAME_LATN && (
-              <div className="flex flex-wrap space-x-2.5 divide-x-2 divide-white-900 text-left font-satoshi text-xs font-bold">
-                <span>{nutsProperties?.NAME_LATN}</span>
-                <span className="ml-2.5">Region name</span>
+            {isRegionsLayerActive && !!nutsDataResponse?.NAME_LATN && (
+              <div className="flex flex-wrap space-x-2.5 divide-x-2 divide-white-900 text-left font-satoshi text-xs font-medium">
+                <span>{nutsDataResponse?.NAME_LATN}</span>
+                <span className="ml-2.5">{nutsDataResponse?.NUTS_NAME}</span>
               </div>
             )}
             <div className="space-x-2 text-[22px]">
