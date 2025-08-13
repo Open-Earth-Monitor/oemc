@@ -10,7 +10,7 @@ import {
 
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { CheckIcon, DotFilledIcon } from '@radix-ui/react-icons';
-import { HiChevronDown } from 'react-icons/hi2';
+import { LuChevronDown } from 'react-icons/lu';
 
 import { cn } from 'lib/classnames';
 
@@ -61,7 +61,7 @@ const DropdownMenuTrigger = forwardRef<
     <div className={cn('flex w-full items-center justify-between px-2.5', classNameContent)}>
       {children}
       {hasArrow && (
-        <HiChevronDown className="h-5 w-5 shrink-0 transition-transform group-data-[state=open]:rotate-180" />
+        <LuChevronDown className="h-6 w-6 shrink-0 transition-transform group-data-[state=open]:rotate-180" />
       )}
     </div>
   </DropdownMenuPrimitive.Trigger>

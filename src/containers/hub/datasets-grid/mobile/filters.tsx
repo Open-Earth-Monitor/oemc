@@ -30,9 +30,12 @@ const FilterByDatasetType = ({
         <SelectTrigger className="col-span-9">
           <SelectValue
             placeholder="All"
-            className={cn(buttonVariants({ variant: 'outline' }), 'w-full')}
+            className={cn(
+              buttonVariants({ variant: 'outline', size: 'sm' }),
+              'flex h-9 w-full justify-between'
+            )}
           >
-            <span className="capitalize">{active}</span>
+            <span className="text-sm capitalize">{active}</span>
             <SelectIcon />
           </SelectValue>
         </SelectTrigger>

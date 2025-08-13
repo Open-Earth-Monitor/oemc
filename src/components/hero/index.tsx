@@ -7,9 +7,12 @@ import Video from '@/components/video';
 
 const Hero = () => {
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
-      <div className="relative h-full w-full">
-        <Video src="/video/globewithbg.mp4" className="h-full min-h-screen w-full object-cover" />
+    <div className="relative  w-full overflow-hidden sm:min-h-screen">
+      <div className="relative h-auto w-full sm:h-full ">
+        <Video
+          src="/video/globewithbg.mp4"
+          className="h-full min-h-[512px] w-full object-cover sm:min-h-screen"
+        />
       </div>
 
       {/* Main Content */}

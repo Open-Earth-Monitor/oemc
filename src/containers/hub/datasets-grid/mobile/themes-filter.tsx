@@ -57,9 +57,9 @@ export default function ThemesFilter({
     <div className="grid grid-cols-12 items-center justify-between gap-2">
       <p className="col-span-3">Categories</p>
       <DropdownMenu
-        className={cn(buttonVariants({ variant: 'outline' }), 'col-span-9 w-full py-0')}
+        className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'col-span-9 h-9 w-full')}
       >
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger classNameContent="px-0">
           <div className="inline-flex w-full items-center gap-2">
             <span className="truncate text-sm text-white-500" title={selectedThemes.join(', ')}>
               {!!selectedThemes.length ? selectedThemes.join(', ') : 'All'}

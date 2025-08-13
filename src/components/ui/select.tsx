@@ -45,7 +45,7 @@ const SelectIcon = forwardRef<
     {...props}
   >
     {children}
-    <LuChevronDown className="h-4 w-4" />
+    <LuChevronDown className="h-6 w-6" />
   </SelectPrimitive.Icon>
 ));
 
