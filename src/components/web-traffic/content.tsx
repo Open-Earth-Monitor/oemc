@@ -7,7 +7,7 @@ const WebTrafficContent = () => {
       <div className="h-[600px]">
         <WebTrafficMapContent />
       </div>
-      <div className="flex justify-between">
+      <div className="flex flex-col sm:flex-row sm:justify-between">
         <WebTrafficRankingContent type="monitors" />
         <WebTrafficRankingContent type="geostories" />
       </div>
