@@ -9,6 +9,8 @@ import { type Theme } from '@/constants/themes';
 import { useMonitorsAndGeostoriesPaginated, useDebounce } from '@/hooks/datasets';
 import { useSyncDatasetType } from '@/hooks/sync-query';
 
+import type { SortingCriteria, Dataset } from '@/containers/hub/datasets-grid/types';
+
 import FilterByCategories from '@/components/filters-by-dataset-type/desktop';
 import GeostoryCard from '@/components/geostories/card';
 import Loading from '@/components/loading';
@@ -20,7 +22,6 @@ import { Separator } from '@/components/ui/separator';
 
 import ThemesFilter from './themes-filter';
 import LandingDatasetsGridTitle from './title';
-import type { SortingCriteria, Dataset } from './types';
 
 const LandingDatasetsDesktop = () => {
   const [counter, setCounter] = useState(0);
