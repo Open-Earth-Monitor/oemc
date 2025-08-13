@@ -14,7 +14,7 @@ import { Theme, THEMES_COLORS } from '@/constants/themes';
 
 import { useSyncDatasetType, useSyncTheme, type ThemeQueryParam } from '@/hooks/sync-query';
 
-import { SortingCriteria } from '@/components/datasets-grid/types';
+import { SortingCriteria } from '@/containers/hub/datasets-grid/desktop/datasets-grid/types';
 
 import API from 'services/api';
 

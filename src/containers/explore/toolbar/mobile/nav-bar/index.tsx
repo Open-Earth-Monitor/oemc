@@ -11,7 +11,7 @@ import { useDatasets } from '@/hooks/datasets';
 import { useSyncDatasetType, useSyncTheme } from '@/hooks/sync-query';
 
 import Badge from '@/components/badge';
-import FilterByDatasetType from '@/components/datasets-grid/filters';
+import FilterByDatasetType from '@/components/filters-by-dataset-type/desktop';
 import Loading from '@/components/loading';
 import CardList from '@/components/sidebar/card-list';
 import SidebarCheckbox from '@/components/sidebar/checkbox';
