@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { isArray } from 'lodash-es';
 
 import type {
   MonitorsAndGeostories,
@@ -11,6 +12,10 @@ import type {
 
 import { Theme, THEMES_COLORS } from '@/constants/themes';
 
+import { useSyncDatasetType, useSyncTheme, type ThemeQueryParam } from '@/hooks/sync-query';
+
+import { SortingCriteria } from '@/containers/hub/datasets-grid/types';
+
 import API from 'services/api';
 
 const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'light') => {
@@ -18,15 +23,16 @@ const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'li
   return THEMES_COLORS[theme][themeType] || THEMES_COLORS.Unknown[themeType];
 };
 
-type DataObject = Array<{ layer_id: string; label: string; value: number; unit?: string }>;
+type DataObject = Array<{ layer_id: string; label: string; value: number }>;
 
 type UseParams = {
-  type?: 'monitors' | 'geostories' | 'all';
+  type?: 'monitors' | 'geostories' | null;
   page?: number;
-  theme?: Theme[];
+  theme?: ThemeQueryParam;
   monitor_id?: string;
   pagination?: boolean;
-  sort_by?: 'title' | 'date';
+  count?: number;
+  sort_by?: SortingCriteria;
 };
 
 const DEFAULT_QUERY_OPTIONS = {
@@ -37,30 +43,38 @@ const DEFAULT_QUERY_OPTIONS = {
   staleTime: Infinity,
 };
 
-const columns = ['id', 'label', 'value'];
-
-export function useMonitorsAndGeostories(
+export function useMonitorsAndGeostories<TData = MonitorsAndGeostoriesParsed>(
   params?: UseParams,
-  queryOptions?: UseQueryOptions<MonitorsAndGeostories, Error, MonitorsAndGeostoriesParsed>
+  queryOptions?: UseQueryOptions<MonitorsAndGeostories, Error, TData>
 ) {
+  const { theme, ...restParams } = params || { theme: undefined };
+
+  const themeQuery = isArray(theme) && theme.length > 0 ? `${theme.join(',')}` : theme;
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostories>({
       method: 'GET',
       url: '/monitors-and-geostories/',
-      params,
-      ...queryOptions,
+      params: {
+        ...(theme && theme.length > 0 && { theme: themeQuery }),
+        ...restParams,
+      },
     }).then((response) => response.data);
 
-  return useQuery(['monitor-and-geostories', params], fetchMonitorAndGeostories, {
+  return useQuery({
+    queryKey: ['monitor-and-geostories', params],
+    queryFn: fetchMonitorAndGeostories,
     ...DEFAULT_QUERY_OPTIONS,
     ...queryOptions,
-    select: (data): MonitorsAndGeostoriesParsed =>
-      data.map((d) => ({
-        ...d,
-        color: THEMES_COLORS[d.theme].base || THEMES_COLORS.Unknown.base,
-        colorHead: THEMES_COLORS[d.theme].dark || THEMES_COLORS.Unknown.dark,
-        colorOpacity: THEMES_COLORS[d.theme].light || THEMES_COLORS.Unknown.light,
-      })),
+    select:
+      queryOptions?.select ??
+      (((data) =>
+        data.map((d) => ({
+          ...d,
+          type: d.type || d.id.startsWith('g') ? 'geostory' : 'monitor',
+          color: THEMES_COLORS[d.theme]?.base ?? THEMES_COLORS.Unknown.base,
+          colorHead: THEMES_COLORS[d.theme]?.dark ?? THEMES_COLORS.Unknown.dark,
+          colorOpacity: THEMES_COLORS[d.theme]?.light ?? THEMES_COLORS.Unknown.light,
+        }))) as unknown as (data: MonitorsAndGeostories) => TData),
   });
 }
 
@@ -73,7 +87,7 @@ export function useMonitorsAndGeostoriesPaginated(
   >
 ) {
   const { theme, ...restParams } = params || { theme: undefined };
-  const themeQuery = theme && theme.length > 0 ? `${theme.join(',')}` : '';
+  const themeQuery = isArray(theme) && theme.length > 0 ? `${theme.join(',')}` : '';
   const fetchMonitorAndGeostories = () =>
     API.request<MonitorsAndGeostoriesPaginated>({
       method: 'GET',
@@ -82,6 +96,7 @@ export function useMonitorsAndGeostoriesPaginated(
         ...(theme && theme.length > 0 && { theme: themeQuery }),
         ...restParams,
         pagination: true,
+        page_size: 8,
       },
       ...queryOptions,
     }).then((response) => response.data);
@@ -120,7 +135,7 @@ export const useDebounce = (value: string, delay: number) => {
 // Function to generate CSV content from JSON data
 function generateCSVContent(data: DataObject): string {
   // Define the columns for the CSV
-  const columns = ['layer_id', 'label', 'value', 'unit'];
+  const columns = ['layer_id', 'label', 'value'];
 
   // Create the CSV header row
   const headerRow = columns.join(',') + '\n';
@@ -134,7 +149,7 @@ function generateCSVContent(data: DataObject): string {
   // Create the CSV rows from the data
   const rows = data
     .map((rowData) => {
-      return `${rowData.layer_id},${rowData.label},${rowData.value},${rowData.unit || ''}`;
+      return `${rowData.layer_id},${rowData.label},${rowData.value}`;
     })
     .join('\n');
 
@@ -143,7 +158,7 @@ function generateCSVContent(data: DataObject): string {
 }
 
 // Function to download a CSV file
-export function downloadCSV(data: DataObject, filename: string | 'data.csv') {
+export function downloadCSV(data: DataObject, filename: string) {
   // Generate CSV content
   const csvContent = generateCSVContent(data);
 
@@ -177,7 +192,6 @@ interface RegionData {
 interface DataObjectCompare {
   date: string;
   layer_id: string;
-  unit: string;
   regionA: RegionData;
   regionB: RegionData;
 }
@@ -188,7 +202,6 @@ function generateCSVContentCompare(data: DataObjectCompare[]): string {
   const columns = [
     'Date',
     'layer_id',
-    'unit',
     `${data[0].regionA.name} A Min`,
     `${data[0].regionA.name} A Max`,
     `${data[0].regionA.name} A Avg`,
@@ -209,7 +222,7 @@ function generateCSVContentCompare(data: DataObjectCompare[]): string {
   // Create the CSV rows from the data
   const rows = data
     .map((rowData) => {
-      return `${rowData.date},${rowData.layer_id},${rowData.unit},${rowData.regionA.min},${rowData.regionA.max},${rowData.regionA.avg},${rowData.regionB.min},${rowData.regionB.max},${rowData.regionB.avg}`;
+      return `${rowData.date},${rowData.layer_id},${rowData.regionA.min},${rowData.regionA.max},${rowData.regionA.avg},${rowData.regionB.min},${rowData.regionB.max},${rowData.regionB.avg}`;
     })
     .join('\n');
 
@@ -218,7 +231,7 @@ function generateCSVContentCompare(data: DataObjectCompare[]): string {
 }
 
 // Function to download a CSV file
-export function downloadCSVCompare(data: DataObjectCompare[], filename: string = 'data.csv') {
+export function downloadCSVCompare(data: DataObjectCompare[], filename: string) {
   // Generate CSV content
   const csvContent = generateCSVContentCompare(data);
 
@@ -240,4 +253,32 @@ export function downloadCSVCompare(data: DataObjectCompare[], filename: string =
   // Clean up by removing the link and revoking the URL
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+}
+
+export function useDatasets() {
+  const [datasetType] = useSyncDatasetType();
+  const [theme] = useSyncTheme();
+  const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
+  // Show more/fewer details about the datasets
+  const [showDetail, setShowDetail] = useState(false);
+
+  const params = useMemo(
+    () => ({
+      ...(datasetType && datasetType !== 'all' && { type: datasetType }),
+      ...(theme && theme !== 'All' && { theme }),
+      sort_by: sortingCriteria,
+    }),
+    [datasetType, theme, sortingCriteria]
+  );
+  const { data: results, isLoading, isFetched } = useMonitorsAndGeostories(params);
+
+  return {
+    results,
+    isLoading,
+    isFetched,
+    sortingCriteria,
+    showDetail,
+    setSortingCriteria,
+    setShowDetail,
+  };
 }

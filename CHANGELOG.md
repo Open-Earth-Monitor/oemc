@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-alpha.7 Unreleased
 
+### Changed
+
+- Map controls style update to new designs [OEMC-355](https://vizzuality.atlassian.net/browse/OEMC-355)
+
+
 ## v1.0.0-alpha.6
 
 ### Added

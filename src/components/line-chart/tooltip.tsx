@@ -1,6 +1,7 @@
 import { Tooltip, defaultStyles } from '@visx/tooltip';
-import { TooltipData } from './types';
 import { format } from 'd3-format';
+
+import { TooltipData } from './types';
 import { COMPARE_DATA_COLOR, DATA_COLOR, formatDate } from './utils';
 
 const numberFormat = format(',.0f');
@@ -50,7 +51,7 @@ const ChartTooltip = ({
                 <p className="font-inter text-xs">{dataTitle}</p>
               </>
             )}
-            <p className="font-inter flex-1 text-end text-xs font-bold">
+            <p className="flex-1 text-end font-inter text-xs font-bold">
               {!!tooltipData && numberFormat(tooltipData.y)}
             </p>
           </div>
@@ -66,7 +67,7 @@ const ChartTooltip = ({
                 <p className="font-inter text-xs">{dataCompareTitle}</p>
               </>
 
-              <p className="font-inter flex-1 text-end text-xs font-bold">
+              <p className="flex-1 text-end font-inter text-xs font-bold">
                 {!!tooltipData.compare && numberFormat(tooltipData.compare.y)}
               </p>
             </div>

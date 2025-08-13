@@ -2,14 +2,15 @@
 
 import { useEffect, useMemo } from 'react';
 
-import dynamic from 'next/dynamic';
-
 import { useGeostoryParsed, useGeostoryLayers } from '@/hooks/geostories';
 import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
 
-import Loading from '@/components/loading';
+import MobileExploreToolbar from '@/containers/explore/toolbar/mobile/toolbar';
+import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geostories-button';
 
-const Map = dynamic(() => import('@/components/map/geostory-map'), { ssr: false });
+import GeostoriesView from '@/components/geostories/view';
+import Loading from '@/components/loading';
+import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
 
 const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   const [layers, setLayers] = useSyncLayersSettings();
@@ -50,18 +51,32 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
 
   return (
     <>
-      {isGeostoryLoading && (
-        <div className="h-screen w-screen items-center justify-center py-24">
-          <Loading />
+      <div className="relative hidden md:block">
+        <Sidebar className="w-96 bg-black-400 px-9 py-12">
+          <div className="font-satoshi">
+            <BackToMonitorsAndGeostories />
+            {isGeostoryLoading ? (
+              <Loading />
+            ) : (
+              <GeostoriesView data={geostoryData} geostoryLayers={geostoryLayers} />
+            )}
+          </div>
+        </Sidebar>
+        <div className="w-full">
+          <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
+            {/* Map + Trigger */}
+
+            <SidebarTrigger />
+          </div>
         </div>
-      )}
-      {geostoryData && !isGeostoryLoading && (
-        <Map
-          geostoryData={geostoryData}
-          layerData={geostoryLayers?.[0]}
-          compareLayerData={comparisonLayer}
-        />
-      )}
+      </div>
+      <MobileExploreToolbar>
+        {isGeostoryLoading ? (
+          <Loading />
+        ) : (
+          <GeostoriesView data={geostoryData} geostoryLayers={geostoryLayers} />
+        )}
+      </MobileExploreToolbar>
     </>
   );
 };

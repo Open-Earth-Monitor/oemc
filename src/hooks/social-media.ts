@@ -22,6 +22,7 @@ export type Account = {
 
 export type Card = {
   title: string;
+  description?: string;
 };
 
 export type Reblog = {

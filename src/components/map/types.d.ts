@@ -1,10 +1,11 @@
+import { Bbox } from 'ol/extent';
 import type { RMapProps } from 'rlayers/RMap';
 import type { RView } from 'rlayers/RMap';
 
 import type { GeostoryParsed } from '@/types/geostories';
 import type { LayerDateRange, LayerParsed } from '@/types/layers';
+
 import { InitialViewport } from './constants';
-import { Bbox } from 'ol/extent';
 
 export interface CustomMapProps extends Omit<RMapProps, 'initial'> {
   /** A function that returns the map instance */
@@ -77,6 +78,9 @@ export type MonitorTooltipInfo = {
 
 interface FeatureProperties {
   [key: string]: number | string;
+  NUTS_NAME: string;
+  NAME_LATN: string;
+  CNTR_CODE: string;
 }
 
 interface Feature {
@@ -96,6 +100,7 @@ export type GeostoryMapProps = CustomMapProps & {
 export type NutsProperties = {
   CNTR_CODE: string;
   NAME_LATN: string;
+  NUTS_NAME: string;
 };
 
 export type NutsDataset = {

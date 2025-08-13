@@ -1,4 +1,3 @@
-import Script from 'next/script';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 const mostVisitedMonitors = [
@@ -48,7 +47,7 @@ const WebTrafficMobileContent = () => {
             value="web-graphic"
             className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=inactive]:border-y-0 data-[state=active]:border-b-2 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-b-brand-500 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
           >
-            <div className="font-inter whitespace-normal text-xs font-medium uppercase tracking-widest">
+            <div className="whitespace-normal font-inter text-xs font-medium uppercase tracking-widest">
               Web Geographic Activity
             </div>
           </TabsTrigger>
@@ -56,7 +55,7 @@ const WebTrafficMobileContent = () => {
             value="list"
             className="rounded-none border-0 py-5 hover:bg-transparent focus:ring-0 data-[state=active]:border data-[state=active]:border-x-[0.5px] data-[state=inactive]:border-y-0 data-[state=active]:border-b-2 data-[state=active]:border-t-2 data-[state=active]:border-brand-50 data-[state=active]:border-b-brand-500 data-[state=active]:border-t-secondary-600 data-[state=active]:bg-transparent"
           >
-            <div className="font-inter whitespace-normal text-xs font-medium uppercase tracking-widest">
+            <div className="whitespace-normal font-inter text-xs font-medium uppercase tracking-widest">
               Monitors and Geostories
             </div>
           </TabsTrigger>
@@ -67,15 +66,11 @@ const WebTrafficMobileContent = () => {
           value="web-graphic"
           className="relative mt-0 box-content flex w-full flex-1 grow flex-col rounded-none"
         >
-          <script
-            type="text/javascript"
-            id="clustrmaps"
-            src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=a&t=tt&d=e9bF-yBRaYPXvvGpxTgq-74ob4nqMoaLjIgTO-UoDyQ&co=092539"
-          />
-
-          <Script
-            id="clustrmaps"
-            src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=a&t=tt&d=e9bF-yBRaYPXvvGpxTgq-74ob4nqMoaLjIgTO-UoDyQ&co=092539"
+          <iframe
+            style={{ background: 'transparent', position: 'absolute', left: 0, top: 0 }}
+            width="100%"
+            height="100%"
+            src="//rf.revolvermaps.com/w/8/a/a2.php?i=5ys2ccrnfty&amp;m=0c&amp;c=2becbf&amp;cr1=2becbf&amp;l=33&amp;cw=0b1825&amp;cb=28333d"
           />
         </TabsContent>
 
