@@ -27,8 +27,8 @@ const SocialMediaFeed = () => {
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
   return (
-    <section className="relative w-screen font-satoshi">
-      <div className=" pointer-events-none absolute inset-0 -z-10 bg-[url(/images/landing/bg_social_media.svg)] bg-cover bg-center" />
+    <section className="container relative h-[calc(100vh-240px)] w-screen font-satoshi sm:h-min sm:max-w-none">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[url(/images/landing/bg_social_media.svg)] bg-cover bg-center" />
       <div className="col-span-12 m-auto flex flex-col items-center justify-center space-y-[18px] sm:space-y-10">
         <h3 className="max-w-md py-6 text-center font-medium sm:text-2xl md:max-w-xl md:pb-12 md:pt-20 lg:max-w-3xl lg:py-28 lg:text-[28px]">
           <span className="text-white-500 sm:text-2xl lg:text-[28px]">

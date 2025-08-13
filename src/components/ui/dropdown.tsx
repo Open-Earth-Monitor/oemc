@@ -24,10 +24,13 @@ const DropdownMenu = forwardRef<
   ElementRef<typeof DropdownMenuPrimitive.Root>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root> & {
     inset?: boolean;
+    className?: string;
   }
->(({ children, ...props }, ref) => (
+>(({ children, className, ...props }, ref) => (
   <DropdownMenuPrimitive.Root {...props}>
-    <div ref={ref}>{children}</div>
+    <div ref={ref} className={className}>
+      {children}
+    </div>
   </DropdownMenuPrimitive.Root>
 ));
 
@@ -49,16 +52,16 @@ const DropdownMenuTrigger = forwardRef<
   <DropdownMenuPrimitive.Trigger
     ref={ref}
     className={cn(
-      'group h-full justify-center rounded-none border border-secondary-900 px-8 text-secondary-500 hover:bg-secondary-900 hover:text-secondary-500',
+      'group flex h-9 w-full items-center justify-between space-x-2 whitespace-nowrap bg-transparent text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
       inset && 'pl-8',
       className
     )}
     {...props}
   >
-    <div className={cn('flex w-full items-center justify-center space-x-4', classNameContent)}>
+    <div className={cn('flex w-full items-center justify-between px-2.5', classNameContent)}>
       {children}
       {hasArrow && (
-        <HiChevronDown className="h-5 w-5 transition-transform group-data-[state=open]:rotate-180" />
+        <HiChevronDown className="h-5 w-5 shrink-0 transition-transform group-data-[state=open]:rotate-180" />
       )}
     </div>
   </DropdownMenuPrimitive.Trigger>
@@ -75,7 +78,7 @@ const DropdownMenuContent = forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn({
-        'dropdown-menu-trigger z-50 w-full overflow-hidden rounded-xl bg-white-500 p-1 text-black-500 hover:bg-accent-green data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2':
+        'dropdown-menu-trigger z-50 w-full overflow-hidden rounded-xl bg-white-500 p-1 text-black-500 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2':
           true,
         [className]: !!className,
       })}
@@ -119,7 +122,7 @@ const DropdownMenuCheckboxItem = forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:text-secondary-500 focus:bg-secondary-700 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent-green focus:bg-accent-green data-[disabled]:pointer-events-none data-[state=checked]:bg-accent-green data-[disabled]:opacity-50',
       className
     )}
     checked={checked}

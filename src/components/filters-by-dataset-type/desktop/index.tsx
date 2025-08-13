@@ -1,5 +1,6 @@
 import cn from '@/lib/classnames';
 
+import { buttonVariants } from '@/components/ui/button';
 import {
   Select,
   SelectTrigger,
@@ -8,8 +9,6 @@ import {
   SelectIcon,
   SelectValue,
 } from '@/components/ui/select';
-
-import { buttonVariants } from '../ui/button';
 
 type FilterByDatasetTypeProps = {
   active: (typeof DATASET_TYPES)[number];

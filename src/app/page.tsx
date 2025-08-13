@@ -1,6 +1,7 @@
 import type { NextPage, Metadata } from 'next';
 
-import LandingDatasets from '@/components/datasets-grid';
+import LandingDatasets from '@/containers/hub/datasets-grid';
+
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 import Hero from '@/components/hero';
