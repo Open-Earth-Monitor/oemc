@@ -11,7 +11,7 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { geostory_id } = await params; // 👈 await
+  const { geostory_id } = await params;
   try {
     const geostoryData = await axios
       .get<Geostory[]>(`${process.env.NEXT_PUBLIC_API_URL}/geostories?geostory_id=${geostory_id}`)

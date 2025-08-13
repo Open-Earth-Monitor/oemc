@@ -5,7 +5,7 @@ import type { NextPage } from 'next';
 import DesktopExploreToolbar from '@/containers/explore/toolbar/desktop';
 import MobileExploreNavbar from '@/containers/explore/toolbar/mobile/nav-bar';
 
-const MapSidebarPage: NextPage = () => {
+const MapSidebarPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   return (
     <>
       <div className="hidden md:block">
