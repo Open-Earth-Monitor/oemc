@@ -57,15 +57,15 @@ function LocationSearchComponent({
     }
   };
 
-  const handleExpanded = () => {
-    if (!inputExpanded) {
-      setInputExpanded(true);
-    }
-  };
+  // const handleExpanded = () => {
+  //   if (!inputExpanded) {
+  //     setInputExpanded(true);
+  //   }
+  // };
 
-  const handleCollapsed = () => {
-    setInputExpanded(false);
-  };
+  // const handleCollapsed = () => {
+  //   setInputExpanded(false);
+  // };
 
   return (
     <div>
