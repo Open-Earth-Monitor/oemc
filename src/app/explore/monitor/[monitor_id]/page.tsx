@@ -1,4 +1,4 @@
-import type { Metadata, NextPage } from 'next';
+import type { Metadata } from 'next';
 
 import axios from 'axios';
 
@@ -7,29 +7,27 @@ import type { Monitor } from '@/types/monitors';
 import MonitorMapComponent from '@/components/datasets/page';
 
 type Props = {
-  params: { monitor_id: string };
+  params: Promise<{ monitor_id: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // read route params
-  const id = params.monitor_id;
+  const { monitor_id } = await params;
+  try {
+    const monitorData = await axios
+      .get<Monitor[]>(`${process.env.NEXT_PUBLIC_API_URL}/monitors/monitor_id=${monitor_id}`)
+      .then((response) => response.data);
 
-  // fetch data
-  const monitorData = await axios
-    .get<Monitor[]>(`${process.env.NEXT_PUBLIC_API_URL}/monitors/${id}`)
-    .then((response) => response.data);
+    if (!monitorData?.length) return { title: 'Monitor not found' };
 
-  if (!monitorData?.length) return { title: 'Monitor not found' };
-
-  return {
-    title: `${monitorData[0].title} - Open Earth Monitor Cyberinfrastructure`,
-  };
+    return {
+      title: `${monitorData[0].title} - Open Earth Monitor Cyberinfrastructure`,
+    };
+  } catch {
+    return { title: 'Monitor' };
+  }
 }
 
-const ExploreMonitorMapPage: NextPage<{ params: { monitor_id: string } }> = ({
-  params: { monitor_id },
-}) => {
+export default async function ExploreMonitorMapPage({ params }: Props) {
+  const { monitor_id } = await params;
   return <MonitorMapComponent monitor_id={monitor_id} />;
-};
-
-export default ExploreMonitorMapPage;
+}
