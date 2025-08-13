@@ -51,7 +51,14 @@ const CardHeader: React.FC<CardHeaderProps> = ({
         href={`/explore/${type === 'monitor' ? 'monitor' : 'geostory'}/${id}?bbox=${bbox}`}
         onClick={handleClick}
       >
-        <h2 style={{ color }} className="text-[22px]">
+        <h2
+          style={{ color }}
+          className="relative inline-block text-[22px] 
+      before:absolute before:bottom-0 before:left-0
+      before:h-[2px] before:w-0 before:bg-current
+      before:transition-all before:duration-300
+      hover:before:w-full"
+        >
           {title}
         </h2>
       </Link>

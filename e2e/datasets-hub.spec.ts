@@ -91,7 +91,7 @@ test.describe('monitors and geostories display', () => {
     await geostoriesCheckbox.click();
 
     const geostoriesResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/?type=geostories*`
+      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/*?type=geostories*`
     );
 
     const geostoriesData = (await geostoriesResponse.json()) as MonitorsAndGeostoriesPaginated;

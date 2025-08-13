@@ -24,17 +24,7 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers }) => {
 
   return (
     <>
-      <div className="space-y-6 py-4">
-        <CardHeader
-          theme={theme}
-          title={title}
-          type="geostory"
-          color={color}
-          id={id}
-          className="space-y-4"
-          bbox={geostory_bbox}
-        />
-
+      <div className="relative space-y-6 py-3">
         <p>{description}</p>
         <div className="space-y-4">
           {/* Geostory image */}

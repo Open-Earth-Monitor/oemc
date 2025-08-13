@@ -25,7 +25,7 @@ export const LegendTypeChoropleth: React.FC<{
 
           {/* First column */}
           <div className="flex flex-col space-y-1">
-            {entries.slice(0, Math.ceil(entries.length / 2)).map((entry, i) => (
+            {entries.slice(0, Math.ceil(entries.length / 2)).map((entry) => (
               <div
                 key={`col1-${entry?.label}`}
                 className="flex items-baseline space-x-2"
@@ -39,7 +39,7 @@ export const LegendTypeChoropleth: React.FC<{
 
           {/* Second column */}
           <div className="flex flex-col space-y-1">
-            {entries.slice(Math.ceil(entries.length / 2)).map((entry, i) => (
+            {entries.slice(Math.ceil(entries.length / 2)).map((entry) => (
               <div
                 key={`col2-${entry?.label}`}
                 className="flex items-baseline space-x-2"

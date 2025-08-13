@@ -15,7 +15,7 @@ const OtherResourcesLinks = () => {
 
         return (
           <li key={props.href} className="w-full cursor-pointer px-6 py-2.5">
-            <Link {...props} className="cursor-pointer">
+            <Link className="cursor-pointer" rel="noopener noreferrer" target="_blank" {...props}>
               {isActive && <span>·</span>}
               <span>{name}</span>
             </Link>

@@ -15,7 +15,7 @@ export default function DesktopExploreToolbar() {
         <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
           {/* Map + Trigger */}
 
-          <SidebarTrigger />
+          {/* <SidebarTrigger /> */}
         </div>
       </div>
     </>

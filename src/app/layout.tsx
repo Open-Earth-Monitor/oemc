@@ -2,12 +2,14 @@ import { Metadata } from 'next';
 
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
-
 import Providers from '@/utils/providers';
 
 // Styles
 import '@/styles/globals.css';
 import 'ol/ol.css';
+
+import LayoutClient from './layout-client';
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -58,7 +60,9 @@ export default function RootLayout({ children }) {
       <body className="mx-auto h-full min-h-screen w-screen overflow-x-hidden bg-brand-500 font-inter">
         <div className="flex h-full flex-col">
           <main className="relative h-full flex-1">
-            <Providers>{children}</Providers>
+            <Providers>
+              <LayoutClient>{children}</LayoutClient>
+            </Providers>
           </main>
         </div>
       </body>

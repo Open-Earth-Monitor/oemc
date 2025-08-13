@@ -13,9 +13,9 @@ const WebTrafficRankingContent = ({ type }) => {
   const data = type === 'monitors' ? monitorsInfo : geostoriesInfo;
 
   return (
-    <div className="h-full w-full grid-cols-2 space-y-4  p-6 text-secondary-500">
-      <h5 className="text-xs font-medium uppercase tracking-widest">
-        top 5 most visited {type === 'monitors' ? 'monitors' : 'geostories'}
+    <div className="h-full w-full grid-cols-2 space-y-10  p-6 text-secondary-500">
+      <h5 className="text-lg font-medium tracking-widest">
+        Top 5 most visited {type === 'monitors' ? 'monitors' : 'geostories'}
       </h5>
       <ul className="space-y-5">
         {isLoading && <Loading />}

@@ -4,7 +4,6 @@ import { FC, useCallback, useMemo } from 'react';
 
 import { format } from 'd3-format';
 import { useAtomValue } from 'jotai';
-import { h } from 'next-usequerystate/dist/parsers-fd455cd5';
 import { FiDownload } from 'react-icons/fi';
 
 import { cn } from '@/lib/classnames';

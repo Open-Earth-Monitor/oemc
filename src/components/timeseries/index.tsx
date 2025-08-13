@@ -31,7 +31,7 @@ const TimeSeries: FC<{
   isActive: boolean;
   defaultActive?: boolean;
   autoPlay: boolean;
-}> = ({ range, isActive, layerId, defaultActive = 'false', autoPlay }) => {
+}> = ({ range, isActive, layerId, defaultActive = false, autoPlay }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
   const [isPlaying, setPlaying] = useState(autoPlay && defaultActive && isActive);
@@ -221,7 +221,7 @@ const TimeSeries: FC<{
                   <div key={r.value} className="flex w-full items-center justify-center">
                     <div
                       className={cn('h-[6px] w-[1px] bg-white-800', {
-                        'bg-accent-green': r.value === compareDate,
+                        'w-[1.5px] bg-accent-green': r.value === currentRange?.value,
                       })}
                     />
                   </div>

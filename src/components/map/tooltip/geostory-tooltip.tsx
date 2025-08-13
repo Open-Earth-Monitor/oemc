@@ -4,11 +4,8 @@ import React, { FC, useMemo, useCallback } from 'react';
 
 import { format } from 'd3-format';
 import { useAtom, useSetAtom } from 'jotai';
-import { XIcon } from 'lucide-react';
 import { Coordinate } from 'ol/coordinate';
 import TileWMS from 'ol/source/TileWMS';
-
-import cn from '@/lib/classnames';
 
 import {
   coordinateAtom,
@@ -32,7 +29,6 @@ interface TooltipProps extends GeostoryTooltipInfo {
 
 const GeostoryTooltip: FC<TooltipProps> = ({
   position,
-  onCloseTooltip = () => null,
   leftData,
   rightData,
   nutsProperties,
@@ -42,7 +38,7 @@ const GeostoryTooltip: FC<TooltipProps> = ({
   const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
 
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
-  const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
+  const isHistogramVisibility = useSetAtom(histogramVisibilityAtom);
 
   const handleClick = () => {
     isHistogramVisibility(true);
