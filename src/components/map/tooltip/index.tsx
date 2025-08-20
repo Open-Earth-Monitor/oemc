@@ -86,7 +86,7 @@ const MapTooltip: FC<TooltipProps> = ({
   return (
     <div
       className={cn({
-        'absolute z-50 max-w-[300px] translate-x-[-50%] translate-y-[-100%] rounded-[20px] bg-white-500 p-5 font-satoshi font-medium text-black-500 shadow-md':
+        'absolute z-50 min-w-[250px] max-w-[300px] translate-x-[-50%] translate-y-[-100%] rounded-[20px] bg-white-500 p-5 font-satoshi font-medium text-black-500 shadow-md':
           true,
         hidden: isHistogramActive,
       })}

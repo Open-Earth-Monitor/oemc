@@ -2,23 +2,26 @@
 
 import { useEffect, useMemo } from 'react';
 
-import { useGeostoryParsed, useGeostoryLayers } from '@/hooks/geostories';
+import { useMonitor, useMonitorLayers } from '@/hooks/monitors';
 import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
 
 import MobileExploreToolbar from '@/containers/explore/toolbar/mobile/toolbar';
 import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geostories-button';
 
-import GeostoriesView from '@/components/geostories/view';
-import Loading from '@/components/loading';
-import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
+import MonitorView from '@/components/monitors/view';
 import CardHeader from '@/components/sidebar/card-header';
-import { ScrollBar, ScrollArea } from '@/components/ui/scroll-area';
-const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
+import Loading from '@/components/loading';
+
+const GeostoryPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
-  const { data: geostoryData, isLoading: isGeostoryLoading } = useGeostoryParsed({ geostory_id });
-  const { data: layersData } = useGeostoryLayers({ geostory_id });
+  const { data: monitorData, isLoading: isLoading } = useMonitor({
+    monitor_id: monitor_id,
+  });
+  const { data: layersData } = useMonitorLayers({ monitor_id: monitor_id });
 
   // Only show layers with position right
   const geostoryLayers = useMemo(
@@ -56,14 +59,14 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
         <Sidebar className="w-96 overflow-y-auto bg-black-400 px-9 py-12">
           <ScrollArea>
             <div className="font-satoshi">
-              <div className="sticky top-0 z-10 gap-2 bg-black-400 pb-4">
+              <div className="sticky top-0 z-10 gap-2 bg-black-400 pb-4 ">
                 <BackToMonitorsAndGeostories />
-                {!isGeostoryLoading && <CardHeader type="geostory" {...geostoryData} />}
+                {!isLoading && <CardHeader type="monitor" {...monitorData} />}
               </div>
-              {isGeostoryLoading ? (
+              {isLoading ? (
                 <Loading />
               ) : (
-                <GeostoriesView data={geostoryData} geostoryLayers={geostoryLayers} />
+                <MonitorView data={monitorData} geostoryLayers={geostoryLayers} />
               )}
             </div>
           </ScrollArea>
@@ -77,10 +80,10 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
         </div>
       </div>
       <MobileExploreToolbar>
-        {isGeostoryLoading ? (
+        {isLoading ? (
           <Loading />
         ) : (
-          <GeostoriesView data={geostoryData} geostoryLayers={geostoryLayers} />
+          <MonitorView data={monitorData} geostoryLayers={geostoryLayers} />
         )}
       </MobileExploreToolbar>
     </>

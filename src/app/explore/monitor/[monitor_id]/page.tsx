@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import type { Monitor } from '@/types/monitors';
 
-import MonitorMapComponent from '@/components/datasets/page';
+import MonitorPageComponent from '@/components/monitors/page';
 
 type Props = {
   params: Promise<{ monitor_id: string }>;
@@ -29,5 +29,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ExploreMonitorMapPage({ params }: Props) {
   const { monitor_id } = await params;
-  return <MonitorMapComponent monitor_id={monitor_id} />;
+  return <MonitorPageComponent monitor_id={monitor_id} />;
 }

@@ -12,7 +12,7 @@ import { buttonVariants } from '@/components/ui/button';
 
 const BackToMonitorsAndGeostories: FC = () => {
   return (
-    <Link href="/explore" className="flex items-center gap-2">
+    <Link href="/explore" className="z-10 flex items-center gap-2 pb-4">
       <div className={cn(buttonVariants({ variant: 'background' }), 'rounded-full p-2.5')}>
         <ArrowLeft className="h-6 w-6" />
       </div>
