@@ -49,7 +49,7 @@ function MapSidebar() {
         </div>
         {/* Cards - Monitors & Geostories */}
         {isLoading && !isFetched && <Loading />}
-        {!isLoading && isFetched && <CardList data={results} showMore={showDetail} />}
+        {!isLoading && isFetched && results && <CardList data={results} showMore={showDetail} />}
       </SidebarContent>
     </>
   );
