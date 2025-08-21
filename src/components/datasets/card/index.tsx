@@ -126,13 +126,14 @@ const DatasetCard: FC<DatasetCardProps> = ({
           </Button>
         </div>
       )}
+
       {isActive && range && !!range.length && (
         <TimeSeries
           layerId={id}
           range={range}
           isActive={isActive}
-          defaultActive={isActive}
-          autoPlay={!isHistogramActive}
+          defaultActive={true}
+          autoPlay={true}
         />
       )}
       <div className="flex flex-col space-y-2.5 border-t border-dashed border-white-900 pt-3.5">

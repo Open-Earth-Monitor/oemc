@@ -23,6 +23,8 @@ function DatasetCardMonitor({ showMore, theme, title, geostories, color, id, mon
                   href={`/explore/geostory/${geostory.id}${
                     geostory.geostory_bbox ? `?bbox=${geostory.geostory_bbox.join(',')}` : ''
                   }`}
+                  className="font-bold underline decoration-gray-400 
+    hover:decoration-white-500 hover:decoration-2"
                 >
                   {geostory.title}
                 </Link>
