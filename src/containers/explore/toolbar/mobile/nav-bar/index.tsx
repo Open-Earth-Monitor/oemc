@@ -99,7 +99,7 @@ const MobileExploreNavbar = () => {
             </header>
             <ScrollArea className="h-full">
               {isLoading && !isFetched && <Loading />}
-              {!isLoading && isFetched && (
+              {!isLoading && isFetched && results && (
                 <CardList className="px-6" data={results} showMore={showDetail} />
               )}
             </ScrollArea>

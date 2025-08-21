@@ -13,7 +13,7 @@ interface CardListProps {
 export default function CardList({ data, showMore, className }: CardListProps) {
   return (
     <ul className={className}>
-      {data.map((parsed) => (
+      {data?.map((parsed) => (
         <li key={parsed.id} className="mb-4">
           <SidebarDatasetCard {...parsed}>
             {parsed.type === 'monitor' && <DatasetCardMonitor showMore={showMore} {...parsed} />}
