@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
 
-import { RxCross2 } from 'react-icons/rx';
+import { LuX } from 'react-icons/lu';
 
 import { cn } from '@/lib/classnames';
 
@@ -26,7 +26,7 @@ export const RemoveLayer: FC<{ className?: string }> = ({ className }) => {
       onClick={handleRemoveLayer}
       aria-label="Toggle layer visibility"
     >
-      <RxCross2 className="h-6 w-6 text-gray-600 hover:text-secondary-500" />
+      <LuX className="h-6 w-6 text-gray-600 hover:text-secondary-500" />
     </button>
   );
 };

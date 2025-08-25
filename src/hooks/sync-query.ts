@@ -2,6 +2,8 @@ import { useQueryState } from 'next-usequerystate';
 import { parseAsJson, parseAsInteger, parseAsBoolean } from 'next-usequerystate/parsers';
 import { Extent } from 'ol/extent';
 
+import type { Theme } from '@/constants/themes';
+
 type LayerSettings = {
   id: string;
   opacity: number;
@@ -26,6 +28,13 @@ export const useSyncBasemapSettings = () =>
     'basemap',
     parseAsJson<'world_imagery' | 'gray_scale'>().withDefault('world_imagery')
   );
+export type ThemeQueryParam = Theme[] | 'All' | Theme;
+export const useSyncTheme = () =>
+  useQueryState<ThemeQueryParam>('theme', parseAsJson<ThemeQueryParam>());
+
+//  Filter view in monitors, geostories or everything
+export const useSyncDatasetType = () =>
+  useQueryState('datasetType', parseAsJson<'all' | 'monitors' | 'geostories'>().withDefault('all'));
 
 export const useSyncBasemapLabelsSettings = () =>
   useQueryState(

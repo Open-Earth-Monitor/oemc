@@ -1,7 +1,6 @@
 import type { Theme } from '@/constants/themes';
 
 import type { Geostory } from './geostories';
-
 import { UseCase } from './monitors-and-geostories';
 
 export type Monitor = {
@@ -24,7 +23,12 @@ export type Monitor = {
   responsible_partner_url?: string;
 };
 
-export type MonitorParsed = Monitor & { color: string; colorOpacity?: string; colorHead?: string };
+export type MonitorParsed = Monitor & {
+  color: string;
+  colorOpacity?: string;
+  colorHead?: string;
+  type?: 'monitor';
+};
 
 export type MonitorsPaginated = {
   monitors: Monitor[];

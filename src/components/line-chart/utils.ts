@@ -1,5 +1,6 @@
-import { DataPoint } from './types';
 import { bisector } from '@visx/vendor/d3-array';
+
+import { DataPoint } from './types';
 
 export const formatDate = (value: number | string) =>
   new Date(value).toLocaleDateString('en-US', {
@@ -9,9 +10,9 @@ export const formatDate = (value: number | string) =>
 
 export const DATA_COLOR = '#35B6D8';
 export const COMPARE_DATA_COLOR = '#F06BAF';
-export const margin = { top: 25, right: 20, bottom: 30, left: 40 };
+export const margin = { top: 25, right: 20, bottom: 30, left: 30 };
 export const height = 200;
-export const width = 400;
+export const width = 280;
 export const colorAxis = '#2E3333';
 export const tickProps = {
   hideTicks: true,

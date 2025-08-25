@@ -18,4 +18,5 @@ export interface LineChartProps {
     title?: string;
     data: DataPoint[];
   };
+  color: string;
 }
