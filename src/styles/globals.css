@@ -286,3 +286,26 @@
     transform: translateX(100%);
   }
 }
+
+¡#clustrmaps-widget-v2 {
+  display: block;
+  width: 100% !important;
+  max-width: 1200px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  height: auto !important;
+  background: transparent;
+}
+
+#clustrmaps-widget-v2 .clustrmaps-map,
+#clustrmaps-widget-v2 .jvectormap-container,
+#clustrmaps-widget-v2 svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (max-width: 640px) {
+  #clustrmaps-widget-v2 {
+    aspect-ratio: 3 / 4;
+  }
+}
