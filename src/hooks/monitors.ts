@@ -1,6 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
-import compact from 'lodash/compact';
 
 import type { Geostory } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';

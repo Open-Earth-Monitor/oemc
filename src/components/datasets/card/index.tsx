@@ -4,7 +4,7 @@ import { FC, useCallback, useMemo } from 'react';
 
 import Image from 'next/image';
 
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { LuLayers2 } from 'react-icons/lu';
 
