@@ -1,16 +1,17 @@
 import Script from 'next/script';
+
 import WebTrafficRankingContent from './list';
 
 const WebTrafficContent = () => {
   return (
     <div className="relative flex w-full grow flex-col">
       <section className="mt-12">
-        <div className="relative mx-auto w-full max-w-4xl">
-          <div id="clustrmaps-widget-v2" className="w--screen h-[520px]" />
+        <div className="relative mx-auto w-full">
+          <div id="clustrmaps-widget-v2" className="w-full" style={{ height: 420 }} />
           <Script
             id="clustrmaps"
-            src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=800&t=tt&d=e9bF-yBRaYPXvvGpxTgq-74ob4nqMoaLjIgTO-UoDyQ&co=092539"
-            strategy="afterInteractive"
+            src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=a&t=tt&d=e9bF-yBRaYPXvvGpxTgq-74ob4nqMoaLjIgTO-UoDyQ&co=092539"
+            strategy="lazyOnload"
           />
         </div>
       </section>
