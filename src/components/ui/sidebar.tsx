@@ -316,7 +316,6 @@ const SidebarTrigger = forwardRef<ElementRef<typeof Button>, ComponentProps<type
             'rotate-180 transform': open,
           })}
         />
-
         <span className="sr-only">Toggle Sidebar</span>
       </Button>
     );
