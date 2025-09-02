@@ -300,3 +300,8 @@
     aspect-ratio: 3 / 4;
   }
 }
+
+#clustrmaps {
+  display: block;
+  position: absolute;
+}
