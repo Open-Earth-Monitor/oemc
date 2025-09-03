@@ -1,11 +1,32 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
 import Script from 'next/script';
 
 import WebTrafficRankingContent from './list';
 
+const useWindowWidth = () => {
+  const [width, setWidth] = useState<number | null>(null);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return width;
+};
+
 const WebTrafficContent = () => {
+  const width = useWindowWidth();
+
   return (
     <div className="relative flex w-full grow flex-col">
-      <section className="mt-12">
+      <section className="mt-12" style={{ height: width / 2 }}>
         <div className="relative mx-auto w-full">
           <Script
             id="clustrmaps"
