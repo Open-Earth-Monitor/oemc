@@ -154,10 +154,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   // initial viewport
   const dataBbox = useMemo(
-    () => bbox || predefinedBbox || initialViewState.bbox,
+    () => predefinedBbox || bbox || initialViewState.bbox,
     [bbox, predefinedBbox, initialViewState.bbox]
   );
-
   const initialViewport = {
     zoom: initialViewState.zoom,
     center: initialViewState.center,

@@ -24,11 +24,7 @@ const SocialMediaMobile = ({ data }) => (
     <CarouselContent>
       {data?.map((post) => {
         return (
-          <CarouselItem
-            key={post.id}
-            className="flex items-center justify-center transition-all
-             duration-300"
-          >
+          <CarouselItem key={post.id} className="flex items-center justify-center">
             <Post post={post} />
           </CarouselItem>
         );

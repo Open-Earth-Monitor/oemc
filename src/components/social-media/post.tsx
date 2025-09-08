@@ -11,7 +11,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
   const data = post?.reblog || post;
 
   return (
-    <div className="h-[465px] max-w-xs bg-black-500 bg-opacity-30 sm:h-80" key={post.id}>
+    <div className="h-[365px] max-w-xs bg-black-500 bg-opacity-30 sm:h-80" key={post.id}>
       <div className="p-5">
         <PostHeader post={post} />
         <PostHero post={post} />

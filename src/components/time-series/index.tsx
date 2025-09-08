@@ -21,9 +21,6 @@ export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTy
   useEffect(() => {
     let interval: number | ReturnType<typeof setTimeout>;
 
-    if (!isPlaying) {
-    }
-
     if (isPlaying) {
       interval = setInterval(() => {
         setYearIndex((prevIndex) => (prevIndex + 1) % range.length);

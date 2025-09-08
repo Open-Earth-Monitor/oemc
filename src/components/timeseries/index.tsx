@@ -1,9 +1,7 @@
-import { useEffect, useMemo, useCallback, useState } from 'react';
+import { useEffect, useMemo, useCallback, useState, useRef } from 'react';
 import type { FC } from 'react';
 
-import { TooltipPortal } from '@radix-ui/react-tooltip';
-import { LuCirclePlay, LuCirclePause, LuX } from 'react-icons/lu';
-import { useInterval } from 'usehooks-ts';
+import { LuX } from 'react-icons/lu';
 
 import cn from '@/lib/classnames';
 
@@ -21,9 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
-const TIMEOUT_STEP_DURATION = 2500;
+import Timeline from './timeline';
 
 const TimeSeries: FC<{
   layerId: LayerParsed['layer_id'];
@@ -34,7 +31,19 @@ const TimeSeries: FC<{
 }> = ({ range, isActive, layerId, defaultActive = false, autoPlay }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
-  const [isPlaying, setPlaying] = useState(autoPlay && defaultActive && isActive);
+
+  const initialAutoPlay = useRef(autoPlay && defaultActive && isActive);
+  const STORAGE_KEY = (id: string) => `timeseries:${id}:playing`;
+
+  const [isPlaying, setPlaying] = useState<boolean>(() => {
+    const saved = sessionStorage.getItem(STORAGE_KEY(layerId));
+    return saved !== null ? JSON.parse(saved) : !!initialAutoPlay.current;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem(STORAGE_KEY(layerId), JSON.stringify(isPlaying));
+  }, [isPlaying, layerId]);
+
   const opacity = layers?.[0]?.opacity;
   const [contentVisibility, setContentVisibility] = useState<boolean>(false);
   const [contentCompareVisibility, setContentCompareVisibility] = useState<boolean>(false);
@@ -57,16 +66,6 @@ const TimeSeries: FC<{
     [layerId, opacity, range, setLayers, setContentVisibility]
   );
 
-  const handleTogglePlay = useCallback(() => {
-    void setPlaying(!isPlaying);
-  }, [isPlaying, setPlaying]);
-
-  useEffect(() => {
-    if (defaultActive && isActive && autoPlay) {
-      void setPlaying(true);
-    }
-  }, [defaultActive, isActive, autoPlay]);
-
   const date = layers?.[0]?.date;
   const compareDate = compareLayers?.[0]?.date;
 
@@ -74,7 +73,6 @@ const TimeSeries: FC<{
     () => range.find((r) => r.value === date) ?? range[0],
     [date, range]
   );
-
   const compareCurrentRange = useMemo(
     () =>
       compareLayers && compareLayers.length > 0 && compareDate
@@ -88,17 +86,6 @@ const TimeSeries: FC<{
     [layerId, compareLayers]
   );
 
-  useInterval(
-    () => {
-      const nextRange = range[(range.indexOf(currentRange) + 1) % range.length];
-      void setLayers([{ ...layers?.[0], date: nextRange.value }]);
-    },
-    isPlaying ? TIMEOUT_STEP_DURATION : null
-  );
-
-  const startRangelabel = useMemo(() => range && range[0]?.label, [range]);
-  const endRangelabel = useMemo(() => range && range[range.length - 1]?.label, [range]);
-
   return (
     <div className="flex w-full flex-col">
       {/* Select dates */}
@@ -110,9 +97,7 @@ const TimeSeries: FC<{
               value={currentRange.value}
               onValueChange={handleSelect}
               open={contentVisibility}
-              onOpenChange={() => {
-                setContentVisibility((prev) => !prev);
-              }}
+              onOpenChange={setContentVisibility}
             >
               <SelectTrigger className="w-fit text-xs font-semibold">
                 <div
@@ -200,62 +185,13 @@ const TimeSeries: FC<{
         </div>
       </div>
       {/* Timeline */}
-      <Tooltip delayDuration={0}>
-        <TooltipTrigger disabled={isCompareActive} asChild>
-          <div className="flex w-full items-center space-x-3 py-3.5">
-            <button
-              type="button"
-              onClick={handleTogglePlay}
-              disabled={isCompareActive}
-              className="pointer-events-auto"
-            >
-              {isPlaying && isActive ? (
-                <LuCirclePause className="h-6 w-6 text-accent-green" />
-              ) : (
-                <LuCirclePlay className="h-6 w-6 text-secondary-500" />
-              )}
-            </button>
-            <div className="relative flex w-full flex-col space-y-2 bg-white-950 sm:max-w-[248px]">
-              <div className="max-w flex w-full  overflow-hidden">
-                {range.map((r) => (
-                  <div key={r.value} className="flex w-full items-center justify-center">
-                    <div
-                      className={cn('h-[6px] w-[1px] bg-white-800', {
-                        'w-[1.5px] bg-accent-green': r.value === currentRange?.value,
-                      })}
-                    />
-                  </div>
-                ))}
-                <div className="absolute left-0 right-0 top-2 flex justify-between font-satoshi text-sm tracking-tight text-secondary-500">
-                  <div>{startRangelabel}</div>
-                  <div>{endRangelabel}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </TooltipTrigger>
-
-        <TooltipPortal>
-          <TooltipContent
-            sideOffset={20}
-            side="left"
-            align="center"
-            className={cn({
-              'border-none bg-black-400 text-white-500': true,
-              hidden: !isCompareActive,
-            })}
-          >
-            <div className="max-w-xs text-sm">
-              <p>
-                When the layer comparison functionality is enabled, the timeline is automatically
-                paused .
-              </p>
-              <p>To activate the timeline again, comparison mode must first be disabled.</p>
-            </div>
-            <TooltipArrow />
-          </TooltipContent>
-        </TooltipPortal>
-      </Tooltip>
+      <Timeline
+        layerId={layerId}
+        range={range}
+        isActive={isActive}
+        defaultActive={defaultActive}
+        autoPlay={autoPlay}
+      />
     </div>
   );
 };

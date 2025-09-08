@@ -26,8 +26,7 @@ const SocialMediaDesktop = ({ data }) => (
         return (
           <CarouselItem
             key={post.id}
-            className="flex items-start justify-center transition-all
-             duration-300 lg:basis-1/2 xl:basis-1/3"
+            className="flex items-start justify-center lg:basis-1/2 xl:basis-1/3"
           >
             <Post post={post} />
           </CarouselItem>

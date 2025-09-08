@@ -8,11 +8,11 @@ import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/syn
 import MobileExploreToolbar from '@/containers/explore/toolbar/mobile/toolbar';
 import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geostories-button';
 
+import Loading from '@/components/loading';
 import MonitorView from '@/components/monitors/view';
 import CardHeader from '@/components/sidebar/card-header';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
-import Loading from '@/components/loading';
 
 const GeostoryPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   const [layers, setLayers] = useSyncLayersSettings();

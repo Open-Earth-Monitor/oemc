@@ -6,10 +6,11 @@ import Footer from '@/components/footer';
 
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
   return (
     <>
       {children}
-      {pathname !== '/explore' && <Footer />}
+      {!pathname.includes('/explore') && <Footer />}
     </>
   );
 }

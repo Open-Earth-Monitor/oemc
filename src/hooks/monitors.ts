@@ -39,6 +39,7 @@ export function useMonitor(
       ...data,
       color: THEMES_COLORS[data.theme].base || DEFAULT_COLOR,
       colorOpacity: THEMES_COLORS[data.theme].light || DEFAULT_COLOR,
+      monitor_bbox: parseBBox(data.monitor_bbox, 'monitor'),
     }),
     ...queryOptions,
   });
