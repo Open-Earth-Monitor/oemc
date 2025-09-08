@@ -18,11 +18,10 @@ const NavLinks = () => {
           <li
             key={props.href}
             className={cn({
-              'decoration px-5 py-4 hover:bg-white-100': true,
-              'list-inside list-disc': isActive,
+              'decoration px-5 py-4 hover:bg-accent-green': true,
             })}
           >
-            <Link {...props} className="space-x-2.5">
+            <Link {...props} className="flex items-center space-x-2.5">
               <span>{name}</span>
             </Link>
           </li>
