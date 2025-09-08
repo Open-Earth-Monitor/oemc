@@ -42,7 +42,7 @@ const TimeSeries: FC<{
 
   useEffect(() => {
     sessionStorage.setItem(STORAGE_KEY(layerId), JSON.stringify(isPlaying));
-  }, [isPlaying, layerId]);
+  }, []);
 
   const opacity = layers?.[0]?.opacity;
   const [contentVisibility, setContentVisibility] = useState<boolean>(false);
@@ -191,6 +191,8 @@ const TimeSeries: FC<{
         isActive={isActive}
         defaultActive={defaultActive}
         autoPlay={autoPlay}
+        isPlaying={isPlaying}
+        setPlaying={setPlaying}
       />
     </div>
   );

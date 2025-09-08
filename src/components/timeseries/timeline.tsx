@@ -21,20 +21,11 @@ const Timeline: FC<{
   isActive: boolean;
   defaultActive?: boolean;
   autoPlay: boolean;
-}> = ({ range, isActive, layerId, defaultActive = false, autoPlay }) => {
+  isPlaying: boolean;
+  setPlaying: (value: boolean | ((prev: boolean) => boolean)) => void;
+}> = ({ range, isActive, layerId, isPlaying, setPlaying }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers] = useSyncCompareLayersSettings();
-  const initialAutoPlay = useRef(autoPlay && defaultActive && isActive);
-  const STORAGE_KEY = (id: string) => `timeseries:${id}:playing`;
-
-  const [isPlaying, setPlaying] = useState<boolean>(() => {
-    const saved = sessionStorage.getItem(STORAGE_KEY(layerId));
-    return saved !== null ? JSON.parse(saved) : !!initialAutoPlay.current;
-  });
-
-  useEffect(() => {
-    sessionStorage.setItem(STORAGE_KEY(layerId), JSON.stringify(isPlaying));
-  }, [isPlaying, layerId]);
 
   const handleTogglePlay = useCallback(() => {
     void setPlaying((prev) => !prev);
