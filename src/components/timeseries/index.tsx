@@ -32,17 +32,35 @@ const TimeSeries: FC<{
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
-  const initialAutoPlay = useRef(autoPlay && defaultActive && isActive);
-  const STORAGE_KEY = (id: string) => `timeseries:${id}:playing`;
+  const keyFor = (id: string) => `timeseries:${id}:playing`;
 
-  const [isPlaying, setPlaying] = useState<boolean>(() => {
-    const saved = sessionStorage.getItem(STORAGE_KEY(layerId));
-    return saved !== null ? JSON.parse(saved) : !!initialAutoPlay.current;
-  });
+  const initRef = useRef(false);
+
+  const [isPlaying, setPlaying] = useState<boolean>(false);
+  useEffect(() => {
+    if (!layerId || initRef.current) return;
+
+    const key = keyFor(layerId);
+    let initial = false;
+
+    const saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+      try {
+        initial = JSON.parse(saved);
+      } catch {}
+    } else {
+      initial = !!(autoPlay && defaultActive && isActive);
+    }
+
+    setPlaying(initial);
+    initRef.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [layerId]);
 
   useEffect(() => {
-    sessionStorage.setItem(STORAGE_KEY(layerId), JSON.stringify(isPlaying));
-  }, []);
+    if (!layerId) return;
+    sessionStorage.setItem(keyFor(layerId), JSON.stringify(isPlaying));
+  }, [layerId, isPlaying]);
 
   const opacity = layers?.[0]?.opacity;
   const [contentVisibility, setContentVisibility] = useState<boolean>(false);
