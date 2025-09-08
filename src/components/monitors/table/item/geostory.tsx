@@ -75,8 +75,8 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
           >
             {geostories.map(({ id: geostoryId, title, geostory_bbox }) => {
               const href = geostory_bbox
-                ? `/map/geostories/${geostoryId}?bbox=${geostory_bbox}`
-                : `/map/geostories/${geostoryId}`;
+                ? `/explore/geostory/${geostoryId}?bbox=${geostory_bbox}`
+                : `/explore/geostory/${geostoryId}`;
               return (
                 <motion.li
                   key={`monitor-geostory-${geostoryId}`}

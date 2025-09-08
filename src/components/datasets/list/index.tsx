@@ -61,7 +61,7 @@ const DatasetList: FC<DataSetListProps> = ({ data, monitorId }) => {
             <ul className="space-y-4 sm:space-y-6" data-testid="datasets-list">
               {geostories.map((geostory) => {
                 return (
-                  <Link href={`/map/geostories/${geostory.id}`} key={geostory.id}>
+                  <Link href={`/explore/geostory/${geostory.id}`} key={geostory.id}>
                     <li key={geostory.id} className="font-bold underline">
                       {geostory.title}
                     </li>
