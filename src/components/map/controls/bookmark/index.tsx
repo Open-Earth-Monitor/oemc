@@ -76,21 +76,6 @@ export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
     setBookmarkName(e.currentTarget?.value);
   }, []);
 
-  // const handleClick = (value) => {
-  //   const urlParams = value.target.getAttribute('data-value');
-
-  //   const center = getUrlParameter(urlParams, 'center');
-  //   const zoom = getUrlParameter(urlParams, 'zoom');
-
-  //   const centerCoords = center ? JSON.parse(center) : null;
-  //   const zoomValue = zoom ? parseFloat(zoom) : null;
-
-  //   if (centerCoords && zoomValue) {
-  //     const bbox = createBBox(centerCoords, zoomValue);
-
-  //   }
-  // };
-
   return (
     <Sheet>
       <SheetTrigger
@@ -146,12 +131,7 @@ export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
         </SheetHeader>
 
         {!isInputVisible && (
-          <Button
-            className="h-11 w-full text-brand-500 sm:h-9"
-            onClick={() => setInputVisibility(true)}
-          >
-            Bookmark current URL
-          </Button>
+          <Button onClick={() => setInputVisibility(true)}>Bookmark current URL</Button>
         )}
 
         {bookmarks.length > 0 && (
