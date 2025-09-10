@@ -112,8 +112,12 @@ const MapTooltip: FC<TooltipProps> = ({
               </div>
             )}
             <div className="space-x-2 text-[22px]">
-              {typeof leftData.value === 'number' ? numberFormat(leftData.value) : leftData.value}
-              {!!leftData.unit && leftData.unit}
+              {typeof leftData.value === 'number' ? (
+                <span>{numberFormat(leftData.value)}</span>
+              ) : (
+                leftData.value
+              )}
+              {!!leftData.unit && <span>{leftData.unit}</span>}
             </div>
           </div>
         )}

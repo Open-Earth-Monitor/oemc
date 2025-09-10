@@ -86,8 +86,8 @@ const GeostoryTooltip: FC<TooltipProps> = ({
                 <div className="space-x-2 text-xl">
                   {typeof leftData.value === 'number'
                     ? numberFormat(leftData.value)
-                    : leftData.value}
-                  {!!leftData.unit && leftData.unit}
+                    : leftData.value}{' '}
+                  {!!leftData.unit && <span> {leftData.unit}</span>}
                 </div>
               </div>
             )}
@@ -119,7 +119,7 @@ const GeostoryTooltip: FC<TooltipProps> = ({
                 {typeof rightData.value === 'number'
                   ? numberFormat(rightData.value)
                   : rightData.value}
-                {!!rightData.unit && rightData.unit}
+                {!!rightData.unit && <span> {rightData.unit}</span>}
               </div>
             </div>
             {!isRegionsLayerActive && rightData.range && (
