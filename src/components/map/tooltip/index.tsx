@@ -29,6 +29,21 @@ interface TooltipProps extends MonitorTooltipInfo {
   onCloseTooltip: () => void;
 }
 
+function scrollToHistogram(theId: string) {
+  const vp = document.getElementById('sidebar-scroll-viewport');
+  const el = document.getElementById(`histogram-anchor-${theId}`);
+
+  if (!vp || !el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+
+  const sticky = vp.querySelector('.sticky') as HTMLElement | null;
+  const offset = (sticky?.offsetHeight ?? 0) + 8;
+
+  requestAnimationFrame(() => {
+    vp.scrollTo({ top: vp.scrollTop - offset, behavior: 'smooth' });
+  });
+}
+
 const MapTooltip: FC<TooltipProps> = ({
   position,
   onCloseTooltip = () => null,
@@ -76,9 +91,13 @@ const MapTooltip: FC<TooltipProps> = ({
 
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     isHistogramVisibility(true);
-  };
+    requestAnimationFrame(() => {
+      scrollToHistogram(leftData.id);
+    });
+  }, [isHistogramVisibility, leftData.id]);
+
   const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
   const compareDateLabel =
     rightData.date && leftData.range?.find(({ value }) => value === rightData.date)?.label;

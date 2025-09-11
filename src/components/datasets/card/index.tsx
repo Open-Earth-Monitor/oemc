@@ -1,6 +1,8 @@
 'use client';
 
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useMemo, useRef } from 'react';
+
+import { Element as ScrollElement } from 'react-scroll';
 
 import Image from 'next/image';
 
@@ -160,6 +162,9 @@ const DatasetCard: FC<DatasetCardProps> = ({
             />
           </div>
         )}
+        <ScrollElement name={`histogram-${id}`} id={`histogram-anchor-${id}`}>
+          <span className="block h-px" />
+        </ScrollElement>
         {id && isHistogramActive && isActive && <Histogram color={color} title={title} id={id} />}
       </div>
     </div>

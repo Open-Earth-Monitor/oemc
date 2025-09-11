@@ -15,7 +15,7 @@ const Search: FC<SearchProps> = ({
   ...rest
 }: SearchProps) => {
   const { placeholder } = rest;
-  const ref = useRef<HTMLInputElement>();
+  const ref = useRef<HTMLInputElement>(null);
 
   return (
     <div
