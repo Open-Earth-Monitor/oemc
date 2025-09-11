@@ -5657,7 +5657,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^12.23.12":
+"framer-motion@npm:12.23.12":
   version: 12.23.12
   resolution: "framer-motion@npm:12.23.12"
   dependencies:
@@ -7594,7 +7594,7 @@ __metadata:
     eslint-config-next: 14.2.4
     eslint-config-prettier: ^9.1.0
     eslint-plugin-prettier: ^5.2.1
-    framer-motion: ^12.23.12
+    framer-motion: 12.23.12
     jotai: ^2.10.0
     lodash-es: ^4.17.21
     lucide-react: ^0.257.0
