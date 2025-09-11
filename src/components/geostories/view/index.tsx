@@ -7,7 +7,6 @@ import { Geostory } from '@/types/geostories';
 import { LayerParsed } from '@/types/layers';
 
 import DatasetCard from '@/components/datasets/card';
-import CardHeader from '@/components/sidebar/card-header';
 
 import GeostoryDialog from '../dialog';
 
@@ -20,8 +19,7 @@ interface GeostoriesViewProps {
 }
 
 const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers }) => {
-  const { title, theme, color, id, description, monitors, geostory_bbox } = data || {};
-
+  const { color, description, monitors } = data || {};
   return (
     <>
       <div className="relative space-y-6 py-3">

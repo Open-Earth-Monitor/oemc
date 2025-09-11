@@ -63,12 +63,13 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryT
 
   const histogramPointData = useMemo(() => {
     return {
-      data:
-        (histogramData || [])?.map((d) => ({
+      data: (Array.isArray(histogramData) ? histogramData : [])
+        .filter((d) => Number.isFinite(d?.value))
+        .map((d) => ({
           x: d.label,
           y: d.value,
-          unit: d.unit || '',
-        })) || [],
+          unit: d.unit ?? '',
+        })),
     };
   }, [histogramData]);
 

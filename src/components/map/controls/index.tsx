@@ -1,4 +1,4 @@
-import { useState, useMemo, FC, useCallback, ChangeEvent } from 'react';
+import { useState, useMemo, FC, useCallback, ChangeEvent, lazy } from 'react';
 
 import { useMediaQuery } from 'react-responsive';
 
@@ -17,7 +17,8 @@ import LocationSearchComponent from '@/components/location-search';
 import BasemapControl from '@/components/map/controls/basemaps';
 import BookmarkControl from '@/components/map/controls/bookmark';
 import ShareControl from '@/components/map/controls/share';
-import SwipeControl from '@/components/map/controls/swipe';
+
+const SwipeControl = lazy(() => import('@/components/map/controls/swipe'));
 
 type ControlsProps = {
   className?: string;
@@ -137,9 +138,9 @@ export const Controls: FC<ControlsProps> = ({
         <BookmarkControl isMobile={isMobile} />
         <ShareControl isMobile={isMobile} />
       </div>
-      {isCompareLayerActive && data && !isLoading && (
+      {/* {isCompareLayerActive && data && !isLoading && (
         <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
-      )}
+      )} */}
     </div>
   );
 };
