@@ -39,9 +39,6 @@
     "@radix-ui/react-tabs": "latest",
     "@radix-ui/react-tooltip": "latest",
     "@react-spring/web": "^9.7.3",
-    "@react-three/drei": "^10.7.5",
-    "@react-three/fiber": "^9.3.0",
-    "@react-three/postprocessing": "^3.0.4",
     "@rive-app/react-canvas": "^4.20.1",
     "@tailwindcss/forms": "0.5.3",
     "@tailwindcss/line-clamp": "^0.4.4",
@@ -91,7 +88,6 @@
     "tailwindcss": "3.3.2",
     "tailwindcss-animate": "^1.0.6",
     "usehooks-ts": "3.1.0",
-    "uuid": "^13.0.0",
     "webpack": "^5.88.2"
   },
   "devDependencies": {
