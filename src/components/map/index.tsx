@@ -4,7 +4,7 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useParams, usePathname } from 'next/navigation';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
@@ -39,6 +39,7 @@ import {
   useSyncBboxSettings,
   useSyncCompareLayersSettings,
   useSyncLayersSettings,
+  useSyncSwipeControlPosition,
 } from '@/hooks/sync-query';
 
 import { LABELS } from '@/components/map/controls/basemaps/constants';
@@ -69,8 +70,9 @@ function buildWmsSource(url: string, layerName: string) {
 }
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
-  const queryClient = useQueryClient();
   const [isCompareMode, setIsCompareMode] = useAtom(compareFunctionalityAtom);
+  const [position] = useSyncSwipeControlPosition();
+  const [tooltipSide, setTooltipSide] = useState<'left' | 'right'>('left');
   // const [, setNutsDataResponse] = useAtom(nutsDataResponseAtom);
   const isRegionsLayerActive = useAtomValue(regionsLayerVisibilityAtom);
   const setHistogramVisible = useSetAtom(histogramVisibilityAtom);
@@ -106,13 +108,20 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     { enabled: type === 'geostory' && !!params.geostory_id }
   );
 
-  const monitorLayer = useMonitorLayers(
+  // monitors and geostories layer should get just layers with position right (layers for left are managed by URL or compare trigger)
+  const { data: monitorLayer, isLoading: isLoadingMonitorLayer } = useMonitorLayers(
     { monitor_id: params.monitor_id as string },
-    { enabled: type === 'monitor' && !!monitorId }
+    {
+      enabled: type === 'monitor' && !!monitorId,
+      select: (layers) => layers.filter((l) => l.position === 'right')[0] ?? undefined,
+    }
   );
-  const geostoryLayer = useGeostoryLayers(
+  const { data: geostoryLayer, isLoading: isLoadingGeostoryLayer } = useGeostoryLayers(
     { geostory_id: params.geostory_id as string },
-    { enabled: type === 'geostory' && !!params.geostory_id }
+    {
+      enabled: type === 'geostory' && !!params.geostory_id,
+      select: (layers) => layers.filter((l) => l.position === 'right')[0] ?? undefined,
+    }
   );
 
   const dataMeta = useMemo(() => {
@@ -152,6 +161,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const { data: compareData } = useLayer({ layer_id: compareLayerId });
 
+  const {
+    gs_name: compareGsName,
+    gs_base_wms: compareGsBaseWms,
+    title: compareTitle,
+  } = compareData || {};
+
   // initial viewport
   const dataBbox = useMemo(
     () => predefinedBbox || bbox || initialViewState.bbox,
@@ -169,11 +184,19 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   );
 
   const layerData = useMemo(() => {
-    if (layerFromURL) return layerFromURL;
-    if (type === 'monitor') return monitorLayer?.data?.[0];
-    if (type === 'geostory') return geostoryLayer?.data?.[0];
+    if (layerFromURL && !isLoading) return layerFromURL;
+    if (type === 'monitor' && !isLoadingMonitorLayer) return monitorLayer;
+    if (type === 'geostory' && !isLoadingGeostoryLayer) return geostoryLayer;
     return undefined;
-  }, [layerFromURL, monitorLayer, geostoryLayer, type]);
+  }, [
+    layerFromURL,
+    monitorLayer,
+    geostoryLayer,
+    type,
+    isLoading,
+    isLoadingMonitorLayer,
+    isLoadingGeostoryLayer,
+  ]);
 
   const { gs_base_wms, gs_name, title, unit, range, range_labels } = layerData || {};
 
@@ -185,6 +208,14 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       gs_name
     );
   }, [gs_base_wms, gs_name]);
+
+  const wmsMainCompare = useMemo(() => {
+    if (!compareGsName) return null;
+    return buildWmsSource(
+      compareGsBaseWms || 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
+      compareGsName
+    );
+  }, [compareGsBaseWms, compareGsName]);
 
   const wmsNutsSource = useMemo(() => {
     return new TileWMS({
@@ -224,6 +255,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       setLonLat(lonlat);
       setCoordinate(e.coordinate);
 
+      const swipePixelX = position.x * e.map.getSize()?.[0];
+      const side = e.pixel[0] < swipePixelX ? 'left' : 'right';
+      setTooltipSide(side);
       setTooltipInfo((prev) => ({
         ...prev,
         leftData: { ...prev.leftData, value: null },
@@ -242,8 +276,14 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           }
 
           const res = await getHistogramData(wmsNutsSource, e.coordinate, resolution, layerId);
-          const next = res?.nutsDataParams ?? NUTS_INITIAL_STATE;
           if (isCompareMode) {
+            const res = await getHistogramData(
+              wmsNutsSource,
+              e.coordinate,
+              resolution,
+              compareLayerId
+            );
+            const next = res?.nutsDataParams ?? NUTS_INITIAL_STATE;
             setNutsDataParamsCompare({ ...next });
           } else {
             setNutsDataParams(res.nutsDataParams ?? NUTS_INITIAL_STATE);
@@ -291,10 +331,16 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   }, [wmsMain, resolution, tooltipInfo.coordinate, gs_name, date]);
 
   const rightUrl = useMemo(() => {
-    if (!wmsMain || !compareDate || !resolution || !tooltipInfo.coordinate || !gs_name)
+    if (!wmsMainCompare || !resolution || !tooltipInfo.coordinate || !compareGsName)
       return undefined;
-    return getFeatureInfoUrl(wmsMain, tooltipInfo.coordinate, resolution, gs_name, compareDate);
-  }, [wmsMain, compareDate, resolution, tooltipInfo.coordinate, gs_name]);
+    return getFeatureInfoUrl(
+      wmsMainCompare,
+      tooltipInfo.coordinate,
+      resolution,
+      compareGsName,
+      compareDate
+    );
+  }, [wmsMainCompare, compareDate, resolution, tooltipInfo.coordinate, compareGsName]);
 
   const nutsUrl = useMemo(() => {
     if (!wmsNutsSource || !resolution || !tooltipInfo.coordinate) return undefined;
@@ -354,7 +400,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       },
       rightData: {
         id: compareLayerId ?? null,
-        title: title ?? null,
+        title: compareTitle ?? null,
         date: compareDate ?? null,
         value: vRight,
         unit: compareData?.unit ?? unit ?? null,
@@ -369,12 +415,16 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     layerId,
     compareLayerId,
     title,
+    compareTitle,
     date,
     compareDate,
     unit,
     compareData?.unit,
     range,
     range_labels,
+    isCompareLayerActive,
+    isCompareMode,
+    setCompareNutsProperties,
   ]);
 
   /* ----- Labels basemap ----- */
@@ -422,8 +472,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         {compareDate && dataMeta && !isLoading && isCompareLayerActive && gs_name && (
           <RLayerWMS
             ref={layerRightRef}
-            properties={{ label: gs_name, date: compareDate }}
-            url={gs_base_wms}
+            properties={{ label: compareGsName, date: compareDate }}
+            url={compareGsBaseWms}
             opacity={opacity ?? 1}
             params={{
               FORMAT: 'image/png',
@@ -431,8 +481,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
               VERSION: '1.3.0',
               REQUEST: 'GetMap',
               TRANSPARENT: true,
-              LAYERS: gs_name,
-              DIM_DATE: compareDate,
+              LAYERS: compareGsName,
+              // DIM_DATE: compareDate,
               CRS: WMS_CRS,
               BBOX: 'bbox-epsg-3857',
             }}
@@ -482,7 +532,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       </RMap>
 
       {/* Interactivity */}
-      {dataMeta && <MapTooltip {...tooltipInfo} onCloseTooltip={handleCloseTooltip} />}
+      {dataMeta && (
+        <MapTooltip
+          {...tooltipInfo}
+          data={tooltipSide === 'left' ? tooltipInfo.leftData : tooltipInfo.rightData}
+          onCloseTooltip={handleCloseTooltip}
+        />
+      )}
     </div>
   );
 };

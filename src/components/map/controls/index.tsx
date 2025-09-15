@@ -106,7 +106,6 @@ export const Controls: FC<ControlsProps> = ({
     // TO - DO - review dependencies mapREf setBbox
     [isDesktop, isMobile, mapRef, setBbox]
   );
-
   return (
     <div
       className={cn({
@@ -138,9 +137,9 @@ export const Controls: FC<ControlsProps> = ({
         <BookmarkControl isMobile={isMobile} />
         <ShareControl isMobile={isMobile} />
       </div>
-      {/* {isCompareLayerActive && data && !isLoading && (
+      {isCompareLayerActive && data && !isLoading && (
         <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
-      )} */}
+      )}
     </div>
   );
 };

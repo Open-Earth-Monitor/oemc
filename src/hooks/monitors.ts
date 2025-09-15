@@ -8,6 +8,7 @@ import type { Monitor, MonitorParsed } from '@/types/monitors';
 import { THEMES_COLORS, DEFAULT_COLOR } from '@/constants/themes';
 
 import { parseBBox } from '@/utils/bbox';
+import { normalizeLayers } from '@/utils/layers';
 import API from 'services/api';
 
 type UseParams = {
@@ -66,9 +67,12 @@ export function useMonitors(
   });
 }
 
-export function useMonitorLayers(
+export function useMonitorLayers<TData = LayerParsed[]>(
   params: UseParams,
-  queryOptions?: UseQueryOptions<Layer[], AxiosError, LayerParsed[]>
+  queryOptions?: Omit<UseQueryOptions<Layer[], Error, TData>, 'select'> & {
+    // remove when API improves response
+    select?: (data: LayerParsed[]) => TData;
+  }
 ) {
   const { monitor_id } = params;
 
@@ -76,35 +80,18 @@ export function useMonitorLayers(
     API.request({
       method: 'GET',
       url: `/monitors/${monitor_id}/layers`,
-      ...queryOptions,
     }).then((response: AxiosResponse<Layer[]>) => response.data);
 
-  return useQuery(['monitor-layers', params], fetchMonitorLayers, {
+  // remove this part when API improves and adds extra_lyrs directly to the response
+  const { select: externalSelect, ...rest } = queryOptions ?? {};
+
+  return useQuery<Layer[], Error, TData>(['monitor-layers', params], fetchMonitorLayers, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (layers) => {
-      return layers.flatMap((layer) => {
-        const toParsed = (l: Layer): LayerParsed => {
-          return {
-            ...l,
-            range:
-              l.range?.map((r, i) => ({
-                value: r,
-                label: l.range_labels?.[i] ?? null,
-              })) ?? [],
-          };
-        };
-
-        const parsedExtraLayers =
-          Array.isArray(layer.extra_lyrs) && layer.extra_lyrs.length > 0
-            ? layer.extra_lyrs.map(toParsed)
-            : [];
-
-        const includeBaseLayer = !Array.isArray(layer.extra_lyrs) || layer.extra_lyrs.length === 0;
-
-        return [...(includeBaseLayer ? [toParsed(layer)] : []), ...parsedExtraLayers];
-      });
+    ...rest,
+    select: (raw: Layer[]) => {
+      const normalized = normalizeLayers(raw);
+      return externalSelect ? externalSelect(normalized) : (normalized as unknown as TData);
     },
-    ...queryOptions,
   });
 }
 

@@ -22,21 +22,28 @@ import {
 
 import Timeline from './timeline';
 
-const TimeSeries: FC<{
+const TimeSeriesLayerBaseline: FC<{
   layerId: LayerParsed['layer_id'];
   range: LayerParsed['range'];
   isActive: boolean;
   defaultActive?: boolean;
   autoPlay: boolean;
-}> = ({ range, isActive, layerId, defaultActive = false, autoPlay }) => {
+  comparisonLayer?: LayerParsed | null;
+}> = ({ range, isActive, layerId, defaultActive = false, autoPlay, comparisonLayer }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
+
+  const layerToCompare = useMemo(() => {
+    if (!comparisonLayer) return null;
+    return compareLayers?.[0]?.id || comparisonLayer.layer_id || null;
+  }, [comparisonLayer, compareLayers]);
 
   const keyFor = (id: string) => `timeseries:${id}:playing`;
 
   const initRef = useRef(false);
 
   const [isPlaying, setPlaying] = useState<boolean>(false);
+
   useEffect(() => {
     if (!layerId || initRef.current) return;
 
@@ -64,7 +71,6 @@ const TimeSeries: FC<{
 
   const opacity = layers?.[0]?.opacity;
   const [contentVisibility, setContentVisibility] = useState<boolean>(false);
-  const [contentCompareVisibility, setContentCompareVisibility] = useState<boolean>(false);
 
   const handleSelect = useCallback(
     (value: string) => {
@@ -75,34 +81,14 @@ const TimeSeries: FC<{
     [layerId, opacity, range, setLayers, setContentVisibility]
   );
 
-  const handleCompareSelect = useCallback(
-    (value: string) => {
-      const nextRange = range.find((r) => r.value === value);
-      void setCompareLayers([{ id: layerId, opacity, date: nextRange.value }]);
-      setContentVisibility(false);
-    },
-    [layerId, opacity, range, setLayers, setContentVisibility]
-  );
-
   const date = layers?.[0]?.date;
-  const compareDate = compareLayers?.[0]?.date;
 
   const currentRange = useMemo(
     () => range.find((r) => r.value === date) ?? range[0],
     [date, range]
   );
-  const compareCurrentRange = useMemo(
-    () =>
-      compareLayers && compareLayers.length > 0 && compareDate
-        ? range.find((r) => r.value === compareDate) ?? range[0]
-        : null,
-    [compareDate, compareLayers, range]
-  );
 
-  const isCompareActive = useMemo(
-    () => compareLayers?.[0]?.id === layerId,
-    [layerId, compareLayers]
-  );
+  const isCompareActive = useMemo(() => !!compareLayers?.[0]?.id, [compareLayers]);
 
   return (
     <div className="flex w-full flex-col">
@@ -144,61 +130,34 @@ const TimeSeries: FC<{
               </SelectContent>
             </Select>
           )}
-          {!isCompareActive && (
+
+          {comparisonLayer && !isCompareActive && (
             <Button
               variant="outline"
               size="sm"
               className="text-xs font-semibold"
               onClick={() => {
                 setPlaying(false);
-                setCompareLayers([{ id: layerId, opacity, date: range[0].value }]);
+                setCompareLayers([{ id: layerToCompare, opacity }]);
               }}
             >
               Compare
             </Button>
           )}
-          {compareCurrentRange && (
-            <Select
-              value={compareCurrentRange?.value || range[0].value}
-              disabled={isPlaying}
-              onValueChange={handleCompareSelect}
-              open={contentCompareVisibility}
-              onOpenChange={() => {
-                setContentCompareVisibility((prev) => !prev);
+
+          {isCompareActive && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full text-xs font-semibold"
+              onClick={() => {
+                setPlaying(false);
+                setCompareLayers(null);
               }}
             >
-              <SelectTrigger className="w-fit text-xs font-semibold ">
-                <div
-                  className={cn(
-                    buttonVariants({ variant: 'outline', size: 'sm' }),
-                    'w-full justify-between hover:bg-transparent'
-                  )}
-                >
-                  <SelectValue>{compareCurrentRange?.label || range[0].label}</SelectValue>
-                  <div className="flex items-center space-x-2">
-                    <LuX
-                      className="pointer-events-auto h-4 w-4 text-accent-green"
-                      onClick={() => setCompareLayers(null)}
-                    />
-                    <SelectIcon />
-                  </div>
-                </div>
-              </SelectTrigger>
-              <SelectContent
-                className="z-[1000] flex max-h-56 w-full min-w-fit items-center text-center"
-                alignOffset={-20}
-                sideOffset={0}
-                style={{ width: 'calc(100% - 2rem)' }}
-              >
-                <ScrollArea className="max-h-[200px] w-full">
-                  {range.map((r: LayerDateRange) => (
-                    <SelectItem key={r.value} value={r.value} className="px-2">
-                      {r?.label}
-                    </SelectItem>
-                  ))}
-                </ScrollArea>
-              </SelectContent>
-            </Select>
+              <span>Hide average</span>
+              <LuX className="h-4 w-4 text-accent-green" />
+            </Button>
           )}
         </div>
       </div>
@@ -216,4 +175,4 @@ const TimeSeries: FC<{
   );
 };
 
-export default TimeSeries;
+export default TimeSeriesLayerBaseline;

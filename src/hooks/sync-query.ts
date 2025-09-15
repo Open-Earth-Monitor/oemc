@@ -18,7 +18,11 @@ export const useSyncBboxSettings = () => useQueryState('bbox', parseAsJson<Exten
 
 // swipe control position, this should not be on the URL but currently we have no global state,
 // if the app grows and evolves in a way to consider the use of a global state, move this there
-export const useSwipeControlPosition = () => useQueryState('sp', parseAsInteger.withDefault(0.5));
+export const useSyncSwipeControlPosition = () =>
+  useQueryState(
+    'sp',
+    parseAsJson<{ side: 'left' | 'right'; x: number }>().withDefault({ side: 'left', x: 0.5 })
+  );
 
 export const useSyncSidebarState = () =>
   useQueryState('sidebar-open', parseAsBoolean.withDefault(true));
