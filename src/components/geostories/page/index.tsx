@@ -10,9 +10,10 @@ import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geos
 
 import GeostoriesView from '@/components/geostories/view';
 import Loading from '@/components/loading';
-import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
 import CardHeader from '@/components/sidebar/card-header';
-import { ScrollBar, ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
+
 const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
@@ -22,7 +23,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
 
   // Only show layers with position right
   const geostoryLayers = useMemo(
-    () => layersData?.filter(({ position }) => position === 'right'),
+    () => layersData?.filter(({ position }) => position === 'right' || !position),
     [layersData]
   );
   const comparisonLayer = useMemo(
@@ -43,12 +44,11 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
         { shallow: false }
       );
 
-      if (comparisonLayer && !compareLayers) {
+      if (comparisonLayer && compareLayers) {
         void setCompareLayers([{ id: comparisonLayer.layer_id, opacity: 1 }], { shallow: false });
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geostoryLayers, comparisonLayer]);
+  }, [geostoryLayers, comparisonLayer, compareLayers, layers, setCompareLayers, setLayers]);
 
   return (
     <>
@@ -63,7 +63,11 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
               {isGeostoryLoading ? (
                 <Loading />
               ) : (
-                <GeostoriesView data={geostoryData} geostoryLayers={geostoryLayers} />
+                <GeostoriesView
+                  data={geostoryData}
+                  geostoryLayers={geostoryLayers}
+                  comparisonLayer={comparisonLayer}
+                />
               )}
             </div>
           </ScrollArea>
@@ -80,7 +84,11 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
         {isGeostoryLoading ? (
           <Loading />
         ) : (
-          <GeostoriesView data={geostoryData} geostoryLayers={geostoryLayers} />
+          <GeostoriesView
+            data={geostoryData}
+            geostoryLayers={geostoryLayers}
+            comparisonLayer={comparisonLayer}
+          />
         )}
       </MobileExploreToolbar>
     </>

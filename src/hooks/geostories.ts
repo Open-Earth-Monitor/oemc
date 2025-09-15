@@ -6,9 +6,8 @@ import type { Layer, LayerParsed } from '@/types/layers';
 
 import { Theme, THEMES_COLORS } from '@/constants/themes';
 
-import { cleanLayer } from '@/hooks/layers';
-
 import { parseBBox } from '@/utils/bbox';
+import { normalizeLayers } from '@/utils/layers';
 import API from 'services/api';
 
 type UseParams = {
@@ -64,9 +63,12 @@ export function useGeostoryParsed(
   });
 }
 
-export function useGeostoryLayers(
+export function useGeostoryLayers<TData = LayerParsed[]>(
   params: UseParams,
-  queryOptions?: UseQueryOptions<Layer[], Error, LayerParsed[]>
+  queryOptions?: Omit<UseQueryOptions<Layer[], Error, TData>, 'select'> & {
+    // remove when API improves response
+    select?: (data: LayerParsed[]) => TData;
+  }
 ) {
   const { geostory_id } = params;
 
@@ -74,24 +76,18 @@ export function useGeostoryLayers(
     API.request({
       method: 'GET',
       url: `/geostories/${geostory_id}/layers`,
-      ...queryOptions,
     }).then((response: AxiosResponse<Layer[]>) => response.data);
 
-  return useQuery(['geostory-layers', params], fetchGeostoryLayers, {
+  // remove this part when API improves and adds extra_lyrs directly to the response
+  const { select: externalSelect, ...rest } = queryOptions ?? {};
+
+  return useQuery<Layer[], Error, TData>(['geostory-layers', params], fetchGeostoryLayers, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (layers) => {
-      const flattenAndCleanLayers = layers.flatMap((layer) => {
-        const { extra_lyrs = [], ...baseLayer } = layer;
-
-        const cleanedBase = cleanLayer(baseLayer);
-        const cleanedExtras = extra_lyrs.map(cleanLayer);
-
-        return [cleanedBase, ...cleanedExtras];
-      });
-
-      return flattenAndCleanLayers;
+    ...rest,
+    select: (raw: Layer[]) => {
+      const normalized = normalizeLayers(raw);
+      return externalSelect ? externalSelect(normalized) : (normalized as unknown as TData);
     },
-    ...queryOptions,
   });
 }
 

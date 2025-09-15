@@ -9,6 +9,7 @@ import { TileWMS } from 'ol/source';
 import { LuChartColumnBig, LuX } from 'react-icons/lu';
 
 import cn from '@/lib/classnames';
+import { getHistogramData } from '@/lib/utils';
 
 import {
   coordinateAtom,
@@ -19,7 +20,8 @@ import {
   resolutionAtom,
 } from '@/app/store';
 
-import { getHistogramData } from '../../../lib/utils';
+import { useSyncSwipeControlPosition } from '@/hooks/sync-query';
+
 import type { MonitorTooltipInfo } from '@/components/map/types';
 import { Button } from '@/components/ui/button';
 
@@ -44,15 +46,15 @@ function scrollToHistogram(theId: string) {
   });
 }
 
-const MapTooltip: FC<TooltipProps> = ({
-  position,
-  onCloseTooltip = () => null,
-  leftData,
-  rightData,
-}: TooltipProps) => {
+type MapTooltipProps = Omit<TooltipProps, 'leftData' | 'rightData'> & {
+  data: TooltipProps['leftData'] | TooltipProps['rightData'];
+};
+
+const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null, data }) => {
   const [isHistogramActive, isHistogramVisibility] = useAtom(histogramVisibilityAtom);
   const nutsDataResponse = useAtomValue(nutsDataResponseAtom);
   const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
+  const swipeSide = useSyncSwipeControlPosition();
 
   const [coordinate] = useAtom(coordinateAtom);
   const [resolution] = useAtom(resolutionAtom);
@@ -76,32 +78,22 @@ const MapTooltip: FC<TooltipProps> = ({
       wmsNutsSource,
       coordinate as Coordinate,
       resolution,
-      leftData.id
+      data.id
     );
     setNutsDataParams(nutsDataParams);
     isHistogramVisibility(true);
-  }, [
-    coordinate,
-    resolution,
-    leftData.id,
-    isHistogramVisibility,
-    setNutsDataParams,
-    wmsNutsSource,
-  ]);
+  }, [coordinate, resolution, data.id, isHistogramVisibility, setNutsDataParams, wmsNutsSource]);
 
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
   const handleClick = useCallback(() => {
     isHistogramVisibility(true);
     requestAnimationFrame(() => {
-      scrollToHistogram(leftData.id);
+      scrollToHistogram(data.id);
     });
-  }, [isHistogramVisibility, leftData.id]);
+  }, [isHistogramVisibility, data.id]);
 
-  const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
-  const compareDateLabel =
-    rightData.date && leftData.range?.find(({ value }) => value === rightData.date)?.label;
-  if (!position || (!leftData?.value && leftData?.value !== 0)) return null;
+  if (!position || (data?.value === undefined && data?.value !== 0)) return null;
   return (
     <div
       className={cn({
@@ -116,13 +108,13 @@ const MapTooltip: FC<TooltipProps> = ({
     >
       <div className="space-y-5">
         <div className="flex w-full items-start justify-between">
-          <h3 className="break-word flex flex-wrap text-left">{leftData.title}</h3>
+          <h3 className="break-word flex flex-wrap text-left">{data.title}</h3>
 
           <button type="button" onClick={onCloseTooltip}>
             <LuX className="h-6 w-6" />
           </button>
         </div>
-        {leftData.value !== 0 && (
+        {data.value !== 0 && (
           <div className="flex flex-col items-start space-y-3">
             {isRegionsLayerActive && !!nutsDataResponse?.NAME_LATN && (
               <div className="flex flex-wrap space-x-2.5 divide-x-2 divide-white-900 text-left font-satoshi text-xs font-medium">
@@ -131,30 +123,28 @@ const MapTooltip: FC<TooltipProps> = ({
               </div>
             )}
             <div className="space-x-2 text-[22px]">
-              {typeof leftData.value === 'number' ? (
-                <span>{numberFormat(leftData.value)}</span>
+              {typeof data.value === 'number' ? (
+                <span>{numberFormat(data.value)}</span>
               ) : (
-                leftData.value
+                data.value
               )}
-              {!!leftData.unit && <span>{leftData.unit}</span>}
+              {!!data.unit && <span>{data.unit}</span>}
             </div>
           </div>
         )}
-        {!leftData.value && (!!rightData.value || !rightData.date) && (
-          <span>No data is available at this specific point.</span>
-        )}
-        {leftData?.value && !isRegionsLayerActive && (
+        {!data.value && <span>No data is available at this specific point.</span>}
+        {data?.value && !isRegionsLayerActive && (
           <Button
             variant="default"
             onClick={handleClick}
             className="space-x-2 p-2 text-sm"
-            disabled={!leftData.value}
+            disabled={!data.value}
           >
             <LuChartColumnBig className="h-6 w-6" />
             <span>See point-based summary</span>
           </Button>
         )}
-        {leftData?.value && isRegionsLayerActive && (
+        {data?.value && isRegionsLayerActive && (
           <Button variant="default" onClick={handleHistogram} className="space-x-2 p-2  text-sm">
             <LuChartColumnBig className="h-6 w-6" />
             <span> See regions-based summary</span>
