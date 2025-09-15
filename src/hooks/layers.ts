@@ -159,11 +159,9 @@ export function useLegendGraphic({ gs_base_wms, gs_name }: UseLegendGraphicOptio
 export function cleanLayer(layer: Omit<Layer, 'extra_lyrs'>): LayerParsed {
   return {
     ...layer,
-    range_labels: layer.range_labels,
-    range:
-      layer.range?.map((r, i) => ({
-        value: r,
-        label: layer.range_labels?.[i] || null,
-      })) || [],
+    range: (layer.range ?? []).map((r, i) => ({
+      value: r,
+      label: layer.range_labels?.[i] ?? null,
+    })),
   };
 }

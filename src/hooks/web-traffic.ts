@@ -109,7 +109,7 @@ export function useGetWebTraffic(
   };
 }
 
-export function postWebTraffic(data: TrackingData, queryOptions?: UseQueryOptions) {
+export function postWebTraffic(data: TrackingData) {
   return API.request({
     method: 'POST',
     url: '/usage-stats',

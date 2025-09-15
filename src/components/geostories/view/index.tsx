@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { Geostory } from '@/types/geostories';
-import { LayerParsed } from '@/types/layers';
+import { LayerParsed, Layer } from '@/types/layers';
 
 import DatasetCard from '@/components/datasets/card';
 
@@ -14,12 +14,14 @@ interface GeostoriesViewProps {
   data: Geostory & {
     geostory_bbox: number[];
     color: string;
+    layers: LayerParsed[] | Layer[];
   };
   geostoryLayers: LayerParsed[];
+  comparisonLayer?: LayerParsed | null;
 }
-
-const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers }) => {
+const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, comparisonLayer }) => {
   const { color, description, monitors } = data || {};
+
   return (
     <>
       <div className="relative space-y-6 py-3">
@@ -51,6 +53,7 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers }) => {
                     id={dataset?.layer_id}
                     isGeostory={false}
                     color={color}
+                    comparisonLayer={comparisonLayer}
                   />
                 </li>
               );

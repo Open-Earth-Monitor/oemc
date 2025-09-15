@@ -80,7 +80,7 @@ export const LineChart = ({
             height={height}
             xScale={{ type: xScaleType }}
             yScale={{ type: 'linear', domain: [yMin, yMax] }}
-            margin={{ top: 30, right: 20, bottom: 60, left: 60 }}
+            margin={{ top: 30, right: 20, bottom: 80, left: 60 }}
           >
             <Label
               x={90}

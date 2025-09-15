@@ -73,17 +73,17 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (activeTab === 'comparison' && !compareLayerData && !isGeostory) {
-      void setCompareLayers([
-        {
-          id: layerId,
-          opacity,
-          date: compareDate,
-        },
-      ]);
-    }
-  }, [setCompareLayers, compareLayerData, opacity, compareDate, layerId, activeTab, isGeostory]);
+  // useEffect(() => {
+  //   if (activeTab === 'comparison' && !layerDataCompare && !isGeostory) {
+  //     void setCompareLayers([
+  //       {
+  //         id: layerDataCompare?.layer_id,
+  //         opacity,
+  //         date: compareDate,
+  //       },
+  //     ]);
+  //   }
+  // }, [setCompareLayers, layerDataCompare, opacity, compareDate, layerId, activeTab, isGeostory]);
 
   const handleCompareOpacity = useCallback(
     (nexOpacity: number) => {

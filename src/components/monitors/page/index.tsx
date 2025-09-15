@@ -14,7 +14,7 @@ import CardHeader from '@/components/sidebar/card-header';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
 
-const GeostoryPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
+const MonitorPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
@@ -90,4 +90,4 @@ const GeostoryPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   );
 };
 
-export default GeostoryPage;
+export default MonitorPage;
