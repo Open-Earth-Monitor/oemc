@@ -104,7 +104,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
     setIsRegionsLayerActive((prev) => !prev);
     setHistogramVisibility(false);
   };
-
+  console.log('geostory dataset', layers, compareLayers, isGeostory, isActive, isCompareActive);
   return (
     <div className="space-y-3 bg-brand-300 p-3.5 font-medium" data-testid={`dataset-item-${id}`}>
       <h2 data-testid="dataset-title" className="font-satoshi text-secondary-500" style={{ color }}>
