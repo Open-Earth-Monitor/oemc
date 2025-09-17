@@ -111,13 +111,21 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     { enabled: type === 'geostory' && !!params.geostory_id }
   );
 
+  const geostoryLayers = geostoryData?.layers;
+  const layerPositionLeft = useMemo(
+    () => geostoryLayers?.find((l) => l.position === 'left'),
+    [geostoryLayers]
+  );
+  const layerPositionRight = useMemo(
+    () => geostoryLayers?.find((l) => l.position === 'right'),
+    [geostoryLayers]
+  );
+
   const isComparativeGeostory = useMemo(() => {
     if (isFetchedGeostory && !isLoadingGeostory) {
-      const layerPositionLeft = geostoryData?.layers?.find((l) => l.position === 'left');
-      const layerPositionRight = geostoryData?.layers?.find((l) => l.position === 'right');
       return geostoryData.layers?.length === 2 && layerPositionLeft && layerPositionRight;
     }
-  }, [geostoryData, isFetchedGeostory, isLoadingGeostory]);
+  }, [geostoryData, isFetchedGeostory, isLoadingGeostory, layerPositionLeft, layerPositionRight]);
 
   // monitors and geostories layer should get just layers with position right (layers for left are managed by URL or compare trigger)
   const { data: monitorLayer, isLoading: isLoadingMonitorLayer } = useMonitorLayers(
@@ -338,10 +346,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   // after that, the user should manage timeseries and comparative mode
   useEffect(() => {
     if (isComparativeGeostory) {
-      const layers = geostoryData?.layers;
-      const layerPositionLeft = layers?.find((l) => l.position === 'left');
-      const layerPositionRight = layers?.find((l) => l.position === 'right');
-
       setIsCompareMode(true);
       setCompareLayers([
         {
@@ -359,8 +363,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       ]);
       setBbox(geostoryData?.geostory_bbox || undefined);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [layerId, geostoryData, isComparativeGeostory]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const resolution = mapRef.current?.ol.getView?.()?.getResolution?.();
 
@@ -508,7 +511,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           />
         )}
 
-        {dataMeta && !isLoading && isCompareLayerActive && gs_name && (
+        {dataMeta && !isLoading && isCompareLayerActive && compareGsName && (
           <RLayerWMS
             ref={layerRightRef}
             properties={{ label: compareGsName, date: compareDate }}

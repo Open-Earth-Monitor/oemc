@@ -51,7 +51,7 @@ const TimeSeriesComparativeLayers: FC<{
   const handleSelect = useCallback(
     (value: string) => {
       const nextRange = range.find((r) => r.value === value);
-      void setLayers([{ id: layerId, opacity, date: nextRange.value }]);
+      void setLayers([{ id: layerId, opacity, date: nextRange?.value }]);
       setContentVisibility(false);
     },
     [layerId, opacity, range, setLayers, setContentVisibility]
