@@ -1,146 +1,88 @@
-import { useState, useMemo, FC, useCallback, ChangeEvent, lazy } from 'react';
+'use client';
 
-import { useMediaQuery } from 'react-responsive';
+import { useCallback, useEffect, useRef } from 'react';
 
-import { Extent } from 'ol/extent';
-import { fromLonLat } from 'ol/proj';
-import { RControl } from 'rlayers';
+import type BaseEvent from 'ol/events/Event';
+import Swipe from 'ol-ext/control/Swipe';
+import { RLayerWMS, useOL } from 'rlayers';
+import 'ol-ext/dist/ol-ext.css';
 
-import { cn } from '@/lib/classnames';
-import { mobile, tablet } from '@/lib/media-queries';
+import {
+  useSyncLayersSettings,
+  useSyncCompareLayersSettings,
+  useSyncSwipeControlPosition,
+} from '@/hooks/sync-query';
 
-import { useDebounce } from '@/hooks/datasets';
-import { useOpenStreetMapsLocations } from '@/hooks/openstreetmaps';
-import { useSyncBboxSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
+const SwipeControl: React.FC<{
+  layerLeft: React.RefObject<RLayerWMS>;
+  layerRight: React.RefObject<RLayerWMS>;
+}> = ({ layerLeft, layerRight }) => {
+  const { map } = useOL();
 
-import LocationSearchComponent from '@/components/location-search';
-import BasemapControl from '@/components/map/controls/basemaps';
-import BookmarkControl from '@/components/map/controls/bookmark';
-import ShareControl from '@/components/map/controls/share';
+  const [position, setPosition] = useSyncSwipeControlPosition();
+  const [layersUrl] = useSyncLayersSettings();
+  const [layersUrlCompare] = useSyncCompareLayersSettings();
 
-const SwipeControl = lazy(() => import('@/components/map/controls/swipe'));
+  const swipeRef = useRef<Swipe | null>(null);
 
-type ControlsProps = {
-  className?: string;
-  mapRef?: React.RefObject<any>;
-  layerRightRef?: React.RefObject<any>;
-  layerLeftRef?: React.RefObject<any>;
-  data?: any;
-  isLoading?: boolean;
-};
-
-interface ClickEvent {
-  bbox?: Extent;
-}
-
-export const Controls: FC<ControlsProps> = ({
-  className,
-  mapRef,
-  layerLeftRef,
-  layerRightRef,
-  data,
-  isLoading = false,
-}: ControlsProps) => {
-  // Media queries
-  const isMobile = useMediaQuery(mobile);
-  const isTablet = useMediaQuery(tablet);
-  const isDesktop = !isMobile && !isTablet;
-
-  // Compare layer from the URL
-  const [compareLayers] = useSyncCompareLayersSettings();
-  const compareLayerId = compareLayers?.[0]?.id;
-  const [locationSearch, setLocationSearch] = useState('');
-  const [, setBbox] = useSyncBboxSettings();
-  const isCompareLayerActive = useMemo(() => !!compareLayerId, [compareLayerId]);
-
-  const debouncedSearchValue = useDebounce(locationSearch, 500);
-
-  const handleLocationSearchChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setLocationSearch(e.target.value);
+  // The "moving" event provides a numeric position (0..1)
+  const handleMoving = useCallback(
+    (e: BaseEvent & { position: number }) => {
+      const x = e.position[0]; // horizontal fraction (0..1)
+      const side = x >= 0.5 ? 'right' : 'left'; // 1 = right half, 0 = left half
+      setPosition({ side, x });
     },
-    [setLocationSearch]
+    [setPosition]
   );
 
-  const {
-    data: locationData = [],
-    isLoading: isLoadingLocationData = false,
-    isFetching: isFetchingLocationData = false,
-  } = useOpenStreetMapsLocations(
-    {
-      q: debouncedSearchValue,
-      format: 'json',
-    },
-    {
-      enabled: debouncedSearchValue !== '' && debouncedSearchValue.length >= 2,
-      select: (data) => data,
+  useEffect(() => {
+    if (!swipeRef.current) {
+      swipeRef.current = new Swipe({ position: position.x }); // initial position
     }
-  );
-  const OPTIONS = useMemo(() => {
-    if (!Array.isArray(locationData)) return [];
-    return locationData.map((d) => ({
-      value: d.place_id ?? undefined,
-      label: d.display_name ?? '',
-      // transforming bbox from "nominatim" to "overpass" and to "ESPG:3857 projection"
-      bbox: [
-        ...fromLonLat([+d.boundingbox[2], +d.boundingbox[0]]),
-        ...fromLonLat([+d.boundingbox[3], +d.boundingbox[1]]),
-      ] as Extent,
-    }));
-  }, [locationData]);
+    return () => {
+      swipeRef.current = null;
+    };
+  }, []);
 
-  const handleClick = useCallback(
-    (e: ClickEvent) => {
-      if (mapRef?.current) {
-        const view = mapRef.current.ol.getView();
-        const padding = isDesktop ? [150, 0, 0, 300] : [150, 0, 0, 50];
-        view?.fit(e.bbox, {
-          duration: 2000,
-          ...(!isMobile && { padding }),
-        });
-      }
+  useEffect(() => {
+    if (!map || !swipeRef.current) return;
 
-      // Center the map
-      setBbox(e.bbox);
-    },
-    // TO - DO - review dependencies mapREf setBbox
-    [isDesktop, isMobile, mapRef, setBbox]
-  );
-  return (
-    <div
-      className={cn({
-        'absolute right-5 top-[222px] z-40 flex flex-col space-y-1.5 sm:top-1/2 sm:-translate-y-[50%]':
-          true,
-        [className]: !!className,
-      })}
-    >
-      <LocationSearchComponent
-        locationSearch={locationSearch}
-        OPTIONS={OPTIONS}
-        handleLocationSearchChange={handleLocationSearchChange}
-        handleClick={handleClick}
-        isLoading={isLoadingLocationData}
-        isFetching={isFetchingLocationData}
-        isMobile={isMobile}
-        className="absolute right-0 top-[-134px]"
-      />
+    const swipe = swipeRef.current;
+    map.addControl(swipe);
 
-      <RControl.RZoom className="ol-zoom" key="ol-zoom" zoomOutLabel="-" zoomInLabel="+" />
+    (swipe as any).on('moving', handleMoving);
 
-      <div
-        className={cn({
-          'absolute top-4 flex w-full flex-col items-end justify-end space-y-1.5 sm:top-[-26px]':
-            true,
-        })}
-      >
-        <BasemapControl isMobile={isMobile} />
-        <BookmarkControl isMobile={isMobile} />
-        <ShareControl isMobile={isMobile} />
-      </div>
-      {isCompareLayerActive && data && !isLoading && (
-        <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
-      )}
-    </div>
-  );
+    return () => {
+      (swipe as any).un('moving', handleMoving);
+      try {
+        map.removeControl(swipe);
+      } catch {}
+    };
+  }, [map, handleMoving]);
+
+  // Sync the left/right layers whenever their refs or URLs change
+  useEffect(() => {
+    const swipe = swipeRef.current;
+    const left = layerLeft?.current?.ol;
+    const right = layerRight?.current?.ol;
+    if (!swipe || !left || !right) return;
+
+    // Optionally clear previous layers before adding new ones
+    // swipe.set('left', []); swipe.set('right', []);
+
+    // Add layers to each side of the swipe
+    swipe.addLayer([left], false); // false => left side
+    swipe.addLayer([right], true); // true  => right side
+  }, [layerLeft, layerRight, layersUrl, layersUrlCompare]);
+
+  // Update the swipe position whenever external state changes
+  useEffect(() => {
+    const swipe = swipeRef.current;
+    if (!swipe) return;
+    swipe.setProperties({ position: [position.x, 0] });
+  }, [position]);
+
+  return null;
 };
-export default Controls;
+
+export default SwipeControl;

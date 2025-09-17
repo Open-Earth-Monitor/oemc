@@ -94,6 +94,7 @@ const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null
   }, [isHistogramVisibility, data.id]);
 
   if (!position || (data?.value === undefined && data?.value !== 0)) return null;
+
   return (
     <div
       className={cn({

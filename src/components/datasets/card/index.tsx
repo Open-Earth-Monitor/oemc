@@ -22,7 +22,7 @@ import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store
 import Histogram from '@/containers/histogram';
 
 import TimeSeriesSameLayer from '@/components/timeseries-baseline-layer';
-import TimeSeriesLayerBaseline from '@/components/timeseries-different-layers';
+import TimeSeriesComparativeLayers from '@/components/timeseries-different-layers';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 
@@ -104,7 +104,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
     setIsRegionsLayerActive((prev) => !prev);
     setHistogramVisibility(false);
   };
-  console.log('geostory dataset', layers, compareLayers, isGeostory, isActive, isCompareActive);
+
   return (
     <div className="space-y-3 bg-brand-300 p-3.5 font-medium" data-testid={`dataset-item-${id}`}>
       <h2 data-testid="dataset-title" className="font-satoshi text-secondary-500" style={{ color }}>
@@ -158,13 +158,10 @@ const DatasetCard: FC<DatasetCardProps> = ({
         />
       )}
       {comparisonLayer && (
-        // second layer to compare
-        <TimeSeriesLayerBaseline
+        <TimeSeriesComparativeLayers
           layerId={id}
           range={range}
           isActive={isActive}
-          defaultActive={true}
-          autoPlay={isGeostory}
           comparisonLayer={comparisonLayer}
         />
       )}
