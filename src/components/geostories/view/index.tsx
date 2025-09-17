@@ -21,7 +21,6 @@ interface GeostoriesViewProps {
 }
 const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, comparisonLayer }) => {
   const { color, description, monitors } = data || {};
-
   return (
     <>
       <div className="relative space-y-6 py-3">
@@ -51,7 +50,7 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
                   <DatasetCard
                     {...dataset}
                     id={dataset?.layer_id}
-                    isGeostory={false}
+                    isGeostory={true}
                     color={color}
                     comparisonLayer={comparisonLayer}
                   />

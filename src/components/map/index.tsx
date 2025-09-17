@@ -103,10 +103,22 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     { monitor_id: params.monitor_id as string },
     { enabled: type === 'monitor' && !!monitorId }
   );
-  const { data: geostoryData } = useGeostory(
+  const {
+    data: geostoryData,
+    isLoading: isLoadingGeostory,
+    isFetched: isFetchedGeostory,
+  } = useGeostory(
     { geostory_id: params.geostory_id as string },
     { enabled: type === 'geostory' && !!params.geostory_id }
   );
+
+  const isComparativeGeostory = useMemo(() => {
+    if (isFetchedGeostory && !isLoadingGeostory) {
+      const layerPositionLeft = geostoryData?.layers?.find((l) => l.position === 'left');
+      const layerPositionRight = geostoryData?.layers?.find((l) => l.position === 'right');
+      return geostoryData.layers?.length === 2 && layerPositionLeft && layerPositionRight;
+    }
+  }, [geostoryData, isFetchedGeostory, isLoadingGeostory]);
 
   // monitors and geostories layer should get just layers with position right (layers for left are managed by URL or compare trigger)
   const { data: monitorLayer, isLoading: isLoadingMonitorLayer } = useMonitorLayers(
@@ -149,12 +161,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TOOLTIP_INITIAL_STATE);
 
-  const [layers] = useSyncLayersSettings();
+  const [layers, setLayers] = useSyncLayersSettings();
   const layerId = layers?.[0]?.id;
   const opacity = layers?.[0]?.opacity;
   const date = layers?.[0]?.date;
   const isLayerActive = !!layerId;
-  const [compareLayers] = useSyncCompareLayersSettings();
+  const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
   const compareLayerId = compareLayers?.[0]?.id;
   const compareDate = compareLayers?.[0]?.date;
   const isCompareLayerActive = !!compareLayerId;
@@ -323,6 +335,39 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     setTooltipInfo((prev) => ({ ...prev, position: null }));
   }, [layerId, compareLayerId]);
 
+  useEffect(() => {
+    if (isComparativeGeostory) {
+      const layers = geostoryData?.layers;
+      const layerPositionLeft = layers?.find((l) => l.position === 'left');
+      const layerPositionRight = layers?.find((l) => l.position === 'right');
+      console.log({ layerPositionLeft, layerPositionRight });
+      setIsCompareMode(true);
+      setCompareLayers([
+        {
+          id: layerPositionLeft?.layer_id,
+          ...(!!layerPositionLeft?.range && { date: layerPositionLeft?.range[0] }),
+          opacity: 1,
+        },
+      ]);
+      setLayers([
+        {
+          id: layerPositionRight?.layer_id,
+          ...(!!layerPositionRight?.range && { date: layerPositionRight?.range[0] }),
+          opacity: 1,
+        },
+      ]);
+      setBbox(geostoryData?.geostory_bbox || undefined);
+    }
+  }, [
+    layerId,
+    compareLayerId,
+    setCompareLayers,
+    setIsCompareMode,
+    geostoryData,
+    isComparativeGeostory,
+    setLayers,
+  ]);
+
   const resolution = mapRef.current?.ol.getView?.()?.getResolution?.();
 
   const leftUrl = useMemo(() => {
@@ -469,7 +514,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
           />
         )}
 
-        {compareDate && dataMeta && !isLoading && isCompareLayerActive && gs_name && (
+        {dataMeta && !isLoading && isCompareLayerActive && gs_name && (
           <RLayerWMS
             ref={layerRightRef}
             properties={{ label: compareGsName, date: compareDate }}
