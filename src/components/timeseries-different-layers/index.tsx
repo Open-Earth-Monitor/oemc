@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useState, useRef } from 'react';
+import { useEffect, useMemo, useCallback, useState } from 'react';
 import type { FC } from 'react';
 
 import { LuX } from 'react-icons/lu';

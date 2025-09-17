@@ -1,5 +1,5 @@
 import { useQueryState } from 'next-usequerystate';
-import { parseAsJson, parseAsInteger, parseAsBoolean } from 'next-usequerystate/parsers';
+import { parseAsJson, parseAsBoolean } from 'next-usequerystate/parsers';
 import { Extent } from 'ol/extent';
 
 import type { Theme } from '@/constants/themes';

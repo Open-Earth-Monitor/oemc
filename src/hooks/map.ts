@@ -1,4 +1,4 @@
-import { CancelledError, useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse, CanceledError } from 'axios';
 import { getCenter } from 'ol/extent';
 import { fromLonLat, toLonLat } from 'ol/proj';
