@@ -1,5 +1,3 @@
-import Script from 'next/script';
-
 const WebTrafficMapContent = () => (
   <div style={{ width: '100%', height: '400px', position: 'relative' }}>
     {/* <script
