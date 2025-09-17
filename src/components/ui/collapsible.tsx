@@ -3,7 +3,6 @@
 import { forwardRef, ElementRef, ComponentPropsWithoutRef } from 'react';
 
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible';
-import { HiChevronDown } from 'react-icons/hi2';
 
 import { cn } from 'lib/classnames';
 
