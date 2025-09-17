@@ -73,15 +73,14 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [isCompareMode, setIsCompareMode] = useAtom(compareFunctionalityAtom);
   const [position] = useSyncSwipeControlPosition();
   const [tooltipSide, setTooltipSide] = useState<'left' | 'right'>('left');
-  // const [, setNutsDataResponse] = useAtom(nutsDataResponseAtom);
+
   const isRegionsLayerActive = useAtomValue(regionsLayerVisibilityAtom);
-  const setHistogramVisible = useSetAtom(histogramVisibilityAtom);
 
   const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
   const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
 
-  const [nutsProperties, setNutsDataResponse] = useAtom(nutsDataResponseAtom);
-  const [nutsPropertiesCompare, setCompareNutsProperties] = useAtom(nutsDataResponseCompareAtom);
+  const setNutsDataResponse = useSetAtom(nutsDataResponseAtom);
+  const setCompareNutsProperties = useSetAtom(nutsDataResponseCompareAtom);
 
   const setPlaying = useSetAtom(timeSeriesPlaybackAtom);
 
@@ -335,12 +334,14 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     setTooltipInfo((prev) => ({ ...prev, position: null }));
   }, [layerId, compareLayerId]);
 
+  // activates timeseries and comparative mode if geostory is comparative and just the first time
+  // after that, the user should manage timeseries and comparative mode
   useEffect(() => {
     if (isComparativeGeostory) {
       const layers = geostoryData?.layers;
       const layerPositionLeft = layers?.find((l) => l.position === 'left');
       const layerPositionRight = layers?.find((l) => l.position === 'right');
-      console.log({ layerPositionLeft, layerPositionRight });
+
       setIsCompareMode(true);
       setCompareLayers([
         {
@@ -358,15 +359,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       ]);
       setBbox(geostoryData?.geostory_bbox || undefined);
     }
-  }, [
-    layerId,
-    compareLayerId,
-    setCompareLayers,
-    setIsCompareMode,
-    geostoryData,
-    isComparativeGeostory,
-    setLayers,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const resolution = mapRef.current?.ol.getView?.()?.getResolution?.();
 

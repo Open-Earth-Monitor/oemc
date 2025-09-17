@@ -22,14 +22,12 @@ import {
 
 import Timeline from './timeline';
 
-const TimeSeriesLayerBaseline: FC<{
+const TimeSeriesComparativeLayers: FC<{
   layerId: LayerParsed['layer_id'];
   range: LayerParsed['range'];
   isActive: boolean;
-  defaultActive?: boolean;
-  autoPlay: boolean;
   comparisonLayer?: LayerParsed | null;
-}> = ({ range, isActive, layerId, defaultActive = false, autoPlay, comparisonLayer }) => {
+}> = ({ range, isActive, layerId, comparisonLayer }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
@@ -40,29 +38,7 @@ const TimeSeriesLayerBaseline: FC<{
 
   const keyFor = (id: string) => `timeseries:${id}:playing`;
 
-  const initRef = useRef(false);
-
-  const [isPlaying, setPlaying] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!layerId || initRef.current) return;
-
-    const key = keyFor(layerId);
-    let initial = false;
-
-    const saved = sessionStorage.getItem(key);
-    if (saved !== null) {
-      try {
-        initial = JSON.parse(saved);
-      } catch {}
-    } else {
-      initial = !!(autoPlay && defaultActive && isActive);
-    }
-
-    setPlaying(initial);
-    initRef.current = true;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layerId]);
+  const [isPlaying, setPlaying] = useState<boolean>(true);
 
   useEffect(() => {
     if (!layerId) return;
@@ -166,8 +142,8 @@ const TimeSeriesLayerBaseline: FC<{
         layerId={layerId}
         range={range}
         isActive={isActive}
-        defaultActive={defaultActive}
-        autoPlay={autoPlay}
+        defaultActive={true}
+        autoPlay={true}
         isPlaying={isPlaying}
         setPlaying={setPlaying}
       />
@@ -175,4 +151,4 @@ const TimeSeriesLayerBaseline: FC<{
   );
 };
 
-export default TimeSeriesLayerBaseline;
+export default TimeSeriesComparativeLayers;
