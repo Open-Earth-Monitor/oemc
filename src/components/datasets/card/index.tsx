@@ -21,8 +21,8 @@ import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store
 
 import Histogram from '@/containers/histogram';
 
-import TimeSeriesSameLayer from '@/components/timeseries-baseline-layer';
-import TimeSeriesComparativeLayers from '@/components/timeseries-different-layers';
+import TimeSeriesSameLayer from '@/components/timeseries-layer';
+import TimeSeriesComparativeLayers from '@/components/timeseries-comparative-layers';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 
@@ -39,7 +39,6 @@ type DatasetCardProps = LayerParsed & {
 };
 
 const DatasetCard: FC<DatasetCardProps> = ({
-  type = 'monitor',
   id,
   title,
   download_url,
