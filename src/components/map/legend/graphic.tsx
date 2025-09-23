@@ -20,7 +20,7 @@ export const LegendGraphic: React.FC<{
 
       {type !== 'intervals' && type !== 'ramp' && gs_style && gs_style?.length > 8 && (
         <div className="flex flex-col space-y-1 p-2">
-          <div className="to-black-500 via-black-500 absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent" />
+          <div className="absolute left-0 right-0 top-0 h-10 bg-gradient-to-t from-transparent via-black-500 to-black-500" />
 
           {gs_style?.map(({ color, label }) => (
             <div
@@ -37,7 +37,7 @@ export const LegendGraphic: React.FC<{
               <div className="text-left text-xs text-gray-600">{label}</div>
             </div>
           ))}
-          <div className="from-black-500 absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t via-transparent to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black-500 via-transparent to-transparent" />
         </div>
       )}
 

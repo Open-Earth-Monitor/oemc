@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse, CanceledError } from 'axios';
 import { getCenter } from 'ol/extent';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import View from 'ol/View';
@@ -31,17 +31,24 @@ export function usePointData(
   params: UseParams,
   queryOptions?: UseQueryOptions<RegionData[], AxiosError, RegionData[]>
 ) {
-  const fetchRegionData = () =>
+  const fetchRegionData = ({ signal }: { signal?: AbortSignal }) =>
     API.request({
       method: 'GET',
       url: '/point-query',
       params,
+      signal,
       ...queryOptions,
     })
-      .then((response: AxiosResponse<RegionData[]>) => {
+      .then((response: AxiosResponse<RegionData[] | string>) => {
+        // example - Soil moisture index 12,5km resolution HSAF ASCAT h121 over Europe ( layer_id: l25)
+        // we could find it in geostory "Drought at high resolution in Europe" (geostory_id: g5)
+
+        if (typeof response.data === 'string') {
+          return JSON.parse(response.data.replace(/\bNaN\b/g, 'null'));
+        }
         return response.data;
       })
-      .catch((error) => {
+      .catch((error: CanceledError<unknown> | AxiosError) => {
         console.error('Error fetching region data:', error);
       });
 

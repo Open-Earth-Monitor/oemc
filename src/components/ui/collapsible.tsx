@@ -3,7 +3,6 @@
 import { forwardRef, ElementRef, ComponentPropsWithoutRef } from 'react';
 
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible';
-import { HiChevronDown } from 'react-icons/hi2';
 
 import { cn } from 'lib/classnames';
 
@@ -20,16 +19,12 @@ const CollapsibleTrigger = forwardRef<
   <CollapsiblePrimitive.Trigger
     ref={ref}
     className={cn({
-      'group w-full min-w-[294px] rounded-sm bg-secondary-500 text-brand-500 hover:bg-secondary-600 data-[state=open]:rounded-b-none data-[state=active]:bg-secondary-500':
-        true,
+      'group flex w-full items-center justify-between rounded-sm  rounded-b-none px-4 py-2': true,
       [className]: !!className,
     })}
     {...props}
   >
-    <div className="flex w-full items-center justify-between px-4 py-2">
-      {children}
-      <HiChevronDown className="h-5 w-6 fill-current font-bold group-data-[state=open]:rotate-180" />
-    </div>
+    {children}
   </CollapsiblePrimitive.Trigger>
 ));
 

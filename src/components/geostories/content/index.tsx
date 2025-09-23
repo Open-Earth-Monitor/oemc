@@ -9,7 +9,6 @@ import { useParams } from 'next/navigation';
 import { PopoverClose } from '@radix-ui/react-popover';
 import { motion } from 'framer-motion';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { HiArrowLeft } from 'react-icons/hi';
 
 import { mobile, tablet } from '@/lib/media-queries';
 
@@ -65,7 +64,6 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
     () => layersData?.find(({ position }) => position === 'left'),
     [layersData]
   );
-
   useEffect(() => {
     if (geostoryLayers?.length && !layers) {
       void setLayers(
@@ -90,14 +88,14 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
     <>
       {/* Desktop and tablet */}
       {!isMobile && (
-        <div className="monitors absolute bottom-0 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:left-4 sm:top-[82px] sm:w-fit sm:border-0 sm:p-0">
+        <div className="monitors absolute bottom-0 left-0 top-0 z-[55] w-full border-secondary-900 bg-brand-500 p-1 sm:w-fit sm:border-0 sm:p-0">
           <motion.section
             initial={{ x: '-100%' }} // Start hidden and off-screen
             animate={{
               x: open ? 0 : '-100%', // Slide in and out
             }}
             transition={{ duration: 0.5, ease: 'easeInOut' }} // Smooth easing
-            className="absolute bottom-3 left-0 z-[55] w-full border-t border-secondary-900 bg-brand-500 p-1 sm:left-4 sm:w-fit sm:border-0 sm:p-0"
+            className="absolute bottom-0 left-0 top-0 z-[55] h-screen w-full border-secondary-900 bg-brand-500 p-1 sm:w-fit sm:border-0 sm:p-0"
           >
             {/* Desktop */}
             <div className="relative">
@@ -125,7 +123,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                   },
                 }}
                 transition={{ duration: 0.3 }}
-                className="bottom-3 left-4 top-auto w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block sm:h-[calc(100vh-24px-70px)]"
+                className="bottom-0 left-0 top-0 h-screen w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 sm:block"
               >
                 <motion.div
                   initial={{ opacity: 1, x: 0 }}
@@ -137,7 +135,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                     },
                   }}
                   transition={{ duration: 0.3 }}
-                  className="bottom-3 left-4 h-[calc(100vh-24px-70px)] w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block"
+                  className="bottom-0 left-0 top-0 h-screen w-fit max-w-fit rounded-none border-none bg-brand-500 px-0 py-0 lg:block"
                 >
                   <ScrollArea className="h-full p-7.5 md:w-[370px] lg:w-[526px]" type="auto">
                     <div className="space-y-6">
@@ -174,6 +172,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
                       )}
                       {geostoryData?.monitors?.map((monitor) => (
                         <Link
+                          key={monitor.id}
                           href={`/map/${monitor.id}/geostories`}
                           className="font-bold"
                           data-testid="back-to-monitor"
@@ -194,7 +193,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
       {isMobile && (
         <div className="absolute bottom-0 left-0 right-0 z-[700] h-[58px] bg-brand-500 px-1 py-2 sm:hidden">
           <Popover onOpenChange={onOpenChange} open={defaultOpen && open}>
-            <PopoverTrigger className="font-inter absolute bottom-1 h-12 w-1/2 bg-secondary-500 text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
+            <PopoverTrigger className="absolute bottom-1 h-12 w-1/2 bg-secondary-500 font-inter text-sm font-medium uppercase text-brand-500 hover:bg-secondary-900 hover:text-secondary-500 data-[state=open]:bg-secondary-900 data-[state=open]:text-secondary-500 sm:hidden">
               Geostory
             </PopoverTrigger>
             <PopoverContent

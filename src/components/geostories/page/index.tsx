@@ -2,14 +2,17 @@
 
 import { useEffect, useMemo } from 'react';
 
-import dynamic from 'next/dynamic';
-
 import { useGeostoryParsed, useGeostoryLayers } from '@/hooks/geostories';
 import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
 
-import Loading from '@/components/loading';
+import MobileExploreToolbar from '@/containers/explore/toolbar/mobile/toolbar';
+import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geostories-button';
 
-const Map = dynamic(() => import('@/components/map/geostory-map'), { ssr: false });
+import GeostoriesView from '@/components/geostories/view';
+import Loading from '@/components/loading';
+import CardHeader from '@/components/sidebar/card-header';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
 
 const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   const [layers, setLayers] = useSyncLayersSettings();
@@ -20,7 +23,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
 
   // Only show layers with position right
   const geostoryLayers = useMemo(
-    () => layersData?.filter(({ position }) => position === 'right'),
+    () => layersData?.filter(({ position }) => position === 'right' || !position),
     [layersData]
   );
   const comparisonLayer = useMemo(
@@ -41,27 +44,53 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
         { shallow: false }
       );
 
-      if (comparisonLayer && !compareLayers) {
+      if (comparisonLayer && compareLayers) {
         void setCompareLayers([{ id: comparisonLayer.layer_id, opacity: 1 }], { shallow: false });
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geostoryLayers, comparisonLayer]);
+  }, [geostoryLayers, comparisonLayer, compareLayers, layers, setCompareLayers, setLayers]);
 
   return (
     <>
-      {isGeostoryLoading && (
-        <div className="h-screen w-screen items-center justify-center py-24">
-          <Loading />
+      <div className="relative hidden md:block">
+        <Sidebar className="w-96 overflow-y-auto bg-black-400 px-9 py-12">
+          <ScrollArea>
+            <div className="font-satoshi">
+              <div className="sticky top-0 z-10 gap-2 bg-black-400 pb-4">
+                <BackToMonitorsAndGeostories />
+                {!isGeostoryLoading && <CardHeader type="geostory" {...geostoryData} />}
+              </div>
+              {isGeostoryLoading ? (
+                <Loading />
+              ) : (
+                <GeostoriesView
+                  data={geostoryData}
+                  geostoryLayers={geostoryLayers}
+                  comparisonLayer={comparisonLayer}
+                />
+              )}
+            </div>
+          </ScrollArea>
+        </Sidebar>
+        <div className="w-full">
+          <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
+            {/* Map + Trigger */}
+
+            <SidebarTrigger />
+          </div>
         </div>
-      )}
-      {geostoryData && !isGeostoryLoading && (
-        <Map
-          geostoryData={geostoryData}
-          layerData={geostoryLayers?.[0]}
-          compareLayerData={comparisonLayer}
-        />
-      )}
+      </div>
+      <MobileExploreToolbar>
+        {isGeostoryLoading ? (
+          <Loading />
+        ) : (
+          <GeostoriesView
+            data={geostoryData}
+            geostoryLayers={geostoryLayers}
+            comparisonLayer={comparisonLayer}
+          />
+        )}
+      </MobileExploreToolbar>
     </>
   );
 };

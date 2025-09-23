@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-
 import { Extent } from 'ol/extent';
+
 import { APIOpenStreetMapLocation } from 'services/api';
 
 export type Location = {

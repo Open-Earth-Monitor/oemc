@@ -5,6 +5,7 @@ import type { GeostoryParsed } from '@/types/geostories';
 import { THEMES_COLORS } from '@/constants/themes';
 
 import GeostoryDialog from '@/components/geostories/dialog';
+
 import { TAG_STYLE } from '@/styles/constants';
 
 const GeostoryHeader: FC<GeostoryParsed> = (data) => (

@@ -1,3 +1,5 @@
+import cn from '@/lib/classnames';
+
 import {
   Dialog,
   DialogTrigger,
@@ -7,9 +9,6 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 
-import cn from '@/lib/classnames';
-
-import WebTrafficContent from './content';
 import WebTrafficMobileContent from './mobile-content';
 
 const WebTraffic = ({
@@ -59,7 +58,6 @@ const WebTraffic = ({
             </div>
           </DialogTitle>
         </DialogHeader>
-        <WebTrafficContent />
         {isMobile && <WebTrafficMobileContent />}
       </DialogContent>
     </Dialog>

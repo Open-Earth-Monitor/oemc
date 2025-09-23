@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 import type { Geostory } from '@/types/geostories';
 import type { Monitor } from '@/types/monitors';
 import type { MonitorsAndGeostoriesPaginated } from '@/types/monitors-and-geostories';
+
 import { MONITOR_GEOSTORIES } from './data/monitor-geostories';
 
 test.beforeEach(async ({ page }) => {
@@ -10,7 +11,9 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.only('geostories and monitors display', async ({ page }) => {
-  const API_URL_REGEX = new RegExp(`${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/*`);
+  const API_URL_REGEX = new RegExp(
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/*?page_size=8`
+  );
 
   await page.route(API_URL_REGEX, async (route) => {
     await route.fulfill({ json: MONITOR_GEOSTORIES });
@@ -19,13 +22,10 @@ test.only('geostories and monitors display', async ({ page }) => {
   const datasetsResponse = await page.waitForResponse(API_URL_REGEX);
 
   const datasetsData = (await datasetsResponse.json()) as MonitorsAndGeostoriesPaginated;
-  const pageLength = datasetsData['results']?.length;
 
   const datasetCard = page.getByTestId('datasets-list').locator('li');
-  const maxResultShown = pageLength;
   const datasetCardCount = await datasetCard.count();
-
-  expect(datasetCardCount).toBe(maxResultShown);
+  expect(datasetCardCount).toBe(8);
 
   const dataLength = datasetsData.count;
   const resultNumber = page.getByTestId('result-number');
@@ -91,7 +91,7 @@ test.describe('monitors and geostories display', () => {
     await geostoriesCheckbox.click();
 
     const geostoriesResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/?type=geostories*`
+      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/*?type=geostories*`
     );
 
     const geostoriesData = (await geostoriesResponse.json()) as MonitorsAndGeostoriesPaginated;

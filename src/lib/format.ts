@@ -1,3 +1,5 @@
+import { BBox } from 'ol/render/canvas/Executor';
+
 export const formatDate = (date: string, time: boolean) => {
   const d = new Date(date);
 
@@ -12,12 +14,7 @@ export const formatDate = (date: string, time: boolean) => {
   return time ? `${formattedDate} ${d.toLocaleTimeString('en-US')}` : formattedDate;
 };
 
-export function metersToDegrees(
-  lat: number,
-  lon: number,
-  deltaMetersLat: number,
-  deltaMetersLon: number
-) {
+export function metersToDegrees(lat, lon, deltaMetersLat, deltaMetersLon) {
   const metersPerDegreeLat = 111320; // Approximate meters per degree of latitude
   const metersPerDegreeLon = 111320 * Math.cos(lat * (Math.PI / 180)); // Meters per degree of longitude at a given latitude
 
@@ -30,18 +27,17 @@ export function metersToDegrees(
   return { lat: newLat, lon: newLon };
 }
 
-export function transformToBBoxArray(str: string): [number, number, number, number] | false {
+export function transformToBBoxArray(str) {
   const MIN_X = -20026376.39;
   const MAX_X = 20026376.39;
   const MIN_Y = -20048966.1;
   const MAX_Y = 20048966.1;
 
   try {
-    // Convert the string to an array of numbers
     const bboxArray = str
       .split(',')
-      .map((item) => item.trim()) // Trim extra spaces
-      .map(Number); // Convert to numbers
+      .map((item) => item.trim())
+      .map(Number) satisfies BBox;
 
     // Check if all items are valid numbers and we have exactly 4 numbers
     if (bboxArray.length === 4 && bboxArray.every((num) => !isNaN(num))) {
@@ -53,12 +49,12 @@ export function transformToBBoxArray(str: string): [number, number, number, numb
       const isCorrectOrder = xMin < xMax && yMin < yMax; // Make sure the bbox is valid
 
       if (isValidX && isValidY && isCorrectOrder) {
-        return bboxArray as [number, number, number, number]; // Valid bbox
+        return bboxArray;
       }
     }
-    return false; // Return false if it's not a valid bbox
+    return false;
   } catch (error) {
-    return false; // Return false if any error occurs
+    return false;
   }
 }
 

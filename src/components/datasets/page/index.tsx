@@ -1,55 +1,21 @@
 'use client';
 
-import { useEffect } from 'react';
+import type { NextPage } from 'next';
 
-import { redirect } from 'next/navigation';
+import DesktopExploreToolbar from '@/containers/explore/toolbar/desktop';
+import MobileExploreNavbar from '@/containers/explore/toolbar/mobile/nav-bar';
 
-import { useMonitorLayers } from '@/hooks/monitors';
-import { useSyncLayersSettings } from '@/hooks/sync-query';
-
-import DatasetCard from '@/components/datasets/card';
-import Loading from '@/components/loading';
-
-const DatasetPageComponent: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
-  const { data, error, isLoading, isError } = useMonitorLayers({ monitor_id });
-  const [layers, setLayers] = useSyncLayersSettings();
-
-  // Only at beginning set the first layer
-  useEffect(() => {
-    if (data?.length && !layers) {
-      void setLayers(
-        [
-          {
-            id: data[0].layer_id,
-            opacity: 1,
-            date: data[0].range?.[0]?.value,
-          },
-        ],
-        // Required to load layer on navigation
-        { shallow: false }
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
-
-  if (error?.code === '400') return redirect('/not-found');
-
+const MapSidebarPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   return (
-    <div>
-      {isLoading && <Loading />}
-      {!!data?.length && !isError && (
-        <ul className="space-y-4 sm:space-y-6" data-testid="datasets-list">
-          {data.map((dataset) => {
-            return (
-              <li key={dataset.layer_id}>
-                <DatasetCard {...dataset} id={dataset.layer_id} isGeostory={false} />
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </div>
+    <>
+      <div className="hidden md:block">
+        <DesktopExploreToolbar />
+      </div>
+      <div className="block md:hidden">
+        <MobileExploreNavbar />
+      </div>
+    </>
   );
 };
 
-export default DatasetPageComponent;
+export default MapSidebarPage;

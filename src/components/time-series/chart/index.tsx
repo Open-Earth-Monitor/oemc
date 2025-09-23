@@ -84,7 +84,7 @@ const Chart: FC<{
                 height={22}
                 width={isEdge && !isSelectedYear ? 2 : 1}
                 className={cn({
-                  'w-[1px] cursor-pointer fill-current text-brand-50 hover:bg-white hover:fill-white hover:text-white':
+                  'hover:bg-white hover:fill-white hover:text-white w-[1px] cursor-pointer fill-current text-brand-50':
                     true,
                   'w-[2px]': isEdge && !isSelectedYear,
                   'text-white': isEdge,

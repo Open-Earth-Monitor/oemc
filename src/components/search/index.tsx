@@ -15,11 +15,11 @@ const Search: FC<SearchProps> = ({
   ...rest
 }: SearchProps) => {
   const { placeholder } = rest;
-  const ref = useRef<HTMLInputElement>();
+  const ref = useRef<HTMLInputElement>(null);
 
   return (
     <div
-      className={cn('relative flex h-14 w-full outline-none focus:border-red-400', {
+      className={cn('relative flex h-14 w-full outline-none', {
         [className]: !!className,
       })}
       aria-label="search"
@@ -43,7 +43,7 @@ const Search: FC<SearchProps> = ({
         onChange={(e) => setValue(e.target.value)}
         value={value}
         data-testid="search-input"
-        className="flex-1 truncate border-none bg-transparent px-10 font-inter leading-4 text-secondary-700 placeholder-secondary-700 outline-none focus:border-secondary-500"
+        className="flex-1 truncate border-0 border-b-secondary-500 bg-transparent px-10 font-inter leading-4 text-secondary-700 placeholder-secondary-700 outline-none ring-0 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
       />
       {value !== '' && (
         <button

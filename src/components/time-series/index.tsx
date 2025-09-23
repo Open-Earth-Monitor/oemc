@@ -1,10 +1,12 @@
-import { FC } from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 
 import { usePathname, useRouter } from 'next/navigation';
 
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
+import { useAtom } from 'jotai';
 import { HiPlay, HiPause } from 'react-icons/hi2';
+
+import { timeSeriesPlaybackAtom } from '@/app/store';
 
 import BarChart from './chart';
 import type { TimeSeriesTypes } from './types';
@@ -12,15 +14,12 @@ import type { TimeSeriesTypes } from './types';
 const timeStepDuration = 1500;
 export const TimeSeries: FC<TimeSeriesTypes> = ({ range, layerId }: TimeSeriesTypes) => {
   const [yearIndex, setYearIndex] = useState(0);
-  const [isPlaying, setPlaying] = useState(false);
+  const [isPlaying, setPlaying] = useAtom(timeSeriesPlaybackAtom);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     let interval: number | ReturnType<typeof setTimeout>;
-
-    if (!isPlaying) {
-    }
 
     if (isPlaying) {
       interval = setInterval(() => {

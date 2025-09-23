@@ -1,9 +1,10 @@
 import { useQuery, useQueries, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { sortBy } from 'lodash';
-import API from 'services/api';
 
 import { THEMES_COLORS, DEFAULT_COLOR } from '@/constants/themes';
+
+import API from 'services/api';
 
 type TrackingType = 'geostory_id' | 'monitor_id' | 'layer_id';
 
@@ -57,9 +58,7 @@ export function useGetWebTraffic(
       const topGeostoryIds =
         webTrafficQuery.data.geostories.map(({ geostory_id }) => geostory_id) || [];
       // Filter geostories by the top 5 most visited IDs and return their titles
-      return allGeostories
-        .filter((geostory) => topGeostoryIds.includes(geostory.id))
-        .map((geostory) => geostory.title);
+      return allGeostories.filter((geostory) => topGeostoryIds.includes(geostory.id));
     },
     ...queryOptions,
   });
@@ -79,15 +78,23 @@ export function useGetWebTraffic(
         enabled: !!monitor_id, // Only enable if monitor_id exists
       })) || [],
   });
-
   const isLoadingMonitors =
     webTrafficQuery.isLoading || monitorsQueries.some((query) => query.isLoading);
 
   const isLoadingGeostories = webTrafficQuery.isLoading || allGeostoriesQuery.isLoading;
 
-  const geostoriesInfo = allGeostoriesQuery.data;
+  const geostoriesInfo = allGeostoriesQuery?.data?.map((query) => {
+    return {
+      monitor_id: query.id,
+      theme: query.theme,
+      title: query.title,
+      color: THEMES_COLORS[query?.theme]?.base || DEFAULT_COLOR,
+    };
+  });
+
   const monitorsInfo = monitorsQueries.map((query) => {
     return {
+      monitor_id: query.data?.[0]?.id,
       theme: query.data?.[0]?.theme,
       title: query.data?.[0]?.title,
       color: THEMES_COLORS[query?.data?.[0]?.theme]?.base || DEFAULT_COLOR,
@@ -102,7 +109,7 @@ export function useGetWebTraffic(
   };
 }
 
-export function usePostWebTraffic(data: TrackingData, queryOptions?: UseQueryOptions) {
+export function postWebTraffic(data: TrackingData) {
   return API.request({
     method: 'POST',
     url: '/usage-stats',

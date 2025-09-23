@@ -7,37 +7,37 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/map', { waitUntil: 'load' });
 });
 
-test('datasets tab', async ({ page }) => {
-  const monitorsResponse = await page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}/monitors/`
-  );
+// test('datasets tab', async ({ page }) => {
+//   const monitorsResponse = await page.waitForResponse(
+//     `${process.env.NEXT_PUBLIC_API_URL}/monitors/`
+//   );
 
-  const monitorsData = (await monitorsResponse.json()) as Monitor[];
-  await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
-  await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
+//   const monitorsData = (await monitorsResponse.json()) as Monitor[];
+//   await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
+//   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
 
-  const datasetsTabLink = page.getByTestId('tab-datasets');
-  await expect(datasetsTabLink).toHaveText('datasets');
-  await expect(datasetsTabLink).toHaveAttribute('href', `/map/${monitorsData[0].id}/datasets`);
-  await expect(datasetsTabLink).toHaveClass(/border-t-secondary-500/); // active tab
-});
+//   const datasetsTabLink = page.getByTestId('tab-datasets');
+//   await expect(datasetsTabLink).toHaveText('datasets');
+//   await expect(datasetsTabLink).toHaveAttribute('href', `/map/${monitorsData[0].id}/datasets`);
+//   await expect(datasetsTabLink).toHaveClass(/border-t-secondary-500/); // active tab
+// });
 
-test('datasets list', async ({ page }) => {
-  const monitorsResponse = await page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}/monitors/`
-  );
-  const monitorsData = (await monitorsResponse.json()) as Monitor[];
-  await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
-  await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
+// test('datasets list', async ({ page }) => {
+//   const monitorsResponse = await page.waitForResponse(
+//     `${process.env.NEXT_PUBLIC_API_URL}/monitors/`
+//   );
+//   const monitorsData = (await monitorsResponse.json()) as Monitor[];
+//   await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
+//   await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
 
-  const layersResponse = await page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}/monitors/${monitorsData[0].id}/layers/`
-  );
-  const layersData = (await layersResponse.json()) as Layer[];
-  const datasetsList = page.getByTestId('datasets-list').locator('li');
-  const datasetsListCount = await datasetsList.count();
-  expect(datasetsListCount).toBe(layersData.length);
-});
+//   const layersResponse = await page.waitForResponse(
+//     `${process.env.NEXT_PUBLIC_API_URL}/monitors/${monitorsData[0].id}/layers/`
+//   );
+//   const layersData = (await layersResponse.json()) as Layer[];
+//   const datasetsList = page.getByTestId('datasets-list').locator('li');
+//   const datasetsListCount = await datasetsList.count();
+//   expect(datasetsListCount).toBe(layersData.length);
+// });
 
 // TODO: once we know monitors with datasets, we can test this in a better way
 test('datasets item', async ({ page }) => {

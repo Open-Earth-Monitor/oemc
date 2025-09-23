@@ -1,191 +1,203 @@
-import React, { useCallback } from 'react';
-import { Group } from '@visx/group';
-import { Line, LinePath } from '@visx/shape';
-import { scaleLinear, scaleTime } from '@visx/scale';
-import { AxisLeft, AxisBottom } from '@visx/axis';
-import { useTooltip } from '@visx/tooltip';
-import { localPoint } from '@visx/event';
-import ChartTooltip from './tooltip';
-import { DataPoint, LineChartProps, TooltipData } from './types';
+import { useMemo } from 'react';
+
+import { Label } from '@visx/annotation';
+import { ParentSize } from '@visx/responsive';
+import { Line } from '@visx/shape';
+import { useTooltipInPortal } from '@visx/tooltip';
 import {
-  bisectDate,
-  COMPARE_DATA_COLOR,
-  DATA_COLOR,
-  formatDate,
-  getDate,
-  height,
-  margin,
-  tickProps,
-  width,
-} from './utils';
-import ChartLegend from './legend';
+  AnimatedAxis,
+  AnimatedGrid,
+  AnimatedLineSeries,
+  XYChart,
+  Tooltip,
+  buildChartTheme,
+} from '@visx/xychart';
+import { format } from 'd3-format';
 
-const LineChart: React.FC<LineChartProps> = ({ data: chartData, dataCompare }) => {
-  const compare = dataCompare?.data || [];
-  const data = chartData?.data || [];
-  const x = (d: DataPoint) => new Date(d.x).valueOf();
-  const y = (d: DataPoint) => d.y;
+const numberFormat = format(',.2f');
 
-  // Calculate scales
-  const xMin = Math.min(...data.map(x), ...compare.map(x));
-  const xMax = Math.max(...data.map(x), ...compare.map(x));
-  const yMin = Math.min(...data.map(y), ...compare.map(y));
-  const yMax = Math.max(...data.map(y), ...compare.map(y));
+function formatDate(value: unknown): string {
+  const date = new Date(value as string);
+  if (!isNaN(date.getTime())) {
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).format(date); // e.g., "01 May 2019"
+  }
 
-  const xScale = scaleTime({
-    range: [0, width - margin.left - margin.right],
-    domain: [xMin, xMax],
+  return String(value);
+}
+
+export const LineChart = ({
+  data,
+  dataCompare,
+  color,
+}: {
+  data: { title?: string; data: { x: string | number | Date; y: number; unit: string }[] };
+  dataCompare?: { title?: string; data: { x: string | number | Date; y: number; unit: string }[] };
+  color: string;
+}) => {
+  const { TooltipInPortal, containerRef } = useTooltipInPortal({
+    scroll: true,
+    detectBounds: true,
   });
-
-  const yScale = scaleLinear({
-    range: [height - margin.top - margin.bottom, 0],
-    domain: [yMin, yMax],
+  const theme = buildChartTheme({
+    backgroundColor: 'transparent',
+    gridColor: '#9CA3AF',
+    gridColorDark: '#9CA3AF',
+    colors: [color, '#ffffe6'],
+    tickLength: 5,
   });
+  const xSample = data?.data?.[0]?.x;
+  const isDate = !isNaN(Date.parse(String(xSample)));
+  const isNumber = typeof xSample === 'number';
 
-  const { showTooltip, hideTooltip, tooltipData, tooltipLeft, tooltipTop, tooltipOpen } =
-    useTooltip<TooltipData>();
+  const xScaleType = isDate ? 'time' : isNumber ? 'linear' : 'point';
 
-  const getTooltipData = (data: DataPoint[], x: number) => {
-    const x0 = xScale.invert(x - margin.left);
-    const index = bisectDate(data, x0, 1);
-    const d0 = data[index - 1];
-    const d1 = data[index];
-    let d = d0;
-    if (d1 && getDate(d1)) {
-      d = x0.valueOf() - getDate(d0).valueOf() > getDate(d1).valueOf() - x0.valueOf() ? d1 : d0;
-    }
-    return d;
+  const accessors = {
+    xAccessor: isDate ? (d: any) => new Date(d.x) : (d: any) => d.x,
+    yAccessor: (d: any) => d.y,
   };
 
-  const handleMouseMove = useCallback(
-    (event: React.TouchEvent<SVGGElement> | React.MouseEvent<SVGGElement, MouseEvent>) => {
-      const { x } = localPoint(event) || { x: 0 };
-      const tooltipData = getTooltipData(data, x);
-      const tooltipDataCompare = getTooltipData(compare, x);
-
-      showTooltip({
-        tooltipData: {
-          ...tooltipData,
-          ...(!!compare.length && {
-            compare: { ...tooltipDataCompare, tooltipTop: yScale(tooltipDataCompare?.y) },
-          }),
-        },
-        tooltipLeft: x - margin.left,
-        tooltipTop: yScale(tooltipData?.y),
-      });
-    },
-    [showTooltip, yScale, xScale]
+  const allY = useMemo(
+    () => [
+      ...data.data.map(accessors.yAccessor),
+      ...(dataCompare?.data ?? []).map(accessors.yAccessor),
+    ],
+    [data, dataCompare, accessors.yAccessor]
   );
-
-  const handleMouseLeave = () => {
-    hideTooltip();
-  };
-
+  const yMin = useMemo(() => Math.min(...allY), [allY]);
+  const yMax = useMemo(() => Math.max(...allY), [allY]);
+  const unit = data.data[0]?.unit || '';
   return (
-    <div>
-      <svg width={width} height={height}>
-        <Group width={width} left={margin.left} top={margin.top}>
-          {/* Y Axis */}
-          <AxisLeft tickValues={[yMin, yMax]} scale={yScale} {...tickProps} />
-
-          {/* X Axis */}
-          <AxisBottom
-            tickValues={[xMin, xMax]}
-            scale={xScale}
-            tickFormat={(value: number) => formatDate(value)}
-            top={height - margin.top - margin.bottom}
-            {...tickProps}
-            tickLabelProps={(a, i) => {
-              return {
-                ...tickProps.tickLabelProps,
-                textAnchor: i === 0 ? 'start' : 'end',
-              };
-            }}
-          />
-
-          <Group width={width} left={0} top={0}>
-            {/* Line */}
-            <LinePath
-              data={data}
-              x={(d) => xScale(x(d))}
-              y={(d) => yScale(y(d))}
-              stroke={DATA_COLOR}
-              strokeWidth={2}
+    <div ref={containerRef} className="relative h-72 w-full text-white-500">
+      <ParentSize>
+        {({ width, height }) => (
+          <XYChart
+            theme={theme}
+            width={width}
+            height={height}
+            xScale={{ type: xScaleType }}
+            yScale={{ type: 'linear', domain: [yMin, yMax] }}
+            margin={{ top: 30, right: 20, bottom: 80, left: 60 }}
+          >
+            <Label
+              x={90}
+              y={30}
+              title={unit}
+              titleFontSize={12}
+              fontColor="#dfdfdf"
+              backgroundFill="transparent"
+            />
+            <AnimatedAxis
+              orientation="bottom"
+              tickLabelProps={() => ({
+                angle: -45,
+                textAnchor: 'end',
+                dx: '-0.5em',
+                dy: '0',
+                fontSize: 12,
+                fill: '#dfdfdf',
+              })}
+            />
+            <AnimatedAxis
+              orientation="left"
+              tickLabelProps={() => ({
+                dx: '-0.25em',
+                dy: '0.25em',
+                fontSize: 12,
+                fill: '#dfdfdf',
+                textAnchor: 'end',
+              })}
             />
 
-            {/* Compare Line */}
-            {!!compare?.length && (
-              <LinePath
-                data={compare}
-                x={(d) => xScale(x(d))}
-                y={(d) => yScale(y(d))}
-                stroke={COMPARE_DATA_COLOR}
-                strokeWidth={2}
+            <AnimatedGrid columns={false} numTicks={5} stroke="#13273c" strokeWidth={0.5} />
+
+            <AnimatedLineSeries
+              dataKey={data?.title}
+              data={data.data}
+              xAccessor={accessors.xAccessor}
+              yAccessor={accessors.yAccessor}
+              colorAccessor={() => color}
+            />
+            {dataCompare && (
+              <AnimatedLineSeries
+                dataKey={dataCompare.title}
+                data={dataCompare.data}
+                xAccessor={accessors.xAccessor}
+                yAccessor={accessors.yAccessor}
+                colorAccessor={() => '#ffffe6'}
               />
             )}
-          </Group>
 
-          {/* Transparent rectangle for mouse events */}
-          <rect
-            x={0}
-            y={0}
-            width={width - margin.left - margin.right}
-            height={height - margin.top - margin.bottom}
-            fill="transparent"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-          />
+            <Tooltip
+              showVerticalCrosshair
+              snapTooltipToDatumX
+              snapTooltipToDatumY
+              showSeriesGlyphs
+              detectBounds
+              renderTooltip={({ tooltipData, tooltipTop = 0, tooltipLeft = 0 }) => {
+                const nearest = tooltipData?.nearestDatum;
+                if (!nearest) return null;
+                const d = nearest.datum;
 
-          {/* Tooltip vertical line */}
-          {tooltipOpen && (
-            <g>
-              <Line
-                from={{ x: tooltipLeft, y: 0 }}
-                to={{ x: tooltipLeft, y: height - margin.top - margin.bottom }}
-                stroke="#2E3333"
-                strokeWidth={2}
-                pointerEvents="none"
-              />
+                const info = tooltipData.datumByKey[data?.title];
+                const compareInfo = tooltipData.datumByKey[dataCompare?.title];
 
-              <circle
-                cx={tooltipLeft}
-                cy={tooltipTop}
-                r={4}
-                fill={DATA_COLOR}
-                stroke="white"
-                strokeWidth={2}
-                pointerEvents="none"
-              />
-              {!!compare.length && (
-                <circle
-                  cx={tooltipLeft}
-                  cy={tooltipData.compare.tooltipTop}
-                  r={4}
-                  fill={COMPARE_DATA_COLOR}
-                  stroke="white"
-                  strokeWidth={2}
-                  pointerEvents="none"
-                />
-              )}
-            </g>
-          )}
-        </Group>
-      </svg>
-
-      {/* Tooltip */}
-      {tooltipOpen && (
-        <ChartTooltip
-          tooltipData={tooltipData}
-          tooltipLeft={tooltipLeft}
-          tooltipTop={tooltipTop}
-          dataTitle={chartData?.title}
-          dataCompareTitle={dataCompare?.title}
-        />
-      )}
-
-      {chartData?.title && dataCompare?.title && (
-        <ChartLegend title={chartData.title} compareTitle={dataCompare.title} />
-      )}
+                return (
+                  <>
+                    {tooltipData?.nearestDatum && (
+                      <Line
+                        from={{ x: tooltipLeft, y: 0 }}
+                        to={{ x: tooltipLeft, y: height }}
+                        stroke="red"
+                        strokeWidth={1}
+                        pointerEvents="none"
+                      />
+                    )}
+                    <TooltipInPortal
+                      top={tooltipTop}
+                      left={tooltipLeft}
+                      style={{
+                        position: 'absolute',
+                        background: '#13273c',
+                        padding: '0.5rem',
+                        boxShadow: '0 0 4px rgba(0,0,0,0.3)',
+                        zIndex: 9999,
+                        pointerEvents: 'none',
+                        color: '#dfdfdf',
+                        fontSize: '0.875rem',
+                      }}
+                    >
+                      <div>
+                        <span>{formatDate(accessors.xAccessor(d))}</span>
+                        <span>{unit && ` (${unit})`}</span>
+                      </div>
+                      {!dataCompare && (
+                        <div>
+                          {numberFormat(accessors.yAccessor(d))} {unit}
+                        </div>
+                      )}
+                      {dataCompare && (
+                        <div>
+                          <div>
+                            {info.key} - {numberFormat((info.datum as { y: number }).y)}
+                          </div>
+                          <div>
+                            {compareInfo.key} -{' '}
+                            {numberFormat((compareInfo.datum as { y: number }).y)}
+                          </div>
+                        </div>
+                      )}
+                    </TooltipInPortal>
+                  </>
+                );
+              }}
+            />
+          </XYChart>
+        )}
+      </ParentSize>
     </div>
   );
 };

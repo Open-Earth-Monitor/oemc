@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
-import Link from 'next/link';
 import { motion, AnimatePresence, useAnimationControls } from 'framer-motion';
 import { HiOutlineChevronUp } from 'react-icons/hi';
 
 import { cn } from '@/lib/classnames';
 
 import { MonitorParsed } from '@/types/monitors';
-import { usePostWebTraffic } from '@/hooks/web-traffic';
+
+import { postWebTraffic } from '@/hooks/web-traffic';
 
 export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: MonitorParsed) => {
   const [borderColor, setBorderColor] = useState<string | null>(null);
@@ -26,7 +26,7 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
   };
 
   const handleClick = (id) => {
-    usePostWebTraffic({
+    postWebTraffic({
       geostory_id: id,
     });
     console.info('WT3 -', 'geostories', id);
@@ -75,8 +75,8 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
           >
             {geostories.map(({ id: geostoryId, title, geostory_bbox }) => {
               const href = geostory_bbox
-                ? `/map/geostories/${geostoryId}?bbox=${geostory_bbox}`
-                : `/map/geostories/${geostoryId}`;
+                ? `/explore/geostory/${geostoryId}?bbox=${geostory_bbox}`
+                : `/explore/geostory/${geostoryId}`;
               return (
                 <motion.li
                   key={`monitor-geostory-${geostoryId}`}
