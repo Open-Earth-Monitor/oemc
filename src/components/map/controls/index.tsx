@@ -61,7 +61,6 @@ export const Controls: FC<ControlsProps> = ({
     },
     [setLocationSearch]
   );
-
   const {
     data: locationData = [],
     isLoading: isLoadingLocationData = false,

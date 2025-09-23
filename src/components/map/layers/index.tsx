@@ -1,20 +1,17 @@
 'use client';
 
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useParams, usePathname } from 'next/navigation';
 
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import type { MapBrowserEvent } from 'ol';
 import ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
-import { toLonLat } from 'ol/proj';
 import { Size } from 'ol/size';
 import TileWMS from 'ol/source/TileWMS';
-import { RLayerTile, RLayerWMS, RMap } from 'rlayers';
+import { RLayerTile, RLayerWMS } from 'rlayers';
 
-import { getHistogramData } from '@/lib/utils';
 import { fetchFeatureInfo, getFeatureInfoUrl, firstPropertyValue } from '@/lib/wms';
 
 import {
@@ -44,22 +41,15 @@ import {
 import { LABELS } from '@/components/map/controls/basemaps/constants';
 import type { CustomMapProps, MonitorTooltipInfo } from '@/components/map/types';
 
-import Attributions from './attributions';
-import BasemapLayer from './basemap';
+import BasemapLayer from '../basemap';
 import {
   DEFAULT_VIEWPORT,
   InitialViewport,
   TOOLTIP_INITIAL_STATE,
   WMS_INFO_FORMAT,
   WMS_CRS,
-  NUTS_INITIAL_STATE,
-} from './constants';
-// map controls
-import Controls from './controls';
-import Legend from './legend';
-import MapTooltip from './tooltip';
-import { Nut } from 'lucide-react';
-import NutsLayer from './layers/nuts';
+} from '../constants';
+import NutsLayer from './nuts';
 
 function buildWmsSource(url: string, layerName: string) {
   return new TileWMS({
@@ -70,27 +60,17 @@ function buildWmsSource(url: string, layerName: string) {
   });
 }
 
-const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
+const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const [isCompareMode, setIsCompareMode] = useAtom(compareFunctionalityAtom);
-  const [position] = useSyncSwipeControlPosition();
-  const [tooltipSide, setTooltipSide] = useState<'left' | 'right'>('left');
 
   const isRegionsLayerActive = useAtomValue(regionsLayerVisibilityAtom);
-
-  const setNutsDataParams = useSetAtom(nutsDataParamsAtom);
-  const setNutsDataParamsCompare = useSetAtom(nutsDataParamsCompareAtom);
 
   const setNutsDataResponse = useSetAtom(nutsDataResponseAtom);
   const setCompareNutsProperties = useSetAtom(nutsDataResponseCompareAtom);
 
-  const setPlaying = useSetAtom(timeSeriesPlaybackAtom);
-
   const [activeLabels] = useSyncBasemapLabelsSettings();
   const [basemap] = useSyncBasemapSettings();
   const [bbox, setBbox] = useSyncBboxSettings();
-
-  const setCoordinate = useSetAtom(coordinateAtom);
-  const setLonLat = useSetAtom(lonLatAtom);
 
   // URL info
   const params = useParams();
@@ -124,7 +104,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const isComparativeGeostory = useMemo(() => {
     if (isFetchedGeostory && !isLoadingGeostory) {
-      return geostoryData.layers?.length === 2 && layerPositionLeft && layerPositionRight;
+      return geostoryData.layers?.length === 2 && !!layerPositionLeft && !!layerPositionRight;
     }
   }, [geostoryData, isFetchedGeostory, isLoadingGeostory, layerPositionLeft, layerPositionRight]);
 
@@ -143,7 +123,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       select: (layers) => layers.filter((l) => l.position === 'right')[0] ?? undefined,
     }
   );
-
   const dataMeta = useMemo(() => {
     if (type === 'monitor') return monitorData;
     if (type === 'geostory') return geostoryData;
@@ -165,6 +144,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const layerLeftRef = useRef(null);
   const layerRightRef = useRef(null);
+  const nutsLayer = useRef(null);
 
   const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TOOLTIP_INITIAL_STATE);
 
@@ -191,19 +171,14 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     () => predefinedBbox || bbox || initialViewState.bbox,
     [bbox, predefinedBbox, initialViewState.bbox]
   );
-  const initialViewport = {
-    zoom: initialViewState.zoom,
-    center: initialViewState.center,
-    bbox: dataBbox,
-  } satisfies InitialViewport;
 
-  const { data: layerFromURL, isLoading } = useLayerParsedSource(
+  const { data: layerFromURL, isLoading: isLoadingLayerFromURL } = useLayerParsedSource(
     { layer_id: layerId },
     { enabled: !!layerId }
   );
 
   const layerData = useMemo(() => {
-    if (layerFromURL && !isLoading) return layerFromURL;
+    if (layerFromURL && !isLoadingLayerFromURL) return layerFromURL;
     if (type === 'monitor' && !isLoadingMonitorLayer) return monitorLayer;
     if (type === 'geostory' && !isLoadingGeostoryLayer) return geostoryLayer;
     return undefined;
@@ -212,7 +187,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     monitorLayer,
     geostoryLayer,
     type,
-    isLoading,
+    isLoadingLayerFromURL,
     isLoadingMonitorLayer,
     isLoadingGeostoryLayer,
   ]);
@@ -250,88 +225,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     });
   }, []);
 
-  const handleMapMove = useCallback(() => {
-    if (!mapRef.current) return;
-    const map = mapRef.current.ol;
-    const mapSize = map.getSize();
-    if (!mapSize) return;
-    const nextBbox = map.getView().calculateExtent(mapSize);
-    setBbox(nextBbox);
-  }, [setBbox]);
-
-  const handleMapDrag = useCallback(() => {
-    if (!mapRef.current) return;
-    if (!tooltipInfo.coordinate) return;
-    const map = mapRef.current.ol;
-    const updatedPixel = map.getPixelFromCoordinate(tooltipInfo.coordinate);
-    setTooltipInfo((prev) => ({ ...prev, position: updatedPixel }));
-  }, [tooltipInfo.coordinate]);
-
-  const handleSingleClick = useCallback(
-    (e: MapBrowserEvent<UIEvent>): void => {
-      const lonlat = toLonLat(e.coordinate);
-      setPlaying(false);
-      setLonLat(lonlat);
-      setCoordinate(e.coordinate);
-
-      const swipePixelX = position.x * e.map.getSize()?.[0];
-      const side = e.pixel[0] < swipePixelX ? 'left' : 'right';
-      setTooltipSide(side);
-      setTooltipInfo((prev) => ({
-        ...prev,
-        leftData: { ...prev.leftData, value: null },
-        coordinate: e.coordinate,
-        position: [e.pixel[0], e.pixel[1]],
-      }));
-
-      void (async () => {
-        try {
-          const resolution = e.map.getView()?.getResolution();
-
-          if (!isRegionsLayerActive) {
-            setNutsDataParams(NUTS_INITIAL_STATE);
-            setNutsDataParamsCompare(NUTS_INITIAL_STATE);
-            return;
-          }
-
-          const res = await getHistogramData(wmsNutsSource, e.coordinate, resolution, layerId);
-          if (isCompareMode) {
-            const res = await getHistogramData(
-              wmsNutsSource,
-              e.coordinate,
-              resolution,
-              compareLayerId
-            );
-            const next = res?.nutsDataParams ?? NUTS_INITIAL_STATE;
-            setNutsDataParamsCompare({ ...next });
-          } else {
-            setNutsDataParams(res.nutsDataParams ?? NUTS_INITIAL_STATE);
-            setNutsDataParamsCompare(NUTS_INITIAL_STATE);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      })();
-    },
-    [
-      isRegionsLayerActive,
-      isCompareMode,
-      wmsNutsSource,
-      layerId,
-      setNutsDataParams,
-      setNutsDataParamsCompare,
-      setLonLat,
-      setCoordinate,
-      setTooltipInfo,
-      setPlaying,
-    ]
-  );
-
-  const handleCloseTooltip = useCallback(() => {
-    setTooltipInfo((prev) => ({ ...prev, position: null }));
-    setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
-  }, [setNutsDataParamsCompare]);
-
   useEffect(() => {
     if (!dataBbox || !mapRef?.current) return;
     setBbox(dataBbox);
@@ -363,7 +256,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       ]);
       setBbox(geostoryData?.geostory_bbox || undefined);
     }
-  }, [layerId, geostoryData, isComparativeGeostory]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const resolution = mapRef.current?.ol.getView?.()?.getResolution?.();
 
@@ -474,97 +367,63 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     () => LABELS.find((label) => activeLabels === label.id)?.url,
     [activeLabels]
   );
-  console.log(!isLoading && isLayerActive && !!gs_name);
+  console.log('********map', layerLeftRef, layerRightRef, isComparativeGeostory);
   return (
-    <div className="relative h-full w-full">
-      <RMap
-        ref={mapRef as unknown as React.RefObject<any>}
-        projection="EPSG:3857"
-        width="100%"
-        height="100%"
-        className="relative"
-        initial={initialViewport}
-        onMoveEnd={handleMapMove}
-        onPointerDrag={handleMapDrag}
-        onSingleClick={handleSingleClick}
-        noDefaultControls
-      >
-        <BasemapLayer />
+    <>
+      <BasemapLayer />
 
-        {!isLoading && isLayerActive && !!gs_name && (
-          <RLayerWMS
-            ref={layerLeftRef}
-            properties={{ label: gs_name, date }}
-            url={gs_base_wms}
-            opacity={opacity ?? 1}
-            params={{
-              FORMAT: 'image/png',
-              SERVICE: 'WMS',
-              VERSION: '1.3.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: gs_name,
-              DIM_DATE: date,
-              CRS: WMS_CRS,
-              BBOX: 'bbox-epsg-3857',
-            }}
-          />
-        )}
-
-        {!isLoading && isCompareLayerActive && !!compareGsName && (
-          <RLayerWMS
-            ref={layerRightRef}
-            properties={{ label: compareGsName, date: compareDate }}
-            url={compareGsBaseWms}
-            opacity={opacity ?? 1}
-            params={{
-              FORMAT: 'image/png',
-              SERVICE: 'WMS',
-              VERSION: '1.3.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: compareGsName,
-              // DIM_DATE: compareDate,
-              CRS: WMS_CRS,
-              BBOX: 'bbox-epsg-3857',
-            }}
-            visible={isCompareLayerActive}
-          />
-        )}
-
-        {isRegionsLayerActive && <NutsLayer />}
-
-        {basemap === 'world_imagery' && (
-          <RLayerTile
-            zIndex={100}
-            url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-          />
-        )}
-
-        <RLayerTile zIndex={100} url={labelUrl} />
-
-        <Controls
-          mapRef={mapRef}
-          layerLeftRef={layerLeftRef}
-          layerRightRef={layerRightRef}
-          data={dataMeta}
-          isLoading={isLoading}
-        />
-
-        {isLayerActive && <Legend />}
-        <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
-      </RMap>
-
-      {/* Interactivity */}
-      {dataMeta && (
-        <MapTooltip
-          {...tooltipInfo}
-          data={tooltipSide === 'left' ? tooltipInfo.leftData : tooltipInfo.rightData}
-          onCloseTooltip={handleCloseTooltip}
+      {dataMeta && !isLoadingLayerFromURL && isLayerActive && !!gs_name && (
+        <RLayerWMS
+          ref={layerLeftRef}
+          properties={{ label: gs_name, date }}
+          url={gs_base_wms}
+          opacity={opacity ?? 1}
+          params={{
+            FORMAT: 'image/png',
+            SERVICE: 'WMS',
+            VERSION: '1.3.0',
+            REQUEST: 'GetMap',
+            TRANSPARENT: true,
+            LAYERS: gs_name,
+            DIM_DATE: date,
+            CRS: WMS_CRS,
+            BBOX: 'bbox-epsg-3857',
+          }}
         />
       )}
-    </div>
+      {dataMeta && !isLoadingLayerFromURL && isCompareLayerActive && !!compareGsName && (
+        <RLayerWMS
+          ref={layerRightRef}
+          properties={{ label: compareGsName }}
+          url={compareGsBaseWms}
+          opacity={opacity ?? 1}
+          params={{
+            FORMAT: 'image/png',
+            SERVICE: 'WMS',
+            VERSION: '1.3.0',
+            REQUEST: 'GetMap',
+            TRANSPARENT: true,
+            LAYERS: compareGsName,
+            CRS: WMS_CRS,
+            BBOX: 'bbox-epsg-3857',
+          }}
+          visible={isCompareLayerActive}
+        />
+      )}
+
+      {isRegionsLayerActive && <NutsLayer />}
+
+      {/* boundaries, for world imagery */}
+      {basemap === 'world_imagery' && (
+        <RLayerTile
+          zIndex={100}
+          url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+        />
+      )}
+
+      <RLayerTile zIndex={100} url={labelUrl} />
+    </>
   );
 };
 
-export default Map;
+export default MapLayers;
