@@ -5,7 +5,7 @@ import type { Geostory } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
 import type { Monitor, MonitorParsed } from '@/types/monitors';
 
-import { THEMES_COLORS, DEFAULT_COLOR } from '@/constants/themes';
+import { CATEGORIES_COLORS, DEFAULT_COLOR } from '@/constants/categories';
 
 import { parseBBox } from '@/utils/bbox';
 import { normalizeLayers } from '@/utils/layers';
@@ -38,8 +38,8 @@ export function useMonitor(
     // ...DEFAULT_QUERY_OPTIONS,
     select: (data) => ({
       ...data,
-      color: THEMES_COLORS[data.theme].base || DEFAULT_COLOR,
-      colorOpacity: THEMES_COLORS[data.theme].light || DEFAULT_COLOR,
+      color: CATEGORIES_COLORS[data.theme].base || DEFAULT_COLOR,
+      colorOpacity: CATEGORIES_COLORS[data.theme].light || DEFAULT_COLOR,
       monitor_bbox: parseBBox(data.monitor_bbox, 'monitor'),
     }),
     ...queryOptions,
@@ -60,8 +60,8 @@ export function useMonitors(
       data.map((monitor) => ({
         ...monitor,
         monitor_bbox: parseBBox(monitor.monitor_bbox, 'monitor'),
-        color: THEMES_COLORS[monitor.theme].base || DEFAULT_COLOR,
-        colorOpacity: THEMES_COLORS[monitor.theme].light || DEFAULT_COLOR,
+        color: CATEGORIES_COLORS[monitor.theme].base || DEFAULT_COLOR,
+        colorOpacity: CATEGORIES_COLORS[monitor.theme].light || DEFAULT_COLOR,
       })),
     ...queryOptions,
   });

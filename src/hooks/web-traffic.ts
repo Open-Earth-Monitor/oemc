@@ -2,7 +2,7 @@ import { useQuery, useQueries, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { sortBy } from 'lodash';
 
-import { THEMES_COLORS, DEFAULT_COLOR } from '@/constants/themes';
+import { CATEGORIES_COLORS, DEFAULT_COLOR } from '@/constants/categories';
 
 import API from 'services/api';
 
@@ -88,7 +88,7 @@ export function useGetWebTraffic(
       monitor_id: query.id,
       theme: query.theme,
       title: query.title,
-      color: THEMES_COLORS[query?.theme]?.base || DEFAULT_COLOR,
+      color: CATEGORIES_COLORS[query?.theme]?.base || DEFAULT_COLOR,
     };
   });
 
@@ -97,7 +97,7 @@ export function useGetWebTraffic(
       monitor_id: query.data?.[0]?.id,
       theme: query.data?.[0]?.theme,
       title: query.data?.[0]?.title,
-      color: THEMES_COLORS[query?.data?.[0]?.theme]?.base || DEFAULT_COLOR,
+      color: CATEGORIES_COLORS[query?.data?.[0]?.theme]?.base || DEFAULT_COLOR,
     };
   });
 

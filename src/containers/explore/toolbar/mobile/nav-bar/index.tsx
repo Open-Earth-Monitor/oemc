@@ -5,7 +5,7 @@ import { ChevronDownIcon, ChevronLeftIcon } from 'lucide-react';
 
 import cn from '@/lib/classnames';
 
-import { Theme } from '@/constants/themes';
+import { Category } from '@/constants/categories';
 
 import { useDatasets } from '@/hooks/datasets';
 import { useSyncDatasetType, useSyncTheme } from '@/hooks/sync-query';
@@ -16,7 +16,7 @@ import Loading from '@/components/loading';
 import CardList from '@/components/sidebar/card-list';
 import SidebarCheckbox from '@/components/sidebar/checkbox';
 import SortBy from '@/components/sort-by';
-import { THEMES } from '@/components/theme-filter/constants';
+import { CATEGORIES } from '@/components/theme-filter/constants';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -34,7 +34,7 @@ const MobileExploreNavbar = () => {
     setSortingCriteria,
   } = useDatasets();
 
-  const handleClick = (type: Theme | 'All') => {
+  const handleClick = (type: Category | 'All') => {
     setTheme(type);
   };
   const toggle = () => setIsOpen(!isOpen);
@@ -55,7 +55,7 @@ const MobileExploreNavbar = () => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className={cn('relative p-4', showTheme && 'min-h-[80vh]')}>
-          {/* Theme Panel */}
+          {/* Category Panel */}
           <div
             className={cn(
               'absolute inset-0 overflow-hidden transition-all duration-300 ease-in-out',
@@ -118,7 +118,7 @@ const MobileExploreNavbar = () => {
               <h2>Catalogue</h2>
             </header>
             <ul className="grid grid-cols-3">
-              {THEMES.map((theme) => (
+              {CATEGORIES.map((theme) => (
                 <li key={theme.id} className="flex justify-center">
                   <Button
                     variant="background"

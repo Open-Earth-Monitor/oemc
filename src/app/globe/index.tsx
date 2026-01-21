@@ -26,9 +26,9 @@ export default function Page() {
         const picked = (evt as any).picked;
         const billboard = picked?.primitive;
         const billboardId = billboard?.id;
-        console.log('Picked billboard id:', evt, evt.geostoryId);
+        // console.log('Picked billboard id:', evt, evt.geostoryId);
         const geostoryId =
-          evt.primitive.olFeature.id ??
+          (evt as any).primitive?.olFeature?.id ??
           // 1) si el wrapper ya lo pusiera (por si acaso)
           (evt as any).geostoryId ??
           // 2) entity.id (a veces se usa para guardar el id “lógico”)

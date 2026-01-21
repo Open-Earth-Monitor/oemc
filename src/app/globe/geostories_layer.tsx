@@ -8,14 +8,17 @@ import RegularShape from 'ol/style/RegularShape';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 
-import { THEMES_COLORS } from '@/constants/themes';
+import { CATEGORIES_COLORS } from '@/constants/categories';
 import { useMemo } from 'react';
 import { useGeostories } from '@/hooks/geostories';
 
 const GEOSTORY_PINS_LAYER_ID = 'geostory-pins';
 
 function colorForCategory(category?: string) {
-  return THEMES_COLORS[category as keyof typeof THEMES_COLORS]?.base ?? THEMES_COLORS.Unknown.base;
+  return (
+    CATEGORIES_COLORS[category as keyof typeof CATEGORIES_COLORS]?.base ??
+    CATEGORIES_COLORS.Unknown.base
+  );
 }
 
 export type GeostoryPin = {

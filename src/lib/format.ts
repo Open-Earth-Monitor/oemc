@@ -1,4 +1,4 @@
-import { BBox } from 'ol/render/canvas/Executor';
+import BBox from 'ol/render/canvas/Executor';
 
 export const formatDate = (date: string, time: boolean) => {
   const d = new Date(date);

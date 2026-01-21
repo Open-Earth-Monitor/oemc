@@ -8,10 +8,6 @@ export const metadata: Metadata = {
     'Open Earth Monitor Cyberinfrastructure is an ecosystem of actors creating and using data tools in support of the sustainable environmental policy.',
 };
 
-const Hub: NextPage = () => (
-  <>
-    <Globe />
-  </>
-);
+const Hub: NextPage = () => <Globe />;
 
 export default Hub;

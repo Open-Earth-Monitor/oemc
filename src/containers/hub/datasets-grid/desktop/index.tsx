@@ -4,7 +4,7 @@ import { useCallback, useState, useMemo } from 'react';
 
 import { scroller } from 'react-scroll';
 
-import { type Theme } from '@/constants/themes';
+import { type Category } from '@/constants/categories';
 
 import { useMonitorsAndGeostoriesPaginated, useDebounce } from '@/hooks/datasets';
 import { useSyncDatasetType } from '@/hooks/sync-query';
@@ -31,7 +31,7 @@ const LandingDatasetsDesktop = () => {
 
   // activeDatasetType is used to filter the datasets by type (monitors, geostories, or all)
   const [activeDatasetType, setActiveDatasetType] = useSyncDatasetType();
-  const [activeThemes, setActiveThemes] = useState<Theme[] | []>([]);
+  const [activeThemes, setActiveThemes] = useState<Category[] | []>([]);
   const debouncedSearchValue = useDebounce(searchValue, 500);
 
   const params = useMemo(
@@ -71,10 +71,10 @@ const LandingDatasetsDesktop = () => {
   );
 
   // const handleThemes = useCallback(
-  //   (e: React.MouseEvent<Omit<HTMLButtonElement, 'id' & { id: Theme }>>) => {
+  //   (e: React.MouseEvent<Omit<HTMLButtonElement, 'id' & { id: Category }>>) => {
   //     e.stopPropagation(); // avoid to close the dropdown interacting with the checkbox
 
-  //     const id = e.currentTarget.id as Theme;
+  //     const id = e.currentTarget.id as Category;
   //     const themesUpdate = activeThemes.includes(id)
   //       ? activeThemes.filter((e) => e !== id)
   //       : [id, ...activeThemes];

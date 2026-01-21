@@ -2,17 +2,17 @@ import { useCallback } from 'react';
 
 import cn from '@/lib/classnames';
 
-import type { Theme } from '@/constants/themes';
+import type { Category } from '@/constants/categories';
 
-import { ThemeID, THEMES } from '@/components/theme-filter/constants';
+import { ThemeID, CATEGORIES } from '@/components/theme-filter/constants';
 import { Button } from '@/components/ui/button';
 
 const ThemesFilter = ({
   selectedThemes,
   setSelectedThemes,
 }: {
-  selectedThemes: Theme[];
-  setSelectedThemes: React.Dispatch<React.SetStateAction<Theme[]>>;
+  selectedThemes: Category['id'][];
+  setSelectedThemes: React.Dispatch<React.SetStateAction<Category['id'][]>>;
 }) => {
   const toggleTheme = useCallback(
     (theme: ThemeID) => {
@@ -32,7 +32,7 @@ const ThemesFilter = ({
 
   return (
     <div className="flex w-full flex-wrap gap-2.5">
-      {THEMES.map((theme) => {
+      {CATEGORIES.map((theme) => {
         const isActive =
           theme.id !== 'All' && !!selectedThemes.length && selectedThemes.includes(theme.id);
         const isAllSelected = !selectedThemes.length;

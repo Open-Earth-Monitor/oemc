@@ -28,6 +28,9 @@ type CesiumClickEvent = {
   type: 'cesium-click';
   picked?: any; // Cesium pick result
   position?: any;
+  olFeature?: Feature<any>;
+  geostoryId?: string | number;
+  movement?: any;
 };
 
 export type Map3DClickEvent = MapBrowserEvent<any> | CesiumClickEvent;
@@ -61,6 +64,9 @@ const applyFog = (scene: Cesium.Scene) => {
   scene.fog.minimumBrightness = 0.25;
 };
 
+const MARGIN_X_DESKTOP = 100;
+const MARGIN_Y_DESKTOP = 200;
+
 export default function Map3D({
   onReady,
   onClick,
@@ -68,7 +74,7 @@ export default function Map3D({
   style,
   className,
   layers = [],
-  globePadding = 1.08,
+  globePadding = 1.3,
   initialCenter = [20, 15],
 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -131,8 +137,8 @@ export default function Map3D({
     const camera = scene.camera;
     const canvas = scene.canvas;
 
-    const width = canvas?.clientWidth || 0;
-    const height = canvas?.clientHeight || 0;
+    const width = (canvas?.clientWidth ?? 0) - MARGIN_X_DESKTOP;
+    const height = (canvas?.clientHeight ?? 0) - MARGIN_Y_DESKTOP;
     if (!width || !height) return;
 
     const R = Cesium.Ellipsoid.WGS84.maximumRadius;
@@ -205,6 +211,10 @@ export default function Map3D({
       ctrl.enableTilt = true;
       ctrl.enableTranslate = true;
 
+      scene.backgroundColor = Cesium.Color.fromCssColorString('#09131d');
+      scene.skyBox = undefined;
+      scene.skyAtmosphere = undefined;
+
       fitGlobeToViewport();
       requestAnimationFrame(() => fitGlobeToViewport());
 
@@ -224,7 +234,6 @@ export default function Map3D({
             picked?.primitive?.id?.olFeature ??
             picked?.id?.olFeature;
           const geostoryId = olFeature?.getProperties()?.geostory_id;
-          console.log(olFeature, geostoryId);
 
           onClick({
             type: 'cesium-click',

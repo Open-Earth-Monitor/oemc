@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 import MainMenuDesktop from '@/components/main-menu/desktop';
-import Map from '@/components/map/index1';
+import Map from '@/components/map/index';
 // import Proj3413 from '@/components/map';
 import SidebarWrapper from '@/components/sidebar-wrapper';
 import { SidebarProvider } from '@/components/ui/sidebar';

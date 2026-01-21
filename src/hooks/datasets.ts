@@ -10,7 +10,7 @@ import type {
   MonitorsAndGeostoriesPaginatedParsed,
 } from '@/types/monitors-and-geostories';
 
-import { Theme, THEMES_COLORS } from '@/constants/themes';
+import { Category, CATEGORIES_COLORS } from '@/constants/categories';
 
 import { useSyncDatasetType, useSyncTheme, type ThemeQueryParam } from '@/hooks/sync-query';
 
@@ -18,9 +18,9 @@ import { SortingCriteria } from '@/containers/hub/datasets-grid/types';
 
 import API from 'services/api';
 
-const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'light') => {
+const getColor = (ready: boolean, theme: Category, themeType: 'base' | 'dark' | 'light') => {
   if (!ready) return 'hsla(0, 0%, 79%, 1)';
-  return THEMES_COLORS[theme][themeType] || THEMES_COLORS.Unknown[themeType];
+  return CATEGORIES_COLORS[theme][themeType] || CATEGORIES_COLORS.Unknown[themeType];
 };
 
 type DataObject = Array<{ layer_id: string; label: string; value: number }>;
@@ -71,9 +71,9 @@ export function useMonitorsAndGeostories<TData = MonitorsAndGeostoriesParsed>(
         data.map((d) => ({
           ...d,
           type: d.type || d.id.startsWith('g') ? 'geostory' : 'monitor',
-          color: THEMES_COLORS[d.theme]?.base ?? THEMES_COLORS.Unknown.base,
-          colorHead: THEMES_COLORS[d.theme]?.dark ?? THEMES_COLORS.Unknown.dark,
-          colorOpacity: THEMES_COLORS[d.theme]?.light ?? THEMES_COLORS.Unknown.light,
+          color: CATEGORIES_COLORS[d.theme]?.base ?? CATEGORIES_COLORS.Unknown.base,
+          colorHead: CATEGORIES_COLORS[d.theme]?.dark ?? CATEGORIES_COLORS.Unknown.dark,
+          colorOpacity: CATEGORIES_COLORS[d.theme]?.light ?? CATEGORIES_COLORS.Unknown.light,
         }))) as unknown as (data: MonitorsAndGeostories) => TData),
   });
 }
