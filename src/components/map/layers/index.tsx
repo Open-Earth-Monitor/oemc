@@ -139,6 +139,13 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
       getView: () => ol.View;
       getSize: () => Size;
       getPixelFromCoordinate: (coordinate: Coordinate) => [number, number];
+      controls: ol.Collection<ol.control.Control>;
+      addControl: (control: ol.control.Control) => void;
+      removeControl: (control: ol.control.Control) => void;
+      addLayer: (layer: ol.layer.Base) => void;
+      removeLayer: (layer: ol.layer.Base) => void;
+      getLayers: () => ol.Collection<ol.layer.Base>;
+      getControls: () => ol.Collection<ol.control.Control>;
     };
   }> = useRef(null as unknown as any);
 
