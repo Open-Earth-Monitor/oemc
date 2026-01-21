@@ -1,4 +1,4 @@
-import type { Theme } from '@/constants/themes';
+import type { Category } from '@/constants/categories';
 
 import type { Geostory } from './geostories';
 import { UseCase } from './monitors-and-geostories';
@@ -11,7 +11,7 @@ export type Monitor = {
   geostories: Geostory[];
   id: string;
   title: string;
-  theme: Theme;
+  theme: Category;
   entity_type: 'monitor';
   ready: boolean;
   metadata_url: string;

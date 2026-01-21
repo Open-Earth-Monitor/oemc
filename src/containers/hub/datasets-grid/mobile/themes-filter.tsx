@@ -4,9 +4,9 @@ import { useCallback, useMemo } from 'react';
 
 import cn from '@/lib/classnames';
 
-import type { Theme } from '@/constants/themes';
+import type { Category } from '@/constants/categories';
 
-import { ThemeID, THEMES } from '@/components/theme-filter/constants';
+import { ThemeID, CATEGORIES } from '@/components/theme-filter/constants';
 import { buttonVariants } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -21,8 +21,8 @@ export default function ThemesFilter({
   selectedThemes,
   setSelectedThemes,
 }: {
-  selectedThemes: Theme[];
-  setSelectedThemes: React.Dispatch<React.SetStateAction<Theme[]>>;
+  selectedThemes: Category[];
+  setSelectedThemes: React.Dispatch<React.SetStateAction<Category[]>>;
 }) {
   const isAllSelected = !selectedThemes.length;
 
@@ -39,7 +39,7 @@ export default function ThemesFilter({
 
   const checkedMap = useMemo(() => {
     const map = new Map<ThemeID, boolean>();
-    THEMES.forEach(({ id }) => {
+    CATEGORIES.forEach(({ id }) => {
       if (id === 'All') {
         map.set('All', isAllSelected);
       } else {
@@ -50,7 +50,7 @@ export default function ThemesFilter({
   }, [isAllSelected, selectedThemes]);
 
   const selectedCount = isAllSelected
-    ? THEMES.filter((t) => t.id !== 'All').length
+    ? CATEGORIES.filter((t) => t.id !== 'All').length
     : selectedThemes.length;
 
   return (
@@ -74,7 +74,7 @@ export default function ThemesFilter({
           <DropdownMenuLabel>Select themes</DropdownMenuLabel>
           <DropdownMenuSeparator />
 
-          {THEMES.map((theme) => (
+          {CATEGORIES.map((theme) => (
             <DropdownMenuCheckboxItem
               key={theme.id}
               checked={checkedMap.get(theme.id)}

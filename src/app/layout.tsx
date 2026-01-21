@@ -9,6 +9,7 @@ import '@/styles/globals.css';
 import 'ol/ol.css';
 
 import LayoutClient from './layout-client';
+import DesktopExploreToolbar from '@/containers/explore/toolbar/desktop';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -57,7 +58,7 @@ const satoshi = localFont({
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${satoshi.variable} ${inter.variable} h-full min-h-screen`}>
-      <body className="mx-auto h-full min-h-screen w-screen overflow-x-hidden bg-black-400 font-inter">
+      <body className="mx-auto h-full min-h-screen w-screen overflow-x-hidden bg-black-500 font-inter">
         <div className="flex h-full flex-col">
           <main className="relative h-full flex-1">
             <Providers>

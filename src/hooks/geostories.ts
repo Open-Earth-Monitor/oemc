@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 import type { Geostory, GeostoryParsed } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
 
-import { Theme, THEMES_COLORS } from '@/constants/themes';
+import { Category, CATEGORIES_COLORS } from '@/constants/categories';
 
 import { parseBBox } from '@/utils/bbox';
 import { normalizeLayers } from '@/utils/layers';
@@ -22,9 +22,9 @@ const DEFAULT_QUERY_OPTIONS = {
   staleTime: Infinity,
 };
 
-const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'light') => {
+const getColor = (ready: boolean, theme: Category, themeType: 'base' | 'dark' | 'light') => {
   if (!ready) return 'hsla(0, 0%, 79%, 1)';
-  return THEMES_COLORS[theme][themeType] || THEMES_COLORS.Unknown[themeType];
+  return CATEGORIES_COLORS[theme][themeType] || CATEGORIES_COLORS.Unknown[themeType];
 };
 
 export function useGeostory(params: UseParams, queryOptions?: UseQueryOptions<Geostory, Error>) {

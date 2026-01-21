@@ -6,7 +6,13 @@ import { useParams, usePathname } from 'next/navigation';
 
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import ol from 'ol';
+import * as ol from 'ol';
+import Collection from 'ol/Collection';
+import olLayerBase from 'ol/layer/Base';
+import Layer from 'ol/layer/Layer';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import Control from 'ol/control/Control';
 import type { Coordinate } from 'ol/coordinate';
 import { Size } from 'ol/size';
 import TileWMS from 'ol/source/TileWMS';
@@ -139,13 +145,13 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
       getView: () => ol.View;
       getSize: () => Size;
       getPixelFromCoordinate: (coordinate: Coordinate) => [number, number];
-      controls: ol.Collection<ol.control.Control>;
-      addControl: (control: ol.control.Control) => void;
-      removeControl: (control: ol.control.Control) => void;
-      addLayer: (layer: ol.layer.Base) => void;
-      removeLayer: (layer: ol.layer.Base) => void;
-      getLayers: () => ol.Collection<ol.layer.Base>;
-      getControls: () => ol.Collection<ol.control.Control>;
+      controls: Collection<Control>;
+      addControl: (control: Control) => void;
+      removeControl: (control: Control) => void;
+      addLayer: (layer: olLayerBase) => void;
+      removeLayer: (layer: olLayerBase) => void;
+      getLayers: () => Collection<olLayerBase>;
+      getControls: () => Collection<Control>;
     };
   }> = useRef(null as unknown as any);
 
@@ -374,7 +380,7 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
     () => LABELS.find((label) => activeLabels === label.id)?.url,
     [activeLabels]
   );
-  console.log('********map', layerLeftRef, layerRightRef, isComparativeGeostory);
+
   return (
     <>
       <BasemapLayer />

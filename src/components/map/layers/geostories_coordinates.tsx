@@ -1,20 +1,18 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
+import VectorLayer from 'ol/layer/Vector';
 import { fromLonLat } from 'ol/proj';
-import Style from 'ol/style/Style';
+import VectorSource from 'ol/source/Vector';
 import CircleStyle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
-import { Layer } from './Layer';
+import Style from 'ol/style/Style';
 
 type Pin = {
   id: string;
-  coordinates: [number, number]; // lon/lat
+  coordinates: [number, number];
   category: string;
 };
 
@@ -27,38 +25,33 @@ const COLORS: Record<string, string> = {
   biodiversity: '#FCB84B',
   default: '#6B7280',
 };
-
 export function PinsLayer({ pins }: { pins: Pin[] }) {
-  const layer = useMemo(() => {
-    const source = new VectorSource({
-      features: pins
-        .filter((p) => Number.isFinite(p.coordinates[0]) && Number.isFinite(p.coordinates[1]))
-        .map((p) => {
-          const f = new Feature({
-            geometry: new Point(fromLonLat(p.coordinates)),
-          });
-          f.setId(p.id);
-          f.set('category', p.category?.toLowerCase?.() ?? '');
-          return f;
-        }),
-    });
-
-    return new VectorLayer({
-      source,
-      zIndex: 50,
-      style: (feature) => {
-        const cat = String(feature.get('category') ?? '').toLowerCase();
-        const color = COLORS[cat] ?? COLORS.default;
-        return new Style({
-          image: new CircleStyle({
-            radius: 6,
-            fill: new Fill({ color }),
-            stroke: new Stroke({ color: '#ffffff', width: 2 }),
-          }),
+  const source = new VectorSource({
+    features: pins
+      .filter((p) => Number.isFinite(p.coordinates[0]) && Number.isFinite(p.coordinates[1]))
+      .map((p) => {
+        const f = new Feature({
+          geometry: new Point(fromLonLat(p.coordinates)),
         });
-      },
-    });
-  }, [pins]);
+        f.setId(p.id);
+        f.set('category', p.category?.toLowerCase?.() ?? '');
+        return f;
+      }),
+  });
 
-  return <Layer layer={layer} />;
+  return new VectorLayer({
+    source,
+    zIndex: 50,
+    style: (feature) => {
+      const cat = String(feature.get('category') ?? '').toLowerCase();
+      const color = COLORS[cat] ?? COLORS.default;
+      return new Style({
+        image: new CircleStyle({
+          radius: 6,
+          fill: new Fill({ color }),
+          stroke: new Stroke({ color: '#ffffff', width: 2 }),
+        }),
+      });
+    },
+  });
 }

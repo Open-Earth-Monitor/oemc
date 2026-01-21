@@ -1,4 +1,4 @@
-import type { Theme } from '@/constants/themes';
+import type { Category } from '@/constants/categories';
 
 import type { Layer } from './layers';
 import { UseCase } from './monitors-and-geostories';
@@ -10,7 +10,7 @@ export type Geostory = {
   id: string;
   layers: Layer[];
   title: string;
-  theme: Theme;
+  theme: Category;
   entity_type: 'geo_story';
   ready: boolean;
   metadata_url: string;

@@ -2,17 +2,17 @@ import { FC, useMemo } from 'react';
 
 import { cn } from '@/lib/classnames';
 
-import type { Theme } from '@/constants/themes';
+import type { Category } from '@/constants/categories';
 
 import { useSyncTheme } from '@/hooks/sync-query';
 
 export type SidebarProps = {
-  type?: Theme | 'All';
+  type?: Category;
   enabled?: boolean;
 };
 
 type SidebarButtonProps = {
-  id: SidebarProps['type'];
+  id: SidebarProps['type']['id'];
   label: string;
 };
 
@@ -24,7 +24,7 @@ export type SidebarItemProps = {
 const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
   const [theme, setTheme] = useSyncTheme();
 
-  const handleClick = (type: Theme | 'All') => {
+  const handleClick = (type: Category['id']) => {
     setTheme(type);
   };
 
