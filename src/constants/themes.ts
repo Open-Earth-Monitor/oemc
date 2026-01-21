@@ -18,32 +18,32 @@ export type ThemeColor = {
 
 export const THEMES_COLORS: Record<Theme, ThemeColor> = {
   Agriculture: {
-    base: 'hsla(348, 85%, 58%, 1)',
+    base: '#FF4F71',
     light: 'hsla(348, 85%, 58%, 0.2)',
     dark: 'hsla(8, 50%, 41%, 1)',
   },
   Water: {
-    base: 'hsla(227, 100%, 69%, 1)',
+    base: '#6E8DFF',
     light: 'hsla(221, 100%, 73%, 1)',
     dark: 'hsla(209, 35%, 44%, 1)',
   },
   Biodiversity: {
-    base: 'hsla(37, 97%, 64%, 1)',
+    base: '#FCB84B',
     light: 'hsla(37, 97%, 64%, 0.2)',
     dark: 'hsla(246, 100%, 71%, 0.2)',
   },
   Soil: {
-    base: 'hsla(17, 87%, 56%, 1)',
+    base: '#F1642E',
     light: 'hsla(17, 87%, 56%, 0.2)',
     dark: 'hsla(29, 59%, 26%, 1)',
   },
   'Climate & Health': {
-    base: 'hsla(291, 87%, 56%, 1)',
+    base: '#E44CFF',
     light: 'hsla(290, 69%, 51%, 0.2)',
     dark: 'hsla(254, 28%, 50%, 1)',
   },
   Forest: {
-    base: 'hsla(155, 78%, 43%, 1)',
+    base: '#19C37C',
     light: 'hsla(155, 77%, 43%, 0.2)',
     dark: 'hsla(167, 85%, 52%, 1)',
   },

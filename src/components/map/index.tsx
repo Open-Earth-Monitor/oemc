@@ -56,10 +56,22 @@ import {
 } from './constants';
 // map controls
 import Controls from './controls';
+import NutsLayer from './layers/nuts';
 import Legend from './legend';
 import MapTooltip from './tooltip';
-import { Nut } from 'lucide-react';
-import NutsLayer from './layers/nuts';
+
+// import proj4 from 'proj4';
+// import { register } from 'ol/proj/proj4';
+// import { get as getProjection } from 'ol/proj';
+
+// proj4.defs(
+//   'EPSG:3413',
+//   '+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs'
+// );
+// register(proj4);
+
+// const proj3413 = getProjection('EPSG:3413')!;
+// proj3413.setExtent([-3314693.24, -3314693.24, 3314693.24, 3314693.24]);
 
 function buildWmsSource(url: string, layerName: string) {
   return new TileWMS({
@@ -474,16 +486,16 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     () => LABELS.find((label) => activeLabels === label.id)?.url,
     [activeLabels]
   );
-  console.log(!isLoading && isLayerActive && !!gs_name);
+
   return (
     <div className="relative h-full w-full">
       <RMap
         ref={mapRef as unknown as React.RefObject<any>}
-        projection="EPSG:3857"
+        projection="EPSG:3413"
         width="100%"
         height="100%"
         className="relative"
-        initial={initialViewport}
+        initial={{ ...initialViewport, center: [0, 0] }}
         onMoveEnd={handleMapMove}
         onPointerDrag={handleMapDrag}
         onSingleClick={handleSingleClick}
