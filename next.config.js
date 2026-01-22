@@ -28,7 +28,6 @@ const nextConfig = {
   },
   output: 'standalone',
   transpilePackages: ['ol'],
-  experimental: { esmExternals: 'loose' },
 };
 
 module.exports = nextConfig;
