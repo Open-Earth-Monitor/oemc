@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 
 import CategoriesFilters from '@/containers/globe/categories-filters';
 
-import Footer from '@/components/footer';
 import Header from '@/components/header';
 
 export const metadata: Metadata = {
@@ -15,13 +14,16 @@ export const metadata: Metadata = {
 
 export default function GlobeLayout({ children }) {
   return (
-    <div className="relative py-9">
-      <Header />
-      {children}
-      <div className="absolute bottom-60 left-[50%] z-[1000] -translate-x-1/2">
+    <div className="relative flex h-screen flex-col overflow-hidden">
+      <div className="absolute left-0 top-0 z-[1000] h-full w-full shrink-0 py-8">
+        <Header />
+      </div>
+
+      <div className="relative h-full min-h-0 flex-1">{children}</div>
+
+      <div className="absolute bottom-60 left-1/2 z-[1000] -translate-x-1/2">
         <CategoriesFilters />
       </div>
-      <Footer />
     </div>
   );
 }

@@ -86,7 +86,7 @@ export default function Page() {
   );
 
   return (
-    <div className="h-screen w-screen">
+    <div className="relative h-full w-full">
       <Map3D
         start3D={true}
         onReady={(m) => {
