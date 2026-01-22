@@ -2,9 +2,9 @@ import { FC } from 'react';
 
 import Link from 'next/link';
 
-import type { Category } from '@/constants/categories';
+import type { CategoryId } from '@/constants/categories';
 
-export type ThemeQueryParam = Category[] | [];
+export type ThemeQueryParam = CategoryId[] | [];
 
 type ItemProps = {
   id: string;
