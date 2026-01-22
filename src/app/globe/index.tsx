@@ -3,19 +3,26 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import Map3D, { type Map3DHandle, Map3DClickEvent } from '@/components/globe';
 import { createGeostoryPointsLayer, useGeostoryPins } from './geostories_layer';
-
+import type { Feature } from 'ol';
+import VectorSource from 'ol/source/Vector';
+import VectorLayer from 'ol/layer/Vector';
+import type { Point } from 'ol/geom';
 import type { MapBrowserEvent } from 'ol';
 
 export default function Page() {
   const pins = useGeostoryPins();
   const [controller, setController] = useState<Map3DHandle | null>(null);
 
-  const pinsLayer = useMemo(() => {
-    if (!pins?.length) return null;
-    const layer = createGeostoryPointsLayer(pins);
-    layer.set('id', 'geostory-pins');
-    return layer;
-  }, [pins]);
+  const pinsLayer: VectorLayer<VectorSource<Feature<Point>>, Feature<Point>> | null =
+    useMemo(() => {
+      if (!pins?.length) return null;
+      const layer = createGeostoryPointsLayer(pins) as VectorLayer<
+        VectorSource<Feature<Point>>,
+        Feature<Point>
+      >;
+      layer.set('id', 'geostory-pins');
+      return layer;
+    }, [pins]);
   const handleClick = useCallback(
     (evt: Map3DClickEvent) => {
       const map = controller?.getMap();
@@ -86,7 +93,7 @@ export default function Page() {
           setController(m);
         }}
         onClick={handleClick}
-        layers={pinsLayer ? [pinsLayer] : []}
+        layers={!!pinsLayer ? [pinsLayer] : []}
         style={{ width: '100%', height: '100%' }}
       />
     </div>

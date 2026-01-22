@@ -4,7 +4,7 @@ import { useCallback, useState, useMemo } from 'react';
 
 import { scroller } from 'react-scroll';
 
-import { type Category } from '@/constants/categories';
+import { type CategoryId } from '@/constants/categories';
 
 import { useMonitorsAndGeostoriesPaginated, useDebounce } from '@/hooks/datasets';
 import { useSyncDatasetType } from '@/hooks/sync-query';
@@ -30,7 +30,7 @@ const LandingDatasetsMobile = () => {
 
   // activeDatasetType is used to filter the datasets by type (monitors, geostories, or all)
   const [activeDatasetType, setActiveDatasetType] = useSyncDatasetType();
-  const [activeThemes, setActiveThemes] = useState<Category[] | []>([]);
+  const [activeThemes, setActiveThemes] = useState<CategoryId[] | []>([]);
   const debouncedSearchValue = useDebounce(searchValue, 500);
 
   const params = useMemo(

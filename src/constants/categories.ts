@@ -8,11 +8,6 @@ import { WaterIcon } from '@/components/ui/icons/sidebar/water_category';
 
 export const CATEGORIES = [
   {
-    id: 'All',
-    label: 'All',
-    Icon: AllCategoriesIcon,
-  },
-  {
     id: 'Agriculture',
     label: 'Agriculture',
     Icon: AgricultureIcon,
@@ -44,17 +39,21 @@ export const CATEGORIES = [
   },
 ] as const;
 
-export type ThemeID = (typeof CATEGORIES)[number]['id'];
+export const ALL_CATEGORY = {
+  id: 'All',
+  label: 'All Categories',
+  Icon: AllCategoriesIcon,
+} as const;
 
-export type Category = (typeof CATEGORIES)[number];
+export type CategoryId = (typeof CATEGORIES)[number]['id'];
 
-export type ThemeColor = {
+export type CategoryColorType = {
   base: string;
   light: string;
   dark: string;
 };
 
-export const CATEGORIES_COLORS: Record<ThemeID & 'Unknown', ThemeColor> = {
+export const CATEGORIES_COLORS: Record<CategoryId | 'Unknown', CategoryColorType> = {
   Agriculture: {
     base: '#FF4F71',
     light: 'hsla(348, 85%, 58%, 0.2)',

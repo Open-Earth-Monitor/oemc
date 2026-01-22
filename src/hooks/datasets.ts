@@ -10,7 +10,7 @@ import type {
   MonitorsAndGeostoriesPaginatedParsed,
 } from '@/types/monitors-and-geostories';
 
-import { Category, CATEGORIES_COLORS } from '@/constants/categories';
+import { CategoryId, CATEGORIES_COLORS } from '@/constants/categories';
 
 import { useSyncDatasetType, useSyncTheme, type ThemeQueryParam } from '@/hooks/sync-query';
 
@@ -18,7 +18,7 @@ import { SortingCriteria } from '@/containers/hub/datasets-grid/types';
 
 import API from 'services/api';
 
-const getColor = (ready: boolean, theme: Category, themeType: 'base' | 'dark' | 'light') => {
+const getColor = (ready: boolean, theme: CategoryId, themeType: 'base' | 'dark' | 'light') => {
   if (!ready) return 'hsla(0, 0%, 79%, 1)';
   return CATEGORIES_COLORS[theme][themeType] || CATEGORIES_COLORS.Unknown[themeType];
 };

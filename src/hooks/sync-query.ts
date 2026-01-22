@@ -2,7 +2,7 @@ import { useQueryState } from 'next-usequerystate';
 import { parseAsJson, parseAsBoolean } from 'next-usequerystate/parsers';
 import { Extent } from 'ol/extent';
 
-import type { Category } from '@/constants/categories';
+import type { CategoryId } from '@/constants/categories';
 
 type LayerSettings = {
   id: string;
@@ -32,7 +32,7 @@ export const useSyncBasemapSettings = () =>
     'basemap',
     parseAsJson<'world_imagery' | 'gray_scale'>().withDefault('world_imagery')
   );
-export type ThemeQueryParam = Category['id'][] | Category['id'];
+export type ThemeQueryParam = CategoryId[] | CategoryId | 'All';
 export const useSyncTheme = () =>
   useQueryState<ThemeQueryParam>('theme', parseAsJson<ThemeQueryParam>());
 

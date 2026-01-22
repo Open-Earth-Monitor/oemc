@@ -10,7 +10,7 @@ export type Geostory = {
   id: string;
   layers: Layer[];
   title: string;
-  theme: Category;
+  theme: Category['id'];
   entity_type: 'geo_story';
   ready: boolean;
   metadata_url: string;

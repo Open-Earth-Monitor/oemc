@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/classnames';
 
-import { CATEGORIES } from '@/constants/categories';
+import { ALL_CATEGORY, CATEGORIES } from '@/constants/categories';
 import { SIDEBAR_THEME_FILTERS } from '@/constants/sidebar';
 
 import SidebarItem from './map-sidebar-item';
@@ -14,7 +14,7 @@ const SidebarThemeFilters = () => {
       style={{ width: SIDEBAR_THEME_FILTERS }}
     >
       <div className={cn('flex w-full flex-col items-start space-y-2 py-8 text-sm text-white-500')}>
-        {CATEGORIES.map((category) => {
+        {[...CATEGORIES, ALL_CATEGORY].map((category) => {
           const Icon = category.Icon;
 
           return (
