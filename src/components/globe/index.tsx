@@ -91,7 +91,11 @@ export default function Map3D({
 
     ol3d.setEnabled(enabled);
     setCesiumEnabled(enabled);
-    (mapRef.current as any)?.renderSync?.();
+
+    const map = mapRef.current as any;
+    if (map && typeof map.renderSync === 'function') {
+      map.renderSync();
+    }
   }, []);
 
   const is3DEnabled = useCallback(() => {
@@ -140,7 +144,7 @@ export default function Map3D({
     const width = (canvas?.clientWidth ?? 0) - MARGIN_X_DESKTOP;
     const height = (canvas?.clientHeight ?? 0) - MARGIN_Y_DESKTOP;
     if (!width || !height) return;
-
+    console.log(height);
     const R = Cesium.Ellipsoid.WGS84.maximumRadius;
 
     const frustum: any = camera.frustum;

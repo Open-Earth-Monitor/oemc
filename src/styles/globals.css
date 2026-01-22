@@ -263,6 +263,12 @@
   left: 2px !important;
 }
 
+.cesium-credit-wrapper {
+  position: fixed !important;
+  bottom: 0px !important;
+  right: 40px !important;
+}
+
 .arrow {
   height: 15px;
   width: 15px;
