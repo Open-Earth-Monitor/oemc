@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ChevronDownIcon, ChevronLeftIcon } from 'lucide-react';
 
 import cn from '@/lib/classnames';
 
 import { useDatasets } from '@/hooks/datasets';
-import { useSyncDatasetType, useSyncTheme } from '@/hooks/sync-query';
+import { useSyncDatasetType, useSyncCategories } from '@/hooks/sync-query';
 
 import Badge from '@/components/badge';
 import FilterByDatasetType from '@/components/filters-by-dataset-type/desktop';
@@ -22,8 +22,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 const MobileExploreNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentDataset, setDatasetType] = useSyncDatasetType();
-  const [theme, setTheme] = useSyncTheme();
-
+  const [categories, setCategory] = useSyncCategories();
+  const category = categories?.[0] ?? null;
   const {
     results,
     isLoading,
@@ -36,14 +36,14 @@ const MobileExploreNavbar = () => {
 
   const handleClick = useCallback(
     (id: CategoryId | typeof ALL_CATEGORY.id) => {
-      setTheme(id);
+      setCategory(id as CategoryId[] | 'All');
     },
-    [setTheme]
+    [setCategory]
   );
 
   const toggle = useCallback(() => setIsOpen((v) => !v), []);
 
-  const showTheme = theme !== null && theme !== undefined;
+  const showTheme = category !== null && category !== undefined;
 
   return (
     <div className="fixed bottom-0 left-0 z-50 w-full text-sm">
@@ -66,7 +66,7 @@ const MobileExploreNavbar = () => {
                 <Button
                   variant="background"
                   className="bg-transparent p-0 hover:bg-transparent"
-                  onClick={() => setTheme(null)}
+                  onClick={() => setCategory(null)}
                 >
                   <ChevronLeftIcon className="text-accent-green" />
                   <span>Catalogue</span>

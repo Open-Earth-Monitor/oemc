@@ -32,9 +32,11 @@ export const useSyncBasemapSettings = () =>
     'basemap',
     parseAsJson<'world_imagery' | 'gray_scale'>().withDefault('world_imagery')
   );
-export type ThemeQueryParam = CategoryId[] | CategoryId | 'All';
-export const useSyncTheme = () =>
-  useQueryState<ThemeQueryParam>('theme', parseAsJson<ThemeQueryParam>());
+
+// API category comes as "theme" from the backend but we use "category" in the URL for clarity
+export type CategoryQueryParam = CategoryId[] | 'All';
+export const useSyncCategories = () =>
+  useQueryState<CategoryQueryParam>('categories', parseAsJson<CategoryQueryParam>());
 
 //  Filter view in monitors, geostories or everything
 export const useSyncDatasetType = () =>

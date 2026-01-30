@@ -12,7 +12,7 @@ import type {
 
 import { CategoryId, CATEGORIES_COLORS } from '@/constants/categories';
 
-import { useSyncDatasetType, useSyncTheme, type ThemeQueryParam } from '@/hooks/sync-query';
+import { useSyncDatasetType, useSyncCategories, type CategoryQueryParam } from '@/hooks/sync-query';
 
 import { SortingCriteria } from '@/containers/hub/datasets-grid/types';
 
@@ -28,7 +28,7 @@ type DataObject = Array<{ layer_id: string; label: string; value: number }>;
 type UseParams = {
   type?: 'monitors' | 'geostories' | null;
   page?: number;
-  theme?: ThemeQueryParam;
+  theme?: CategoryQueryParam;
   monitor_id?: string;
   pagination?: boolean;
   count?: number;
@@ -257,7 +257,7 @@ export function downloadCSVCompare(data: DataObjectCompare[], filename: string) 
 
 export function useDatasets() {
   const [datasetType] = useSyncDatasetType();
-  const [theme] = useSyncTheme();
+  const [theme] = useSyncCategories();
   const [sortingCriteria, setSortingCriteria] = useState<SortingCriteria>('title');
   // Show more/fewer details about the datasets
   const [showDetail, setShowDetail] = useState(false);

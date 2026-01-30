@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Map3D, { type Map3DHandle, Map3DClickEvent } from '@/components/globe';
 import { createGeostoryPointsLayer, useGeostoryPins } from './geostories_layer';
 import type { Feature } from 'ol';
@@ -8,9 +8,12 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import type { Point } from 'ol/geom';
 import type { MapBrowserEvent } from 'ol';
+import { useSyncCategories } from '@/hooks/sync-query';
+import { CategoryId } from '@/constants/categories';
 
 export default function Page() {
-  const pins = useGeostoryPins();
+  const [categories] = useSyncCategories();
+  const pins = useGeostoryPins(categories as CategoryId[] | 'All');
   const [controller, setController] = useState<Map3DHandle | null>(null);
 
   const pinsLayer: VectorLayer<VectorSource<Feature<Point>>, Feature<Point>> | null =

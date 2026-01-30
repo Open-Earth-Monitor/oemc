@@ -12,6 +12,8 @@ const Search: FC<SearchProps> = ({
   setValue,
   label = 'Search',
   className,
+  children,
+  hasIcon = true,
   ...rest
 }: SearchProps) => {
   const { placeholder } = rest;
@@ -25,12 +27,13 @@ const Search: FC<SearchProps> = ({
       aria-label="search"
       role="searchbox"
     >
-      <HiMagnifyingGlass
-        className={cn({
-          'absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform': true,
-        })}
-      />
-
+      {hasIcon && (
+        <HiMagnifyingGlass
+          className={cn({
+            'absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform': true,
+          })}
+        />
+      )}
       <label htmlFor="search">
         <span className="visually-hidden">{label}</span>
       </label>
@@ -45,6 +48,7 @@ const Search: FC<SearchProps> = ({
         data-testid="search-input"
         className="flex-1 truncate border-0 border-b-secondary-500 bg-transparent px-10 font-inter leading-4 text-secondary-700 placeholder-secondary-700 outline-none ring-0 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
       />
+      {children}
       {value !== '' && (
         <button
           tabIndex={0}
