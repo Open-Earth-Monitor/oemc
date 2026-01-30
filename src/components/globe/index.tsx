@@ -64,7 +64,7 @@ const applyFog = (scene: Cesium.Scene) => {
   scene.fog.minimumBrightness = 0.25;
 };
 
-const MARGIN_X_DESKTOP = 100;
+const MARGIN_X_DESKTOP = 600;
 const MARGIN_Y_DESKTOP = 200;
 
 export default function Map3D({
@@ -91,11 +91,6 @@ export default function Map3D({
 
     ol3d.setEnabled(enabled);
     setCesiumEnabled(enabled);
-
-    const map = mapRef.current as any;
-    if (map && typeof map.renderSync === 'function') {
-      map.renderSync();
-    }
   }, []);
 
   const is3DEnabled = useCallback(() => {
@@ -116,15 +111,22 @@ export default function Map3D({
     [enable3D, is3DEnabled, getCesiumScene]
   );
 
-  const syncLayers = useCallback(() => {
+  const syncLayers = () => {
     const map = mapRef.current;
     if (!map) return;
-    const current = map.getLayers().getArray();
+
+    const group = map.getLayers(); // Collection<BaseLayer>
+    const current = group.getArray();
+
     for (const lyr of layers) {
-      if (!current.includes(lyr)) map.addLayer(lyr);
+      if (!current.includes(lyr)) group.push(lyr);
     }
-    (map as any).renderSync?.();
-  }, [layers]);
+  };
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+    syncLayers();
+  }, [syncLayers]);
 
   const fitGlobeToViewport = useCallback(() => {
     const scene = olCesiumRef.current?.getCesiumScene?.();
@@ -144,7 +146,7 @@ export default function Map3D({
     const width = (canvas?.clientWidth ?? 0) - MARGIN_X_DESKTOP;
     const height = (canvas?.clientHeight ?? 0) - MARGIN_Y_DESKTOP;
     if (!width || !height) return;
-    console.log(height);
+
     const R = Cesium.Ellipsoid.WGS84.maximumRadius;
 
     const frustum: any = camera.frustum;
@@ -222,33 +224,37 @@ export default function Map3D({
       fitGlobeToViewport();
       requestAnimationFrame(() => fitGlobeToViewport());
 
-      if (onClick) {
-        const h = new (Cesium as any).ScreenSpaceEventHandler(scene.canvas);
-        cesiumClickHandlerRef.current = h;
+      cesiumClickHandlerRef.current?.setInputAction((movement: any) => {
+        const pos = movement?.position ?? movement?.endPosition;
+        if (!pos) return;
 
-        h.setInputAction((movement: any) => {
-          const pos = movement?.position ?? movement?.endPosition;
-          if (!pos) return;
+        const picked = scene.pick(pos);
 
-          const picked = scene.pick(pos);
-          if (!picked) return;
+        const ray = scene.camera.getPickRay(pos);
+        const cartesian = ray ? scene.globe.pick(ray, scene) : null;
 
-          const olFeature =
-            picked?.primitive?.olFeature ??
-            picked?.primitive?.id?.olFeature ??
-            picked?.id?.olFeature;
-          const geostoryId = olFeature?.getProperties()?.geostory_id;
+        let lonLat: [number, number] | null = null;
+        if (cartesian) {
+          const c = Cesium.Cartographic.fromCartesian(cartesian);
+          lonLat = [Cesium.Math.toDegrees(c.longitude), Cesium.Math.toDegrees(c.latitude)];
+        }
 
-          onClick({
-            type: 'cesium-click',
-            olFeature,
-            geostoryId,
-            picked,
-            movement,
-          });
-        }, (Cesium as any).ScreenSpaceEventType.LEFT_CLICK);
-      }
+        const olFeature =
+          picked?.primitive?.olFeature ?? picked?.primitive?.id?.olFeature ?? picked?.id?.olFeature;
 
+        const geostoryId = olFeature?.getProperties?.()?.geostory_id;
+
+        onClick?.({
+          type: 'cesium-click',
+          picked,
+          movement,
+          olFeature,
+          geostoryId,
+          position: { cartesian, lonLat }, // optional
+        });
+      }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+      layers.forEach((lyr) => map.addLayer(lyr));
       // Refit en resize
       resizeObserverRef.current = new ResizeObserver(() => {
         if (ol3d.getEnabled?.()) requestAnimationFrame(() => fitGlobeToViewport());
@@ -270,14 +276,11 @@ export default function Map3D({
       olCesiumRef.current = null;
 
       map.setTarget(undefined);
+
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onReady, onClick, start3D, fitGlobeToViewport]);
-
-  useEffect(() => {
-    syncLayers();
-  }, [syncLayers]);
 
   return (
     <div
@@ -288,7 +291,7 @@ export default function Map3D({
         width: '100%',
         height: '100%',
         ...style,
-        visibility: start3D && !cesiumEnabled ? 'hidden' : 'visible',
+        // visibility: start3D && !cesiumEnabled ? 'hidden' : 'visible',
       }}
     />
   );

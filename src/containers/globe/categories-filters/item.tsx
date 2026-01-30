@@ -1,20 +1,49 @@
-import { useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import cn from '@/lib/classnames';
 
-import { CATEGORIES_COLORS } from '@/constants/categories';
+import { CATEGORIES, CATEGORIES_COLORS } from '@/constants/categories';
+
+import { useSyncCategories } from '@/hooks/sync-query';
 
 const Filter = ({ id, label, Icon }) => {
-  const [isActive, setIsActive] = useState(true);
+  const [categoriesFilter, setCategoriesFilter] = useSyncCategories();
+
+  const categories = useMemo(() => CATEGORIES.map((c) => c.id), []);
+  const isActive = useMemo(() => {
+    if (categoriesFilter === 'All') {
+      return true;
+    }
+    return categoriesFilter?.includes(id);
+  }, [categoriesFilter, id]);
+
+  const handleCategory = useCallback(() => {
+    setCategoriesFilter((prev) => {
+      if (prev === 'All') {
+        const next = categories?.filter((catId) => catId !== id);
+        return next.length === categories.length ? 'All' : next;
+      }
+
+      const exists = prev.includes(id);
+
+      const next = exists ? prev.filter((catId) => catId !== id) : [...prev, id];
+
+      if (next.length === categories.length) {
+        return 'All';
+      }
+
+      return next;
+    });
+  }, [id, categories, setCategoriesFilter]);
 
   return (
-    <div
+    <button
       className={cn({
         'flex cursor-pointer items-center space-x-2.5 rounded-full border border-white-950 px-4 py-2.5 hover:bg-white-950':
           true,
         'border-transparent': isActive,
       })}
-      onClick={() => setIsActive(!isActive)}
+      onClick={handleCategory}
       style={{
         color: isActive ? '#0b1825' : CATEGORIES_COLORS[id]?.base,
         backgroundColor: isActive ? CATEGORIES_COLORS[id]?.base : 'transparent',
@@ -45,7 +74,7 @@ const Filter = ({ id, label, Icon }) => {
       >
         {label}
       </span>
-    </div>
+    </button>
   );
 };
 

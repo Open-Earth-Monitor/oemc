@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 
 import CategoriesFilters from '@/containers/globe/categories-filters';
+import GeostoriesList from '@/containers/globe/geostories-list';
 
 import Header from '@/components/header';
 
@@ -18,10 +19,15 @@ export default function GlobeLayout({ children }) {
       <div className="absolute left-0 top-0 z-[1000] h-full w-full shrink-0 py-8">
         <Header />
       </div>
-
+      <div className="absolute top-40 z-[1000] flex max-h-[70vh] flex-col space-y-4 overflow-hidden lg:max-w-xs xl:left-10 2xl:left-40">
+        <div className="rounded-[50px] border-[0.5px] border-white-800/20 px-5 py-2.5 text-white-700/50">
+          Filter Geostories
+        </div>
+        <GeostoriesList />
+      </div>
       <div className="relative h-full min-h-0 flex-1">{children}</div>
 
-      <div className="absolute bottom-60 left-1/2 z-[1000] -translate-x-1/2">
+      <div className="absolute bottom-20 left-1/2 z-[1000] -translate-x-1/2">
         <CategoriesFilters />
       </div>
     </div>

@@ -4,12 +4,12 @@ import Link from 'next/link';
 
 import type { CategoryId } from '@/constants/categories';
 
-export type ThemeQueryParam = CategoryId[] | [];
+export type CategoryQueryParam = CategoryId[] | [];
 
 type ItemProps = {
   id: string;
   title: string;
-  theme: ThemeQueryParam;
+  theme: CategoryQueryParam;
   color: string;
   type: 'monitor' | 'geostory';
 };

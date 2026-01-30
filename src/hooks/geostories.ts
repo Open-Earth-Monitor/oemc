@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import type { Geostory, GeostoryParsed } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
@@ -13,6 +13,8 @@ import API from 'services/api';
 type UseParams = {
   geostory_id?: string;
 };
+
+type GeostoriesRequestConfig = Omit<AxiosRequestConfig, 'method' | 'url'>;
 
 const DEFAULT_QUERY_OPTIONS = {
   refetchOnWindowFocus: false,
@@ -95,13 +97,23 @@ export function useGeostoryLayers<TData = LayerParsed[]>(
   });
 }
 
-export function useGeostories(queryOptions?: UseQueryOptions<Geostory[], Error>) {
-  const fetchGeostories = () =>
-    API.request({
+export function useGeostories({
+  queryOptions,
+  requestConfig,
+}: {
+  queryOptions?: UseQueryOptions<Geostory[], Error>;
+  requestConfig?: GeostoriesRequestConfig;
+}) {
+  const fetchGeostories = async () => {
+    const response: AxiosResponse<Geostory[]> = await API.request({
       method: 'GET',
       url: '/geostories',
-      ...queryOptions,
-    }).then((response: AxiosResponse<Geostory[]>) => response.data);
+      ...requestConfig,
+    });
+
+    return response.data;
+  };
+
   return useQuery(['geostories'], fetchGeostories, {
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) =>
