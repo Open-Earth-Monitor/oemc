@@ -1,7 +1,9 @@
 import { Metadata } from 'next';
 
 import CategoriesFilters from '@/containers/globe/categories-filters';
-import GeostoriesList from '@/containers/globe/geostories-list';
+import GlobeExploreData from '@/containers/globe/explore-data';
+import Geostories from '@/containers/globe/geostories';
+import GlobeSocialMedia from '@/containers/globe/social-media';
 
 import Header from '@/components/header';
 
@@ -15,20 +17,24 @@ export const metadata: Metadata = {
 
 export default function GlobeLayout({ children }) {
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden">
-      <div className="absolute left-0 top-0 z-[1000] h-full w-full shrink-0 py-8">
+    <div className="relative h-screen w-screen">
+      <div className="absolute left-0 top-0 z-[1000] w-full py-8">
         <Header />
       </div>
-      <div className="absolute top-40 z-[1000] flex max-h-[70vh] flex-col space-y-4 overflow-hidden lg:max-w-xs xl:left-10 2xl:left-40">
-        <div className="rounded-[50px] border-[0.5px] border-white-800/20 px-5 py-2.5 text-white-700/50">
-          Filter Geostories
-        </div>
-        <GeostoriesList />
-      </div>
-      <div className="relative h-full min-h-0 flex-1">{children}</div>
 
-      <div className="absolute bottom-20 left-1/2 z-[1000] -translate-x-1/2">
-        <CategoriesFilters />
+      <div className="flex h-full">
+        <div className="relative flex w-full min-w-0 flex-1 items-center justify-center">
+          <Geostories />
+          <div className="h-full w-full">{children}</div>
+          <GlobeSocialMedia />
+
+          <div className="absolute bottom-20 left-1/2 z-[1000] -translate-x-1/2 space-y-4">
+            <div className="-translate-y-6">
+              <CategoriesFilters />
+            </div>
+            <GlobeExploreData />
+          </div>
+        </div>
       </div>
     </div>
   );

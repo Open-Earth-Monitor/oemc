@@ -24,9 +24,11 @@ const Filter = ({ id, label, Icon }) => {
         return next.length === categories.length ? 'All' : next;
       }
 
-      const exists = prev.includes(id);
+      if (!prev) return [id];
 
-      const next = exists ? prev.filter((catId) => catId !== id) : [...prev, id];
+      const exists = prev?.includes(id);
+
+      const next = exists ? prev?.filter((catId) => catId !== id) : [...prev, id];
 
       if (next.length === categories.length) {
         return 'All';

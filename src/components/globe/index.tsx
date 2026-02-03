@@ -64,7 +64,7 @@ const applyFog = (scene: Cesium.Scene) => {
   scene.fog.minimumBrightness = 0.25;
 };
 
-const MARGIN_X_DESKTOP = 600;
+const MARGIN_X_DESKTOP = 50;
 const MARGIN_Y_DESKTOP = 200;
 
 export default function Map3D({
