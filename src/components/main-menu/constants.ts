@@ -1,6 +1,6 @@
 export const navLinks = [
   {
-    name: 'Hub',
+    name: ' Hub',
     href: '/',
     'data-testid': 'hub-link',
   },

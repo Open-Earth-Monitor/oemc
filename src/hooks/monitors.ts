@@ -9,6 +9,8 @@ import { THEMES_COLORS, DEFAULT_COLOR } from '@/constants/themes';
 
 import { parseBBox } from '@/utils/bbox';
 import API from 'services/api';
+import { usePathname } from 'next/navigation';
+import path from 'path';
 
 type UseParams = {
   monitor_id?: string;
@@ -69,12 +71,12 @@ export function useMonitorLayers(
   params: UseParams,
   queryOptions?: UseQueryOptions<Layer[], AxiosError, LayerParsed[]>
 ) {
-  const { monitor_id } = params;
-
+  const pathname = usePathname();
+  const monitorId = pathname?.split('/')[2] || params.monitor_id;
   const fetchMonitorLayers = async (): Promise<Layer[]> => {
     const response = await API.request<Layer[]>({
       method: 'GET',
-      url: `/monitors/${monitor_id}/layers`,
+      url: `/monitors/${monitorId}/layers`,
     });
     return response.data;
   };
