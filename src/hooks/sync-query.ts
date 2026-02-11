@@ -2,7 +2,7 @@ import { useQueryState } from 'next-usequerystate';
 import { parseAsJson, parseAsBoolean } from 'next-usequerystate/parsers';
 import { Extent } from 'ol/extent';
 
-import type { Theme } from '@/constants/themes';
+import type { CategoryId } from '@/constants/categories';
 
 type LayerSettings = {
   id: string;
@@ -32,9 +32,11 @@ export const useSyncBasemapSettings = () =>
     'basemap',
     parseAsJson<'world_imagery' | 'gray_scale'>().withDefault('world_imagery')
   );
-export type ThemeQueryParam = Theme[] | 'All' | Theme;
-export const useSyncTheme = () =>
-  useQueryState<ThemeQueryParam>('theme', parseAsJson<ThemeQueryParam>());
+
+// API category comes as "theme" from the backend but we use "category" in the URL for clarity
+export type CategoryQueryParam = CategoryId[] | 'All';
+export const useSyncCategories = () =>
+  useQueryState<CategoryQueryParam>('categories', parseAsJson<CategoryQueryParam>());
 
 //  Filter view in monitors, geostories or everything
 export const useSyncDatasetType = () =>

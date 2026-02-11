@@ -1,49 +1,51 @@
-import { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 
-import { LuRefreshCcw, LuArrowRight } from 'react-icons/lu';
+import { LuArrowRight, LuRefreshCcw } from 'react-icons/lu';
 
-import { Geostory } from '@/types/geostories';
+import type { Geostory } from '@/types/geostories';
 
 import { TAG_STYLE } from '@/styles/constants';
 
+type CardType = 'geostory' | 'monitor';
+type GeostoryTheme = Geostory['theme'];
+type GeostoryReady = Geostory['ready'];
+type GeostoryId = Geostory['id'];
+type GeostoryTitle = Geostory['title'];
+
 type CardHeaderProps = {
-  type: 'geostory' | 'monitor';
+  type: CardType;
   color?: string;
-  theme: Geostory['theme'];
-  ready: Geostory['ready'];
-  id: Geostory['id'];
-  title: Geostory['title'];
+  theme?: GeostoryTheme;
+  ready?: GeostoryReady;
+  id?: GeostoryId;
+  title?: GeostoryTitle;
 };
 
-type CardFooterProps = {
-  id: Geostory['id'];
-};
-
-type DatasetCardProps = PropsWithChildren<{
-  type: CardHeaderProps['type'];
-  ready: Geostory['ready'];
+type CardFooterProps = PropsWithChildren<{
+  id?: GeostoryId;
 }>;
 
-export const CardHeader: FC<Partial<CardHeaderProps>> = ({
-  type,
-  color,
-  theme,
-  ready,
-  id,
-  title,
-}) => {
+type DatasetCardProps = PropsWithChildren<{
+  type: CardType;
+  ready?: GeostoryReady;
+}>;
+
+export const CardHeader: FC<CardHeaderProps> = ({ type, color, theme, ready, id, title }) => {
+  const displayColor = ready ? color ?? '#000' : '#000';
+  const displayTheme = theme.label;
+
   return (
     <div className="space-y-3">
       <div data-testid={`card-type-${id}`} className={TAG_STYLE}>
         <span>{type}</span> |{' '}
-        <span className="capitalize" style={{ color: ready ? color : '#000' }}>
-          #{theme || 'Unknown'}
+        <span className="capitalize" style={{ color: displayColor }}>
+          #{displayTheme}
         </span>
       </div>
       <h2
         data-testid={`card-title-${id}`}
         className="font-satoshi text-2xl font-bold group-hover:underline"
-        style={{ color: ready ? color : '#000' }}
+        style={{ color: displayColor }}
       >
         {title}
       </h2>
@@ -51,7 +53,7 @@ export const CardHeader: FC<Partial<CardHeaderProps>> = ({
   );
 };
 
-export const CardFooter: FC<PropsWithChildren<CardFooterProps>> = ({ id, children }) => {
+export const CardFooter: FC<CardFooterProps> = ({ id, children }) => {
   return (
     <div className="flex items-center justify-between">
       {children}
@@ -65,7 +67,7 @@ export const CardFooter: FC<PropsWithChildren<CardFooterProps>> = ({ id, childre
   );
 };
 
-export const DatasetCard: FC<Partial<DatasetCardProps>> = ({ type, ready, children }) => {
+export const DatasetCard: FC<DatasetCardProps> = ({ type, ready, children }) => {
   return (
     <div className="flex h-full flex-1 flex-col justify-between space-y-11 p-7">
       {ready ? (

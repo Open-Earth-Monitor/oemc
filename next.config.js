@@ -27,6 +27,7 @@ const nextConfig = {
     ],
   },
   output: 'standalone',
+  transpilePackages: ['ol'],
 };
 
 module.exports = nextConfig;

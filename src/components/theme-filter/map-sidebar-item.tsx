@@ -1,13 +1,13 @@
-import { FC, useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 
 import { cn } from '@/lib/classnames';
 
-import type { Theme } from '@/constants/themes';
+import type { ALL_CATEGORY, CategoryId } from '@/constants/categories';
 
-import { useSyncTheme } from '@/hooks/sync-query';
+import { useSyncCategories } from '@/hooks/sync-query';
 
 export type SidebarProps = {
-  type?: Theme | 'All';
+  type?: CategoryId | typeof ALL_CATEGORY.id;
   enabled?: boolean;
 };
 
@@ -22,15 +22,20 @@ export type SidebarItemProps = {
 };
 
 const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
-  const [theme, setTheme] = useSyncTheme();
+  const [categories, setCategory] = useSyncCategories();
 
-  const handleClick = (type: Theme | 'All') => {
-    setTheme(type);
-  };
+  const category = categories?.[0] ?? null;
+
+  const handleClick = useCallback(
+    (type: CategoryId | typeof ALL_CATEGORY.id) => {
+      setCategory(type as CategoryId[] | 'All');
+    },
+    [setCategory]
+  );
 
   const isActive = useMemo(() => {
-    return theme === button.id;
-  }, [theme, button.id]);
+    return category === button.id;
+  }, [category, button.id]);
 
   return (
     <button
