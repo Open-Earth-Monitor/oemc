@@ -25,13 +25,13 @@ const SocialMediaFeed = () => {
   const isMobile = useMediaQuery(mobile);
   const isTablet = useMediaQuery(tablet);
   return (
-    <div className="col-span-12 m-auto flex h-full w-full flex-col items-center justify-center space-y-[18px] sm:space-y-10">
+    <div>
       {isLoading && (
         <div>
           <Loading />
         </div>
       )}
-      {isFetched && !isLoading && (isMobile || isTablet) && <SocialMediaMobile data={data} />}
+      {/* {isFetched && !isLoading && (isMobile || isTablet) && <SocialMediaMobile data={data} />} */}
       {isFetched && !isLoading && !isMobile && !isTablet && <SocialMediaDesktop data={data} />}
     </div>
   );
