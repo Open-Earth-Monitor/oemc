@@ -2,10 +2,9 @@
 
 import { useState, useMemo } from 'react';
 
-import { type CategoryId } from '@/constants/categories';
-
-import { useDebounce, useMonitorsAndGeostoriesPaginated } from '@/hooks/datasets';
-import { useSyncDatasetType } from '@/hooks/sync-query';
+import { useDebounce } from '@/hooks/datasets';
+import { useGeostories, GeostoriesParams } from '@/hooks/geostories';
+import { useSyncCategories } from '@/hooks/sync-query';
 
 import GeostoriesList from '@/containers/globe/geostories/geostories-list';
 
@@ -13,22 +12,32 @@ import GlobeSearch from './geostories-search';
 
 export default function GlobeGeostories() {
   const [searchValue, setSearchValue] = useState<string>('');
+  const [categories] = useSyncCategories();
 
-  const [activeDatasetType, setActiveDatasetType] = useSyncDatasetType();
-  const [activeThemes, setActiveThemes] = useState<CategoryId[] | []>([]);
   const debouncedSearchValue = useDebounce(searchValue, 500);
 
-  const params = useMemo(
+  const params: GeostoriesParams = useMemo(
     () => ({
-      type: 'geostory',
-      ...(activeThemes.length > 0 && { theme: activeThemes }),
+      sort_by: 'title',
+      // ...(categories.length > 0 && { theme: categories }),
       ...(debouncedSearchValue !== '' &&
         debouncedSearchValue.length >= 2 && { title: debouncedSearchValue }),
     }),
-    [activeThemes, debouncedSearchValue]
+    [
+      // categories,
+      debouncedSearchValue,
+    ]
   );
-  const { data, isError, isLoading, isFetching } = useMonitorsAndGeostoriesPaginated(params, {
-    keepPreviousData: true,
+
+  const { data: geostoriesList, isLoading } = useGeostories({
+    params,
+    queryOptions: {
+      select: (data) => {
+        if (!!categories && categories !== 'All')
+          return data.filter((d) => categories.includes(d.theme));
+        return data;
+      },
+    },
   });
 
   return (
@@ -36,7 +45,7 @@ export default function GlobeGeostories() {
       <div className="flex h-[calc(100vh-400px)] flex-col px-5 pb-6">
         <GlobeSearch value={searchValue} setValue={setSearchValue} />
 
-        <GeostoriesList />
+        <GeostoriesList geostoriesList={geostoriesList} isLoading={isLoading} />
       </div>
     </aside>
   );

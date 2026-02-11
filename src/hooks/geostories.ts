@@ -10,6 +10,15 @@ import { parseBBox } from '@/utils/bbox';
 import { normalizeLayers } from '@/utils/layers';
 import API from 'services/api';
 
+export type GeostoriesParams = {
+  geostory_id?: string | number;
+  title?: string;
+  author?: string;
+  theme?: string[];
+  sort_by?: 'title' | 'date' | 'id';
+  pagination?: boolean;
+};
+
 type UseParams = {
   geostory_id?: string;
 };
@@ -98,9 +107,11 @@ export function useGeostoryLayers<TData = LayerParsed[]>(
 }
 
 export function useGeostories({
+  params,
   queryOptions,
   requestConfig,
 }: {
+  params?: GeostoriesParams;
   queryOptions?: UseQueryOptions<Geostory[], Error>;
   requestConfig?: GeostoriesRequestConfig;
 }) {
@@ -109,13 +120,15 @@ export function useGeostories({
       method: 'GET',
       url: '/geostories',
       ...requestConfig,
+      ...(params && { params }),
     });
 
     return response.data;
   };
 
-  return useQuery(['geostories'], fetchGeostories, {
+  return useQuery(['geostories', params], fetchGeostories, {
     ...DEFAULT_QUERY_OPTIONS,
+
     select: (data) =>
       data.map((d) => ({ ...d, geostory_bbox: parseBBox(d.geostory_bbox, 'geostory') })),
     ...queryOptions,
