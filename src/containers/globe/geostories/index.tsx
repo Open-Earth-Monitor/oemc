@@ -33,7 +33,7 @@ export default function GlobeGeostories() {
     params,
     queryOptions: {
       select: (data) => {
-        if (!!categories && categories !== 'All')
+        if (Array.isArray(categories) && categories.length > 0)
           return data.filter((d) => categories.includes(d.theme));
         return data;
       },
