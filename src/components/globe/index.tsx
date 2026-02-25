@@ -102,17 +102,23 @@ export default function Map3D({
         sceneModePicker={false}
         selectionIndicator={false}
         timeline={false}
-        skyBox={false as any}
+        skyBox={false}
       >
         <Scene backgroundColor={DARK_NAVY} />
-        <Globe enableLighting showGroundAtmosphere />
+        <Globe
+          enableLighting
+          showGroundAtmosphere
+          atmosphereHueShift={0.1}
+          atmosphereSaturationShift={0.4}
+          atmosphereBrightnessShift={-0.1}
+        />
         <SkyAtmosphere
           show
           perFragmentAtmosphere
-          hueShift={0.0}
+          hueShift={0.1}
           saturationShift={0.4}
-          brightnessShift={-0.9}
-          atmosphereLightIntensity={0.0}
+          brightnessShift={-0.1}
+          atmosphereLightIntensity={5.0}
         />
         <DynamicLighting />
         <CameraConstraints globePadding={globePadding} initialCenter={initialCenter} />
