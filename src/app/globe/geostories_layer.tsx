@@ -11,8 +11,8 @@ import RegularShape from 'ol/style/RegularShape';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 
-import type { CategoryId } from '@/constants/categories';
 import { CATEGORIES_COLORS, DEFAULT_COLOR } from '@/constants/categories';
+import type { CategoryId } from '@/constants/categories';
 
 import { useGeostories } from '@/hooks/geostories';
 
@@ -87,16 +87,8 @@ function looksLikeWebMercator(x: number, y: number) {
   return Math.abs(x) > 180 || Math.abs(y) > 90;
 }
 
-export function useGeostoryPins(categories?: CategoryId[] | 'All'): GeostoryPin[] {
-  const { data: geostories } = useGeostories({
-    queryOptions: {
-      select: (data) => {
-        if (!!categories && categories !== 'All')
-          return data.filter((d) => categories.includes(d.theme));
-        return data;
-      },
-    },
-  });
+export function useGeostoryPins(): GeostoryPin[] {
+  const { data: geostories } = useGeostories({});
 
   return useMemo(() => {
     if (!geostories?.length) return [];
