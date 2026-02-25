@@ -9026,16 +9026,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"olcs@npm:^2.22.1":
-  version: 2.22.1
-  resolution: "olcs@npm:2.22.1"
-  peerDependencies:
-    cesium: ">= 1.90.0"
-    ol: "*"
-  checksum: d76d6b42ed76428e44fd1bcd66ce6236c26d61491a95f9ae2b7e24b0c14da422adbb6eae4c74ca45f085b88072f0339a69df473caaa1c6835fe489517543e454
-  languageName: node
-  linkType: hard
-
 "on-finished@npm:~2.3.0":
   version: 2.3.0
   resolution: "on-finished@npm:2.3.0"
@@ -9127,7 +9117,6 @@ __metadata:
     ol: ^10.6.1
     ol-ext: ^4.0.11
     ol3-projection-switcher: ^0.1.3
-    olcs: ^2.22.1
     openlayers: ^4.6.5
     postcss: 8.4.21
     prettier: ^2.8.8
@@ -9144,6 +9133,7 @@ __metadata:
     react-responsive: ^10.0.0
     react-scroll: ^1.9.0
     react-share: 4.4.1
+    resium: ^1.19.4
     rlayers: ^3.7.1
     shadcn-ui: latest
     sharp: ^0.32.6
@@ -10260,6 +10250,17 @@ __metadata:
   dependencies:
     lodash: ^4.17.21
   checksum: fceaa448b235f9ed111aa58360129225a3cec1a897a23293dc08d2a00f001756c042a62df0a9d4d1e2669ace52dec960aea73437f407b30c51bfba2e9da208b7
+  languageName: node
+  linkType: hard
+
+"resium@npm:^1.19.4":
+  version: 1.19.4
+  resolution: "resium@npm:1.19.4"
+  peerDependencies:
+    cesium: 1.x
+    react: ">=18.2.0"
+    react-dom: ">=18.2.0"
+  checksum: 480b82c8b9ce566ee18be564434a3edc81e19838b0cc4dbc2dd62f7eac352fdf16210cbb8691957237e1b508e1cc03666fc2a9563385f6b2a060f5eb04ebe5d8
   languageName: node
   linkType: hard
 
