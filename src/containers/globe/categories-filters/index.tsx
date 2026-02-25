@@ -11,7 +11,7 @@ const CategoriesFilters = () => {
         <p className="text-white-700">Select a category</p>
         <p className="text-3xl font-medium text-white-500">Explore our geostories</p>
       </div>
-      <div className="flex space-x-2.5 rounded-full bg-white-950 p-6 backdrop-blur-[10px] ">
+      <div className="flex space-x-2.5 rounded-full bg-white-950 p-[22px] backdrop-blur-[10px] ">
         {[...CATEGORIES, ALL_CATEGORY].map(
           (category) => category.id !== 'All' && <Item key={category.id} {...category} />
         )}

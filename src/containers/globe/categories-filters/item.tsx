@@ -41,7 +41,7 @@ const Filter = ({ id, label, Icon }) => {
   return (
     <button
       className={cn({
-        'flex cursor-pointer items-center space-x-2.5 rounded-full border border-white-950 px-4 py-2.5 hover:bg-white-950':
+        'flex cursor-pointer items-center gap-2.5 rounded-full border border-white-950 p-1 hover:bg-white-950':
           true,
         'border-transparent': isActive,
       })}
@@ -53,7 +53,7 @@ const Filter = ({ id, label, Icon }) => {
     >
       <div
         className={cn({
-          'rounded-full bg-white-950 p-2': true,
+          'flex h-[38px] w-[38px] items-center justify-center rounded-full bg-white-950': true,
         })}
         style={{ backgroundColor: isActive ? '#ffffe6' : 'hsla(60, 100%, 95%, 0.05)' }}
       >
@@ -63,19 +63,19 @@ const Filter = ({ id, label, Icon }) => {
             color: CATEGORIES_COLORS[id]?.base,
           }}
           className={cn({
-            'h-6 w-6 fill-current': true,
+            'h-6 w-6 fill-current stroke-black-100 stroke-[0.2px]': true,
           })}
         />
       </div>
 
-      <span
+      <div
         className={cn({
-          'whitespace-nowrap font-medium text-white-500': true,
+          'mr-4 flex whitespace-nowrap font-medium text-white-500': true,
           'text-black-400': isActive,
         })}
       >
         {label}
-      </span>
+      </div>
     </button>
   );
 };

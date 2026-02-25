@@ -1,17 +1,19 @@
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
+import { useMemo } from 'react';
+
 import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
 import type { FeatureLike } from 'ol/Feature';
+import Point from 'ol/geom/Point';
+import VectorLayer from 'ol/layer/Vector';
 import { fromLonLat, toLonLat } from 'ol/proj';
-import Style from 'ol/style/Style';
-import RegularShape from 'ol/style/RegularShape';
+import VectorSource from 'ol/source/Vector';
 import Fill from 'ol/style/Fill';
+import RegularShape from 'ol/style/RegularShape';
 import Stroke from 'ol/style/Stroke';
+import Style from 'ol/style/Style';
 
 import type { CategoryId } from '@/constants/categories';
 import { CATEGORIES_COLORS, DEFAULT_COLOR } from '@/constants/categories';
-import { useMemo } from 'react';
+
 import { useGeostories } from '@/hooks/geostories';
 
 const GEOSTORY_PINS_LAYER_ID = 'geostory-pins';

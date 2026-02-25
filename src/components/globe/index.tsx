@@ -22,6 +22,7 @@ export type Map3DHandle = {
   enable3D: (enabled: boolean) => void;
   is3DEnabled: () => boolean;
   getCesiumScene: () => any | null;
+  getViewer?: () => any | null;
 };
 
 type CesiumClickEvent = {
