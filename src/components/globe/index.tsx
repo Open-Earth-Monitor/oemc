@@ -53,6 +53,27 @@ type Props = {
 const MARGIN_X_DESKTOP = 50;
 const MARGIN_Y_DESKTOP = 200;
 
+function computeFullGlobeHeight(scene: any, globePadding: number): number | null {
+  const camera = scene.camera;
+  const canvas = scene.canvas;
+
+  const width = (canvas?.clientWidth ?? 0) - MARGIN_X_DESKTOP;
+  const height = (canvas?.clientHeight ?? 0) - MARGIN_Y_DESKTOP;
+  if (!width || !height) return null;
+
+  const R = Cesium.Ellipsoid.WGS84.maximumRadius;
+  const frustum: any = camera.frustum;
+  const fovy = frustum?.fovy;
+  if (!fovy) return null;
+
+  const aspect = width / height;
+  const fovx = 2 * Math.atan(Math.tan(fovy / 2) * aspect);
+  const minFov = Math.min(fovy, fovx);
+
+  const distanceFromCenter = (R / Math.sin(minFov / 2)) * globePadding;
+  return Math.max(distanceFromCenter - R, 10_000);
+}
+
 export default function Map3D({
   onReady,
   onClick,
@@ -107,29 +128,12 @@ export default function Map3D({
     scene.fog.density = 0.0007;
     scene.fog.minimumBrightness = 0.25;
 
-    const camera = scene.camera;
-    const canvas = scene.canvas;
-
-    const width = (canvas?.clientWidth ?? 0) - MARGIN_X_DESKTOP;
-    const height = (canvas?.clientHeight ?? 0) - MARGIN_Y_DESKTOP;
-    if (!width || !height) return;
-
-    const R = Cesium.Ellipsoid.WGS84.maximumRadius;
-
-    const frustum: any = camera.frustum;
-    const fovy = frustum?.fovy;
-    if (!fovy) return;
-
-    const aspect = width / height;
-    const fovx = 2 * Math.atan(Math.tan(fovy / 2) * aspect);
-    const minFov = Math.min(fovy, fovx);
-
-    const distanceFromCenter = (R / Math.sin(minFov / 2)) * globePadding;
-    const heightAboveEllipsoid = Math.max(distanceFromCenter - R, 10_000);
+    const heightAboveEllipsoid = computeFullGlobeHeight(scene, globePadding);
+    if (heightAboveEllipsoid === null) return;
 
     const [lon, lat] = initialCenter;
 
-    camera.setView({
+    scene.camera.setView({
       destination: Cesium.Cartesian3.fromDegrees(lon, lat, heightAboveEllipsoid),
       orientation: {
         heading: 0,
@@ -138,7 +142,7 @@ export default function Map3D({
       },
     });
 
-    camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
+    scene.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
   }, [globePadding, initialCenter]);
 
   const flyToDefault = useCallback(() => {
@@ -147,28 +151,12 @@ export default function Map3D({
 
     scene.camera.cancelFlight();
 
-    const camera = scene.camera;
-    const canvas = scene.canvas;
-
-    const width = (canvas?.clientWidth ?? 0) - MARGIN_X_DESKTOP;
-    const height = (canvas?.clientHeight ?? 0) - MARGIN_Y_DESKTOP;
-    if (!width || !height) return;
-
-    const R = Cesium.Ellipsoid.WGS84.maximumRadius;
-    const frustum: any = camera.frustum;
-    const fovy = frustum?.fovy;
-    if (!fovy) return;
-
-    const aspect = width / height;
-    const fovx = 2 * Math.atan(Math.tan(fovy / 2) * aspect);
-    const minFov = Math.min(fovy, fovx);
-
-    const distanceFromCenter = (R / Math.sin(minFov / 2)) * globePadding;
-    const heightAboveEllipsoid = Math.max(distanceFromCenter - R, 10_000);
+    const heightAboveEllipsoid = computeFullGlobeHeight(scene, globePadding);
+    if (heightAboveEllipsoid === null) return;
 
     const [lon, lat] = DEFAULT_CENTER;
 
-    camera.flyTo({
+    scene.camera.flyTo({
       destination: Cesium.Cartesian3.fromDegrees(lon, lat, heightAboveEllipsoid),
       orientation: {
         heading: 0,
@@ -179,20 +167,32 @@ export default function Map3D({
     });
   }, [globePadding]);
 
-  const flyToBounds = useCallback((extent: [number, number, number, number]) => {
-    const scene = olCesiumRef.current?.getCesiumScene?.();
-    if (!scene) return;
+  const flyToBounds = useCallback(
+    (extent: [number, number, number, number]) => {
+      const scene = olCesiumRef.current?.getCesiumScene?.();
+      if (!scene) return;
 
-    scene.camera.cancelFlight();
+      scene.camera.cancelFlight();
 
-    const [west, south, east, north] = extent;
-    const destination = Cesium.Rectangle.fromDegrees(west, south, east, north);
+      const heightAboveEllipsoid = computeFullGlobeHeight(scene, globePadding);
+      if (heightAboveEllipsoid === null) return;
 
-    scene.camera.flyTo({
-      destination,
-      duration: 1.5,
-    });
-  }, []);
+      const [west, south, east, north] = extent;
+      const centerLon = (west + east) / 2;
+      const centerLat = (south + north) / 2;
+
+      scene.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(centerLon, centerLat, heightAboveEllipsoid),
+        orientation: {
+          heading: 0,
+          pitch: -Math.PI / 2,
+          roll: 0,
+        },
+        duration: 1.5,
+      });
+    },
+    [globePadding]
+  );
 
   const handle: Map3DHandle = useMemo(
     () => ({
@@ -296,9 +296,7 @@ export default function Map3D({
         }
 
         const olFeature =
-          picked?.primitive?.olFeature ??
-          picked?.primitive?.id?.olFeature ??
-          picked?.id?.olFeature;
+          picked?.primitive?.olFeature ?? picked?.primitive?.id?.olFeature ?? picked?.id?.olFeature;
 
         const geostoryId = olFeature?.getProperties?.()?.geostory_id;
 
