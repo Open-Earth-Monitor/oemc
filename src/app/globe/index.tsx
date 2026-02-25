@@ -4,9 +4,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { CategoryId } from '@/constants/categories';
 
+import { useGeostories } from '@/hooks/geostories';
 import { useSyncCategories } from '@/hooks/sync-query';
 
 import Map3D, { type GlobeClickEvent, type FlyTarget } from '@/components/globe';
+import GeostoryDialog from '@/components/globe/geostory-dialog';
 
 import { useGeostoryPins } from './geostory-pins';
 
@@ -15,6 +17,13 @@ const DEFAULT_CENTER: [number, number] = [20, 15];
 export default function Page() {
   const [categories] = useSyncCategories();
   const allPins = useGeostoryPins();
+  const { data: geostories } = useGeostories({});
+  const [selectedGeostoryId, setSelectedGeostoryId] = useState<string | null>(null);
+
+  const selectedGeostory = useMemo(
+    () => geostories?.find((g) => g.id === selectedGeostoryId) ?? null,
+    [geostories, selectedGeostoryId]
+  );
 
   const pins = useMemo(() => {
     if (!allPins?.length) return [];
@@ -71,7 +80,9 @@ export default function Page() {
 
   const handleClick = useCallback((evt: GlobeClickEvent) => {
     if (evt.geostoryId) {
-      console.info('Clicked geostory:', evt.geostoryId);
+      setSelectedGeostoryId(evt.geostoryId);
+    } else {
+      setSelectedGeostoryId(null);
     }
   }, []);
 
@@ -82,6 +93,11 @@ export default function Page() {
         pins={pins}
         flyToCenter={flyToCenter}
         style={{ width: '100%', height: '100%' }}
+      />
+      <GeostoryDialog
+        geostory={selectedGeostory}
+        open={!!selectedGeostory}
+        onOpenChange={(open) => !open && setSelectedGeostoryId(null)}
       />
     </div>
   );

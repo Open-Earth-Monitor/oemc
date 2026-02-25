@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
@@ -71,14 +71,21 @@ export default function Map3D({
     return map;
   }, [pins]);
 
+  const entityClickedRef = useRef(false);
+
   const handleEntityClick = useCallback(
     (geostoryId: string) => {
+      entityClickedRef.current = true;
       onClick?.({ type: 'globe-click', geostoryId });
     },
     [onClick]
   );
 
   const handleGlobeClick = useCallback(() => {
+    if (entityClickedRef.current) {
+      entityClickedRef.current = false;
+      return;
+    }
     onClick?.({
       type: 'globe-click',
       position: { lonLat: null },
