@@ -267,14 +267,42 @@ export default function Map3D({
     const scene = ol3d.getCesiumScene?.();
     if (scene) {
       const ctrl = scene.screenSpaceCameraController;
-      ctrl.enableZoom = true;
+      ctrl.enableZoom = false;
       ctrl.enableRotate = true;
       ctrl.enableTilt = true;
       ctrl.enableTranslate = true;
 
       scene.backgroundColor = Cesium.Color.fromCssColorString('#09131d');
       scene.skyBox = undefined;
-      scene.skyAtmosphere = undefined;
+
+      // Atmospheric limb glow
+      if (!scene.skyAtmosphere) {
+        scene.skyAtmosphere = new Cesium.SkyAtmosphere();
+      }
+      scene.skyAtmosphere.show = true;
+      scene.skyAtmosphere.perFragmentAtmosphere = true;
+      scene.skyAtmosphere.hueShift = 0.0;
+      scene.skyAtmosphere.saturationShift = 0.4;
+      scene.skyAtmosphere.brightnessShift = -0.9;
+      scene.skyAtmosphere.atmosphereLightIntensity = 0.0;
+
+      scene.globe.showGroundAtmosphere = true;
+
+      // Directional light from top-left; follows camera so shadow stays at bottom-right
+      scene.globe.enableLighting = true;
+      scene.light = new Cesium.DirectionalLight({
+        direction: new Cesium.Cartesian3(0.5, -0.5, -0.7),
+      });
+      scene.preRender.addEventListener(() => {
+        const cam = scene.camera;
+        const lightDir = new Cesium.Cartesian3(
+          cam.right.x * 0.5 - cam.up.x * 0.7 + cam.direction.x * 0.5,
+          cam.right.y * 0.5 - cam.up.y * 0.7 + cam.direction.y * 0.5,
+          cam.right.z * 0.5 - cam.up.z * 0.7 + cam.direction.z * 0.5
+        );
+        Cesium.Cartesian3.normalize(lightDir, lightDir);
+        scene.light.direction = lightDir;
+      });
 
       fitGlobeToViewport();
       requestAnimationFrame(() => fitGlobeToViewport());
