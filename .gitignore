@@ -52,3 +52,8 @@ tsconfig.tsbuildinfo
 /e2e/test-results/
 /playwright-report/
 /playwright/.cache/
+
+
+.claude/
+CLAUDE.md
+.mcp.json

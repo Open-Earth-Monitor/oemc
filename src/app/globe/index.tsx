@@ -1,20 +1,43 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
-import Map3D, { type Map3DHandle, Map3DClickEvent } from '@/components/globe';
-import { createGeostoryPointsLayer, useGeostoryPins } from './geostories_layer';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import type { Feature } from 'ol';
-import VectorSource from 'ol/source/Vector';
-import VectorLayer from 'ol/layer/Vector';
-import type { Point } from 'ol/geom';
 import type { MapBrowserEvent } from 'ol';
+import type { Point } from 'ol/geom';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+
+import type { CategoryId } from '@/constants/categories';
+
 import { useSyncCategories } from '@/hooks/sync-query';
-import { CategoryId } from '@/constants/categories';
+
+import Map3D, {
+  type Map3DHandle,
+  type Map3DClickEvent,
+  type CesiumClickEvent,
+} from '@/components/globe';
+
+import { createGeostoryPointsLayer, useGeostoryPins } from './geostories_layer';
 
 export default function Page() {
   const [categories] = useSyncCategories();
-  const pins = useGeostoryPins(categories as CategoryId[] | 'All');
-  const [controller, setController] = useState<Map3DHandle | null>(null);
+  const allPins = useGeostoryPins();
+  const pins = useMemo(() => {
+    if (!allPins?.length) return [];
+    if (
+      !categories ||
+      categories === 'All' ||
+      !Array.isArray(categories) ||
+      categories.length === 0
+    )
+      return allPins;
+    return allPins.filter((p) => (categories as CategoryId[]).includes(p.category as CategoryId));
+  }, [allPins, categories]);
+
+  const controllerRef = useRef<Map3DHandle | null>(null);
+  const [ready, setReady] = useState(false);
+  const isInitialMountRef = useRef(true);
 
   const pinsLayer: VectorLayer<VectorSource<Feature<Point>>, Feature<Point>> | null =
     useMemo(() => {
@@ -26,75 +49,100 @@ export default function Page() {
       layer.set('id', 'geostory-pins');
       return layer;
     }, [pins]);
-  const handleClick = useCallback(
-    (evt: Map3DClickEvent) => {
-      const map = controller?.getMap();
-      if (!map) return;
 
-      // --- 3D (Cesium) click payload ---
-      if ((evt as any)?.type === 'cesium-click') {
-        const picked = (evt as any).picked;
-        const billboard = picked?.primitive;
-        const billboardId = billboard?.id;
-        // console.log('Picked billboard id:', evt, evt.geostoryId);
-        const geostoryId =
-          (evt as any).primitive?.olFeature?.id ??
-          // 1) si el wrapper ya lo pusiera (por si acaso)
-          (evt as any).geostoryId ??
-          // 2) entity.id (a veces se usa para guardar el id “lógico”)
-          picked?.id?.geostoryId ??
-          // 3) Cesium Entity -> properties
-          picked?.id?.properties?.geostory_id?.getValue?.() ??
-          picked?.id?.properties?.geostoryId?.getValue?.() ??
-          // 4) primitive.id (cuando pick devuelve un Primitive con id custom)
-          picked?.primitive?.id?.geostoryId ??
-          picked?.primitive?.id?.geostory_id ??
-          // 5) primitive.id.properties (si el id es un Entity-like)
-          picked?.primitive?.id?.properties?.geostory_id?.getValue?.() ??
-          picked?.primitive?.id?.properties?.geostoryId?.getValue?.();
+  const onReady = useCallback((m: Map3DHandle) => {
+    controllerRef.current = m;
+    setReady(true);
+  }, []);
 
+  const isCesiumClick = (evt: Map3DClickEvent): evt is CesiumClickEvent =>
+    'type' in evt && evt.type === 'cesium-click';
+
+  const handleClick = useCallback((evt: Map3DClickEvent) => {
+    const map = controllerRef.current?.getMap();
+    if (!map) return;
+
+    if (isCesiumClick(evt)) {
+      const geostoryId =
+        evt.geostoryId ?? evt.olFeature?.get('geostory_id') ?? evt.olFeature?.getId();
+
+      if (geostoryId) {
+        console.info('Clicked geostory (3D):', geostoryId);
+      }
+      return;
+    }
+
+    const olEvt = evt as MapBrowserEvent<PointerEvent>;
+    if (!olEvt?.pixel) return;
+
+    map.forEachFeatureAtPixel(
+      olEvt.pixel,
+      (feature) => {
+        const geostoryId = feature.get('geostory_id');
         if (geostoryId) {
-          console.log('Clicked geostory (3D):', geostoryId);
-        } else {
-          console.log('3D click (no geostory picked):', picked);
+          console.info('Clicked feature (2D):', geostoryId);
         }
-        return;
-      }
+        return true;
+      },
+      { hitTolerance: 6 }
+    );
+  }, []);
 
-      // --- 2D (OpenLayers) click event ---
-      const olEvt = evt as MapBrowserEvent<any>;
-      if (!olEvt?.pixel) {
-        console.log('Click event has no evt.pixel (not an OL click):', evt);
-        return;
-      }
+  // Fly to filtered geostories when category filter changes
+  useEffect(() => {
+    if (!ready || !controllerRef.current) return;
 
-      let hit = false;
+    // Skip the very first render so the default globe view shows
+    if (isInitialMountRef.current) {
+      isInitialMountRef.current = false;
+      return;
+    }
 
-      map.forEachFeatureAtPixel(
-        olEvt.pixel,
-        (feature) => {
-          hit = true;
-          console.log('Clicked feature (2D):', {
-            layerId: feature.get('layerId'),
-            geostoryId: feature.get('geostory_id'),
-          });
-          return true;
-        },
-        { hitTolerance: 6 }
-      );
+    if (!pins || pins.length === 0) {
+      controllerRef.current.flyToDefault();
+      return;
+    }
 
-      if (!hit) console.log('No feature hit at pixel', olEvt.pixel);
-    },
-    [controller]
-  );
+    if (pins.length === 1) {
+      const [lon, lat] = pins[0].coordinates;
+      const padding = 2;
+      controllerRef.current.flyToBounds([
+        lon - padding,
+        lat - padding,
+        lon + padding,
+        lat + padding,
+      ]);
+      return;
+    }
+
+    let minLon = Infinity;
+    let minLat = Infinity;
+    let maxLon = -Infinity;
+    let maxLat = -Infinity;
+    for (const pin of pins) {
+      const [lon, lat] = pin.coordinates;
+      if (lon < minLon) minLon = lon;
+      if (lat < minLat) minLat = lat;
+      if (lon > maxLon) maxLon = lon;
+      if (lat > maxLat) maxLat = lat;
+    }
+
+    const padLon = Math.max((maxLon - minLon) * 0.1, 1);
+    const padLat = Math.max((maxLat - minLat) * 0.1, 1);
+
+    controllerRef.current.flyToBounds([
+      minLon - padLon,
+      minLat - padLat,
+      maxLon + padLon,
+      maxLat + padLat,
+    ]);
+  }, [pins, ready]);
 
   return (
     <div className="relative h-full w-full">
       <Map3D
         start3D={true}
-        onReady={(m) => {
-          setController(m);
-        }}
+        onReady={onReady}
         onClick={handleClick}
         layers={!!pinsLayer ? [pinsLayer] : []}
         style={{ width: '100%', height: '100%' }}

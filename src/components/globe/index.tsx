@@ -6,16 +6,17 @@ import 'ol/ol.css';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 import * as Cesium from 'cesium';
-import { Feature, MapBrowserEvent, MapEvent } from 'ol';
+import { Feature, MapBrowserEvent } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import Map from 'ol/Map';
 import XYZ from 'ol/source/XYZ';
 import View from 'ol/View';
 import OLCesium from 'olcs';
-
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { Point } from 'ol/geom';
+
+const DEFAULT_CENTER: [number, number] = [20, 15];
 
 export type Map3DHandle = {
   getMap: () => Map | null;
@@ -23,12 +24,14 @@ export type Map3DHandle = {
   is3DEnabled: () => boolean;
   getCesiumScene: () => any | null;
   getViewer?: () => any | null;
+  flyToBounds: (extent: [number, number, number, number]) => void;
+  flyToDefault: () => void;
 };
 
-type CesiumClickEvent = {
+export type CesiumClickEvent = {
   type: 'cesium-click';
-  picked?: any; // Cesium pick result
-  position?: any;
+  picked?: any;
+  position?: { cartesian: any; lonLat: [number, number] | null };
   olFeature?: Feature<any>;
   geostoryId?: string | number;
   movement?: any;
@@ -41,28 +44,10 @@ type Props = {
   style?: React.CSSProperties;
   className?: string;
   onReady?: (handle: Map3DHandle) => void;
-
-  /**
-   * Click:
-   * - 2D: OL click event
-   * - 3D: { type:'cesium-click', geostoryId?, picked, movement }
-   */
   onClick?: (evt: Map3DClickEvent) => void;
-
   layers?: VectorLayer<VectorSource<Feature<Point>>, Feature<Point>>[];
   globePadding?: number;
   initialCenter?: [number, number];
-};
-
-const applyFog = (scene: Cesium.Scene) => {
-  scene.fog.enabled = true;
-
-  // Cesium fog density is usually a very small number.
-  // Start here and tweak.
-  scene.fog.density = 0.00012;
-
-  // Prevent the horizon from getting too dark
-  scene.fog.minimumBrightness = 0.25;
 };
 
 const MARGIN_X_DESKTOP = 50;
@@ -76,13 +61,25 @@ export default function Map3D({
   className,
   layers = [],
   globePadding = 1.3,
-  initialCenter = [20, 15],
+  initialCenter = DEFAULT_CENTER,
 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const olCesiumRef = useRef<any>(null);
   const cesiumClickHandlerRef = useRef<any>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
+  const hasResizedOnceRef = useRef(false);
+
+  const onReadyRef = useRef(onReady);
+  const onClickRef = useRef(onClick);
+
+  useEffect(() => {
+    onReadyRef.current = onReady;
+  }, [onReady]);
+
+  useEffect(() => {
+    onClickRef.current = onClick;
+  }, [onClick]);
 
   const [cesiumEnabled, setCesiumEnabled] = useState(false);
 
@@ -102,45 +99,14 @@ export default function Map3D({
     return olCesiumRef.current?.getCesiumScene?.() ?? null;
   }, []);
 
-  const handle: Map3DHandle = useMemo(
-    () => ({
-      getMap: () => mapRef.current,
-      enable3D,
-      is3DEnabled,
-      getCesiumScene,
-    }),
-    [enable3D, is3DEnabled, getCesiumScene]
-  );
-
-  const syncLayers = () => {
-    const map = mapRef.current;
-    if (!map) return;
-
-    const group = map.getLayers(); // Collection<BaseLayer>
-    const current = group.getArray();
-
-    for (const lyr of layers) {
-      if (!current.includes(lyr)) group.push(lyr);
-    }
-  };
-
-  useEffect(() => {
-    if (!mapRef.current) return;
-    syncLayers();
-  }, [syncLayers]);
-
   const fitGlobeToViewport = useCallback(() => {
     const scene = olCesiumRef.current?.getCesiumScene?.();
     if (!scene) return;
 
     scene.fog.enabled = true;
-
-    // Cesium fog density is usually a very small number.
-    // Start here and tweak.
     scene.fog.density = 0.0007;
-
-    // Prevent the horizon from getting too dark
     scene.fog.minimumBrightness = 0.25;
+
     const camera = scene.camera;
     const canvas = scene.canvas;
 
@@ -159,7 +125,6 @@ export default function Map3D({
     const minFov = Math.min(fovy, fovx);
 
     const distanceFromCenter = (R / Math.sin(minFov / 2)) * globePadding;
-
     const heightAboveEllipsoid = Math.max(distanceFromCenter - R, 10_000);
 
     const [lon, lat] = initialCenter;
@@ -176,6 +141,96 @@ export default function Map3D({
     camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
   }, [globePadding, initialCenter]);
 
+  const flyToDefault = useCallback(() => {
+    const scene = olCesiumRef.current?.getCesiumScene?.();
+    if (!scene) return;
+
+    scene.camera.cancelFlight();
+
+    const camera = scene.camera;
+    const canvas = scene.canvas;
+
+    const width = (canvas?.clientWidth ?? 0) - MARGIN_X_DESKTOP;
+    const height = (canvas?.clientHeight ?? 0) - MARGIN_Y_DESKTOP;
+    if (!width || !height) return;
+
+    const R = Cesium.Ellipsoid.WGS84.maximumRadius;
+    const frustum: any = camera.frustum;
+    const fovy = frustum?.fovy;
+    if (!fovy) return;
+
+    const aspect = width / height;
+    const fovx = 2 * Math.atan(Math.tan(fovy / 2) * aspect);
+    const minFov = Math.min(fovy, fovx);
+
+    const distanceFromCenter = (R / Math.sin(minFov / 2)) * globePadding;
+    const heightAboveEllipsoid = Math.max(distanceFromCenter - R, 10_000);
+
+    const [lon, lat] = DEFAULT_CENTER;
+
+    camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(lon, lat, heightAboveEllipsoid),
+      orientation: {
+        heading: 0,
+        pitch: -Math.PI / 2,
+        roll: 0,
+      },
+      duration: 1.5,
+    });
+  }, [globePadding]);
+
+  const flyToBounds = useCallback((extent: [number, number, number, number]) => {
+    const scene = olCesiumRef.current?.getCesiumScene?.();
+    if (!scene) return;
+
+    scene.camera.cancelFlight();
+
+    const [west, south, east, north] = extent;
+    const destination = Cesium.Rectangle.fromDegrees(west, south, east, north);
+
+    scene.camera.flyTo({
+      destination,
+      duration: 1.5,
+    });
+  }, []);
+
+  const handle: Map3DHandle = useMemo(
+    () => ({
+      getMap: () => mapRef.current,
+      enable3D,
+      is3DEnabled,
+      getCesiumScene,
+      flyToBounds,
+      flyToDefault,
+    }),
+    [enable3D, is3DEnabled, getCesiumScene, flyToBounds, flyToDefault]
+  );
+
+  // Layer synchronization: diff the OL map's layers against the layers prop
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const group = map.getLayers();
+    const current = group.getArray();
+
+    // Remove layers no longer in props (skip base tile layer at index 0)
+    for (let i = current.length - 1; i >= 1; i--) {
+      const lyr = current[i];
+      if (!layers.includes(lyr as any)) {
+        group.removeAt(i);
+      }
+    }
+
+    // Add layers from props that are not yet on the map
+    for (const lyr of layers) {
+      if (!current.includes(lyr)) {
+        group.push(lyr);
+      }
+    }
+  }, [layers]);
+
+  // Mount-only initialization
   useEffect(() => {
     if (!containerRef.current) return;
     if (mapRef.current) return;
@@ -188,7 +243,8 @@ export default function Map3D({
       layers: [
         new TileLayer({
           source: new XYZ({
-            url: 'https://a.tile.opentopomap.org/{z}/{x}/{y}.png',
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            attributions: '&copy; Esri &mdash; Esri, Earthstar Geographics',
           }),
         }),
       ],
@@ -204,8 +260,6 @@ export default function Map3D({
 
     const ol3d = new OLCesium({ map });
     olCesiumRef.current = ol3d;
-
-    onReady?.(handle);
 
     ol3d.setEnabled(true);
     setCesiumEnabled(true);
@@ -225,7 +279,8 @@ export default function Map3D({
       fitGlobeToViewport();
       requestAnimationFrame(() => fitGlobeToViewport());
 
-      cesiumClickHandlerRef.current?.setInputAction((movement: any) => {
+      cesiumClickHandlerRef.current = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+      cesiumClickHandlerRef.current.setInputAction((movement: any) => {
         const pos = movement?.position ?? movement?.endPosition;
         if (!pos) return;
 
@@ -241,30 +296,33 @@ export default function Map3D({
         }
 
         const olFeature =
-          picked?.primitive?.olFeature ?? picked?.primitive?.id?.olFeature ?? picked?.id?.olFeature;
+          picked?.primitive?.olFeature ??
+          picked?.primitive?.id?.olFeature ??
+          picked?.id?.olFeature;
 
         const geostoryId = olFeature?.getProperties?.()?.geostory_id;
 
-        onClick?.({
+        onClickRef.current?.({
           type: 'cesium-click',
           picked,
           movement,
           olFeature,
           geostoryId,
-          position: { cartesian, lonLat }, // optional
+          position: { cartesian, lonLat },
         });
       }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-      layers.forEach((lyr) => map.addLayer(lyr));
-      // Refit en resize
+      // Only refit on first resize after mount
       resizeObserverRef.current = new ResizeObserver(() => {
-        if (ol3d.getEnabled?.()) requestAnimationFrame(() => fitGlobeToViewport());
+        if (!hasResizedOnceRef.current && ol3d.getEnabled?.()) {
+          hasResizedOnceRef.current = true;
+          requestAnimationFrame(() => fitGlobeToViewport());
+        }
       });
       resizeObserverRef.current.observe(containerRef.current);
     }
 
-    (map as any).renderSync?.();
-    requestAnimationFrame(() => (map as any).renderSync?.());
+    onReadyRef.current?.(handle);
 
     return () => {
       cesiumClickHandlerRef.current?.destroy?.();
@@ -281,7 +339,7 @@ export default function Map3D({
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onReady, onClick, start3D, fitGlobeToViewport]);
+  }, []);
 
   return (
     <div
@@ -292,7 +350,6 @@ export default function Map3D({
         width: '100%',
         height: '100%',
         ...style,
-        // visibility: start3D && !cesiumEnabled ? 'hidden' : 'visible',
       }}
     />
   );
