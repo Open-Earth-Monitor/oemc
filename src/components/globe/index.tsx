@@ -301,7 +301,7 @@ export default function Map3D({
           cam.right.z * 0.5 - cam.up.z * 0.7 + cam.direction.z * 0.5
         );
         Cesium.Cartesian3.normalize(lightDir, lightDir);
-        scene.light.direction = lightDir;
+        (scene.light as Cesium.DirectionalLight).direction = lightDir;
       });
 
       fitGlobeToViewport();
