@@ -23,6 +23,7 @@ import CameraConstraints from './camera-constraints';
 import { colorForCategory, createDiamondDataUrl } from './diamond-pin';
 import DynamicLighting from './dynamic-lighting';
 import FlyToCenter from './fly-to-center';
+import PulseLayer from './pulse-layer';
 
 if (typeof window !== 'undefined') {
   (window as any).CESIUM_BASE_URL = '/cesium/';
@@ -155,6 +156,8 @@ export default function Map3D({
             action={handleGlobeClick}
           />
         </ScreenSpaceEventHandler>
+
+        <PulseLayer pins={pins} />
 
         {pins.map((pin) => {
           const color = colorForCategory(pin.category);
