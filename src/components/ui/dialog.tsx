@@ -49,7 +49,7 @@ const DialogOverlay = forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'fixed inset-0 z-[1000] bg-brand-500 opacity-90 backdrop-blur-3xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      'fixed inset-0 z-[900] bg-brand-500 opacity-80 backdrop-blur-3xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className
     )}
     {...props}
@@ -117,8 +117,11 @@ DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 const DialogClose = forwardRef<
   ElementRef<typeof DialogPrimitive.Close>,
-  ComponentPropsWithoutRef<typeof DialogPrimitive.Close> & { iconClassName?: string }
->(({ className, children, iconClassName, ...props }, ref) => (
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Close> & {
+    iconClassName?: string;
+    hasIcon?: boolean;
+  }
+>(({ className, children, iconClassName, hasIcon, ...props }, ref) => (
   <DialogPrimitive.Close
     ref={ref}
     {...props}
@@ -129,7 +132,9 @@ const DialogClose = forwardRef<
     })}
   >
     {children}
-    <Cross2Icon className={cn({ 'h-6 w-6': true, [iconClassName]: !!iconClassName })} />
+    {hasIcon && (
+      <Cross2Icon className={cn({ 'h-6 w-6': true, [iconClassName]: !!iconClassName })} />
+    )}
     <span className="sr-only">Close</span>
   </DialogPrimitive.Close>
 ));

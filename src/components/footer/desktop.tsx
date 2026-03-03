@@ -8,7 +8,7 @@ import SocialMedia from './social-media';
 
 export const FooterDesktop: FC = () => {
   return (
-    <footer className="absolute bottom-0 z-50 flex w-full items-center justify-center border-t border-white-900/10">
+    <footer className="absolute bottom-0 z-[10th00] flex w-full items-center justify-center border-t border-white-900/10">
       <div className="mx-8 flex w-full max-w-7xl items-center justify-between xl:m-auto">
         <div className="flex items-center">
           <a
