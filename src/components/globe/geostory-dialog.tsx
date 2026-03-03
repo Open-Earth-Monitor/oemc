@@ -47,8 +47,8 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         scrollArea={false}
-        overlay={false}
-        className="flex-row overflow-hidden rounded-2xl bg-brand-500 p-0 sm:max-w-[507px] md:max-w-[507px]"
+        overlay={true}
+        className="!max-h-[400px] flex-row overflow-hidden rounded-none bg-brand-500 p-0 sm:max-w-[507px] md:max-w-[507px]"
       >
         <DialogTitle className="sr-only">{geostory.title}</DialogTitle>
         <DialogDescription className="sr-only">{geostory.description}</DialogDescription>
@@ -163,7 +163,7 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
         {/* Close button */}
         <DialogClose className="hover:text-white absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-brand-500/80 px-3 py-1 text-xs text-white-500 opacity-100 backdrop-blur-sm">
           <span>Close</span>
-          <LuX className="h-3.5 w-3.5" />
+          <LuX className="h-5 w-5 rounded-full border p-1" />
         </DialogClose>
 
         {/* Navigate arrow */}
