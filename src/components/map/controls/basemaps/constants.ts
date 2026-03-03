@@ -81,8 +81,9 @@ export const BASEMAPS: BasemapProps[] = [
   {
     id: 'world_imagery',
     label: 'Satellite',
-    attributions: '© OpenStreetMap contributors, SRTM | OpenTopoMap',
-    url: 'https://a.tile.opentopomap.org/{z}/{x}/{y}.png',
+    attributions:
+      'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer" target="_blank">Esri</a>',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     thumb: 'https://opentopomap.org/img/preview.png',
   },
 ];

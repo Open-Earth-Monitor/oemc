@@ -9,6 +9,7 @@ import {
   BillboardGraphics,
   Entity,
   Globe,
+  ImageryLayer,
   Scene,
   ScreenSpaceEvent,
   ScreenSpaceEventHandler,
@@ -25,7 +26,15 @@ import FlyToCenter from './fly-to-center';
 
 if (typeof window !== 'undefined') {
   (window as any).CESIUM_BASE_URL = '/cesium/';
+  Cesium.Ion.defaultAccessToken = undefined;
 }
+
+const esriImageryProvider = new Cesium.UrlTemplateImageryProvider({
+  url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  credit: new Cesium.Credit(
+    'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer" target="_blank">Esri</a>'
+  ),
+});
 
 const DEFAULT_CENTER: [number, number] = [20, 15];
 const DARK_NAVY = Cesium.Color.fromCssColorString('#09131d');
@@ -100,6 +109,7 @@ export default function Map3D({
       <Viewer
         full
         animation={false}
+        baseLayer={false}
         baseLayerPicker={false}
         fullscreenButton={false}
         geocoder={false}
@@ -111,6 +121,7 @@ export default function Map3D({
         timeline={false}
         skyBox={false}
       >
+        <ImageryLayer imageryProvider={esriImageryProvider} />
         <Scene backgroundColor={DARK_NAVY} />
         <Globe
           enableLighting
