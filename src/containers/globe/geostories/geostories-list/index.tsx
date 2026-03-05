@@ -6,7 +6,7 @@ import GeostoryItem from './item';
 
 const GeostoriesList = ({ geostoriesList, isLoading }) => {
   return (
-    <div className="h-full space-y-3 overflow-y-auto">
+    <div className="h-full w-full flex-1 space-y-3 overflow-y-auto lg:max-w-md ">
       <p className="text-xs font-medium text-accent-green">
         {geostoriesList?.length === 1 && `${geostoriesList?.length} Feature Geostory`}
         {geostoriesList?.length > 1 && `${geostoriesList?.length} Featured Geostories`}

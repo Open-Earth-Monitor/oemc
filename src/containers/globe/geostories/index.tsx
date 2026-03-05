@@ -1,17 +1,17 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { useDebounce } from '@/hooks/datasets';
 import { useGeostories, GeostoriesParams } from '@/hooks/geostories';
-import { useSyncCategories } from '@/hooks/sync-query';
+import { useSyncCategories, useSyncSearchGeostoriesGlobe } from '@/hooks/sync-query';
 
 import GeostoriesList from '@/containers/globe/geostories/geostories-list';
 
 import GlobeSearch from './geostories-search';
 
 export default function GlobeGeostories() {
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchValue, setSearchValue] = useSyncSearchGeostoriesGlobe();
   const [categories] = useSyncCategories();
 
   const debouncedSearchValue = useDebounce(searchValue, 500);
@@ -41,7 +41,7 @@ export default function GlobeGeostories() {
   });
 
   return (
-    <aside className="w-[320px] shrink-0 overflow-hidden">
+    <aside className="shrink-0 overflow-hidden">
       <div className="flex h-[calc(100vh-400px)] flex-col px-5 pb-6">
         <GlobeSearch value={searchValue} setValue={setSearchValue} />
 

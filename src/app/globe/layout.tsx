@@ -17,15 +17,14 @@ export const metadata: Metadata = {
 
 export default function GlobeLayout({ children }) {
   return (
-    <div className="relative h-screen w-screen">
-      <div className="absolute left-0 top-0 z-[1000] w-full py-8">
+    <div className="home hidden h-screen w-screen flex-col justify-between overflow-x-hidden text-primary sm:flex sm:px-12">
+      <div className=" z-[1000] w-full py-8">
         <Header />
       </div>
-
-      <div className="flex h-full">
-        <div className="relative flex w-full min-w-0 flex-1 items-center justify-center">
+      <div className="flex flex-1">
+        <div className="relative m-auto flex h-full w-full min-w-0 flex-1 items-center justify-center">
           <Geostories />
-          <div className="h-full w-full">{children}</div>
+          <div className="relative h-full w-full flex-1">{children}</div>
           <GlobeSocialMedia />
 
           <div className="absolute bottom-20 left-1/2 z-[1000] -translate-x-1/2 space-y-4">

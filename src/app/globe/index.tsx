@@ -4,8 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { CategoryId } from '@/constants/categories';
 
-import { useGeostories } from '@/hooks/geostories';
-import { useSyncCategories } from '@/hooks/sync-query';
+import { useDebounce } from '@/hooks/datasets';
+import { GeostoriesParams, useGeostories } from '@/hooks/geostories';
+import { useSyncCategories, useSyncSearchGeostoriesGlobe } from '@/hooks/sync-query';
 
 import Map3D, { type GlobeClickEvent, type FlyTarget } from '@/components/globe';
 import GeostoryDialog from '@/components/globe/geostory-dialog';
@@ -15,8 +16,25 @@ import { useGeostoryPins } from './geostory-pins';
 const DEFAULT_CENTER: [number, number] = [20, 15];
 
 export default function Page() {
+  const [searchValue] = useSyncSearchGeostoriesGlobe();
   const [categories] = useSyncCategories();
-  const allPins = useGeostoryPins();
+
+  const debouncedSearchValue = useDebounce(searchValue, 500);
+
+  // TO - DO: this params object is duplicated with the one in GlobeGeostories, we should unify them and move them to the sync-query hook, but for now we want to keep the geostory pins logic separated from the geostories list logic, so we will keep it here for now, also API should filter by category/theme but currently it does not so we filter on the frontend, when API is ready we can remove the category from the URL and this params object and just rely on the one in GlobeGeostories
+  const params: GeostoriesParams = useMemo(
+    () => ({
+      sort_by: 'title',
+      // ...(categories.length > 0 && { theme: categories }),
+      ...(debouncedSearchValue !== '' &&
+        debouncedSearchValue.length >= 2 && { title: debouncedSearchValue }),
+    }),
+    [
+      // categories,
+      debouncedSearchValue,
+    ]
+  );
+  const allPins = useGeostoryPins(params);
   const { data: geostories } = useGeostories({});
   const [selectedGeostoryId, setSelectedGeostoryId] = useState<string | null>(null);
 
