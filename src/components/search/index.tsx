@@ -1,4 +1,4 @@
-import { FC, useRef } from 'react';
+import { FC, useId, useRef } from 'react';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
@@ -12,54 +12,71 @@ const Search: FC<SearchProps> = ({
   setValue,
   label = 'Search',
   className,
+  children,
+  hasIcon = true,
   ...rest
 }: SearchProps) => {
   const { placeholder } = rest;
   const ref = useRef<HTMLInputElement>(null);
+  const id = useId();
 
   return (
     <div
-      className={cn('relative flex h-14 w-full outline-none', {
-        [className]: !!className,
-      })}
-      aria-label="search"
-      role="searchbox"
+      className={cn(
+        'relative flex h-14 w-fit items-center outline-none transition-colors duration-200 ease-out',
+        className
+      )}
+      role="search"
     >
-      <HiMagnifyingGlass
-        className={cn({
-          'absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform': true,
-        })}
-      />
-
-      <label htmlFor="search">
-        <span className="visually-hidden">{label}</span>
+      <label htmlFor={id} className="sr-only">
+        {label}
       </label>
+
       <input
         ref={ref}
-        placeholder={placeholder}
+        id={id}
         type="search"
-        id="search"
-        aria-label={label}
-        onChange={(e) => setValue(e.target.value)}
+        placeholder={placeholder}
         value={value}
+        onChange={(e) => setValue(e.target.value)}
         data-testid="search-input"
-        className="flex-1 truncate border-0 border-b-secondary-500 bg-transparent px-10 font-inter leading-4 text-secondary-700 placeholder-secondary-700 outline-none ring-0 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+        className={cn(
+          'flex-1 truncate bg-transparent px-10 font-inter leading-4',
+          'text-secondary-700 placeholder-secondary-700',
+          'border-0 outline-none ring-0',
+          'disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm'
+        )}
       />
+
+      {children}
+
       {value !== '' && (
         <button
-          tabIndex={0}
-          className="absolute right-3 z-10 flex items-center justify-center self-center p-0 text-secondary-700 hover:text-secondary-500"
           type="button"
           onClick={() => {
             setValue('');
-            if (ref.current) {
-              ref.current.focus();
-            }
+            ref.current?.focus();
           }}
-          aria-label="Empty search"
+          aria-label="Clear search"
+          className={cn(
+            'absolute right-3 flex items-center justify-center',
+            'text-secondary-700 hover:text-secondary-500',
+            'transition-colors duration-200 ease-out',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
+          )}
         >
-          <Cross2Icon className="h-4 w-4 bg-transparent fill-current" />
+          <Cross2Icon className="h-4 w-4 fill-current" />
         </button>
+      )}
+
+      {hasIcon && value === '' && (
+        <HiMagnifyingGlass
+          aria-hidden="true"
+          className={cn(
+            'pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2',
+            'text-secondary-700/70 transition-colors duration-200 ease-out'
+          )}
+        />
       )}
     </div>
   );

@@ -263,6 +263,12 @@
   left: 2px !important;
 }
 
+.cesium-credit-wrapper {
+  position: fixed !important;
+  bottom: 0px !important;
+  right: 40px !important;
+}
+
 .arrow {
   height: 15px;
   width: 15px;
@@ -287,4 +293,13 @@
   #clustrmaps-widget-v2 {
     top: 195px !important;
   }
+}
+
+.cesium-viewer-bottom {
+  bottom: 52px !important;
+}
+
+.cesium-widget,
+.cesium-widget canvas {
+  background: transparent !important;
 }

@@ -7,7 +7,7 @@ import { useParams, usePathname } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import type { MapBrowserEvent } from 'ol';
-import ol from 'ol';
+import * as ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import { toLonLat } from 'ol/proj';
 import { Size } from 'ol/size';
@@ -268,7 +268,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   }, [tooltipInfo.coordinate]);
 
   const handleSingleClick = useCallback(
-    (e: MapBrowserEvent<UIEvent>): void => {
+    (e: MapBrowserEvent<PointerEvent>): void => {
       const lonlat = toLonLat(e.coordinate);
       setPlaying(false);
       setLonLat(lonlat);
@@ -474,7 +474,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     () => LABELS.find((label) => activeLabels === label.id)?.url,
     [activeLabels]
   );
-  console.log(!isLoading && isLayerActive && !!gs_name);
+
   return (
     <div className="relative h-full w-full">
       <RMap
