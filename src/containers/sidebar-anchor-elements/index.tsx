@@ -1,6 +1,6 @@
 'use client';
 
-import MapLogo from '@/containers/explore/logo';
+import Logo from '@/containers/explore/logo';
 
 import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
 
@@ -32,7 +32,7 @@ export default function SidebarAnchorElements() {
       className="absolute top-0 h-screen w-screen overflow-hidden transition-[left] duration-300 ease-in-out"
       style={{ left }}
     >
-      <MapLogo />
+      <Logo className="absolute top-7 z-10 transition-[left] duration-300 ease-in-out" />
       <SidebarTrigger />
     </div>
   );

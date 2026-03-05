@@ -4,6 +4,8 @@ import { FC } from 'react';
 
 import Image from 'next/image';
 
+import Logo from '@/containers/explore/logo';
+
 import MainMenuDesktop from '../main-menu/desktop';
 
 import SocialMedia from './social-media';
@@ -28,14 +30,7 @@ export const FooterMobile: FC = () => {
       </div>
 
       <div className="flex w-full items-center justify-between px-4 py-3">
-        <Image
-          alt="Open-earth-monitor"
-          src="/images/OEM_Logo.webp"
-          width={140}
-          height={35}
-          className="inline-block"
-          priority
-        />
+        <Logo className="absolute left-5 top-7 z-10 transition-[left] duration-300 ease-in-out" />
         <MainMenuDesktop />
       </div>
     </footer>

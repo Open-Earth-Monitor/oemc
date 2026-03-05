@@ -3,13 +3,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function MapLogo() {
+import cn from '@/lib/classnames';
+
+export default function Logo({ className }: { className?: string }) {
   return (
     <Link
-      href="/"
+      href="/globe"
       aria-label="Go to homepage"
       title="Go to homepage"
-      className="absolute top-7 z-10"
+      className={cn(className)}
     >
       <Image
         alt="Open-earth-monitor"

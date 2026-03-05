@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import type { CategoryId } from '@/constants/categories';
 
-import { useGeostories } from '@/hooks/geostories';
+import { GeostoriesParams, useGeostories } from '@/hooks/geostories';
 
 export type GeostoryPin = {
   geostory_id: string;
@@ -28,8 +28,10 @@ function webMercatorToLonLat(x: number, y: number): [number, number] {
   return [lon, lat];
 }
 
-export function useGeostoryPins(): GeostoryPin[] {
-  const { data: geostories } = useGeostories({});
+export function useGeostoryPins(params: GeostoriesParams): GeostoryPin[] {
+  const { data: geostories } = useGeostories({
+    params,
+  });
 
   return useMemo(() => {
     if (!geostories?.length) return [];

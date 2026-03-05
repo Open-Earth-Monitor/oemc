@@ -18,10 +18,10 @@ module.exports = {
         DEFAULT: '1rem', // Default padding for medium screens
         sm: '1rem', // Small screens
         md: '1rem', // Medium screens
-        lg: '2rem', // Large screens
-        xl: '4rem', // Extra large screens
-        '2xl': '6rem', // Extra-extra large screens
-        '3xl': '10rem', // Extra-extra-extra large screens
+        // lg: '2rem', // Large screens
+        // xl: '4rem', // Extra large screens
+        // '2xl': '6rem', // Extra-extra large screens
+        // '3xl': '10rem', // Extra-extra-extra large screens
       },
     },
     // screens: {
