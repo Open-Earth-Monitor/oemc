@@ -14,7 +14,7 @@ const Header = ({ className }: { className?: string }) => {
   const isMobile = useMediaQuery(mobile);
   return (
     <div
-      className={cn('z-[1000] m-auto w-full items-center', {
+      className={cn('pointer-events-auto z-[1000] m-auto w-full items-center', {
         [className]: className,
       })}
     >

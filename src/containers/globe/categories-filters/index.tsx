@@ -6,7 +6,7 @@ import Item from './item';
 
 const CategoriesFilters = () => {
   return (
-    <div className="m-auto space-y-4">
+    <div className="pointer-events-auto m-auto space-y-4">
       <div className="m-auto flex w-fit flex-col items-center justify-center">
         <p className="text-white-700">Select a category</p>
         <p className="text-3xl font-medium text-white-500">Explore our geostories</p>

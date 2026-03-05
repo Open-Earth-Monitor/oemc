@@ -17,23 +17,31 @@ export const metadata: Metadata = {
 
 export default function GlobeLayout({ children }) {
   return (
-    <div className="flex h-screen w-screen flex-col justify-between overflow-x-hidden text-primary sm:px-12">
-      <div className=" z-[1000] w-full py-8">
+    <div className="relative h-screen w-screen overflow-hidden text-primary">
+      {/* Globe - full-screen base layer */}
+      <div className="absolute inset-0 z-0">{children}</div>
+
+      {/* Header - top overlay, fully transparent */}
+      <div className="pointer-events-none absolute left-0 right-0 top-0 z-[1000] px-4 py-8 sm:px-12">
         <Header />
       </div>
-      <div className="flex flex-1">
-        <div className="relative m-auto flex h-full w-full min-w-0 flex-1 items-center justify-center">
-          <Geostories />
-          <div className="relative h-full w-full flex-1">{children}</div>
-          <GlobeSocialMedia />
 
-          <div className="absolute bottom-20 left-1/2 z-[1000] -translate-x-1/2 space-y-4">
-            <div className="-translate-y-6">
-              <CategoriesFilters />
-            </div>
-            <GlobeExploreData />
-          </div>
+      {/* Left sidebar - Geostories */}
+      <div className="pointer-events-none absolute left-0 top-28 z-[1000] sm:pl-12">
+        <Geostories />
+      </div>
+
+      {/* Right sidebar - Social Media */}
+      <div className="pointer-events-none absolute right-0 top-28 z-[1000] sm:pr-12">
+        <GlobeSocialMedia />
+      </div>
+
+      {/* Bottom controls */}
+      <div className="pointer-events-none absolute bottom-20 left-1/2 z-[1000] -translate-x-1/2 space-y-4">
+        <div className="-translate-y-6">
+          <CategoriesFilters />
         </div>
+        <GlobeExploreData />
       </div>
     </div>
   );
