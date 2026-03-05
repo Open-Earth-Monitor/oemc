@@ -10,7 +10,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
   return (
     <div className="relative flex-1">
       {children}
-      {!pathname.includes('/explore') && <Footer />}
+      {/* {!pathname.includes('/explore') && <Footer />} */}
     </div>
   );
 }

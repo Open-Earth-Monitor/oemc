@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function GlobeLayout({ children }) {
   return (
-    <div className="home hidden h-screen w-screen flex-col justify-between overflow-x-hidden text-primary sm:flex sm:px-12">
+    <div className="flex h-screen w-screen flex-col justify-between overflow-x-hidden text-primary sm:px-12">
       <div className=" z-[1000] w-full py-8">
         <Header />
       </div>

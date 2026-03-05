@@ -298,3 +298,8 @@
 .cesium-viewer-bottom {
   bottom: 52px !important;
 }
+
+.cesium-widget,
+.cesium-widget canvas {
+  background: transparent !important;
+}

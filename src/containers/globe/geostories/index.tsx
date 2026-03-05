@@ -41,7 +41,7 @@ export default function GlobeGeostories() {
   });
 
   return (
-    <aside className="shrink-0 overflow-hidden">
+    <aside className="hidden shrink-0 overflow-hidden sm:flex">
       <div className="flex h-[calc(100vh-400px)] flex-col px-5 pb-6">
         <GlobeSearch value={searchValue} setValue={setSearchValue} />
 
