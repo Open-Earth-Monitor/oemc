@@ -14,7 +14,7 @@ export default function GlobeSearch({
   return (
     <div
       className={cn(
-        'group mb-4 w-full sm:w-fit',
+        'group mb-4 w-full sm:w-52',
         'rounded-[50px] border border-white-800/20 px-5 py-2.5 text-white-700/50',
         'transition-[background-color,width] duration-300 ease-out',
         'hover:bg-white-500 sm:hover:w-full',
