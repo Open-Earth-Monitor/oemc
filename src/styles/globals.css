@@ -295,8 +295,16 @@
   }
 }
 
-.cesium-viewer-bottom {
+.cesium-viewer-bottom,
+.cesium-credit-wrapper {
   bottom: 52px !important;
+}
+
+@media (max-width: 450px) {
+  .cesium-viewer-bottom,
+  .cesium-credit-wrapper {
+    bottom: 62px !important;
+  }
 }
 
 .cesium-widget,

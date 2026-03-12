@@ -16,7 +16,7 @@ const CarouselButton = ({ direction }: { direction: 'prev' | 'next' }) => {
     <button
       onClick={direction === 'prev' ? scrollPrev : scrollNext}
       disabled={direction === 'prev' ? !canScrollPrev : !canScrollNext}
-      className="absolute bottom-0 z-10 rounded-full bg-white-950 p-2 shadow-md disabled:opacity-50"
+      className="absolute bottom-0 z-10 rounded-full p-2 shadow-md disabled:opacity-50"
       style={direction === 'prev' ? { left: '10px' } : { right: '10px' }}
       aria-label={direction === 'prev' ? 'Previous Slide' : 'Next Slide'}
     >

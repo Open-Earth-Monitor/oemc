@@ -105,7 +105,7 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full md:flex xl:flex">
       <Map3D
         onClick={handleClick}
         pins={pins}
