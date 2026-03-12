@@ -1,18 +1,29 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import type { Geostory, GeostoryParsed } from '@/types/geostories';
 import type { Layer, LayerParsed } from '@/types/layers';
 
-import { Theme, THEMES_COLORS } from '@/constants/themes';
+import { CategoryId, CATEGORIES_COLORS, ALL_CATEGORY } from '@/constants/categories';
 
 import { parseBBox } from '@/utils/bbox';
 import { normalizeLayers } from '@/utils/layers';
 import API from 'services/api';
 
+export type GeostoriesParams = {
+  geostory_id?: string | number;
+  title?: string;
+  author?: string;
+  theme?: string[];
+  sort_by?: 'title' | 'date' | 'id';
+  pagination?: boolean;
+};
+
 type UseParams = {
   geostory_id?: string;
 };
+
+type GeostoriesRequestConfig = Omit<AxiosRequestConfig, 'method' | 'url'>;
 
 const DEFAULT_QUERY_OPTIONS = {
   refetchOnWindowFocus: false,
@@ -22,9 +33,13 @@ const DEFAULT_QUERY_OPTIONS = {
   staleTime: Infinity,
 };
 
-const getColor = (ready: boolean, theme: Theme, themeType: 'base' | 'dark' | 'light') => {
+const getColor = (
+  ready: boolean,
+  theme: CategoryId | typeof ALL_CATEGORY.id,
+  themeType: 'base' | 'dark' | 'light'
+) => {
   if (!ready) return 'hsla(0, 0%, 79%, 1)';
-  return THEMES_COLORS[theme][themeType] || THEMES_COLORS.Unknown[themeType];
+  return CATEGORIES_COLORS[theme][themeType] || CATEGORIES_COLORS.Unknown[themeType];
 };
 
 export function useGeostory(params: UseParams, queryOptions?: UseQueryOptions<Geostory, Error>) {
@@ -91,15 +106,29 @@ export function useGeostoryLayers<TData = LayerParsed[]>(
   });
 }
 
-export function useGeostories(queryOptions?: UseQueryOptions<Geostory[], Error>) {
-  const fetchGeostories = () =>
-    API.request({
+export function useGeostories({
+  params,
+  queryOptions,
+  requestConfig,
+}: {
+  params?: GeostoriesParams;
+  queryOptions?: UseQueryOptions<Geostory[], Error>;
+  requestConfig?: GeostoriesRequestConfig;
+}) {
+  const fetchGeostories = async () => {
+    const response: AxiosResponse<Geostory[]> = await API.request({
       method: 'GET',
       url: '/geostories',
-      ...queryOptions,
-    }).then((response: AxiosResponse<Geostory[]>) => response.data);
-  return useQuery(['geostories'], fetchGeostories, {
+      ...requestConfig,
+      ...(params && { params }),
+    });
+
+    return response.data;
+  };
+
+  return useQuery(['geostories', params], fetchGeostories, {
     ...DEFAULT_QUERY_OPTIONS,
+
     select: (data) =>
       data.map((d) => ({ ...d, geostory_bbox: parseBBox(d.geostory_bbox, 'geostory') })),
     ...queryOptions,

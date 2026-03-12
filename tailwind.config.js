@@ -18,12 +18,27 @@ module.exports = {
         DEFAULT: '1rem', // Default padding for medium screens
         sm: '1rem', // Small screens
         md: '1rem', // Medium screens
-        lg: '2rem', // Large screens
-        xl: '4rem', // Extra large screens
-        '2xl': '6rem', // Extra-extra large screens
-        '3xl': '10rem', // Extra-extra-extra large screens
+        // lg: '2rem', // Large screens
+        // xl: '4rem', // Extra large screens
+        // '2xl': '6rem', // Extra-extra large screens
+        // '3xl': '10rem', // Extra-extra-extra large screens
       },
     },
+    // screens: {
+    //   sm: '640px',
+    //   // => @media (min-width: 640px) { ... }
+
+    //   md: '768px',
+    //   // => @media (min-width: 768px) { ... }
+
+    //   lg: '1024px',
+    //   // => @media (min-width: 1024px) { ... }
+
+    //   xl: '1280px',
+    //   // => @media (min-width: 1280px) { ... }
+
+    //   '2xl': '1536px',
+    // },
     extend: {
       fontFamily: {
         inter: ['var(--font-inter)', 'sans-serif'],

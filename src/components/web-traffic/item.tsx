@@ -2,14 +2,14 @@ import { FC } from 'react';
 
 import Link from 'next/link';
 
-import type { Theme } from '@/constants/themes';
+import type { CategoryId } from '@/constants/categories';
 
-export type ThemeQueryParam = Theme[] | [];
+export type CategoryQueryParam = CategoryId[] | [];
 
 type ItemProps = {
   id: string;
   title: string;
-  theme: ThemeQueryParam;
+  theme: CategoryQueryParam;
   color: string;
   type: 'monitor' | 'geostory';
 };
