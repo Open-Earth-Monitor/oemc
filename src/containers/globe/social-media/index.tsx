@@ -4,11 +4,12 @@ import { useMediaQuery } from 'react-responsive';
 
 import { orderBy } from 'lodash-es';
 
-import { mobile, tablet } from '@/lib/media-queries';
+import { tablet } from '@/lib/media-queries';
 
 import { useSocialMedia } from '@/hooks/social-media';
 
 import Loading from '@/components/loading';
+
 import SocialMediaDesktop from './carousel-desktop';
 import SocialMediaMobile from './carousel-mobile';
 
@@ -22,18 +23,18 @@ const SocialMediaFeed = () => {
     },
   });
 
-  const isMobile = useMediaQuery(mobile);
-  const isTablet = useMediaQuery(tablet);
+  const isMobile = useMediaQuery(tablet);
+
   return (
-    <div>
+    <aside>
       {isLoading && (
         <div>
           <Loading />
         </div>
       )}
-      {/* {isFetched && !isLoading && (isMobile || isTablet) && <SocialMediaMobile data={data} />} */}
-      {isFetched && !isLoading && !isMobile && !isTablet && <SocialMediaDesktop data={data} />}
-    </div>
+      {isFetched && !isLoading && isMobile && <SocialMediaMobile data={data} />}
+      {isFetched && !isLoading && !isMobile && <SocialMediaDesktop data={data} />}
+    </aside>
   );
 };
 

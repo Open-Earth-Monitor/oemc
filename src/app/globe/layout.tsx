@@ -6,6 +6,7 @@ import Geostories from '@/containers/globe/geostories';
 import GlobeSocialMedia from '@/containers/globe/social-media';
 
 import Header from '@/components/header';
+import MobileGlobeBar from '@/containers/globe/mobile-toolbar';
 
 export const metadata: Metadata = {
   title:
@@ -42,6 +43,10 @@ export default function GlobeLayout({ children }) {
           <CategoriesFilters />
         </div>
         <GlobeExploreData />
+      </div>
+
+      <div className="block md:hidden">
+        <MobileGlobeBar />
       </div>
     </div>
   );

@@ -21,7 +21,7 @@ import SortBy from '@/components/sort-by';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-const MobileExploreNavbar = () => {
+const MobileGlobeBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentDataset, setDatasetType] = useSyncDatasetType();
   const [categories, setCategory] = useSyncCategories();
@@ -48,7 +48,7 @@ const MobileExploreNavbar = () => {
   const showTheme = category !== null && category !== undefined;
 
   return (
-    <div className="fixed bottom-0 left-0 z-50 w-full text-sm">
+    <div className="fixed bottom-0 left-0 z-10 w-full text-sm">
       <div
         className="z-50 max-h-[80vh] overflow-auto bg-black-500 text-white-500 transition-transform"
         style={{ transform: isOpen ? 'translateY(0)' : 'translateY(100%)' }}
@@ -157,8 +157,8 @@ const MobileExploreNavbar = () => {
 
       <Button
         className={cn(
-          'z-60 relative flex h-[60px] w-full justify-between rounded-none border-none bg-black-500 px-6 py-2 text-sm text-white-500',
-          isOpen && 'bg-accent-green text-black-500'
+          'relative flex h-[60px] w-full justify-between rounded-none border-none bg-black-500 px-6 py-2 text-sm text-white-500',
+          isOpen && 'z-50 bg-accent-green text-black-500'
         )}
         onClick={toggle}
       >
@@ -172,4 +172,4 @@ const MobileExploreNavbar = () => {
   );
 };
 
-export default MobileExploreNavbar;
+export default MobileGlobeBar;
