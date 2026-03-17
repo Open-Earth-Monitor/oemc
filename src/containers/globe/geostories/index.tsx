@@ -41,8 +41,8 @@ export default function GlobeGeostories() {
   });
 
   return (
-    <aside className="pointer-events-auto hidden max-w-md overflow-hidden rounded-2xl bg-brand-500/70 backdrop-blur-sm sm:flex">
-      <div className="flex max-h-[calc(100vh-300px)] flex-col px-5 pb-6 pt-4">
+    <aside className="pointer-events-auto hidden max-w-[420px] overflow-hidden rounded-2xl bg-black-500/70 backdrop-blur-sm sm:flex">
+      <div className="flex max-h-[calc(100vh-300px)] flex-col space-y-5 pb-6 pl-5 pt-4">
         <GlobeSearch value={searchValue} setValue={setSearchValue} />
 
         <GeostoriesList geostoriesList={geostoriesList} isLoading={isLoading} />

@@ -111,10 +111,10 @@
     -webkit-appearance: none;
   }
   input[type='search']:focus {
-    border-color: hsl(60, 100%, 95%) !important;
-    --tw-ring-color: hsl(60, 100%, 95%) !important;
+    border-color: rgb(29, 237, 192) !important;
+    --tw-ring-color: rgb(29, 237, 192) !important;
     --tw-ring-offset-width: 0.5px !important;
-    --tw-ring-offset-color: hsl(60, 100%, 95%) !important;
+    --tw-ring-offset-color: rgb(29, 237, 192) !important;
   }
 }
 
@@ -297,13 +297,13 @@
 
 .cesium-viewer-bottom,
 .cesium-credit-wrapper {
-  bottom: 52px !important;
+  bottom: 72px !important;
 }
 
 @media (max-width: 450px) {
   .cesium-viewer-bottom,
   .cesium-credit-wrapper {
-    bottom: 62px !important;
+    bottom: 72px !important;
   }
 }
 

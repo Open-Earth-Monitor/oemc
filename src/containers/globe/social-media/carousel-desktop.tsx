@@ -49,7 +49,7 @@ const SocialMediaDesktop = ({ data }: { data: any[] }) => {
   }, [api]);
 
   return (
-    <aside className="pointer-events-auto w-[320px] overflow-hidden rounded-2xl bg-brand-500/70 backdrop-blur-sm">
+    <aside className="pointer-events-auto w-[320px] overflow-hidden rounded-2xl bg-black-500/70 backdrop-blur-sm">
       <div className="h-[calc(100vh-200px)]">
         <div className="flex h-full flex-col gap-y-6 px-5">
           <div className="flex items-end justify-between font-medium text-white-500">

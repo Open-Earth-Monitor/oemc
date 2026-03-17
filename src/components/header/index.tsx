@@ -14,11 +14,12 @@ const Header = ({ className }: { className?: string }) => {
   const isMobile = useMediaQuery(mobile);
   return (
     <div
-      className={cn('pointer-events-auto z-[1000] m-auto w-full items-center', {
-        [className]: className,
-      })}
+      className={cn(
+        'pointer-events-auto z-[1000] m-auto flex w-full flex-1 items-center border-b border-white-950/20 px-4 py-[15px] xl:border-none',
+        className
+      )}
     >
-      <div className=" flex h-full items-center justify-between">
+      <div className="flex h-full flex-1 items-center justify-between">
         <Logo />
         {!isMobile && <MainMenuDesktop />}
         {isMobile && <MainMenuMobile />}

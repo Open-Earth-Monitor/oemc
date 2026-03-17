@@ -7,6 +7,7 @@ import GlobeSocialMedia from '@/containers/globe/social-media';
 
 import Header from '@/components/header';
 import MobileGlobeBar from '@/containers/globe/mobile-toolbar';
+import CategoriesFiltersMobile from '@/containers/globe/categories-filters/mobile';
 
 export const metadata: Metadata = {
   title:
@@ -23,29 +24,32 @@ export default function GlobeLayout({ children }) {
       <div className="absolute inset-0 z-0">{children}</div>
 
       {/* Header - top overlay, fully transparent */}
-      <div className="pointer-events-none absolute left-0 right-0 top-0 z-[1000] px-4 py-8 sm:px-12">
+      <div className="pointer-events-none absolute left-0 right-0 top-5 z-[1000] xl:top-0">
         <Header />
       </div>
 
       {/* Left sidebar - Geostories */}
-      <div className="pointer-events-none absolute left-0 top-28 z-[1000] sm:pl-12">
+      <div className="pointer-events-none absolute left-0 top-28 z-[1000] hidden sm:pl-12 xl:block">
         <Geostories />
       </div>
 
       {/* Right sidebar - Social Media */}
-      <div className="pointer-events-none absolute right-0 top-28 z-[1000] sm:pr-12">
+      <div className="pointer-events-none absolute right-0 top-28 z-[1000] hidden sm:pr-12 xl:block">
         <GlobeSocialMedia />
       </div>
 
       {/* Bottom controls */}
-      <div className="pointer-events-none absolute bottom-20 left-1/2 z-[1000] -translate-x-1/2 space-y-4">
+      <div className="pointer-events-none absolute bottom-20 left-1/2 z-[1000] hidden -translate-x-1/2 space-y-4 xl:block">
         <div className="-translate-y-6">
           <CategoriesFilters />
         </div>
         <GlobeExploreData />
       </div>
+      <div>
+        <CategoriesFiltersMobile className="absolute right-0 top-28 flex w-full xl:hidden" />
+      </div>
 
-      <div className="block md:hidden">
+      <div className="block xl:hidden">
         <MobileGlobeBar />
       </div>
     </div>

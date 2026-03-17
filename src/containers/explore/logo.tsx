@@ -11,7 +11,7 @@ export default function Logo({ className }: { className?: string }) {
       href="/globe"
       aria-label="Go to homepage"
       title="Go to homepage"
-      className={cn(className)}
+      className={cn('block h-[35px] w-[140px] shrink-0', className)}
     >
       <Image
         alt="Open-earth-monitor"

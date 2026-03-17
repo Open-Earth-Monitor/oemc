@@ -6,7 +6,15 @@ import { CATEGORIES, CATEGORIES_COLORS } from '@/constants/categories';
 
 import { useSyncCategories } from '@/hooks/sync-query';
 
-const Filter = ({ id, label, Icon }) => {
+type ItemProps = {
+  id: (typeof CATEGORIES)[number]['id'];
+  label: string;
+  theme?: 'plain' | 'colored'; // 'plain' keeps the icon color fixed, 'colored' changes the icon color based on category
+  Icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  className?: string;
+};
+
+const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
   const [categoriesFilter, setCategoriesFilter] = useSyncCategories();
 
   const categories = useMemo(() => CATEGORIES.map((c) => c.id), []);
@@ -44,11 +52,23 @@ const Filter = ({ id, label, Icon }) => {
         'flex cursor-pointer items-center gap-2.5 rounded-full border border-white-950 p-1 hover:bg-white-950':
           true,
         'border-transparent': isActive,
+        [className || '']: !!className,
       })}
       onClick={handleCategory}
       style={{
-        color: isActive ? '#0b1825' : CATEGORIES_COLORS[id]?.base,
-        backgroundColor: isActive ? CATEGORIES_COLORS[id]?.base : 'transparent',
+        color: isActive
+          ? CATEGORIES_COLORS[id]?.base
+          : theme === 'plain'
+          ? '#FFFFE6'
+          : CATEGORIES_COLORS[id]?.base,
+        backgroundColor:
+          theme === 'plain'
+            ? isActive
+              ? CATEGORIES_COLORS[id]?.base
+              : 'transparent'
+            : isActive
+            ? CATEGORIES_COLORS[id]?.base
+            : 'transparent',
       }}
     >
       <div
@@ -60,7 +80,7 @@ const Filter = ({ id, label, Icon }) => {
         <Icon
           style={{
             backgroundColor: isActive ? CATEGORIES_COLORS[id]?.base : CATEGORIES_COLORS[id]?.light,
-            color: CATEGORIES_COLORS[id]?.base,
+            color: theme === 'plain' ? '#FFFFE6' : CATEGORIES_COLORS[id]?.base,
           }}
           className={cn({
             'h-6 w-6 fill-current stroke-black-100 stroke-[0.2px]': true,
@@ -71,7 +91,7 @@ const Filter = ({ id, label, Icon }) => {
       <div
         className={cn({
           'mr-4 flex whitespace-nowrap font-medium text-white-500': true,
-          'text-black-400': isActive,
+          'text-black-400': isActive && theme !== 'plain',
         })}
       >
         {label}

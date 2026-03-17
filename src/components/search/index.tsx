@@ -23,7 +23,7 @@ const Search: FC<SearchProps> = ({
   return (
     <div
       className={cn(
-        'relative flex h-14 w-fit items-center outline-none transition-colors duration-200 ease-out',
+        'relative flex w-fit items-center border-white-950/20 outline-none transition-colors duration-200 ease-out',
         className
       )}
       role="search"
@@ -41,9 +41,10 @@ const Search: FC<SearchProps> = ({
         onChange={(e) => setValue(e.target.value)}
         data-testid="search-input"
         className={cn(
-          'flex-1 truncate bg-transparent px-10 font-inter leading-4',
-          'text-secondary-700 placeholder-secondary-700',
-          'border-0 outline-none ring-0',
+          'flex-1 truncate rounded-full bg-transparent px-10 pl-5 pr-6 font-inter leading-4',
+          'appearance-none shadow-none outline-none',
+
+          // 'focus-visible:outline-none focus-visible:ring-0',
           'disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm'
         )}
       />
@@ -73,8 +74,8 @@ const Search: FC<SearchProps> = ({
         <HiMagnifyingGlass
           aria-hidden="true"
           className={cn(
-            'pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2',
-            'text-secondary-700/70 transition-colors duration-200 ease-out'
+            'pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2',
+            'text-secondary-700/70 transition-colors duration-200 ease-out focus-within:text-secondary-500'
           )}
         />
       )}
