@@ -46,7 +46,7 @@ function GlobeLayoutDesktop() {
 function GlobeLayoutMobile() {
   return (
     <>
-      <CategoriesFiltersMobile className="absolute right-0 top-28 flex w-full xl:hidden" />
+      <CategoriesFiltersMobile className="absolute right-0 top-24 flex w-full xl:hidden" />
 
       <div className="absolute bottom-40 right-5 flex flex-col items-end gap-4 xl:hidden">
         <GeostoriesGlobeMobile />

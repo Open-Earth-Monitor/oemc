@@ -8,7 +8,7 @@ const Header = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        'pointer-events-auto z-[1000] m-auto flex w-full flex-1 items-center border-b border-white-950/20 px-4 py-[15px] xl:border-none',
+        'pointer-events-auto z-[1000] m-auto flex w-full flex-1 items-center px-4 py-2.5 sm:py-5',
         className
       )}
     >

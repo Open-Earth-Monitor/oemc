@@ -19,7 +19,7 @@ const CategoriesFiltersMobile = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        'pointer-events-all relative m-auto flex w-full items-center justify-between space-x-3 px-5',
+        'pointer-events-all relative m-auto flex w-full items-center justify-between space-x-3 border-t border-white-950/20 px-5 py-5',
         className
       )}
     >
@@ -31,7 +31,7 @@ const CategoriesFiltersMobile = ({ className }: { className?: string }) => {
         mobile
       />
       <Popover>
-        <PopoverTrigger className="flex w-fit items-center space-x-4 rounded-full bg-accent-green px-5 py-2.5 font-satoshi text-sm font-medium focus:rounded-full">
+        <PopoverTrigger className="flex w-fit items-center space-x-4 rounded-full bg-white-500 px-5 py-2.5 font-satoshi text-sm font-medium hover:bg-accent-green focus:rounded-full disabled:pointer-events-none data-[state=closed]:bg-white-500 data-[state=open]:bg-accent-green">
           <span>Filter</span>
           <FilterSVG className="text-black h-5 w-5" />
         </PopoverTrigger>

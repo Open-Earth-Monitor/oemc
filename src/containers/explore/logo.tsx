@@ -8,7 +8,7 @@ import cn from '@/lib/classnames';
 export default function Logo({ className }: { className?: string }) {
   return (
     <Link
-      href="/globe"
+      href="/"
       aria-label="Go to homepage"
       title="Go to homepage"
       className={cn('block h-[35px] w-[140px] shrink-0', className)}

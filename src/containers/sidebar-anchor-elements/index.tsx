@@ -32,7 +32,7 @@ export default function SidebarAnchorElements() {
       className="absolute top-0 h-screen w-screen overflow-hidden transition-[left] duration-300 ease-in-out"
       style={{ left }}
     >
-      <Logo className="absolute top-7 z-10 transition-[left] duration-300 ease-in-out" />
+      <Logo className="absolute top-2.5 z-10 transition-[left] duration-300 ease-in-out sm:top-5" />
       <SidebarTrigger />
     </div>
   );
