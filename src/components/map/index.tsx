@@ -474,7 +474,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     () => LABELS.find((label) => activeLabels === label.id)?.url,
     [activeLabels]
   );
-
+  console.log(!isLoading && isLayerActive && !!gs_name);
   return (
     <div className="relative h-full w-full">
       <RMap
