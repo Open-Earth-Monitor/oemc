@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import Image from 'next/image';
 
@@ -12,7 +12,7 @@ import SocialMedia from './social-media';
 
 export const FooterMobile: FC = () => {
   return (
-    <footer className="bg-primary-900 fixed bottom-0 z-[1000] w-full space-y-2">
+    <footer className="fixed bottom-0 z-[1000] w-full space-y-2 bg-black-500">
       <div className="flex-col space-y-9 px-4">
         <a
           href="https://cordis.europa.eu/project/id/101059548"

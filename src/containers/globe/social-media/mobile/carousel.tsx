@@ -1,7 +1,3 @@
-'use client';
-
-import * as React from 'react';
-
 import { Post } from '@/components/social-media/post';
 import {
   Carousel,

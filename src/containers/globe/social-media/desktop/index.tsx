@@ -4,9 +4,9 @@ import { orderBy } from 'lodash-es';
 
 import { useSocialMedia } from '@/hooks/social-media';
 
-import Loading from '@/components/loading';
+import SocialMediaDesktop from '@/containers/globe/social-media/desktop/carousel';
 
-import SocialMediaDesktop from './carousel-desktop';
+import Loading from '@/components/loading';
 
 const SocialMediaFeed = () => {
   const { data, isLoading } = useSocialMedia(null, {
@@ -25,7 +25,6 @@ const SocialMediaFeed = () => {
           <Loading />
         </div>
       )}
-
       <SocialMediaDesktop data={data} />
     </aside>
   );
