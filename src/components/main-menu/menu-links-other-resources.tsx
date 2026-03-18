@@ -16,7 +16,7 @@ const OtherResourcesLinks = () => {
         return (
           <li key={props.href} className="group flex w-full cursor-pointer">
             <Link
-              className="cursor-pointer rounded-[8px] px-4 py-2 font-medium transition-colors hover:bg-black-500 hover:text-white-500"
+              className="flex cursor-pointer items-center space-x-2 rounded-[8px] px-4 py-2 font-medium transition-colors hover:bg-black-500 hover:text-white-500"
               {...props}
             >
               {isActive && (
