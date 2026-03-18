@@ -38,13 +38,13 @@ export const BASEMAPS: BasemapProps[] = [
   //   thumb: 'https://upload.wikimedia.org/wikipedia/commons/6/6e/OpenStreetMap_Mapnik_Sample.png',
   // },
 
-  // {
-  //   id: 'gray_scale',
-  //   label: 'Gray scale',
-  //   attributions: '© OpenStreetMap contributors © Carto',
-  //   url: 'https://basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
-  //   thumb: 'https://carto.com/help/images/building-maps/basemaps/light_all.png',
-  // },
+  {
+    id: 'gray_scale',
+    label: 'Gray scale',
+    attributions: '© OpenStreetMap contributors © Carto',
+    url: 'https://basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
+    thumb: 'https://carto.com/help/images/building-maps/basemaps/light_all.png',
+  },
 
   // {
   //   id: 'world_imagery',
@@ -52,14 +52,6 @@ export const BASEMAPS: BasemapProps[] = [
   //   attributions: '© OpenStreetMap contributors © Carto',
   //   url: 'https://basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png',
   //   thumb: 'https://carto.com/help/images/building-maps/basemaps/dark_all.png',
-  // },
-
-  // {
-  //   id: 'gray_scale',
-  //   label: 'Gray scale',
-  //   attributions: 'Map tiles by Stamen Design, © OpenStreetMap contributors',
-  //   url: 'https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
-  //   thumb: 'https://stamen-tiles.a.ssl.fastly.net/toner/4/2/5.png',
   // },
 
   // {
@@ -77,15 +69,23 @@ export const BASEMAPS: BasemapProps[] = [
   //   url: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png',
   //   thumb: 'https://maps.wikimedia.org/osm-intl/4/8/5.png',
   // },
-
   {
     id: 'world_imagery',
     label: 'Satellite',
     attributions:
       'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer" target="_blank">Esri</a>',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    thumb: 'https://opentopomap.org/img/preview.png',
+    thumb: 'https://ecodatacube.eu/images/osm_overview.png',
   },
+
+  // {
+  //   id: 'world_imagery',
+  //   label: 'Satellite',
+  //   attributions:
+  //     'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer" target="_blank">Esri</a>',
+  //   url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  //   thumb: 'https://opentopomap.org/img/preview.png',
+  // },
 ];
 
 export const LABELS: LabelProps[] = [

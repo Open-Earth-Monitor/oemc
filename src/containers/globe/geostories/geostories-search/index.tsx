@@ -1,5 +1,7 @@
 import { LuSearch } from 'react-icons/lu';
+
 import Search from '@/components/search';
+
 import { cn } from 'lib/classnames';
 
 const SIZE = {
@@ -11,7 +13,6 @@ const SIZE = {
 export default function GlobeSearch({
   value,
   setValue,
-  className,
   size = 'md',
   mobile = false,
 }: {
@@ -60,8 +61,9 @@ export default function GlobeSearch({
           aria-hidden="true"
           className={cn(
             'pointer-events-none absolute right-5 text-lg transition-colors duration-200 ease-out',
-            'group-focus-within:text-black-500',
-            mobile && 'text-white-500 group-focus-within:text-white-500'
+            'text-white-500 group-focus-within:text-black-500',
+            !mobile && 'group-hover:text-black-500',
+            mobile && ' group-focus-within:text-white-500'
           )}
         />
       )}
