@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 
@@ -12,16 +12,74 @@ import { Post } from './post';
 const CarouselButton = ({ direction }: { direction: 'prev' | 'next' }) => {
   const { scrollPrev, scrollNext, canScrollPrev, canScrollNext } = useCarousel();
 
+  const isPrev = direction === 'prev';
+
   return (
     <button
-      onClick={direction === 'prev' ? scrollPrev : scrollNext}
-      disabled={direction === 'prev' ? !canScrollPrev : !canScrollNext}
-      className="absolute bottom-0 z-10 rounded-full p-2 shadow-md disabled:opacity-50"
-      style={direction === 'prev' ? { left: '10px' } : { right: '10px' }}
-      aria-label={direction === 'prev' ? 'Previous Slide' : 'Next Slide'}
+      onClick={isPrev ? scrollPrev : scrollNext}
+      disabled={isPrev ? !canScrollPrev : !canScrollNext}
+      className="z-10 shrink-0 rounded-full bg-white-950 p-2 shadow-md backdrop-blur-sm disabled:opacity-50"
+      aria-label={isPrev ? 'Previous Slide' : 'Next Slide'}
     >
-      {direction === 'prev' ? <ChevronLeftIcon size={20} /> : <ChevronRightIcon size={20} />}
+      {isPrev ? (
+        <ChevronLeftIcon size={20} className="text-white-500" />
+      ) : (
+        <ChevronRightIcon size={20} className="text-white-500" />
+      )}
     </button>
+  );
+};
+
+const CarouselDots = ({
+  api,
+  total,
+  activeIndex,
+  visibleDots = 6,
+}: {
+  api: CarouselApi | null;
+  total: number;
+  activeIndex: number;
+  visibleDots?: number;
+}) => {
+  const DOT_SIZE = 8; // h-1 w-1 => 4px
+  const GAP = 8; // gap-2 => 8px
+  const STEP = DOT_SIZE + GAP;
+
+  const maxStart = Math.max(0, total - visibleDots);
+
+  const startIndex = useMemo(() => {
+    if (total <= visibleDots) return 0;
+
+    const centeredStart = activeIndex - Math.floor(visibleDots / 2);
+    return Math.max(0, Math.min(centeredStart, maxStart));
+  }, [activeIndex, total, visibleDots, maxStart]);
+
+  const translateX = startIndex * STEP;
+  const viewportWidth = visibleDots * DOT_SIZE + (visibleDots - 1) * GAP;
+
+  if (!total) return null;
+
+  return (
+    <div className="h-full overflow-x-hidden py-2" style={{ width: `${viewportWidth}px` }}>
+      <div
+        className="flex items-center gap-2 px-2 transition-transform duration-300 ease-out"
+        style={{ transform: `translateX(-${translateX}px)` }}
+      >
+        {Array.from({ length: total }).map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            onClick={() => api?.scrollTo(index)}
+            aria-label={`Go to slide ${index + 1}`}
+            className={`h-2 w-2 shrink-0 rounded-full transition-all ${
+              activeIndex === index
+                ? 'scale-150 bg-gradient-to-br from-[#1EEDBF] to-[#75A1FF]'
+                : 'bg-white-500/40'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -30,6 +88,7 @@ const SocialMediaDesktop = ({ data }: { data: any[] }) => {
   const [count, setCount] = useState(1);
 
   const dataLength = data?.length ?? 0;
+  const activeIndex = count - 1;
 
   useEffect(() => {
     if (!api) return;
@@ -38,7 +97,7 @@ const SocialMediaDesktop = ({ data }: { data: any[] }) => {
       setCount(api.selectedScrollSnap() + 1);
     };
 
-    update(); // initial
+    update();
     api.on('select', update);
     api.on('reInit', update);
 
@@ -49,8 +108,8 @@ const SocialMediaDesktop = ({ data }: { data: any[] }) => {
   }, [api]);
 
   return (
-    <aside className="pointer-events-auto w-[320px] overflow-hidden rounded-2xl bg-black-500/70 backdrop-blur-sm">
-      <div className="h-[calc(100vh-200px)]">
+    <aside className="pointer-events-auto h-fit w-[320px] overflow-hidden rounded-2xl bg-black-500/70 backdrop-blur-sm">
+      <div className="h-full">
         <div className="flex h-full flex-col gap-y-6 px-5">
           <div className="flex items-end justify-between font-medium text-white-500">
             <p>
@@ -80,8 +139,16 @@ const SocialMediaDesktop = ({ data }: { data: any[] }) => {
                 ))}
               </CarouselContent>
 
-              <CarouselButton direction="prev" />
-              <CarouselButton direction="next" />
+              <div className="absolute bottom-0 left-1/2 z-10 flex -translate-x-1/2 items-center gap-4">
+                <CarouselButton direction="prev" />
+                <CarouselDots
+                  api={api}
+                  total={dataLength}
+                  activeIndex={activeIndex}
+                  visibleDots={6}
+                />
+                <CarouselButton direction="next" />
+              </div>
             </Carousel>
           </div>
         </div>

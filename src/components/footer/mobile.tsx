@@ -12,8 +12,8 @@ import SocialMedia from './social-media';
 
 export const FooterMobile: FC = () => {
   return (
-    <footer className="bg-primary-900 relative w-full space-y-2">
-      <div className="flex-col space-y-9 px-4 py-6">
+    <footer className="bg-primary-900 fixed bottom-0 z-[1000] w-full space-y-2">
+      <div className="flex-col space-y-9 px-4">
         <a
           href="https://cordis.europa.eu/project/id/101059548"
           target="_blank"
@@ -26,13 +26,13 @@ export const FooterMobile: FC = () => {
             Funded by the European Union
           </span>
         </a>
-        <SocialMedia />
+        {/* <SocialMedia /> */}
       </div>
 
-      <div className="flex w-full items-center justify-between px-4 py-3">
+      {/* <div className="flex w-full items-center justify-between px-4 py-3">
         <Logo className="absolute left-5 top-7 z-10 transition-[left] duration-300 ease-in-out" />
         <MainMenuDesktop />
-      </div>
+      </div> */}
     </footer>
   );
 };

@@ -26,7 +26,7 @@ const SocialMediaFeed = () => {
   const isMobile = useMediaQuery(tablet);
 
   return (
-    <aside>
+    <aside className="h-fit">
       {isLoading && (
         <div>
           <Loading />

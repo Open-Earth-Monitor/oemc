@@ -6,8 +6,8 @@ import Geostories from '@/containers/globe/geostories';
 import GlobeSocialMedia from '@/containers/globe/social-media';
 
 import Header from '@/components/header';
-import MobileGlobeBar from '@/containers/globe/mobile-toolbar';
 import CategoriesFiltersMobile from '@/containers/globe/categories-filters/mobile';
+import GeostoriesGlobeMobile from './geostories-mobile';
 
 export const metadata: Metadata = {
   title:
@@ -50,7 +50,7 @@ export default function GlobeLayout({ children }) {
       </div>
 
       <div className="block xl:hidden">
-        <MobileGlobeBar />
+        <GeostoriesGlobeMobile />
       </div>
     </div>
   );

@@ -11,8 +11,7 @@ import { FooterMobile } from './mobile';
 
 export const Footer: FC = () => {
   const isMobile = useMediaQuery(mobile);
-  // return isMobile ? <FooterMobile /> : <FooterDesktop />;
-  return <FooterDesktop />;
+  return isMobile ? <FooterMobile /> : <FooterDesktop />;
 };
 
 export default Footer;

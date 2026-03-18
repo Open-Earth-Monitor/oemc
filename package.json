@@ -24,7 +24,7 @@
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-checkbox": "latest",
     "@radix-ui/react-collapsible": "latest",
-    "@radix-ui/react-dialog": "latest",
+    "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "latest",
     "@radix-ui/react-icons": "latest",
     "@radix-ui/react-label": "latest",
@@ -94,6 +94,7 @@
     "tailwindcss": "3.3.2",
     "tailwindcss-animate": "^1.0.6",
     "usehooks-ts": "3.1.0",
+    "vaul": "^1.1.2",
     "webpack": "^5.104.0"
   },
   "devDependencies": {
@@ -116,6 +117,6 @@
     "next-usequerystate": "1.9.2",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0",
-    "typescript": "5.0.4"
+    "typescript": "^5.9.3"
   }
 }
