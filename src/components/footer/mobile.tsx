@@ -1,19 +1,19 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import Image from 'next/image';
 
-import Logo from '@/containers/explore/logo';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-import MainMenuDesktop from '../main-menu/desktop';
+import ShareSVG from '@/SVGS/share';
 
 import SocialMedia from './social-media';
 
 export const FooterMobile: FC = () => {
   return (
-    <footer className="fixed bottom-0 z-[1000] w-full space-y-2 bg-black-500">
-      <div className="flex-col space-y-9 px-4">
+    <footer className="fixed bottom-0 z-[2000] flex w-full items-center justify-between space-y-2 bg-black-500 px-4">
+      <div className="flex-col space-y-9">
         <a
           href="https://cordis.europa.eu/project/id/101059548"
           target="_blank"
@@ -26,13 +26,21 @@ export const FooterMobile: FC = () => {
             Funded by the European Union
           </span>
         </a>
-        {/* <SocialMedia /> */}
       </div>
-
-      {/* <div className="flex w-full items-center justify-between px-4 py-3">
-        <Logo className="absolute left-5 top-7 z-10 transition-[left] duration-300 ease-in-out" />
-        <MainMenuDesktop />
-      </div> */}
+      <Popover>
+        <PopoverTrigger>
+          <ShareSVG className="h-6 w-6" />
+        </PopoverTrigger>
+        <PopoverContent
+          align="end"
+          side="top"
+          sideOffset={20}
+          hideWhenDetached={true}
+          className="w-fit border-none bg-white-500"
+        >
+          <SocialMedia theme="dark" />
+        </PopoverContent>
+      </Popover>
     </footer>
   );
 };

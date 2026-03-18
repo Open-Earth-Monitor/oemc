@@ -128,7 +128,7 @@ export const SocialMediaContent = ({
               key={post.id}
               className="flex h-full items-start justify-center lg:max-w-md xl:max-w-xs"
             >
-              <div className="h-full w-full overflow-hidden">
+              <div className="mb-10 h-full w-full overflow-hidden xl:mb-0">
                 <Post post={post} />
               </div>
             </CarouselItem>
