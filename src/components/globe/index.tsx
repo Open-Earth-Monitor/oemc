@@ -17,7 +17,7 @@ import {
   Viewer,
 } from 'resium';
 
-import type { GeostoryPin } from '@/app/globe/geostory-pins';
+import type { GeostoryPin } from '@/app/(landing)/geostory-pins';
 
 import CameraConstraints from './camera-constraints';
 import { colorForCategory, createDiamondDataUrl } from './diamond-pin';

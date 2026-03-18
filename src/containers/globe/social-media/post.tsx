@@ -17,7 +17,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
             <CarouselContent>
               {data.media_attachments.map((att, index) => (
                 <CarouselItem key={index}>
-                  <div className="relative h-20 w-full overflow-hidden rounded-md">
+                  <div className="relative h-[30vh]  w-full overflow-hidden rounded-md xl:h-20">
                     <Image
                       src={att.preview_url}
                       alt={att.description || data?.card?.title || 'post'}
@@ -32,7 +32,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
           </Carousel>
         )}
         {!!data?.media_attachments.length && data?.media_attachments.length === 1 && (
-          <div className="relative h-20 overflow-hidden rounded-md pt-4">
+          <div className="relative h-[30vh] overflow-hidden rounded-md pt-4 xl:h-20">
             <Image
               src={data?.media_attachments[0].preview_url}
               alt={data?.media_attachments[0].description || data?.card?.title || 'post'}

@@ -18,11 +18,9 @@ export default function ExploreLayout({ children }: { children: React.ReactNode 
         <SidebarWrapper>{children}</SidebarWrapper>
       </SidebarProvider>
       <div className="relative">
-        <div className="absolute right-5 top-7 z-50 hidden md:block">
+        <div className="absolute right-5 top-7 z-50">
           <MainMenuDesktop />
         </div>
-        <MainMenuMobile className="md:hidden" />
-
         <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
           <Map />
         </div>

@@ -9,14 +9,19 @@ const OtherResourcesLinks = () => {
   const pathname = usePathname();
 
   return (
-    <ul className="w-full px-6 py-5 font-medium">
+    <ul className="flex w-full flex-col gap-1 px-6 py-5 font-medium">
       {otherResources.map(({ name, ...props }) => {
         const isActive = `/${pathname.split('/')[1]}` === props.href;
 
         return (
-          <li key={props.href} className="w-full cursor-pointer px-6 py-2.5">
-            <Link className="cursor-pointer" rel="noopener noreferrer" target="_blank" {...props}>
-              {isActive && <span>·</span>}
+          <li key={props.href} className="group flex w-full cursor-pointer">
+            <Link
+              className="cursor-pointer rounded-[8px] px-4 py-2 font-medium transition-colors hover:bg-black-500 hover:text-white-500"
+              {...props}
+            >
+              {isActive && (
+                <div className="h-2 w-2 rounded-full bg-black-500 group-hover:bg-white-500" />
+              )}
               <span>{name}</span>
             </Link>
           </li>

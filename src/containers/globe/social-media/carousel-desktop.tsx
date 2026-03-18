@@ -108,7 +108,7 @@ const SocialMediaDesktop = ({ data }: { data: any[] }) => {
   }, [api]);
 
   return (
-    <aside className="pointer-events-auto h-fit w-[320px] overflow-hidden rounded-2xl bg-black-500/70 backdrop-blur-sm">
+    <aside className="pointer-events-auto h-[50vh] w-full overflow-hidden rounded-2xl bg-black-500/70 backdrop-blur-sm xl:h-fit xl:w-[320px]">
       <div className="h-full">
         <div className="flex h-full flex-col gap-y-6 px-5">
           <div className="flex items-end justify-between font-medium text-white-500">
@@ -120,7 +120,7 @@ const SocialMediaDesktop = ({ data }: { data: any[] }) => {
             </span>
           </div>
 
-          <div className="max-h-64 min-h-0 flex-1 overflow-hidden">
+          <div className="min-h-0 flex-1 overflow-hidden xl:max-h-64">
             <Carousel
               opts={{ align: 'center', loop: true, slidesToScroll: 1, active: true }}
               className="relative h-full"
@@ -130,7 +130,7 @@ const SocialMediaDesktop = ({ data }: { data: any[] }) => {
                 {data?.map((post) => (
                   <CarouselItem
                     key={post.id}
-                    className="flex h-full max-w-xs items-start justify-center"
+                    className="flex h-full items-start justify-center lg:max-w-md xl:max-w-xs"
                   >
                     <div className="h-full w-full overflow-hidden">
                       <Post post={post} />

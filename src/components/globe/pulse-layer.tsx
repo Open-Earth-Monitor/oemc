@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 import * as Cesium from 'cesium';
 import { useCesium } from 'resium';
 
-import type { GeostoryPin } from '@/app/globe/geostory-pins';
+import type { GeostoryPin } from '@/app/(landing)/geostory-pins';
 
 import { colorForCategory, createPulseDiamondDataUrl } from './diamond-pin';
 import { cesiumColorFromCss, phaseOffsetFromId, pulseColor, pulseScale } from './pulse-animation';

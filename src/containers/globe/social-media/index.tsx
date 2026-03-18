@@ -1,20 +1,15 @@
 'use client';
 
-import { useMediaQuery } from 'react-responsive';
-
 import { orderBy } from 'lodash-es';
-
-import { tablet } from '@/lib/media-queries';
 
 import { useSocialMedia } from '@/hooks/social-media';
 
 import Loading from '@/components/loading';
 
 import SocialMediaDesktop from './carousel-desktop';
-import SocialMediaMobile from './carousel-mobile';
 
 const SocialMediaFeed = () => {
-  const { data, isLoading, isFetched } = useSocialMedia(null, {
+  const { data, isLoading } = useSocialMedia(null, {
     select: (data) => {
       const orderedData = orderBy(data, 'created_at', 'desc');
       const postsIds = orderedData.map((post) => post.id);
@@ -23,8 +18,6 @@ const SocialMediaFeed = () => {
     },
   });
 
-  const isMobile = useMediaQuery(tablet);
-
   return (
     <aside className="h-fit">
       {isLoading && (
@@ -32,8 +25,8 @@ const SocialMediaFeed = () => {
           <Loading />
         </div>
       )}
-      {isFetched && !isLoading && isMobile && <SocialMediaMobile data={data} />}
-      {isFetched && !isLoading && !isMobile && <SocialMediaDesktop data={data} />}
+
+      <SocialMediaDesktop data={data} />
     </aside>
   );
 };

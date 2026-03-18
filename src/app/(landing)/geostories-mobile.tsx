@@ -10,20 +10,18 @@ import { useSyncCategories, useSyncSearchGeostoriesGlobe } from '@/hooks/sync-qu
 
 import GeostoriesList from '@/containers/globe/geostories/geostories-list';
 
-import { Button } from '@/components/ui/button';
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
 
-import { NewsSVG } from '@/SVGS/news';
+import { ListSVG } from '@/SVGS/list';
 
-export const LiveUpdatesGlobeMobile = () => {
+export const GeostoriesGlobeMobile = () => {
   const [searchValue] = useSyncSearchGeostoriesGlobe();
   const [categories] = useSyncCategories();
 
@@ -55,7 +53,7 @@ export const LiveUpdatesGlobeMobile = () => {
   return (
     <Drawer>
       <DrawerTrigger className="shrink-0 rounded-full border border-accent-green p-3 text-accent-green focus:bg-accent-green focus:outline-none active:bg-accent-green">
-        <NewsSVG className="h-6 w-6 text-accent-green" />
+        <ListSVG className="h-6 w-6 text-accent-green" />
       </DrawerTrigger>
       <DrawerContent className="space-y-5 bg-black-500 p-5 text-white-500">
         <DrawerHeader className="flex flex-row items-center justify-between p-0">
@@ -68,12 +66,9 @@ export const LiveUpdatesGlobeMobile = () => {
           </DrawerClose>
         </DrawerHeader>
         <GeostoriesList geostoriesList={geostoriesList} isLoading={isLoading} />
-        <DrawerFooter>
-          <Button>Submit</Button>
-        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );
 };
 
-export default LiveUpdatesGlobeMobile;
+export default GeostoriesGlobeMobile;

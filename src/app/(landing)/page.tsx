@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import GlobeClient from './client';
+import GlobeClient from '@/app/(landing)/client';
 
 export const metadata: Metadata = {
   title: 'Hub - Open Earth Monitor Cyberinfrastructure',
