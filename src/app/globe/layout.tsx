@@ -8,6 +8,7 @@ import GlobeSocialMedia from '@/containers/globe/social-media';
 import Header from '@/components/header';
 import CategoriesFiltersMobile from '@/containers/globe/categories-filters/mobile';
 import GeostoriesGlobeMobile from './geostories-mobile';
+import LiveUpdatesGlobeMobile from './live-updates-mobile';
 
 export const metadata: Metadata = {
   title:
@@ -49,8 +50,9 @@ export default function GlobeLayout({ children }) {
         <CategoriesFiltersMobile className="absolute right-0 top-28 flex w-full xl:hidden" />
       </div>
 
-      <div className="block xl:hidden">
+      <div className="absolute bottom-40 right-5 flex flex-col items-end gap-4 xl:hidden">
         <GeostoriesGlobeMobile />
+        <LiveUpdatesGlobeMobile />
       </div>
     </div>
   );

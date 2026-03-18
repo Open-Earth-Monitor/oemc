@@ -21,9 +21,9 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 
-import { ListSVG } from '@/SVGS/list';
+import { NewsSVG } from '@/SVGS/news';
 
-export const GeostoriesGlobeMobile = () => {
+export const LiveUpdatesGlobeMobile = () => {
   const [searchValue] = useSyncSearchGeostoriesGlobe();
   const [categories] = useSyncCategories();
 
@@ -55,7 +55,7 @@ export const GeostoriesGlobeMobile = () => {
   return (
     <Drawer>
       <DrawerTrigger className="shrink-0 rounded-full border border-accent-green p-3 text-accent-green focus:bg-accent-green focus:outline-none active:bg-accent-green">
-        <ListSVG className="h-6 w-6 text-accent-green" />
+        <NewsSVG className="h-6 w-6 text-accent-green" />
       </DrawerTrigger>
       <DrawerContent className="space-y-5 bg-black-500 p-5 text-white-500">
         <DrawerHeader className="flex flex-row items-center justify-between p-0">
@@ -76,4 +76,4 @@ export const GeostoriesGlobeMobile = () => {
   );
 };
 
-export default GeostoriesGlobeMobile;
+export default LiveUpdatesGlobeMobile;
