@@ -6,7 +6,7 @@ import { useParams, usePathname } from 'next/navigation';
 
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import ol from 'ol';
+import * as ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import { Size } from 'ol/size';
 import TileWMS from 'ol/source/TileWMS';
