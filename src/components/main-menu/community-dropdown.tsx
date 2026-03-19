@@ -10,17 +10,15 @@ import cn from '@/lib/classnames';
 import { navSubLinksCommunity } from '@/components/main-menu/constants';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
-const CommunityDropdown = ({ isMobile }: { isMobile?: boolean }) => {
+const CommunityDropdown = () => {
   const pathname = usePathname();
   return (
     <Collapsible>
       <CollapsibleTrigger
         className={cn({
           'mx-0 px-5 py-4 text-2xl': true,
-          'font-medium transition-colors hover:bg-white-100 data-[state=open]:bg-secondary-500 data-[state=open]:text-brand-500 lg:min-w-[180px]':
-            !isMobile,
-          'border-t-0 text-center font-bold text-secondary-500 transition-colors hover:bg-white-100 hover:text-brand-500':
-            isMobile,
+          'font-medium transition-colors hover:bg-black-500 hover:text-white-500  lg:min-w-[180px]':
+            true,
         })}
       >
         Community
@@ -32,11 +30,13 @@ const CommunityDropdown = ({ isMobile }: { isMobile?: boolean }) => {
             const isActive = `/${pathname.split('/')[1]}` === props.href;
             return (
               <Link
-                className="px-6 py-5 font-medium transition-colors hover:bg-white-100"
+                className="group rounded-[20px] px-6 py-5 font-medium transition-colors hover:bg-black-500 hover:text-white-500"
                 key={props.href}
                 {...props}
               >
-                {isActive && <span className="text-xl">·</span>}
+                {isActive && (
+                  <div className="h-2 w-2 rounded-full bg-black-500 group-hover:bg-white-500" />
+                )}
                 <span>{name}</span>
               </Link>
             );

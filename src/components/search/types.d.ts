@@ -5,5 +5,7 @@ export interface SearchProps extends AriaSearchFieldProps {
   value?: string;
   setValue?: (value: string) => void;
   label?: string;
+  hasIcon?: boolean;
   className?: string;
+  children?: React.ReactNode;
 }

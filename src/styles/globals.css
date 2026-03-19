@@ -111,10 +111,10 @@
     -webkit-appearance: none;
   }
   input[type='search']:focus {
-    border-color: hsl(60, 100%, 95%) !important;
-    --tw-ring-color: hsl(60, 100%, 95%) !important;
+    border-color: rgb(29, 237, 192) !important;
+    --tw-ring-color: rgb(29, 237, 192) !important;
     --tw-ring-offset-width: 0.5px !important;
-    --tw-ring-offset-color: hsl(60, 100%, 95%) !important;
+    --tw-ring-offset-color: rgb(29, 237, 192) !important;
   }
 }
 
@@ -263,6 +263,12 @@
   left: 2px !important;
 }
 
+.cesium-credit-wrapper {
+  position: fixed !important;
+  bottom: 0px !important;
+  right: 40px !important;
+}
+
 .arrow {
   height: 15px;
   width: 15px;
@@ -287,4 +293,21 @@
   #clustrmaps-widget-v2 {
     top: 195px !important;
   }
+}
+
+.cesium-viewer-bottom,
+.cesium-credit-wrapper {
+  bottom: 72px !important;
+}
+
+@media (max-width: 450px) {
+  .cesium-viewer-bottom,
+  .cesium-credit-wrapper {
+    bottom: 72px !important;
+  }
+}
+
+.cesium-widget,
+.cesium-widget canvas {
+  background: transparent !important;
 }

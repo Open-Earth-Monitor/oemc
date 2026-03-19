@@ -4,14 +4,16 @@ import { FC } from 'react';
 
 import Image from 'next/image';
 
-import MainMenuDesktop from '../main-menu/desktop';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+
+import ShareSVG from '@/SVGS/share';
 
 import SocialMedia from './social-media';
 
 export const FooterMobile: FC = () => {
   return (
-    <footer className="bg-primary-900 relative w-full space-y-2">
-      <div className="flex-col space-y-9 px-4 py-6">
+    <footer className="fixed bottom-0 z-[2000] flex w-full items-center justify-between space-y-2 bg-black-500 px-4">
+      <div className="flex-col space-y-9">
         <a
           href="https://cordis.europa.eu/project/id/101059548"
           target="_blank"
@@ -24,20 +26,21 @@ export const FooterMobile: FC = () => {
             Funded by the European Union
           </span>
         </a>
-        <SocialMedia />
       </div>
-
-      <div className="flex w-full items-center justify-between px-4 py-3">
-        <Image
-          alt="Open-earth-monitor"
-          src="/images/OEM_Logo.webp"
-          width={140}
-          height={35}
-          className="inline-block"
-          priority
-        />
-        <MainMenuDesktop />
-      </div>
+      <Popover>
+        <PopoverTrigger>
+          <ShareSVG className="h-6 w-6" />
+        </PopoverTrigger>
+        <PopoverContent
+          align="end"
+          side="top"
+          sideOffset={20}
+          hideWhenDetached={true}
+          className="w-fit border-none bg-white-500"
+        >
+          <SocialMedia theme="dark" />
+        </PopoverContent>
+      </Popover>
     </footer>
   );
 };

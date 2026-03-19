@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  forwardRef,
-  ElementRef,
-  ComponentPropsWithoutRef,
-  HTMLAttributes,
-  PropsWithChildren,
-} from 'react';
+import { forwardRef, ComponentPropsWithoutRef, HTMLAttributes, PropsWithChildren } from 'react';
 
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { CheckIcon, DotFilledIcon } from '@radix-ui/react-icons';
@@ -21,7 +15,7 @@ const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 
 const DropdownMenu = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Root>,
+  HTMLDivElement,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root> & {
     inset?: boolean;
     className?: string;
@@ -33,6 +27,8 @@ const DropdownMenu = forwardRef<
     </div>
   </DropdownMenuPrimitive.Root>
 ));
+
+DropdownMenu.displayName = 'DropdownMenu';
 
 DropdownMenu.displayName = DropdownMenuPrimitive.Root.displayName;
 
@@ -46,11 +42,10 @@ type DropdownMenuTriggerProps = PropsWithChildren<
 >;
 
 const DropdownMenuTrigger = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Trigger>,
-  DropdownMenuTriggerProps
->(({ className, classNameContent, inset, children, hasArrow = true, ...props }, ref) => (
+  HTMLDivElement,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger> & DropdownMenuTriggerProps
+>(({ className, classNameContent, inset, children, hasArrow = true, ...props }) => (
   <DropdownMenuPrimitive.Trigger
-    ref={ref}
     className={cn(
       'group flex h-9 w-full items-center justify-between space-x-2 whitespace-nowrap bg-transparent text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
       inset && 'pl-8',
@@ -70,7 +65,7 @@ const DropdownMenuTrigger = forwardRef<
 DropdownMenuTrigger.displayName = DropdownMenuPrimitive.Trigger.displayName;
 
 const DropdownMenuContent = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Content>,
+  HTMLDivElement,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
 >(({ className, sideOffset = 4, ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
@@ -89,7 +84,7 @@ const DropdownMenuContent = forwardRef<
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
 
 const DropdownMenuItem = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Item>,
+  HTMLDivElement,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
     inset?: boolean;
     className?: string;
@@ -112,7 +107,7 @@ const DropdownMenuItem = forwardRef<
 DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
 
 const DropdownMenuCheckboxItem = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+  HTMLDivElement,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem> & {
     checked?: boolean;
     children: React.ReactNode;
@@ -139,7 +134,7 @@ const DropdownMenuCheckboxItem = forwardRef<
 DropdownMenuCheckboxItem.displayName = DropdownMenuPrimitive.CheckboxItem.displayName;
 
 const DropdownMenuRadioItem = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
+  HTMLDivElement,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem> & {
     children: React.ReactNode;
     className?: string;
@@ -164,7 +159,7 @@ const DropdownMenuRadioItem = forwardRef<
 DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName;
 
 const DropdownMenuLabel = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Label>,
+  HTMLDivElement,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label> & {
     inset?: boolean;
     className?: string;
@@ -183,7 +178,7 @@ const DropdownMenuLabel = forwardRef<
 DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
 
 const DropdownMenuSeparator = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Separator>,
+  HTMLDivElement,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator> & { className?: string }
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator

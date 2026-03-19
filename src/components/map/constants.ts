@@ -26,7 +26,7 @@ export const NUTS_INITIAL_STATE = {
   LAYER_ID: null,
 };
 export const WMS_INFO_FORMAT = 'application/json';
-export const WMS_CRS = 'EPSG:3857';
+export const WMS_CRS = 'EPSG:3413';
 
 export const TOOLTIP_INITIAL_STATE: MonitorTooltipInfo = {
   position: null,

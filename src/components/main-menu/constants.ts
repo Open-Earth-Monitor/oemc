@@ -1,13 +1,13 @@
 export const navLinks = [
   {
-    name: 'Hub',
+    name: 'Home',
     href: '/',
-    'data-testid': 'hub-link',
+    'data-testid': 'home-link',
   },
   {
     name: 'Explore Data',
     href: '/explore',
-    'data-testid': 'map-link',
+    'data-testid': 'explore-data-link',
   },
 ];
 
@@ -34,7 +34,7 @@ export const navSubLinksCommunity = [
 
 export const otherResources = [
   {
-    name: 'Live usage statistics',
+    name: 'Live Usage Statistics',
     href: '/usage-stats',
     'data-testid': 'usage-stats-link',
   },
