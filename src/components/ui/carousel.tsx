@@ -139,7 +139,7 @@ const CarouselContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HT
   ({ className, ...props }, ref) => {
     const { carouselRef, orientation } = useCarousel();
     return (
-      <div ref={carouselRef} className="overflow-hidden">
+      <div ref={carouselRef} className="overflow-hidden pb-10">
         <div
           ref={ref}
           className={cn(

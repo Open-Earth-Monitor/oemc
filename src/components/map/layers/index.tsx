@@ -15,14 +15,9 @@ import { RLayerTile, RLayerWMS } from 'rlayers';
 import { fetchFeatureInfo, getFeatureInfoUrl, firstPropertyValue } from '@/lib/wms';
 
 import {
-  coordinateAtom,
-  lonLatAtom,
-  nutsDataParamsAtom,
-  nutsDataParamsCompareAtom,
   nutsDataResponseAtom,
   regionsLayerVisibilityAtom,
   compareFunctionalityAtom,
-  timeSeriesPlaybackAtom,
   nutsDataResponseCompareAtom,
 } from '@/app/store';
 
@@ -35,20 +30,14 @@ import {
   useSyncBboxSettings,
   useSyncCompareLayersSettings,
   useSyncLayersSettings,
-  useSyncSwipeControlPosition,
 } from '@/hooks/sync-query';
 
 import { LABELS } from '@/components/map/controls/basemaps/constants';
 import type { CustomMapProps, MonitorTooltipInfo } from '@/components/map/types';
 
 import BasemapLayer from '../basemap';
-import {
-  DEFAULT_VIEWPORT,
-  InitialViewport,
-  TOOLTIP_INITIAL_STATE,
-  WMS_INFO_FORMAT,
-  WMS_CRS,
-} from '../constants';
+import { DEFAULT_VIEWPORT, TOOLTIP_INITIAL_STATE, WMS_INFO_FORMAT, WMS_CRS } from '../constants';
+
 import NutsLayer from './nuts';
 
 function buildWmsSource(url: string, layerName: string) {

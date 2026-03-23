@@ -50,3 +50,6 @@ export const useSyncBasemapLabelsSettings = () =>
 
 export const useSyncSearchGeostoriesGlobe = () =>
   useQueryState('search', parseAsJson<string>().withDefault(''));
+
+export const useSyncMediaFilter = () =>
+  useQueryState('mediaFilter', parseAsJson<string[]>().withDefault(['social-media']));
