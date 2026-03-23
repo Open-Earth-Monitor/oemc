@@ -5,10 +5,10 @@ import { Post as PostTypes } from '@/hooks/social-media';
 import { PostHeader } from '@/components/social-media/post-header';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 
-export const Post = ({ post }: { post: PostTypes }) => {
+export const Post = ({ post, children }: { post: PostTypes; children?: React.ReactNode }) => {
   const data = post?.reblog || post;
   return (
-    <div className="flex flex-col gap-y-4 rounded-3xl bg-white-950 p-4" key={post.id}>
+    <div className="flex h-full flex-col gap-y-4 rounded-3xl bg-white-950 p-4" key={post.id}>
       <PostHeader post={post} />
 
       <div className="relative">
@@ -48,6 +48,7 @@ export const Post = ({ post }: { post: PostTypes }) => {
           </p>
         )}
       </div>
+      {children}
     </div>
   );
 };

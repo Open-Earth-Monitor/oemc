@@ -135,7 +135,7 @@ export const SocialMediaContent = ({
           ))}
         </CarouselContent>
 
-        <div className="absolute bottom-0 left-1/2 z-10 flex -translate-x-1/2 items-center gap-4">
+        <div className="absolute bottom-0 left-1/2 z-10 flex -translate-x-1/2 items-center gap-4 xl:bottom-6">
           <CarouselButton direction="prev" />
           <CarouselDots api={api} total={dataLength} activeIndex={activeIndex} visibleDots={6} />
           <CarouselButton direction="next" />
