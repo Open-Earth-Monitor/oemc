@@ -1,5 +1,9 @@
 'use client';
 
+import { useMediaQuery } from 'react-responsive';
+
+import { mobile } from '@/lib/media-queries';
+
 import { useSyncMediaFilter } from '@/hooks/sync-query';
 
 import { FilterPill } from '@/containers/filter-pill';
@@ -9,20 +13,24 @@ import SocialMedia from './social-media';
 
 export const LiveUpdatesContent = () => {
   const [mediaFilter] = useSyncMediaFilter();
+  const isMobile = useMediaQuery(mobile);
+
   return (
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div className="text-2xl">
-          Discover our
-          <br />
+          Discover our <br className="xl:hidden" />
           <span className="bg-[linear-gradient(131.67deg,_#1EEDBF_0%,_#75A1FF_100%)] bg-clip-text text-transparent">
             Latest Updates.
           </span>
         </div>
 
-        <FilterPill>
-          <LiveUpdatesFiltersContent />
-        </FilterPill>
+        {!isMobile && <LiveUpdatesFiltersContent />}
+        {isMobile && (
+          <FilterPill>
+            <LiveUpdatesFiltersContent />
+          </FilterPill>
+        )}
       </div>
       {(mediaFilter.includes('social-media') || mediaFilter.includes('all')) && <SocialMedia />}
       {(mediaFilter.includes('news') || mediaFilter.includes('all')) && <div>News</div>}

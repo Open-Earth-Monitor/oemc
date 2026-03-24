@@ -1,10 +1,13 @@
 'use client';
 
-import { Post } from '@/containers/globe/social-media/post';
-import { orderBy } from 'lodash';
-import { useSocialMedia } from '@/hooks/social-media';
 import Link from 'next/link';
+
+import { orderBy } from 'lodash';
 import { ArrowRight } from 'lucide-react';
+
+import { useSocialMedia } from '@/hooks/social-media';
+
+import { Post } from '@/containers/globe/social-media/post';
 
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -19,9 +22,9 @@ export const SocialMedia = () => {
   });
 
   return (
-    <div className="flex flex-col gap-4 pb-16 sm:flex-row sm:flex-wrap sm:justify-start xl:gap-6">
+    <div className="m-auto flex flex-col gap-4 pb-16 sm:flex-row sm:flex-wrap sm:justify-start xl:w-full xl:gap-6">
       {isLoading && (
-        <div className="flex w-full  flex-col  gap-4 overflow-hidden pb-16 sm:flex-row sm:flex-wrap sm:justify-start ">
+        <div className="flex w-full flex-col gap-4 overflow-hidden pb-16 sm:flex-row sm:flex-wrap sm:justify-start ">
           {Array.from({ length: 40 }).map((_, index) => (
             <Skeleton
               key={index}
@@ -32,11 +35,8 @@ export const SocialMedia = () => {
       )}
       {!isLoading &&
         data?.map((post) => (
-          <div
-            key={post.id}
-            className="flex flex-1 items-stretch justify-center lg:max-w-md xl:max-w-xs"
-          >
-            <div className="flex w-full min-w-[320px] flex-col overflow-hidden xl:min-h-[320px]">
+          <div key={post.id} className="flex flex-1 basis-[320px] items-stretch">
+            <div className="flex w-full min-w-[320px] max-w-[360px] flex-col overflow-hidden xl:min-h-[320px]">
               <Post post={post}>
                 <div className="mt-auto flex w-full justify-end">
                   <Link
