@@ -40,13 +40,16 @@ const Search: FC<SearchProps> = ({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         data-testid="search-input"
-        className={cn(
-          'flex-1 truncate rounded-full bg-transparent px-10 pl-5 pr-6 font-inter leading-4',
-          'appearance-none shadow-none outline-none',
+        className={cn({
+          'flex-1 truncate rounded-full bg-transparent px-10 pl-5 pr-6 font-inter leading-4': true,
+          'appearance-none text-white-700 shadow-none outline-none': true,
 
-          // 'focus-visible:outline-none focus-visible:ring-0',
-          'disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm'
-        )}
+          'focus-visible:outline-none focus-visible:ring-0': true,
+          'disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm': true,
+          'focus-within:placeholder:text-white-200 placeholder:text-white-700 focus-within:placeholder:text-white-500 focus-within:placeholder:transition-colors focus-within:placeholder:duration-200 focus-within:placeholder:ease-out sm:focus-within:placeholder:text-black-500':
+            true,
+          'text-white-500 sm:text-black-500': value !== '',
+        })}
       />
 
       {children}
