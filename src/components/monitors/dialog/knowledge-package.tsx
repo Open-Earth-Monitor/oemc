@@ -34,6 +34,11 @@ const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }: UseCase) => (
             </div>
           ) : null
         )}
+      {!doi && !!url && (
+        <div className="flex w-full justify-end" key={url}>
+          <DoiBadge doi={url} key={url} />
+        </div>
+      )}
     </span>
   </div>
 );

@@ -3,14 +3,14 @@ import Link from 'next/link';
 import { UseCase } from '@/types/monitors-and-geostories';
 
 const DoiBadge: React.FC<{
-  doi: UseCase;
+  doi: UseCase['doi'][number];
 }> = ({ doi }) => {
-  const d = doi.url.split('https://doi.org/')[1] || doi.url;
+  const d = doi.split('https://doi.org/')[1] || doi;
   return (
     <Link
-      href={doi.url}
+      href={doi}
       target="_blank"
-      key={doi.url}
+      key={d}
       className="text-white flex overflow-hidden whitespace-nowrap rounded-l-md text-xs font-medium"
     >
       <div>

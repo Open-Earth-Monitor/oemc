@@ -94,7 +94,7 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
             ))}
 
           {/* DOI */}
-          {!!doi.length && doi.map((d) => <DoiBadge key={d.url} doi={d} />)}
+          {!!doi.length && doi.map((d) => <DoiBadge key={d.url} doi={d.url} />)}
 
           {/* Tab pills */}
           <div className="flex gap-2">
