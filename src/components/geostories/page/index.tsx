@@ -48,7 +48,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
         void setCompareLayers([{ id: comparisonLayer.layer_id, opacity: 1 }], { shallow: false });
       }
     }
-  }, [geostoryLayers, comparisonLayer, compareLayers, layers, setCompareLayers, setLayers]);
+  }, [geostoryLayers, comparisonLayer, compareLayers, setCompareLayers, setLayers]);
 
   return (
     <>

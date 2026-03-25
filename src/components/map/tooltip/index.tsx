@@ -78,20 +78,20 @@ const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null
       wmsNutsSource,
       coordinate as Coordinate,
       resolution,
-      data.id
+      data?.id
     );
     setNutsDataParams(nutsDataParams);
     isHistogramVisibility(true);
-  }, [coordinate, resolution, data.id, isHistogramVisibility, setNutsDataParams, wmsNutsSource]);
+  }, [coordinate, resolution, data?.id, isHistogramVisibility, setNutsDataParams, wmsNutsSource]);
 
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
   const handleClick = useCallback(() => {
     isHistogramVisibility(true);
     requestAnimationFrame(() => {
-      scrollToHistogram(data.id);
+      scrollToHistogram(data?.id);
     });
-  }, [isHistogramVisibility, data.id]);
+  }, [isHistogramVisibility, data?.id]);
 
   if (!position || (data?.value === undefined && data?.value !== 0)) return null;
 

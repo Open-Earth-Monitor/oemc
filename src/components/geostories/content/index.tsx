@@ -64,6 +64,7 @@ const GeostoryContent = ({ children }: PropsWithChildren) => {
     () => layersData?.find(({ position }) => position === 'left'),
     [layersData]
   );
+
   useEffect(() => {
     if (geostoryLayers?.length && !layers) {
       void setLayers(

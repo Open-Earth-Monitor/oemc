@@ -6,17 +6,17 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/classnames';
 
 const buttonVariants = cva(
-  'border font-medium inline-flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded-full space-x-3.5 text-black-500',
+  'flex w-fit items-center gap-3 rounded-full px-[14px] py-2 border border-transparent font-satoshi text-sm font-medium transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       variant: {
         default:
-          'bg-white-500 hover:bg-border-white-500 active:bg-white-500 active:text-black-500 active:border-black-500 active:bg-white-500',
+          'bg-accent-green text-black-500 hover:bg-[#18BE99] active:border active:border-white-800 ',
         gradient:
           'border-none bg-[linear-gradient(131.67deg,_#1EEDBF_0%,_#75A1FF_100%)] text-black-500 font-medium',
         background: 'border-none text-white-500 bg-white-500 bg-opacity-5 hover:bg-white-500/80',
         outline:
-          'border border-white-500/20 bg-transparent text-white-500 hover:bg-white-500 active:bg-white-500 hover:text-black-500 active:text-black-500 rounded-full',
+          'border border-white-800 hover:border-white-500 active:bg-accent-green active:hover:bg-[linear-gradient(0deg,rgba(0,0,0,0.2),rgba(0,0,0,0.2)),theme(colors.accent-green)]',
       },
       size: {
         default: 'px-3.5 py-2',
