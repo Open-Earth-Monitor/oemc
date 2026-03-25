@@ -16,7 +16,8 @@ const MainMenuDesktop = () => (
     </PopoverTrigger>
     <PopoverContent
       className="z-[2000] min-w-fit overflow-hidden border-none bg-secondary-500 px-0 py-2 font-inter text-black-500"
-      sideOffset={-1}
+      sideOffset={0}
+      align="end"
     >
       <MainMenuContent />
     </PopoverContent>

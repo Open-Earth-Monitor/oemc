@@ -356,7 +356,7 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
     () => LABELS.find((label) => activeLabels === label.id)?.url,
     [activeLabels]
   );
-  console.log('********map', layerLeftRef, layerRightRef, isComparativeGeostory);
+
   return (
     <>
       <BasemapLayer />
