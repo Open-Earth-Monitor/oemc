@@ -16,7 +16,14 @@ const GeostoriesList = ({ geostoriesList, isLoading }) => {
         <div className="flex min-h-0 flex-1 flex-col space-y-2.5">
           {isLoading && <Loading />}
           {!isLoading &&
+            geostoriesList?.length > 0 &&
             geostoriesList?.map((geostory) => <GeostoryItem key={geostory.id} {...geostory} />)}
+          {!isLoading && geostoriesList?.length === 0 && (
+            <p className="text-sm text-white-500/20">
+              We couldn’t find any geostories for your search. Try different keywords or remove some
+              filters.
+            </p>
+          )}
         </div>
       </div>
     </div>

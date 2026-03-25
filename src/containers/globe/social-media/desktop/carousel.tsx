@@ -116,7 +116,7 @@ export const SocialMediaContent = ({
   }, [api, setCount]);
 
   return (
-    <div className="min-h-0 flex-1 overflow-hidden xl:max-h-64">
+    <div className="min-h-0 flex-1 xl:max-h-64">
       <Carousel
         opts={{ align: 'center', loop: true, slidesToScroll: 1, active: true }}
         className="relative h-full"
@@ -135,7 +135,7 @@ export const SocialMediaContent = ({
           ))}
         </CarouselContent>
 
-        <div className="absolute bottom-0 left-1/2 z-10 flex -translate-x-1/2 items-center gap-4 xl:bottom-6">
+        <div className="absolute bottom-0 left-1/2 z-10 flex -translate-x-1/2 items-center gap-4 xl:-bottom-4">
           <CarouselButton direction="prev" />
           <CarouselDots api={api} total={dataLength} activeIndex={activeIndex} visibleDots={6} />
           <CarouselButton direction="next" />
@@ -151,7 +151,7 @@ const SocialMediaDesktop = ({ data }: { data: PostTypes[] }) => {
   const dataLength = data?.length ?? 0;
 
   return (
-    <aside className="pointer-events-auto h-fit w-full overflow-hidden rounded-2xl bg-black-500/70 pb-10 backdrop-blur-sm xl:h-fit xl:w-[320px]">
+    <div className="pointer-events-auto h-fit w-full overflow-hidden rounded-2xl bg-black-500/70 pb-10 backdrop-blur-sm xl:h-fit xl:w-[320px]">
       <div className="h-full">
         <div className="flex h-full flex-col gap-y-6 px-5">
           <div className="flex items-end justify-between font-medium text-white-500">
@@ -166,7 +166,7 @@ const SocialMediaDesktop = ({ data }: { data: PostTypes[] }) => {
           <SocialMediaContent data={data} setCount={setCount} count={count} />
         </div>
       </div>
-    </aside>
+    </div>
   );
 };
 

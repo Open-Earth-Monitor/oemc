@@ -48,7 +48,8 @@ const Search: FC<SearchProps> = ({
           'disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm': true,
           'focus-within:placeholder:text-white-200 placeholder:text-white-700 focus-within:placeholder:text-white-500 focus-within:placeholder:transition-colors focus-within:placeholder:duration-200 focus-within:placeholder:ease-out sm:focus-within:placeholder:text-black-500':
             true,
-          'text-white-500 sm:text-black-500': value !== '',
+          'sm:text-black-500 xl:focus:text-black-500': value !== '',
+          'xl:text-white-500 ': true,
         })}
       />
 

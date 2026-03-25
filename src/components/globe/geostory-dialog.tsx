@@ -21,6 +21,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import DoiBadge from '../doi-badge';
 
 type Tab = 'overview' | 'use-cases';
 
@@ -41,7 +42,8 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
 
   const color = getCategoryColor(geostory.theme);
   const firstPublication = geostory.publications?.[0];
-  const doi = geostory.use_case_link?.[0]?.doi?.[0];
+  const useCases = geostory.use_case_link || [];
+  const doi = geostory.use_case_link;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -81,12 +83,18 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
             </a>
           )}
 
+          {/* Use cases link */}
+          {!!useCases.length &&
+            useCases.map((d) => (
+              <Link href={d.url} target="_blank" key={d.url}>
+                <span className="bg-white/10 inline-block w-fit rounded-full px-2 py-0.5 text-[10px] text-white-500">
+                  {d.title}
+                </span>
+              </Link>
+            ))}
+
           {/* DOI */}
-          {doi && (
-            <span className="bg-white/10 inline-block w-fit rounded-full px-2 py-0.5 text-[10px] text-white-500">
-              DOI: {doi}
-            </span>
-          )}
+          {!!doi.length && doi.map((d) => <DoiBadge key={d.url} doi={d} />)}
 
           {/* Tab pills */}
           <div className="flex gap-2">

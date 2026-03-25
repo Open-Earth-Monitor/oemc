@@ -3,9 +3,10 @@
 import Link from 'next/link';
 
 import { orderBy } from 'lodash';
-import { ArrowRight } from 'lucide-react';
 
 import { useSocialMedia } from '@/hooks/social-media';
+
+import { ArrowRight } from 'lucide-react';
 
 import { Post } from '@/containers/globe/social-media/post';
 
