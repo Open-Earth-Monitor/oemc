@@ -277,12 +277,15 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       const swipePixelX = position.x * e.map.getSize()?.[0];
       const side = e.pixel[0] < swipePixelX ? 'left' : 'right';
       setTooltipSide(side);
-      setTooltipInfo((prev) => ({
-        ...prev,
-        leftData: { ...prev.leftData, value: null },
-        coordinate: e.coordinate,
-        position: [e.pixel[0], e.pixel[1]],
-      }));
+
+      setTooltipInfo((prev) => {
+        return {
+          ...prev,
+          leftData: { ...prev?.leftData, value: null },
+          coordinate: e?.coordinate,
+          position: [e?.pixel[0], e.pixel[1]],
+        };
+      });
 
       void (async () => {
         try {

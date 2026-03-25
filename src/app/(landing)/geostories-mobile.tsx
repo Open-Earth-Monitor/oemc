@@ -52,7 +52,7 @@ export const GeostoriesGlobeMobile = () => {
   });
   return (
     <Drawer>
-      <DrawerTrigger className="shrink-0 rounded-full border border-accent-green p-3 text-accent-green focus:bg-accent-green focus:outline-none active:bg-accent-green">
+      <DrawerTrigger className="focus:text-white data-[s] group shrink-0 rounded-full border border-accent-green p-3 text-accent-green hover:text-white-500 focus:outline-none active:bg-accent-green data-[state=open]:bg-accent-green data-[state=open]:text-white-500">
         <ListSVG className="h-6 w-6 text-accent-green" />
       </DrawerTrigger>
       <DrawerContent className="space-y-5 bg-black-500 p-5 text-white-500">

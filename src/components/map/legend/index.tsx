@@ -59,10 +59,10 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
         >
           <div
             data-testid="map-legend-toggle-button"
-            className="flex items-center gap-2 font-satoshi text-xs font-medium"
+            className="flex items-start gap-2 font-satoshi text-xs font-medium"
           >
             <div
-              className="relative flex items-start justify-between space-x-4 text-white-500"
+              className="relative flex flex-1 items-start justify-between space-x-4 text-white-500"
               data-testid="map-legend-item"
             >
               <div data-testid="map-legend-item-title">{title}</div>
@@ -78,7 +78,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
               </div>
             </div>
             <LuChevronDown
-              className="h-6 w-6 text-accent-green group-data-[state=closed]:rotate-180"
+              className="flex h-6 w-6 shrink-0 self-start text-accent-green group-data-[state=closed]:rotate-180"
               onClick={handleCollapse}
             />
           </div>

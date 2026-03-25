@@ -114,6 +114,12 @@ const DatasetCard: FC<DatasetCardProps> = ({
         {description}
       </p>
 
+      <Button variant={isActive ? 'default' : 'outline'} size="sm" onClick={handleToggleLayer}>
+        <span>{isActive ? 'Hide' : 'Show'} layer on map</span>
+        <LuLayers2 className="h-4 w-4" />
+      </Button>
+      <div className="mt-1.5 flex items-baseline space-x-2"></div>
+
       <div className="mt-1.5 flex items-baseline space-x-2">
         {!!download_url && isValidUrlDownload && (
           <a
