@@ -124,10 +124,11 @@ export default function Map3D({
         selectionIndicator={false}
         timeline={false}
         skyBox={false}
+        orderIndependentTranslucency={false}
         contextOptions={CONTEXT_OPTIONS}
       >
         <ImageryLayer imageryProvider={esriImageryProvider} />
-        <Scene backgroundColor={TRANSPARENT} orderIndependentTranslucency={false} />
+        <Scene backgroundColor={TRANSPARENT} />
         <Globe
           enableLighting
           showGroundAtmosphere
