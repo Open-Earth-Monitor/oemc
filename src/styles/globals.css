@@ -309,12 +309,7 @@
 
 .cesium-widget,
 .cesium-widget canvas {
-  /* background: transparent !important; */
-
-  background-image: url('/images/landing/bg.png') !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
+  background: transparent !important;
 }
 
 @media (max-width: 450px) {

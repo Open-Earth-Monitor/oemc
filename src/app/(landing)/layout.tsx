@@ -58,7 +58,7 @@ function GlobeLayoutMobile() {
 
 export default function GlobeLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-[url('/images/landing/bg.png')] bg-cover bg-right-bottom text-primary">
+    <div className="relative flex-1 overflow-hidden bg-[url('/images/landing/bg.png')] bg-cover bg-right-bottom text-primary">
       {/* Globe - full-screen base layer */}
       <div className="absolute inset-0 z-0">{children}</div>
 

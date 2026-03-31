@@ -14,7 +14,7 @@ export const FooterDesktop: FC = () => {
   return (
     <footer
       className={cn({
-        'absolute bottom-0 z-[1000] flex w-full items-center justify-center border-t border-white-900/10 px-6 md:px-24':
+        'z-[1000] flex w-full items-center justify-center border-t border-white-900/10 px-6 md:px-24':
           true,
         'px-5 md:px-5': pathname === '/',
       })}
