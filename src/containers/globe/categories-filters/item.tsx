@@ -49,11 +49,10 @@ const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
   return (
     <button
       className={cn(
-        'group flex cursor-pointer items-center gap-2.5 rounded-full border border-white-950 bg-transparent p-1',
-        {
-          'border-transparent': isActive,
-        },
-        'hover:border-[var(--category-color)] hover:text-white-500',
+        'group flex cursor-pointer items-center gap-2.5 rounded-full border border-white-950 bg-transparent p-1 transition-colors duration-300',
+        isActive
+          ? 'border-transparent'
+          : 'hover:border-[var(--category-color)] hover:text-white-500',
         className
       )}
       onClick={handleCategory}
@@ -68,12 +67,10 @@ const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
       }}
     >
       <div
-        className={cn({
-          'flex  h-[38px] w-[38px] items-center justify-center rounded-full  group-hover:bg-[var(--category-color)]':
-            true,
-          'bg-[#ffffe6]': isActive,
-          'bg-white-950': !isActive,
-        })}
+        className={cn(
+          'flex h-[38px] w-[38px] items-center justify-center rounded-full transition-colors duration-300',
+          isActive ? 'bg-[#ffffe6]' : 'bg-white-950 group-hover:bg-[var(--category-color)]'
+        )}
         style={{ ['--category-color' as string]: CATEGORIES_COLORS[id]?.light }}
       >
         <Icon
@@ -89,7 +86,7 @@ const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
 
       <div
         className={cn({
-          'mr-4 flex whitespace-nowrap font-medium text-white-500': true,
+          'mr-4 flex whitespace-nowrap font-medium text-white-500 transition-colors duration-300': true,
           'text-black-400': isActive && theme !== 'plain',
         })}
       >
