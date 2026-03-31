@@ -60,7 +60,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${satoshi.variable} ${inter.variable}`}>
       <body className="mx-auto min-h-screen overflow-x-hidden bg-black-500 font-inter">
         <div className="flex min-h-screen flex-col">
-          <main className="relative flex-1">
+          <main className="relative flex flex-1 flex-col">
             <Providers>
               <LayoutClient>{children}</LayoutClient>
             </Providers>

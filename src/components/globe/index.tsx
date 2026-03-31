@@ -38,7 +38,10 @@ const esriImageryProvider = new Cesium.UrlTemplateImageryProvider({
 });
 
 const DEFAULT_CENTER: [number, number] = [20, 15];
-const DARK_NAVY = Cesium.Color.fromCssColorString('#09131d');
+const TRANSPARENT = new Cesium.Color(0, 0, 0, 0);
+const CONTEXT_OPTIONS = {
+  webgl: { alpha: true, premultipliedAlpha: false },
+};
 
 export type GlobeClickEvent = {
   type: 'globe-click';
@@ -121,9 +124,10 @@ export default function Map3D({
         selectionIndicator={false}
         timeline={false}
         skyBox={false}
+        contextOptions={CONTEXT_OPTIONS}
       >
         <ImageryLayer imageryProvider={esriImageryProvider} />
-        <Scene backgroundColor={DARK_NAVY} />
+        <Scene backgroundColor={TRANSPARENT} orderIndependentTranslucency={false} />
         <Globe
           enableLighting
           showGroundAtmosphere
