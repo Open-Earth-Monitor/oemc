@@ -14,7 +14,7 @@ import { CategoryId, CATEGORIES_COLORS } from '@/constants/categories';
 
 import { useSyncDatasetType, useSyncCategories, type CategoryQueryParam } from '@/hooks/sync-query';
 
-import { SortingCriteria } from '@/containers/hub/datasets-grid/types';
+import { SortingCriteria } from '@/components/sort-by';
 
 import API from 'services/api';
 

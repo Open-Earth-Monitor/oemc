@@ -1,22 +1,13 @@
-import { SetStateAction } from 'jotai';
 import { LuListFilter } from 'react-icons/lu';
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 
 export type SortingCriteria = 'title' | 'date';
-
-export type Dataset = 'monitors' | 'geostories' | 'all';
 
 export const SORTING = ['title', 'date'] satisfies SortingCriteria[];
 
 type SortByProps = {
-  sortingCriteria: string;
+  sortingCriteria: SortingCriteria;
   handleSortingCriteria: (value: SortingCriteria) => void;
 };
 

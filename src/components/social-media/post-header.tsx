@@ -28,9 +28,7 @@ export const PostHeader = ({ post }: { post: PostTypes }) => {
         className="shrink-0 rounded-full"
       />
       <div className="font-medium text-white-500">
-        <h4 className="w-1/2">
-          {post?.reblog?.account.display_name || post?.account.display_name}
-        </h4>
+        <h4>{post?.reblog?.account.display_name || post?.account.display_name}</h4>
         <span className="text-accent-green">@{data?.account.username}</span>
       </div>
     </div>

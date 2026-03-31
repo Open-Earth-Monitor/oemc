@@ -6,12 +6,14 @@ import Header from '@/components/header';
 
 const UsageStatsPage: NextPage = () => {
   return (
-    <div className="m-auto min-h-screen font-satoshi font-medium">
-      <div className="flex flex-col space-y-2 rounded-bl-3xl  bg-[url(/images/bg.png)] bg-cover bg-left-bottom  px-6 pt-7 sm:space-y-8">
-        <Header className="z-50 mx-0 px-0" />
+    <div className="m-auto h-full font-satoshi font-medium">
+      <div className="flex flex-col space-y-2 rounded-bl-[3.5rem]  bg-[url(/images/bg.png)] bg-cover bg-left-bottom  px-6 pt-7 md:px-24 ">
+        <Header />
         <h1 className="py-10 text-3xl sm:text-7xl">Live Updates.</h1>
       </div>
-      <LiveUpdatesContent />
+      <div className="md:6 px-6 pb-28 xl:px-24">
+        <LiveUpdatesContent />
+      </div>
     </div>
   );
 };

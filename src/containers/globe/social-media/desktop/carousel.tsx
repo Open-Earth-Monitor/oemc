@@ -116,7 +116,7 @@ export const SocialMediaContent = ({
   }, [api, setCount]);
 
   return (
-    <div className="min-h-0 flex-1 xl:max-h-64">
+    <div className="min-h-0 flex-1  xl:max-h-64">
       <Carousel
         opts={{ align: 'center', loop: true, slidesToScroll: 1, active: true }}
         className="relative h-full"
@@ -126,9 +126,9 @@ export const SocialMediaContent = ({
           {data?.map((post) => (
             <CarouselItem
               key={post.id}
-              className="flex h-full items-start justify-center lg:max-w-md xl:max-w-xs"
+              className="flex h-full items-start justify-center  lg:max-w-md xl:max-w-xs"
             >
-              <div className="mb-10 h-full w-full overflow-hidden xl:mb-0">
+              <div className="mb-10 h-full w-full overflow-hidden rounded-3xl border border-black-100 bg-black-500  xl:mb-0">
                 <Post post={post} />
               </div>
             </CarouselItem>
@@ -151,9 +151,9 @@ const SocialMediaDesktop = ({ data }: { data: PostTypes[] }) => {
   const dataLength = data?.length ?? 0;
 
   return (
-    <div className="pointer-events-auto h-fit w-full overflow-hidden rounded-2xl bg-black-500/70 pb-10 backdrop-blur-sm xl:h-fit xl:w-[320px]">
+    <div className="pointer-events-auto h-fit w-full overflow-hidden rounded-2xl pb-16 xl:h-fit xl:w-[320px]">
       <div className="h-full">
-        <div className="flex h-full flex-col gap-y-6 px-5">
+        <div className="flex h-full flex-col gap-y-6">
           <div className="flex items-end justify-between font-medium text-white-500">
             <p>
               Latest insights <br /> and innovations.

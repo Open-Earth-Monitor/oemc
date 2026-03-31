@@ -1,10 +1,11 @@
 'use client';
 
-import { use, useCallback } from 'react';
+import { useCallback } from 'react';
 
 import cn from '@/lib/classnames';
 
 import { LIVE_UPDATES_CONTENT } from '@/constants/live-updates';
+
 import { useSyncMediaFilter } from '@/hooks/sync-query';
 
 type ItemProps = {
@@ -32,7 +33,7 @@ const Filter = ({
   return (
     <button
       className={cn(
-        'flex cursor-pointer items-center gap-2.5 rounded-full border p-1',
+        'group flex cursor-pointer items-center gap-2.5 rounded-full border p-1 hover:border-accent-green hover:bg-accent-green/10 hover:text-white-500',
         isSelected ? 'border-accent-green bg-accent-green' : 'border-white-800 bg-transparent'
       )}
       onClick={() => onClick(id)}
@@ -40,7 +41,7 @@ const Filter = ({
       <div
         className={cn(
           'flex whitespace-nowrap px-3.5 py-2 font-medium',
-          isSelected ? 'text-black-500' : 'text-white-500'
+          isSelected ? 'text-black-500 group-hover:text-white-500' : 'text-white-500'
         )}
       >
         {label}

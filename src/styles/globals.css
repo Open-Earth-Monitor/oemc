@@ -309,7 +309,12 @@
 
 .cesium-widget,
 .cesium-widget canvas {
-  background: transparent !important;
+  /* background: transparent !important; */
+
+  background-image: url('/images/landing/bg.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
 }
 
 @media (max-width: 450px) {
@@ -325,11 +330,20 @@
     align-items: center;
     justify-content: center;
 
-    background-color: rgba(0, 0, 0, 0.5) !important;
+    background-image: url('/images/landing/bg.png') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
   }
 
   .cesium-credit-lightbox-overlay .cesium-credit-wrapper {
-    background-color: transparent !important;
+    background-image: url('/images/landing/bg.png') !important;
+
+    background-size: cover !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+
     border: none !important;
     bottom: 10px !important;
     left: 20px !important;
@@ -349,12 +363,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
-    background-color: rgba(0, 0, 0, 0.5) !important;
+    background-image: url('/images/landing/bg.png') !important;
+    background-position: center !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
   }
 
   .cesium-credit-lightbox-overlay .cesium-credit-wrapper {
-    background-color: transparent !important;
+    background-image: url('/images/landing/bg.png') !important;
+
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+
     border: none !important;
     bottom: 10px !important;
     left: 20px !important;

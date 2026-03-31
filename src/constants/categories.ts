@@ -47,7 +47,7 @@ export const ALL_CATEGORY = {
 
 export type CategoryId = (typeof CATEGORIES)[number]['id'];
 
-export type CategoryColorType = {
+type CategoryColorType = {
   base: string;
   light: string;
   dark: string;
@@ -61,7 +61,7 @@ export const CATEGORIES_COLORS: Record<CategoryId | 'Unknown', CategoryColorType
   },
   Water: {
     base: '#6E8DFF',
-    light: 'hsla(221, 100%, 73%, 1)',
+    light: 'hsla(221, 100%, 73%, 0.2)',
     dark: 'hsla(209, 35%, 44%, 1)',
   },
   Biodiversity: {
