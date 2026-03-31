@@ -2,6 +2,8 @@
 
 import { useMemo } from 'react';
 
+import cn from '@/lib/classnames';
+
 import { useDebounce } from '@/hooks/datasets';
 import { useGeostories, GeostoriesParams } from '@/hooks/geostories';
 import { useSyncCategories, useSyncSearchGeostoriesGlobe } from '@/hooks/sync-query';
@@ -41,7 +43,14 @@ export default function GlobeGeostories() {
   });
 
   return (
-    <aside className="pointer-events-auto hidden max-w-[420px] overflow-hidden rounded-2xl sm:flex">
+    <aside
+      className={cn(
+        'pointer-events-auto hidden max-w-[420px] overflow-hidden rounded-2xl sm:flex',
+        isLoading
+          ? 'opacity-0'
+          : 'animate-in fade-in-0 slide-in-from-left-5 duration-700 ease-out fill-mode-both'
+      )}
+    >
       <div className="flex max-h-[calc(100vh-300px)] flex-col space-y-5 pb-6 pl-5 pt-4">
         <GlobeSearch value={searchValue} setValue={setSearchValue} />
 
