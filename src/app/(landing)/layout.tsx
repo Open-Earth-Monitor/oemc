@@ -23,21 +23,23 @@ function GlobeLayoutDesktop() {
   return (
     <div className="px-5">
       {/* Left sidebar - Geostories */}
-      <div className="pointer-events-none absolute left-0 top-28 z-[1000] hidden  xl:block">
+      <div className="pointer-events-none absolute left-0 top-28 z-[1000] hidden xl:block">
         <Geostories />
       </div>
 
       {/* Right sidebar - Social Media */}
-      <div className="pointer-events-none absolute right-0 top-28 z-[1000] hidden px-5 xl:block">
+      <div className="pointer-events-none absolute right-0 top-28 z-[1000] hidden animate-in fade-in-0 slide-in-from-right-5 duration-700 ease-out fill-mode-both delay-150 px-5 xl:block">
         <GlobeSocialMedia />
       </div>
 
-      {/* Bottom controls */}
-      <div className="pointer-events-none absolute bottom-20 left-1/2 z-[1000] hidden -translate-x-1/2 space-y-4 xl:block">
-        <div className="-translate-y-6">
-          <CategoriesFilters />
+      {/* Bottom controls — extra wrapper keeps centering transform separate from animation */}
+      <div className="pointer-events-none absolute bottom-20 left-1/2 z-[1000] hidden -translate-x-1/2 xl:block">
+        <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-300 space-y-4">
+          <div className="-translate-y-6">
+            <CategoriesFilters />
+          </div>
+          <GlobeExploreData />
         </div>
-        <GlobeExploreData />
       </div>
     </div>
   );

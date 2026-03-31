@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import 'cesium/Build/Cesium/Widgets/widgets.css';
+
+import cn from '@/lib/classnames';
 
 import * as Cesium from 'cesium';
 import {
@@ -23,6 +25,7 @@ import CameraConstraints from './camera-constraints';
 import { colorForCategory, createDiamondDataUrl } from './diamond-pin';
 import DynamicLighting from './dynamic-lighting';
 import FlyToCenter from './fly-to-center';
+import GlobeReady from './globe-ready';
 import PulseLayer from './pulse-layer';
 
 if (typeof window !== 'undefined') {
@@ -84,6 +87,9 @@ export default function Map3D({
     return map;
   }, [pins]);
 
+  const [isGlobeReady, setIsGlobeReady] = useState(false);
+  const handleGlobeReady = useCallback(() => setIsGlobeReady(true), []);
+
   const entityClickedRef = useRef(false);
 
   const handleEntityClick = useCallback(
@@ -107,8 +113,12 @@ export default function Map3D({
 
   return (
     <div
-      className={className}
-      style={{ position: 'relative', width: '100%', height: '100%', ...style }}
+      className={cn(
+        'relative h-full w-full transition-opacity duration-1000 ease-out',
+        isGlobeReady ? 'opacity-100' : 'opacity-0',
+        className
+      )}
+      style={style}
     >
       <Viewer
         full
@@ -144,6 +154,7 @@ export default function Map3D({
           brightnessShift={-0.1}
           atmosphereLightIntensity={5.0}
         />
+        <GlobeReady onReady={handleGlobeReady} />
         <DynamicLighting />
         <CameraConstraints globePadding={globePadding} initialCenter={initialCenter} />
 
