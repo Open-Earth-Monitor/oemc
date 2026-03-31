@@ -48,34 +48,33 @@ const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
 
   return (
     <button
-      className={cn({
-        'flex cursor-pointer items-center gap-2.5 rounded-full border border-white-950 p-1 hover:bg-white-950':
-          true,
-        'border-transparent': isActive,
-        [className || '']: !!className,
-      })}
+      className={cn(
+        'group flex cursor-pointer items-center gap-2.5 rounded-full border border-white-950 bg-transparent p-1',
+        {
+          'border-transparent': isActive,
+        },
+        'hover:border-[var(--category-color)] hover:text-white-500',
+        className
+      )}
       onClick={handleCategory}
       style={{
+        ['--category-color' as string]: CATEGORIES_COLORS[id]?.base,
         color: isActive
           ? CATEGORIES_COLORS[id]?.base
           : theme === 'plain'
           ? '#FFFFE6'
           : CATEGORIES_COLORS[id]?.base,
-        backgroundColor:
-          theme === 'plain'
-            ? isActive
-              ? CATEGORIES_COLORS[id]?.base
-              : 'transparent'
-            : isActive
-            ? CATEGORIES_COLORS[id]?.base
-            : 'transparent',
+        backgroundColor: isActive ? CATEGORIES_COLORS[id]?.base : undefined,
       }}
     >
       <div
         className={cn({
-          'flex h-[38px] w-[38px] items-center justify-center rounded-full bg-white-950': true,
+          'flex  h-[38px] w-[38px] items-center justify-center rounded-full  group-hover:bg-[var(--category-color)]':
+            true,
+          'bg-[#ffffe6]': isActive,
+          'bg-white-950': !isActive,
         })}
-        style={{ backgroundColor: isActive ? '#ffffe6' : 'hsla(60, 100%, 95%, 0.05)' }}
+        style={{ ['--category-color' as string]: CATEGORIES_COLORS[id]?.light }}
       >
         <Icon
           style={{

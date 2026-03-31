@@ -2,42 +2,36 @@
 
 import Link from 'next/link';
 
-import { orderBy } from 'lodash';
-
-import { useSocialMedia } from '@/hooks/social-media';
-
 import { ArrowRight } from 'lucide-react';
+
+import { Post as PostTypes } from '@/hooks/social-media';
 
 import { Post } from '@/containers/globe/social-media/post';
 
 import { Skeleton } from '@/components/ui/skeleton';
 
-export const SocialMedia = () => {
-  const { data, isLoading } = useSocialMedia(null, {
-    select: (data) => {
-      const orderedData = orderBy(data, 'created_at', 'desc');
-      const postsIds = orderedData.map((post) => post.id);
-      const filteredData = orderedData.filter((post) => !postsIds.includes(post.reblog?.id));
-      return filteredData;
-    },
-  });
+type SocialMediaProps = {
+  data: PostTypes[];
+  isLoading: boolean;
+};
 
+export const SocialMedia = ({ data, isLoading }: SocialMediaProps) => {
   return (
-    <div className="m-auto flex flex-col gap-4 pb-16 sm:flex-row sm:flex-wrap sm:justify-start xl:w-full xl:gap-6">
-      {isLoading && (
-        <div className="flex w-full flex-col gap-4 overflow-hidden pb-16 sm:flex-row sm:flex-wrap sm:justify-start ">
-          {Array.from({ length: 40 }).map((_, index) => (
-            <Skeleton
-              key={index}
-              className="min-w-[320px] flex-1 rounded-3xl xl:h-20 xl:min-h-[320px] xl:gap-6"
-            />
-          ))}
-        </div>
-      )}
+    <div className="m-auto grid grid-cols-1 gap-4 pb-16 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:w-full xl:grid-cols-4 xl:gap-6 2xl:grid-cols-6">
+      {isLoading &&
+        Array.from({ length: 40 }).map((_, index) => (
+          <div key={index} className="mx-auto w-full max-w-[420px]">
+            <Skeleton className="min-h-[320px] rounded-3xl" />
+          </div>
+        ))}
+
       {!isLoading &&
         data?.map((post) => (
-          <div key={post.id} className="flex flex-1 basis-[320px] items-stretch">
-            <div className="flex w-full min-w-[320px] max-w-[360px] flex-col overflow-hidden xl:min-h-[320px]">
+          <div
+            key={post.id}
+            className="mx-auto flex w-full max-w-[420px] cursor-pointer rounded-3xl border border-black-100 transition-colors duration-500 hover:bg-black-100"
+          >
+            <div className="flex w-full flex-col overflow-hidden">
               <Post post={post}>
                 <div className="mt-auto flex w-full justify-end">
                   <Link

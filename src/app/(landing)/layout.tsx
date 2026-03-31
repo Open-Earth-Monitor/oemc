@@ -21,14 +21,14 @@ export const metadata: Metadata = {
 
 function GlobeLayoutDesktop() {
   return (
-    <>
+    <div className="px-5">
       {/* Left sidebar - Geostories */}
-      <div className="pointer-events-none absolute left-0 top-28 z-[1000] hidden sm:pl-12 xl:block">
+      <div className="pointer-events-none absolute left-0 top-28 z-[1000] hidden  xl:block">
         <Geostories />
       </div>
 
       {/* Right sidebar - Social Media */}
-      <div className="pointer-events-none absolute right-0 top-28 z-[1000] hidden sm:pr-12 xl:block">
+      <div className="pointer-events-none absolute right-0 top-28 z-[1000] hidden px-5 xl:block">
         <GlobeSocialMedia />
       </div>
 
@@ -39,7 +39,7 @@ function GlobeLayoutDesktop() {
         </div>
         <GlobeExploreData />
       </div>
-    </>
+    </div>
   );
 }
 
@@ -58,13 +58,13 @@ function GlobeLayoutMobile() {
 
 export default function GlobeLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative h-screen w-screen overflow-hidden text-primary">
+    <div className="relative h-screen w-screen overflow-hidden bg-[url('/images/landing/bg.png')] bg-cover bg-right-bottom text-primary">
       {/* Globe - full-screen base layer */}
       <div className="absolute inset-0 z-0">{children}</div>
 
       {/* Header - top overlay, fully transparent */}
-      <div className="pointer-events-none absolute left-0 right-0 top-5 z-[1000] xl:top-0">
-        <Header />
+      <div className="absolute left-0 right-0 top-5 z-[1000] xl:top-0">
+        <Header className="px-5" />
       </div>
 
       <GlobeLayoutDesktop />

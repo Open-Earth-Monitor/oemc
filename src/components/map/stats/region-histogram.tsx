@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 
 import { useAtom } from 'jotai';
 import { useAtomValue } from 'jotai';
@@ -30,12 +30,6 @@ import LineChart from '../../line-chart';
 import CompareGeolocationInfoPopup from '../compare-geolocation-info';
 import { transformNuqsData } from '../../../lib/utils';
 
-export type AnnotationProps = {
-  width: number;
-  height: number;
-  compact?: boolean;
-};
-
 type HistogramTypes = {
   onCloseTooltip?: () => void;
   compareLayerId?: string;
@@ -47,12 +41,7 @@ type HistogramTypes = {
   title;
 };
 
-const RegionsHistogram: FC<HistogramTypes> = ({
-  onCloseTooltip = () => null,
-  title,
-  onCompareClose,
-  color,
-}: HistogramTypes) => {
+const RegionsHistogram: FC<HistogramTypes> = ({ title, onCompareClose, color }: HistogramTypes) => {
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const nutsDataParams = useAtomValue(nutsDataParamsAtom);
   const nutsDataParamsCompare = useAtomValue(nutsDataParamsCompareAtom);

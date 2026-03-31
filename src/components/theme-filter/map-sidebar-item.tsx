@@ -6,7 +6,7 @@ import type { ALL_CATEGORY, CategoryId } from '@/constants/categories';
 
 import { useSyncCategories } from '@/hooks/sync-query';
 
-export type SidebarProps = {
+type SidebarProps = {
   type?: CategoryId | typeof ALL_CATEGORY.id;
   enabled?: boolean;
 };

@@ -4,7 +4,7 @@ import { Extent } from 'ol/extent';
 
 import { APIOpenStreetMapLocation } from 'services/api';
 
-export type Location = {
+type Location = {
   boundingbox: Extent;
   place_id: number;
   display_name: string;

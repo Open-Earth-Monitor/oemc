@@ -19,12 +19,6 @@ import Loading from '../../loading';
 
 const numberFormat = format(',.2f');
 
-export type AnnotationProps = {
-  width: number;
-  height: number;
-  compact?: boolean;
-};
-
 type GeostoryTooltipInfo = {
   id: string;
   compareLayerId?: string;
