@@ -22,7 +22,6 @@ const CategoriesFiltersMobile = ({ className }: { className?: string }) => {
         setValue={setSearchValue}
         size="sm"
         className="max-w-sm flex-1"
-        mobile
       />
       <FilterPill>
         <CategoriesFiltersContent />

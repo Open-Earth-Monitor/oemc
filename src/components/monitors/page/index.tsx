@@ -56,7 +56,7 @@ const MonitorPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
   return (
     <>
       <div className="relative hidden md:block">
-        <Sidebar className="w-96 overflow-y-auto bg-black-400 px-9 py-12">
+        <Sidebar className="w-[448px] overflow-y-auto bg-black-400 px-9 py-12">
           <ScrollArea>
             <div className="font-satoshi">
               <div className="sticky top-0 z-10 gap-2 bg-black-400 pb-4 ">

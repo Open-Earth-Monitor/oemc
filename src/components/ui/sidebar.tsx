@@ -299,7 +299,7 @@ const SidebarTrigger = forwardRef<ElementRef<typeof Button>, ComponentProps<type
         size="icon"
         className={cn(
           {
-            'absolute bottom-2 z-10 h-8 w-8 border-none bg-black-300 transition-[left] duration-300 ease-in-out':
+            'absolute bottom-2 z-10 flex h-8 w-8 shrink-0 items-center justify-center border-none bg-black-300 p-0 transition-[left] duration-300 ease-in-out':
               true,
           },
           className
@@ -312,7 +312,7 @@ const SidebarTrigger = forwardRef<ElementRef<typeof Button>, ComponentProps<type
       >
         <LuCircleArrowRight
           className={cn({
-            'h-6 w-6 text-white-500': true,
+            'relative flex h-6 w-6 shrink-0 text-white-500': true,
             'rotate-180 transform': open,
           })}
         />
