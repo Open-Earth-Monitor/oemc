@@ -33,10 +33,12 @@ export const LineChart = ({
   data,
   dataCompare,
   color,
+  compareColor,
 }: {
   data: { title?: string; data: { x: string | number | Date; y: number; unit: string }[] };
   dataCompare?: { title?: string; data: { x: string | number | Date; y: number; unit: string }[] };
   color: string;
+  compareColor?: string;
 }) => {
   const { TooltipInPortal, containerRef } = useTooltipInPortal({
     scroll: true,
@@ -127,7 +129,7 @@ export const LineChart = ({
                 data={dataCompare.data}
                 xAccessor={accessors.xAccessor}
                 yAccessor={accessors.yAccessor}
-                colorAccessor={() => '#ffffe6'}
+                colorAccessor={() => compareColor || '#ffffe6'}
               />
             )}
 

@@ -5,7 +5,7 @@ import {
   useMemo,
   createContext,
   useContext,
-  ElementRef,
+  ComponentRef,
   useState,
   useCallback,
   CSSProperties,
@@ -288,7 +288,7 @@ const Sidebar = forwardRef<
 );
 Sidebar.displayName = 'Sidebar';
 
-const SidebarTrigger = forwardRef<ElementRef<typeof Button>, ComponentProps<typeof Button>>(
+const SidebarTrigger = forwardRef<ComponentRef<typeof Button>, ComponentProps<typeof Button>>(
   ({ className, onClick, ...props }, ref) => {
     const { toggleSidebar, open } = useSidebar();
 
@@ -368,7 +368,7 @@ const SidebarInset = forwardRef<HTMLDivElement, ComponentProps<'main'>>(
 );
 SidebarInset.displayName = 'SidebarInset';
 
-const SidebarInput = forwardRef<ElementRef<typeof Input>, ComponentProps<typeof Input>>(
+const SidebarInput = forwardRef<ComponentRef<typeof Input>, ComponentProps<typeof Input>>(
   ({ className, ...props }, ref) => {
     return (
       <Input
@@ -413,18 +413,19 @@ const SidebarFooter = forwardRef<HTMLDivElement, ComponentProps<'div'>>(
 );
 SidebarFooter.displayName = 'SidebarFooter';
 
-const SidebarSeparator = forwardRef<ElementRef<typeof Separator>, ComponentProps<typeof Separator>>(
-  ({ className, ...props }, ref) => {
-    return (
-      <Separator
-        ref={ref}
-        data-sidebar="separator"
-        className={cn('bg-sidebar-border mx-2 w-auto', className)}
-        {...props}
-      />
-    );
-  }
-);
+const SidebarSeparator = forwardRef<
+  ComponentRef<typeof Separator>,
+  ComponentProps<typeof Separator>
+>(({ className, ...props }, ref) => {
+  return (
+    <Separator
+      ref={ref}
+      data-sidebar="separator"
+      className={cn('bg-sidebar-border mx-2 w-auto', className)}
+      {...props}
+    />
+  );
+});
 SidebarSeparator.displayName = 'SidebarSeparator';
 
 const SidebarContent = forwardRef<HTMLDivElement, ComponentProps<'div'>>(
@@ -479,8 +480,7 @@ const SidebarGroupLabel = forwardRef<HTMLDivElement, ComponentProps<'div'> & { a
   }
 );
 SidebarGroupLabel.displayName = 'SidebarGroupLabel';
-
-const SidebarGroupAction = forwardRef<ElementRef<'button'>, SidebarGroupActionProps>(
+const SidebarGroupAction = forwardRef<ComponentRef<'button'>, SidebarGroupActionProps>(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
 
@@ -561,7 +561,7 @@ const sidebarMenuButtonVariants = cva(
   }
 );
 
-const SidebarMenuButton = forwardRef<ElementRef<'button'>, SidebarMenuButtonProps>(
+const SidebarMenuButton = forwardRef<ComponentRef<'button'>, SidebarMenuButtonProps>(
   (
     {
       asChild = false,
@@ -613,7 +613,7 @@ SidebarMenuButton.displayName = 'SidebarMenuButton';
 // export default SidebarMenuButton;
 
 // const SidebarMenuAction = forwardRef<
-//   ElementRef<typeof Slot>,
+//   ComponentRef<typeof Slot>,
 //   ComponentProps<'button'> & {
 //     asChild?: boolean;
 //     showOnHover?: boolean;

@@ -3,27 +3,23 @@
 import { FC, useCallback } from 'react';
 
 import { useSetAtom, useAtomValue } from 'jotai';
-import { XIcon } from 'lucide-react';
 
 import {
   compareFunctionalityAtom,
-  histogramVisibilityAtom,
   regionsLayerVisibilityAtom,
   nutsDataParamsAtom,
   nutsDataParamsCompareAtom,
   nutsDataResponseCompareAtom,
 } from '@/app/store';
 
-import PointHistogram from '@/components/map/stats/point-histogram';
-import RegionsHistogram from '@/components/map/stats/region-histogram';
 import { useNutsLayerData } from '@/hooks/layers';
 
-import { Button } from '@/components/ui/button';
 import { NUTS_INITIAL_STATE } from '@/components/map/constants';
+import PointHistogram from '@/components/map/stats/point-histogram';
+import RegionsHistogram from '@/components/map/stats/region-histogram';
 
 type HistogramProps = { title: string; color: string; id: string };
 const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => {
-  const setHistogramVisibility = useSetAtom(histogramVisibilityAtom);
   const setCompareMode = useSetAtom(compareFunctionalityAtom);
   const nutsDataParams = useAtomValue(nutsDataParamsAtom);
   const setNutsCompareDataParams = useSetAtom(nutsDataParamsCompareAtom);
@@ -42,11 +38,6 @@ const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => 
     }
   );
 
-  const handleClick = () => {
-    setHistogramVisibility(false);
-    setCompareMode(false);
-  };
-
   // const onCompareActive = useCallback(() => {
   //   setCompareMode(true);
   // }, []);
@@ -59,23 +50,14 @@ const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => 
 
   return (
     <div>
-      <div className="flex w-full items-center justify-between border-t border-white-900 py-3">
-        <div className="text-sm">Analysis</div>
-        <Button
-          className="flex items-center space-x-2.5"
-          variant="outline"
-          size="sm"
-          onClick={handleClick}
-        >
-          <span className="text-xs">Close analysis</span>
-          <XIcon className="h-4 w-4" />
-        </Button>
-      </div>
-
-      {isRegionsLayerActive && histogramDataRegionRaw && (
+      {isLoadingDataHistogram && (
+        <p className="text-center text-sm text-gray-500">Loading histogram data...</p>
+      )}
+      {!isLoadingDataHistogram && isRegionsLayerActive && histogramDataRegionRaw && (
         <RegionsHistogram color={color} title={title} onCompareClose={onCloseCompareInfo} />
       )}
-      {(!isRegionsLayerActive || (isRegionsLayerActive && !histogramDataRegionRaw)) && (
+      {((!isLoadingDataHistogram && !isRegionsLayerActive) ||
+        (isRegionsLayerActive && !histogramDataRegionRaw)) && (
         <PointHistogram color={color} title={title} id={id} />
       )}
     </div>

@@ -108,7 +108,7 @@ export const Controls: FC<ControlsProps> = ({
   return (
     <div
       className={cn({
-        'absolute right-5 top-[222px] z-40 flex flex-col space-y-1.5 sm:top-1/2 sm:-translate-y-[50%]':
+        'absolute right-5 top-1/2 z-40 flex -translate-y-[50%] flex-col space-y-1.5 sm:top-1/2 sm:-translate-y-[50%]':
           true,
         [className]: !!className,
       })}

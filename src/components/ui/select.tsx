@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, ElementRef, ComponentPropsWithoutRef, PropsWithChildren } from 'react';
+import { forwardRef, ComponentRef, ComponentPropsWithoutRef, PropsWithChildren } from 'react';
 
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { LuChevronDown } from 'react-icons/lu';
@@ -10,7 +10,7 @@ import { cn } from 'lib/classnames';
 const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = forwardRef<
-  ElementRef<typeof SelectPrimitive.Value>,
+  ComponentRef<typeof SelectPrimitive.Value>,
   PropsWithChildren<ComponentPropsWithoutRef<typeof SelectPrimitive.Value>> & {
     className?: string;
   }
@@ -33,7 +33,7 @@ export default Select;
 Select.displayName = SelectPrimitive.Root.displayName;
 
 const SelectIcon = forwardRef<
-  ElementRef<typeof SelectPrimitive.Icon>,
+  ComponentRef<typeof SelectPrimitive.Icon>,
   ComponentPropsWithoutRef<typeof SelectPrimitive.Icon>
 >(({ className, children, ...props }, ref) => (
   <SelectPrimitive.Icon
@@ -52,7 +52,7 @@ const SelectIcon = forwardRef<
 SelectIcon.displayName = SelectPrimitive.Icon.displayName;
 
 const SelectTrigger = forwardRef<
-  ElementRef<typeof SelectPrimitive.Trigger>,
+  ComponentRef<typeof SelectPrimitive.Trigger>,
   ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => {
   return (
@@ -71,7 +71,7 @@ const SelectTrigger = forwardRef<
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectContent = forwardRef<
-  ElementRef<typeof SelectPrimitive.Content>,
+  ComponentRef<typeof SelectPrimitive.Content>,
   ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
 >(({ className, children, position = 'popper', ...props }, ref) => (
   <SelectPrimitive.Portal>
@@ -99,7 +99,7 @@ const SelectContent = forwardRef<
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 
 const SelectLabel = forwardRef<
-  ElementRef<typeof SelectPrimitive.Label>,
+  ComponentRef<typeof SelectPrimitive.Label>,
   ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
@@ -111,7 +111,7 @@ const SelectLabel = forwardRef<
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
 const SelectItem = forwardRef<
-  ElementRef<typeof SelectPrimitive.Item>,
+  ComponentRef<typeof SelectPrimitive.Item>,
   ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
 >(({ className, children, ...props }, ref) => {
   return (
@@ -131,7 +131,7 @@ const SelectItem = forwardRef<
 SelectItem.displayName = SelectPrimitive.Item.displayName;
 
 const SelectSeparator = forwardRef<
-  ElementRef<typeof SelectPrimitive.Separator>,
+  ComponentRef<typeof SelectPrimitive.Separator>,
   ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Separator

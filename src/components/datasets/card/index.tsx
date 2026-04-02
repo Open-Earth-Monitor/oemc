@@ -2,27 +2,19 @@
 
 import { FC, useCallback, useMemo } from 'react';
 
-import { HiOutlineExternalLink } from 'react-icons/hi';
-import { LuLayers2 } from 'react-icons/lu';
-
-import cn from '@/lib/classnames';
-import { isValidUrl } from '@/lib/url';
+import { useAtom } from 'jotai';
 
 import { Geostory } from '@/types/geostories';
 import type { LayerParsed } from '@/types/layers';
 import { Monitor, MonitorParsed } from '@/types/monitors';
 
-import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
+import { histogramVisibilityAtom } from '@/app/store';
 
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
 import Histogram from '@/containers/histogram';
 
-import TimeSeriesComparativeLayers from '@/components/timeseries-comparative-layers';
-import TimeSeriesSameLayer from '@/components/timeseries-layer';
-import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { useAtom } from 'jotai';
 
 type DatasetCardProps = LayerParsed & {
   id: string;
@@ -37,7 +29,6 @@ type DatasetCardProps = LayerParsed & {
 const DatasetCard: FC<DatasetCardProps> = ({
   id,
   title,
-  download_url,
   description,
   range,
   color,
@@ -50,9 +41,8 @@ const DatasetCard: FC<DatasetCardProps> = ({
   const isActive = useMemo(() => layers?.[0]?.id === id, [id, layers]);
   const isCompareActive = useMemo(() => compareLayers?.[1]?.id === id, [id, compareLayers]);
 
-  const [isHistogramActive, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
+  const [isHistogramActive] = useAtom(histogramVisibilityAtom);
   // isActive is based on the url
-  const [regionsLayerVisibility, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
   const layerToCompareId = useMemo(() => {
     if (!comparisonLayer) return null;
@@ -95,11 +85,9 @@ const DatasetCard: FC<DatasetCardProps> = ({
     compareLayers,
   ]);
 
-  const isValidUrlDownload = isValidUrl(download_url);
-
   return (
     <div
-      className="space-y-3 rounded-3xl border border-black-100 p-3.5 font-medium"
+      className="space-y-3 rounded-3xl border border-black-100 p-3.5 text-sm font-medium text-white-50"
       data-testid={`dataset-item-${id}`}
     >
       <div className="flex items-start justify-between">
@@ -122,66 +110,16 @@ const DatasetCard: FC<DatasetCardProps> = ({
         </div>
       </div>
 
-      <p data-testid="dataset-description" className="text-secondary-500">
+      <p
+        data-testid="dataset-description"
+        className="border-b border-black-100 pb-3 text-secondary-500"
+      >
         {description}
       </p>
 
-      <div className="mt-1.5 flex items-baseline space-x-2"></div>
-
-      <div className="mt-1.5 flex items-baseline space-x-2">
-        {!!download_url && isValidUrlDownload && (
-          <a
-            href={download_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="dataset-download-button"
-            title="Go to download dataset site"
-          >
-            <HiOutlineExternalLink className="h-6 w-6 text-secondary-500" />
-          </a>
-        )}
-      </div>
-
-      {!isGeostory && (
-        <div>
-          <Button
-            data-testid="dataset-layer-toggle-button"
-            type="button"
-            variant={isActive ? 'gradient' : 'default'}
-            onClick={handleToggleLayer}
-            className={cn('flex items-center space-x-2 leading-[140%]', {
-              'bg-accent-green': isActive,
-            })}
-          >
-            <span className="text-sm">{isActive ? 'Hide' : 'Show'} layer on the map</span>
-            <LuLayers2 className="h-6 w-6 shrink-0" title="layer" />
-          </Button>
-        </div>
+      {id && isHistogramActive && isActive && (
+        <Histogram color={color} title={title} id={id} isGeostory={isGeostory} />
       )}
-
-      {isActive && range && !!range.length && !comparisonLayer && (
-        // same layer compared
-        <TimeSeriesSameLayer
-          layerId={id}
-          range={range}
-          isActive={isActive}
-          defaultActive={true}
-          autoPlay={isGeostory}
-          comparisonLayer={comparisonLayer}
-        />
-      )}
-      {comparisonLayer && (
-        <TimeSeriesComparativeLayers
-          layerId={id}
-          range={range}
-          isActive={isActive}
-          comparisonLayer={comparisonLayer}
-        />
-      )}
-
-      <div className="flex flex-col space-y-2.5 border-t border-dashed border-white-900 pt-3.5">
-        {id && isHistogramActive && isActive && <Histogram color={color} title={title} id={id} />}
-      </div>
     </div>
   );
 };
