@@ -7,6 +7,7 @@ import cn from '@/lib/classnames';
 
 import type { LayerDateRange, LayerParsed } from '@/types/layers';
 
+import { useLayer } from '@/hooks/layers';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -26,19 +27,15 @@ const TimeSeriesComparativeLayers: FC<{
   layerId: LayerParsed['layer_id'];
   range: LayerParsed['range'];
   isActive: boolean;
-  comparisonLayer?: LayerParsed | null;
-}> = ({ range, isActive, layerId, comparisonLayer }) => {
+}> = ({ range, isActive, layerId }) => {
   const [layers, setLayers] = useSyncLayersSettings();
-  const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
-
-  const layerToCompare = useMemo(() => {
-    if (!comparisonLayer) return null;
-    return compareLayers?.[0]?.id || comparisonLayer.layer_id || null;
-  }, [comparisonLayer, compareLayers]);
+  const [comparisonLayers, setComparisonLayers] = useSyncCompareLayersSettings();
 
   const keyFor = (id: string) => `timeseries:${id}:playing`;
 
   const [isPlaying, setPlaying] = useState<boolean>(true);
+
+  const comparisonLayerId = useMemo(() => comparisonLayers?.[0]?.id, [comparisonLayers]);
 
   useEffect(() => {
     if (!layerId) return;
@@ -64,14 +61,23 @@ const TimeSeriesComparativeLayers: FC<{
     [date, range]
   );
 
-  const isCompareActive = useMemo(() => !!compareLayers?.[0]?.id, [compareLayers]);
+  const isCompareActive = useMemo(() => !!comparisonLayers?.[0]?.id, [comparisonLayers]);
+
+  const { data: comparisonLayerData } = useLayer(
+    {
+      layer_id: comparisonLayerId,
+    },
+    {
+      enabled: !!isCompareActive,
+    }
+  );
 
   return (
     <div className="flex w-full flex-col">
       {/* Select dates */}
       <div className="flex flex-col space-y-2 text-secondary-500">
         <span className="text-sm">Select date:</span>
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between gap-6">
           {currentRange && (
             <Select
               value={currentRange.value}
@@ -107,14 +113,14 @@ const TimeSeriesComparativeLayers: FC<{
             </Select>
           )}
 
-          {comparisonLayer && !isCompareActive && (
+          {comparisonLayerData && !isCompareActive && (
             <Button
               variant="outline"
               size="sm"
               className="text-xs font-semibold"
               onClick={() => {
                 setPlaying(false);
-                setCompareLayers([{ id: layerToCompare, opacity }]);
+                setComparisonLayers([{ id: comparisonLayerId, opacity }]);
               }}
             >
               Compare
@@ -128,7 +134,7 @@ const TimeSeriesComparativeLayers: FC<{
               className="rounded-full text-xs font-semibold"
               onClick={() => {
                 setPlaying(false);
-                setCompareLayers(null);
+                setComparisonLayers(null);
               }}
             >
               <span>Hide average</span>

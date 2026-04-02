@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, ElementRef, ComponentPropsWithoutRef } from 'react';
+import { forwardRef, ComponentPropsWithoutRef, ComponentRef } from 'react';
 
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible';
 
@@ -9,7 +9,7 @@ import { cn } from 'lib/classnames';
 const Collapsible = CollapsiblePrimitive.Root;
 
 const CollapsibleTrigger = forwardRef<
-  ElementRef<typeof CollapsiblePrimitive.Trigger>,
+  ComponentRef<typeof CollapsiblePrimitive.Trigger>,
   ComponentPropsWithoutRef<typeof CollapsiblePrimitive.Trigger> & {
     inset?: boolean;
     children?: React.ReactNode;
@@ -30,6 +30,25 @@ const CollapsibleTrigger = forwardRef<
 
 CollapsibleTrigger.displayName = CollapsiblePrimitive.Trigger.displayName;
 
-const CollapsibleContent = CollapsiblePrimitive.CollapsibleContent;
+const CollapsibleContent = forwardRef<
+  ComponentRef<typeof CollapsiblePrimitive.Content>,
+  ComponentPropsWithoutRef<typeof CollapsiblePrimitive.Content> & {
+    inset?: boolean;
+    children?: React.ReactNode;
+    className?: string;
+  }
+>(({ className, children, ...props }, ref) => (
+  <CollapsiblePrimitive.Content
+    ref={ref}
+    className={cn({
+      [className]: !!className,
+    })}
+    {...props}
+  >
+    {children}
+  </CollapsiblePrimitive.Content>
+));
+
+CollapsibleContent.displayName = CollapsiblePrimitive.Content.displayName;
 
 export { Collapsible, CollapsibleTrigger, CollapsibleContent };

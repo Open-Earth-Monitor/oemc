@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, ElementRef, ComponentPropsWithoutRef } from 'react';
+import { forwardRef, ComponentRef, ComponentPropsWithoutRef } from 'react';
 
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 
@@ -11,14 +11,14 @@ const Popover = PopoverPrimitive.Root;
 const PopoverTrigger = PopoverPrimitive.Trigger;
 
 const PopoverArrow = forwardRef<
-  ElementRef<typeof PopoverPrimitive.Arrow>,
+  ComponentRef<typeof PopoverPrimitive.Arrow>,
   ComponentPropsWithoutRef<typeof PopoverPrimitive.Arrow>
 >(({ className, ...props }, ref) => (
   <PopoverPrimitive.Arrow {...props} ref={ref} className={cn('fill-current', className)} />
 ));
 
 const PopoverContent = forwardRef<
-  ElementRef<typeof PopoverPrimitive.Content>,
+  ComponentRef<typeof PopoverPrimitive.Content>,
   ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
 >(({ className, align = 'center', sideOffset = 4, ...props }, ref) => (
   <PopoverPrimitive.Portal>

@@ -25,9 +25,7 @@ const LegendItem: FC<LegendItemPropsWithChildren> = ({
         <div className="font-heading text-white text-sm">{name}</div>
       </div>
     </div>
-
     <div className="text-sm text-gray-300">{description}</div>
-
     {children && <div className="mt-2.5">{children}</div>}
   </div>
 );

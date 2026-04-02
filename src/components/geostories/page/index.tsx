@@ -10,7 +10,8 @@ import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geos
 
 import GeostoriesView from '@/components/geostories/view';
 import Loading from '@/components/loading';
-import CardHeader from '@/components/sidebar/card-header';
+import GeostoryHeader from '@/components/sidebar/geostory/header';
+import RegionsBanner from '@/components/sidebar/regions-banner';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
 
@@ -48,7 +49,12 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
         void setCompareLayers([{ id: comparisonLayer.layer_id, opacity: 1 }], { shallow: false });
       }
     }
-  }, [geostoryLayers, comparisonLayer, compareLayers, setCompareLayers, setLayers]);
+  }, [geostoryLayers, comparisonLayer, compareLayers, setCompareLayers, setLayers, layers]);
+
+  const baseLayers = useMemo(() => {
+    if (!geostoryLayers?.length && comparisonLayer) return [comparisonLayer];
+    if (geostoryLayers?.length) return geostoryLayers;
+  }, [geostoryLayers, comparisonLayer]);
 
   return (
     <>
@@ -60,18 +66,23 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
                 <BackToMonitorsAndGeostories />
                 {!isGeostoryLoading && <CardHeader type="geostory" {...geostoryData} />}
               </div>
+            </div>
+
+            <ScrollArea className="min-h-0 flex-1">
               {isGeostoryLoading ? (
                 <Loading />
               ) : (
                 <GeostoriesView
                   data={geostoryData}
-                  geostoryLayers={geostoryLayers}
+                  geostoryLayers={baseLayers}
                   comparisonLayer={comparisonLayer}
                 />
               )}
-            </div>
-          </ScrollArea>
+            </ScrollArea>
+          </div>
+          <RegionsBanner />
         </Sidebar>
+
         <div className="w-full">
           <div className="absolute left-0 top-0 h-screen w-screen overflow-hidden">
             {/* Map + Trigger */}
@@ -86,7 +97,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
         ) : (
           <GeostoriesView
             data={geostoryData}
-            geostoryLayers={geostoryLayers}
+            geostoryLayers={baseLayers}
             comparisonLayer={comparisonLayer}
           />
         )}

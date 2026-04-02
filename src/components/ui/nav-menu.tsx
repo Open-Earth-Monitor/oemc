@@ -1,4 +1,4 @@
-import { forwardRef, ElementRef, ComponentPropsWithoutRef } from 'react';
+import { forwardRef, ComponentRef, ComponentPropsWithoutRef } from 'react';
 
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
@@ -7,7 +7,7 @@ import { cva } from 'class-variance-authority';
 import { cn } from 'lib/classnames';
 
 const NavigationMenu = forwardRef<
-  ElementRef<typeof NavigationMenuPrimitive.Root>,
+  ComponentRef<typeof NavigationMenuPrimitive.Root>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
 >(({ className, children, ...props }, ref) => (
   <NavigationMenuPrimitive.Root
@@ -22,7 +22,7 @@ const NavigationMenu = forwardRef<
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
 
 const NavigationMenuList = forwardRef<
-  ElementRef<typeof NavigationMenuPrimitive.List>,
+  ComponentRef<typeof NavigationMenuPrimitive.List>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.List>
 >(({ className, ...props }, ref) => (
   <NavigationMenuPrimitive.List
@@ -40,7 +40,7 @@ const navigationMenuTriggerStyle = cva(
 );
 
 const NavigationMenuTrigger = forwardRef<
-  ElementRef<typeof NavigationMenuPrimitive.Trigger>,
+  ComponentRef<typeof NavigationMenuPrimitive.Trigger>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => (
   <NavigationMenuPrimitive.Trigger
@@ -58,7 +58,7 @@ const NavigationMenuTrigger = forwardRef<
 NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
 
 const NavigationMenuContent = forwardRef<
-  ElementRef<typeof NavigationMenuPrimitive.Content>,
+  ComponentRef<typeof NavigationMenuPrimitive.Content>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Content>
 >(({ className, ...props }, ref) => (
   <NavigationMenuPrimitive.Content
@@ -75,7 +75,7 @@ NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 const NavigationMenuLink = NavigationMenuPrimitive.Link;
 
 const NavigationMenuViewport = forwardRef<
-  ElementRef<typeof NavigationMenuPrimitive.Viewport>,
+  ComponentRef<typeof NavigationMenuPrimitive.Viewport>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
 >(({ className, ...props }, ref) => (
   <div className={cn('absolute left-0 top-full flex justify-center')}>
@@ -92,7 +92,7 @@ const NavigationMenuViewport = forwardRef<
 NavigationMenuViewport.displayName = NavigationMenuPrimitive.Viewport.displayName;
 
 const NavigationMenuIndicator = forwardRef<
-  ElementRef<typeof NavigationMenuPrimitive.Indicator>,
+  ComponentRef<typeof NavigationMenuPrimitive.Indicator>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Indicator>
 >(({ className, ...props }, ref) => (
   <NavigationMenuPrimitive.Indicator

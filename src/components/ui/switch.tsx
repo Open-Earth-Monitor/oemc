@@ -7,7 +7,7 @@ import * as SwitchPrimitives from '@radix-ui/react-switch';
 import { cn } from '@/lib/classnames';
 
 const SwitchThumb = React.forwardRef<
-  React.ElementRef<typeof SwitchPrimitives.Root>,
+  React.ComponentRef<typeof SwitchPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
 >(() => (
   <SwitchPrimitives.Thumb
@@ -19,7 +19,7 @@ const SwitchThumb = React.forwardRef<
 SwitchThumb.displayName = SwitchPrimitives.Thumb.displayName;
 
 const Switch = React.forwardRef<
-  React.ElementRef<typeof SwitchPrimitives.Root>,
+  React.ComponentRef<typeof SwitchPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
 >(({ className, ...props }, ref) => (
   <SwitchPrimitives.Root

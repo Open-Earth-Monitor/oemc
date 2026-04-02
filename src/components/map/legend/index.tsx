@@ -19,7 +19,9 @@ import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
 import LayerVisibility from './visibility';
 
-export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
+export const Legend: React.FC<{
+  isGeostory?: boolean;
+}> = ({ isGeostory = false }) => {
   const isMobile = useMediaQuery(mobile);
   const [isOpen, setIsOpen] = useState(true);
 
@@ -84,7 +86,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           </div>
         </CollapsibleTrigger>
         <CollapsibleContent className="hidden sm:block">
-          <LegendComponent isGeostory={isGeostory} />
+          <LegendComponent />
         </CollapsibleContent>
       </Collapsible>
 
@@ -101,7 +103,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           <PopoverClose className="absolute left-0 top-0 block h-12 w-[60px] -translate-y-full border-none bg-brand-500 focus:text-secondary-500">
             <LuChevronDown className="mx-auto h-6 w-6 text-secondary-500" />
           </PopoverClose>
-          <LegendComponent isGeostory={isGeostory} />
+          <LegendComponent />
         </PopoverContent>
       </Popover>
     </div>

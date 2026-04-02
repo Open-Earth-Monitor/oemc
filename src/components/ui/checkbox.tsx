@@ -1,13 +1,13 @@
 'use client';
 
-import { forwardRef, ElementRef, ComponentPropsWithoutRef, PropsWithChildren } from 'react';
+import { forwardRef, ComponentRef, ComponentPropsWithoutRef, PropsWithChildren } from 'react';
 
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 
 import { cn } from 'lib/classnames';
 
 const Checkbox = forwardRef<
-  ElementRef<typeof CheckboxPrimitive.Root>,
+  ComponentRef<typeof CheckboxPrimitive.Root>,
   ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
 >(({ className, children, ...props }, ref) => (
   <CheckboxPrimitive.Root
@@ -24,7 +24,7 @@ const Checkbox = forwardRef<
 ));
 
 const CheckboxIndicator = forwardRef<
-  ElementRef<typeof CheckboxPrimitive.Indicator>,
+  ComponentRef<typeof CheckboxPrimitive.Indicator>,
   PropsWithChildren<ComponentPropsWithoutRef<typeof CheckboxPrimitive.Indicator>> & {
     className?: string;
   }

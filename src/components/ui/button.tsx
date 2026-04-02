@@ -14,7 +14,8 @@ const buttonVariants = cva(
           'bg-accent-green text-black-500 hover:bg-[#18BE99] active:border active:border-white-800 ',
         gradient:
           'border-none bg-[linear-gradient(131.67deg,_#1EEDBF_0%,_#75A1FF_100%)] text-black-500 font-medium',
-        background: 'border-none text-white-500 bg-white-500 bg-opacity-5 hover:bg-white-500/80',
+        background:
+          'border-none text-white-500 bg-white-500 bg-opacity-5 hover:bg-white-500 hover:text-black-500',
         outline:
           'border border-white-800 hover:border-white-500 active:bg-accent-green active:hover:bg-[linear-gradient(0deg,rgba(0,0,0,0.2),rgba(0,0,0,0.2)),theme(colors.accent-green)]',
       },

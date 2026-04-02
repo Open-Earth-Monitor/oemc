@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, createRef, useLayoutEffect } from 'react';
 
+import { usePathname } from 'next/navigation';
+
 import cn from '@/lib/classnames';
 
 import { useLayer, useLegendGraphic } from '@/hooks/layers';
@@ -12,10 +14,9 @@ import LegendGraphic from './graphic';
 import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
 import LayerVisibility from './visibility';
+import LegendTimeseries from './timelime';
 
-type ActiveTab = 'timeSeries' | 'comparison';
-
-export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false }) => {
+export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [layers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
@@ -28,9 +29,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     { enabled: !!compareLayers }
   );
 
-  const [activeTab, setActiveTab] = useState<ActiveTab>(
-    !!compareDate || isGeostory ? 'comparison' : 'timeSeries'
-  );
+  const isGeostory = usePathname().startsWith('/explore/geostory');
 
   // Info for layer on the left side
   const {
@@ -65,26 +64,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
     gs_name: layerDataCompare?.gs_name,
   });
 
-  // Enable compare legend if compare layer is in the URL
-  useEffect(() => {
-    if (compareLayers) {
-      setActiveTab('comparison');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // useEffect(() => {
-  //   if (activeTab === 'comparison' && !layerDataCompare && !isGeostory) {
-  //     void setCompareLayers([
-  //       {
-  //         id: layerDataCompare?.layer_id,
-  //         opacity,
-  //         date: compareDate,
-  //       },
-  //     ]);
-  //   }
-  // }, [setCompareLayers, layerDataCompare, opacity, compareDate, layerId, activeTab, isGeostory]);
-
   const handleCompareOpacity = useCallback(
     (nexOpacity: number) => {
       void setCompareLayers((prevState) => [{ ...prevState?.[0], opacity: nexOpacity }]);
@@ -118,6 +97,7 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
           isFetchedLayerData &&
           !isLoadingLegendData &&
           isFetchedLegendData && <LegendGraphic dataLayer={layerData} dataLegend={legendData} />}
+        {children}
       </ScrollArea>
 
       {isGeostory && compareLayerData && (
@@ -146,7 +126,6 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
               {!isGeostory && <RemoveLayer className="pl-2" />}
             </div>
           </div>
-
           <ScrollArea className="max-h-[216px]">
             {isLoadingCompare && (
               <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
@@ -154,6 +133,8 @@ export const Legend: React.FC<{ isGeostory?: boolean }> = ({ isGeostory = false 
             {!isLoadingCompare && !isErrorCompare && isFetchedCompare && (
               <LegendGraphic dataLayer={layerDataCompare} dataLegend={legendDataCompare} />
             )}
+            <LegendTimeseries />
+            {children}
           </ScrollArea>
         </div>
       )}

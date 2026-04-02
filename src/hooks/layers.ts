@@ -46,28 +46,30 @@ export function useLayers(queryOptions?: UseQueryOptions<Layer[], Error, LayerPa
   });
 }
 
-export function useLayer(
+export function useLayer<TData = LayerParsed>(
   params: { layer_id: string },
-  queryOptions?: UseQueryOptions<Layer, Error, LayerParsed>
+  queryOptions?: UseQueryOptions<Layer, Error, TData>
 ) {
   const fetchLayer = () =>
     API.request({
       method: 'GET',
       url: '/layers',
       params,
-      ...queryOptions,
     }).then((response: AxiosResponse<Layer[]>) => response.data[0]);
-  return useQuery(['layer', params], fetchLayer, {
+
+  return useQuery<Layer, Error, TData>(['layer', params], fetchLayer, {
     ...DEFAULT_QUERY_OPTIONS,
-    select: (data) => {
-      return {
+    select: ((data: Layer) => {
+      const parsedData: LayerParsed = {
         ...data,
         range: data?.range?.map((r, index) => ({
           value: r,
           label: data?.range_labels?.[index] || null,
         })),
       };
-    },
+
+      return parsedData as TData;
+    }) as (data: Layer) => TData,
     ...queryOptions,
   });
 }
@@ -113,7 +115,7 @@ export function useLayerParsedSource(
 export function useNutsLayerData(
   params: { NUTS_ID?: string; LAYER_ID?: string; key: 'regular' | 'compare' } | undefined,
   queryOptions?: UseQueryOptions<
-    { dataset: { avg: number; label: string; max: number; min: number }[] },
+    { dataset: { avg: number; label: string; max: number; min: number }[]; layer_id: string },
     Error
   >
 ) {
