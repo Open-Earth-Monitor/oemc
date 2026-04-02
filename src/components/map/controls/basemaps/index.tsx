@@ -12,10 +12,20 @@ import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 import { BASEMAPS, LABELS, LabelProps, BasemapProps } from './constants';
+import { useAtom } from 'jotai';
+import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
 
 const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
   const [selectedBasemap, setBasemap] = useSyncBasemapSettings();
   const [activeLabels, setActiveLabels] = useSyncBasemapLabelsSettings();
+  const [isHistogramActive, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
+  // isActive is based on the url
+  const [regionsLayerVisibility, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
+
+  const handleRegionsLayerVisibility = () => {
+    setIsRegionsLayerActive((prev) => !prev);
+    setHistogramVisibility(false);
+  };
 
   const handleMapLabels = (value: LabelProps['id']) => {
     if (activeLabels !== value) {
@@ -79,49 +89,61 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
           </PopoverTrigger>
         </TooltipTrigger>
         <PopoverContent
-          className="divide flex w-fit flex-col divide-y divide-dashed divide-white-900 overflow-hidden bg-black-100 px-2 py-5 text-sm text-white-500"
+          className="divide flex w-fit flex-col divide-y divide-dashed divide-white-900 overflow-hidden rounded-3xl bg-black-100 text-sm text-white-500"
           align="start"
           side="right"
         >
-          <div className="flex flex-col justify-start space-y-3 pb-2">
-            {BASEMAPS.map((basemap) => (
-              <div
-                key={basemap.id}
-                className="flex items-start space-x-2.5 px-2"
-                data-testid={`${basemap.id}-button`}
-              >
-                <Switch
-                  value={basemap.id}
-                  id={basemap.id}
-                  checked={selectedBasemap === basemap.id}
-                  className="h-4 w-6 shrink-0"
-                  onCheckedChange={() => handleBasemap(basemap.id)}
-                />
-                <Label htmlFor={basemap.id} className="text-sm">
-                  {basemap.label}
-                </Label>
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-col justify-start space-y-3 pt-2">
-            {LABELS.map((value) => (
-              <div
-                key={value.id}
-                className="flex items-start space-x-2.5 px-2 "
-                data-testid={`${value.label}-button`}
-              >
-                <Switch
-                  value={value.id}
-                  id={value.id}
-                  checked={activeLabels === value.id}
-                  className="h-4 w-6 shrink-0"
-                  onCheckedChange={() => handleMapLabels(value.id)}
-                />
-                <Label htmlFor={value.id} className="text-sm">
-                  {value.label}
-                </Label>
-              </div>
-            ))}
+          <div className="gap-2 divide-y divide-white-500/50 text-sm">
+            <div
+              key="regions-layer"
+              className="flex items-start space-x-2.5 py-6"
+              data-testid="regions-layer-button"
+            >
+              <Switch
+                onCheckedChange={handleRegionsLayerVisibility}
+                checked={regionsLayerVisibility}
+                className="h-4 w-6 shrink-0"
+              />
+              <Label htmlFor="regions-layer">Regions layer</Label>
+            </div>
+
+            <div className="flex flex-col justify-start space-y-4 py-6">
+              {BASEMAPS.map((basemap) => (
+                <div
+                  key={basemap.id}
+                  className="flex items-start space-x-2.5"
+                  data-testid={`${basemap.id}-button`}
+                >
+                  <Switch
+                    value={basemap.id}
+                    id={basemap.id}
+                    checked={selectedBasemap === basemap.id}
+                    className="h-4 w-6 shrink-0"
+                    onCheckedChange={() => handleBasemap(basemap.id)}
+                  />
+                  <Label htmlFor={basemap.id}>{basemap.label}</Label>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col justify-start space-y-4 py-6">
+              {LABELS.map((value) => (
+                <div
+                  key={value.id}
+                  className="flex items-start space-x-2.5"
+                  data-testid={`${value.label}-button`}
+                >
+                  <Switch
+                    value={value.id}
+                    id={value.id}
+                    checked={activeLabels === value.id}
+                    className="h-4 w-6 shrink-0"
+                    onCheckedChange={() => handleMapLabels(value.id)}
+                  />
+                  <Label htmlFor={value.id}>{value.label}</Label>
+                </div>
+              ))}
+            </div>
           </div>
         </PopoverContent>
         <TooltipPortal>

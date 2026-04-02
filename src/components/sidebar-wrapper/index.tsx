@@ -15,7 +15,7 @@ export default function SidebarWrapper({ children }: { children: React.ReactNode
       {isMobile && children}
       {!isMobile && (
         <>
-          <Sidebar className="w-96 bg-black-400 px-9 py-12">{children}</Sidebar>
+          <Sidebar className="w-[448px] bg-black-400 px-8 py-12">{children}</Sidebar>
           <SidebarAnchorElements />
         </>
       )}

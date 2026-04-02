@@ -2,11 +2,6 @@
 
 import { FC, useCallback, useMemo } from 'react';
 
-import { Element as ScrollElement } from 'react-scroll';
-
-import Image from 'next/image';
-
-import { useAtom } from 'jotai';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { LuLayers2 } from 'react-icons/lu';
 
@@ -19,14 +14,15 @@ import { Monitor, MonitorParsed } from '@/types/monitors';
 
 import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
 
+import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
+
 import Histogram from '@/containers/histogram';
 
-import TimeSeriesSameLayer from '@/components/timeseries-layer';
 import TimeSeriesComparativeLayers from '@/components/timeseries-comparative-layers';
+import TimeSeriesSameLayer from '@/components/timeseries-layer';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-
-import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
+import { useAtom } from 'jotai';
 
 type DatasetCardProps = LayerParsed & {
   id: string;
@@ -50,10 +46,12 @@ const DatasetCard: FC<DatasetCardProps> = ({
 }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
-  const [isHistogramActive, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
   // isActive is based on the url
   const isActive = useMemo(() => layers?.[0]?.id === id, [id, layers]);
   const isCompareActive = useMemo(() => compareLayers?.[1]?.id === id, [id, compareLayers]);
+
+  const [isHistogramActive, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
+  // isActive is based on the url
   const [regionsLayerVisibility, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
   const layerToCompareId = useMemo(() => {
@@ -99,25 +97,35 @@ const DatasetCard: FC<DatasetCardProps> = ({
 
   const isValidUrlDownload = isValidUrl(download_url);
 
-  const handleRegionsLayerVisibility = () => {
-    setIsRegionsLayerActive((prev) => !prev);
-    setHistogramVisibility(false);
-  };
-
   return (
-    <div className="space-y-3 bg-brand-300 p-3.5 font-medium" data-testid={`dataset-item-${id}`}>
-      <h2 data-testid="dataset-title" className="font-satoshi text-secondary-500" style={{ color }}>
-        {title}
-      </h2>
+    <div
+      className="space-y-3 rounded-3xl border border-black-100 p-3.5 font-medium"
+      data-testid={`dataset-item-${id}`}
+    >
+      <div className="flex items-start justify-between">
+        <h2
+          data-testid="dataset-title"
+          className="max-w-[60%] font-satoshi text-secondary-500"
+          style={{ color }}
+        >
+          {title}
+        </h2>
+        <div className="flex items-center space-x-3">
+          <span className="text-xs text-white-500/50">{isActive ? 'Hide' : 'Show'} layer</span>
+          <Switch
+            value={id}
+            id={id}
+            checked={isActive}
+            className="h-4 w-6 shrink-0"
+            onCheckedChange={handleToggleLayer}
+          />
+        </div>
+      </div>
 
       <p data-testid="dataset-description" className="text-secondary-500">
         {description}
       </p>
 
-      <Button variant={isActive ? 'default' : 'outline'} size="sm" onClick={handleToggleLayer}>
-        <span>{isActive ? 'Hide' : 'Show'} layer on map</span>
-        <LuLayers2 className="h-4 w-4" />
-      </Button>
       <div className="mt-1.5 flex items-baseline space-x-2"></div>
 
       <div className="mt-1.5 flex items-baseline space-x-2">
@@ -172,32 +180,6 @@ const DatasetCard: FC<DatasetCardProps> = ({
       )}
 
       <div className="flex flex-col space-y-2.5 border-t border-dashed border-white-900 pt-3.5">
-        <div className="flex items-center space-x-2">
-          <Switch onClick={handleRegionsLayerVisibility} checked={regionsLayerVisibility} />
-          <span
-            className={cn('text-sm', {
-              'text-accent-green': regionsLayerVisibility,
-            })}
-          >
-            Activate regions to analyze
-          </span>
-        </div>
-        {regionsLayerVisibility && (
-          <div className="flex w-full items-center justify-between">
-            <p className="max-w- text-xs text-secondary-500">
-              Click on the map to select a region and analyze it based on the active layer.
-            </p>
-            <Image
-              src={`/svgs/regions-sidebar.svg`}
-              width={34}
-              height={34}
-              alt="left layer active"
-            />
-          </div>
-        )}
-        <ScrollElement name={`histogram-${id}`} id={`histogram-anchor-${id}`}>
-          <span className="block h-px" />
-        </ScrollElement>
         {id && isHistogramActive && isActive && <Histogram color={color} title={title} id={id} />}
       </div>
     </div>

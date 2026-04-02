@@ -43,13 +43,12 @@ const Search: FC<SearchProps> = ({
         className={cn({
           'flex-1 truncate rounded-full bg-transparent px-10 pl-5 pr-6 font-inter leading-4': true,
           'appearance-none text-white-700 shadow-none outline-none': true,
-
           'focus-visible:outline-none focus-visible:ring-0': true,
           'disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm': true,
-          'focus-within:placeholder:text-white-200 placeholder:text-white-700 focus-within:placeholder:text-white-500 focus-within:placeholder:transition-colors focus-within:placeholder:duration-200 focus-within:placeholder:ease-out sm:focus-within:placeholder:text-black-500':
+          'placeholder:text-white-700 focus-within:placeholder:text-white-500 focus:text-white-500':
             true,
-          'sm:text-black-500 xl:focus:text-black-500': value !== '',
-          'xl:text-white-500 ': true,
+
+          'transition-all duration-200 ease-out': true,
         })}
       />
 

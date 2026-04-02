@@ -14,7 +14,6 @@ export default function GlobeSearch({
   value,
   setValue,
   size = 'md',
-  mobile = false,
 }: {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
@@ -27,7 +26,7 @@ export default function GlobeSearch({
       className={cn(
         'relative ',
         'group relative flex w-fit items-center overflow-hidden rounded-[50px]',
-        !mobile && 'hover:w-full hover:max-w-sm'
+        'hover:w-full hover:max-w-sm'
       )}
       //   'text-white-700/50 transition-[background-color,border-color,width] duration-300 ease-out',
       //   'sm:w-40 sm:focus-within:w-full',
@@ -49,10 +48,10 @@ export default function GlobeSearch({
           // '[&_input]:border-0 [&_input]:outline-none [&_input]:ring-0',
           // '[&_input]:focus:border-0 [&_input]:focus:outline-none [&_input]:focus:ring-0',
           // '[&_input]:focus-visible:outline-none [&_input]:focus-visible:ring-0'
-          !mobile &&
-            'focus-within:w-full focus-within:max-w-sm focus-within:bg-white-500 hover:w-full hover:max-w-sm hover:bg-white-500 [&_input]:!border ',
-          mobile &&
-            '[&_input]:!border-white-700/50 [&_input]:focus-within:border-accent-green [&_input]:focus:outline-none [&_input]:focus:ring-0'
+
+          'focus-within:w-full focus-within:max-w-sm  hover:w-full hover:max-w-sm',
+
+          '[&_input]:!border-white-700/50 [&_input]:focus-within:border-accent-green [&_input]:focus:outline-none [&_input]:focus:ring-0'
         )}
       />
 
@@ -61,9 +60,8 @@ export default function GlobeSearch({
           aria-hidden="true"
           className={cn(
             'pointer-events-none absolute right-5 text-lg transition-colors duration-200 ease-out',
-            'text-white-500 group-focus-within:text-black-500',
-            !mobile && 'group-hover:text-black-500',
-            mobile && ' group-focus-within:text-white-500'
+            'text-white-500 ',
+            ' group-focus-within:text-white-500'
           )}
         />
       )}
