@@ -38,6 +38,7 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
 
   const hasValidLink =
     Array.isArray(use_case_link) && use_case_link.some(({ title, url }) => Boolean(title || url));
+
   return (
     <Dialog>
       <DialogTrigger
