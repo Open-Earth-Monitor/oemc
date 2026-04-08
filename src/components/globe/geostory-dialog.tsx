@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { use, useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -42,8 +42,8 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
 
   const color = getCategoryColor(geostory.theme);
   const firstPublication = geostory.publications?.[0];
-  const useCases = geostory.use_case_link || [];
-  const doi = geostory.use_case_link;
+  const useCases = (geostory.use_case_link ?? []).filter((item) => item?.title || item?.url) || [];
+  const doi = (geostory.use_case_link ?? []).filter((item) => item?.title || item?.url);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -112,11 +112,13 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
             </button>
             <button
               onClick={() => setActiveTab('use-cases')}
+              disabled={!useCases.length}
               className={cn(
                 'rounded-full px-3 py-1 text-xs font-medium transition-colors',
                 activeTab === 'use-cases'
                   ? 'text-brand-500'
-                  : 'border border-white-800 text-white-500 hover:border-white-500'
+                  : 'border border-white-800 text-white-500 hover:border-white-500',
+                !useCases.length && 'cursor-not-allowed opacity-50'
               )}
               style={activeTab === 'use-cases' ? { backgroundColor: color } : undefined}
             >
