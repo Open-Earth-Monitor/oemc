@@ -27,7 +27,7 @@ const WebTraffic = ({
             'px-8': tablet,
           })}
         >
-          <span className="h-2 w-2 rounded-full bg-red-600" />
+          <span className="h-2 w-2 rounded-full" />
           <p className="text-xs font-medium uppercase tracking-widest underline">
             {tablet ? 'stats' : 'usage stats'}
           </p>

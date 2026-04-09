@@ -5,10 +5,29 @@ import TimeSeriesSameLayer from '@/components/timeseries-layer';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 import TimeSeriesComparativeLayers from '@/components/timeseries-comparative-layers';
 import { useLayer } from '@/hooks/layers';
+import { useParams, usePathname } from 'next/navigation';
+import { useGeostory } from '@/hooks/geostories';
+import { useMonitor } from '@/hooks/monitors';
 
 export const LegendTimeseries: React.FC = () => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
+
+  const isGeostory = usePathname().startsWith('/explore/geostory');
+
+  const datasetId = usePathname().split('/')[3];
+
+  const { data: geostoryData } = useGeostory(
+    { geostory_id: datasetId },
+    { enabled: isGeostory && !!datasetId }
+  );
+
+  const { data: monitorData } = useMonitor(
+    { monitor_id: datasetId },
+    { enabled: !isGeostory && !!datasetId }
+  );
+
+  const datasetData = isGeostory ? geostoryData : monitorData;
 
   const baseLayerId = useMemo(() => layers?.[0]?.id, [layers]);
   const comparisonLayerId = useMemo(() => compareLayers?.[0]?.id, [compareLayers]);
@@ -25,6 +44,7 @@ export const LegendTimeseries: React.FC = () => {
   const { data: comparisonLayerData } = useLayer(
     {
       layer_id: comparisonLayerId,
+      compare: true,
     },
     {
       enabled: !!comparisonLayerId,
@@ -36,7 +56,12 @@ export const LegendTimeseries: React.FC = () => {
     if (!baseLayerData && !!comparisonLayerData) return comparisonLayerData;
     return baseLayerData;
   }, [baseLayerData, comparisonLayerData]);
-  console.log({ mainLayer, comparisonLayerData, baseLayerData });
+
+  const isSameLayer = useMemo(
+    () => baseLayerData?.position === comparisonLayerData?.position,
+    [baseLayerData, comparisonLayerData]
+  );
+
   return (
     <div>
       {baseLayerData?.range && !!baseLayerData.range.length && (
@@ -47,6 +72,14 @@ export const LegendTimeseries: React.FC = () => {
           defaultActive={true}
           autoPlay={true}
           comparisonLayer={comparisonLayerData || null}
+        />
+      )}
+
+      {!!comparisonLayerId && !isSameLayer && (
+        <TimeSeriesComparativeLayers
+          layerId={comparisonLayerId}
+          range={mainLayer?.range}
+          isActive={true}
         />
       )}
     </div>

@@ -24,8 +24,9 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
   const opacity = layers?.[0]?.opacity;
 
   const compareDate = compareLayers?.[0]?.date;
+
   const { data: compareLayerData } = useLayer(
-    { layer_id: compareLayers?.[0]?.id },
+    { layer_id: compareLayers?.[0]?.id, compare: true },
     { enabled: !!compareLayers }
   );
 
@@ -97,47 +98,46 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
           isFetchedLayerData &&
           !isLoadingLegendData &&
           isFetchedLegendData && <LegendGraphic dataLayer={layerData} dataLegend={legendData} />}
-        {children}
-      </ScrollArea>
-
-      {isGeostory && compareLayerData && (
-        <div
-          className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
-          style={{ minWidth: legendWidth }}
-        >
+        {isGeostory && compareLayerData && (
           <div
-            className="relative flex items-center justify-between space-x-4 text-secondary-500"
-            data-testid="map-legend-item"
+            className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
+            style={{ minWidth: legendWidth }}
           >
-            <div data-testid="map-legend-item-title" className="text-xs font-bold" ref={titleRef}>
-              {compareLayerData.title}
-            </div>
             <div
-              className="flex space-x-2 divide-x divide-secondary-800"
-              data-testid="map-legend-item-toolbar"
+              className="relative flex items-center justify-between space-x-4 text-secondary-500"
+              data-testid="map-legend-item"
             >
-              <div className="flex space-x-2">
-                <OpacitySetting
-                  defaultValue={compareLayers?.[0].opacity}
-                  onChange={handleCompareOpacity}
-                />
-                {!isGeostory && <LayerVisibility />}
+              <div data-testid="map-legend-item-title" className="text-xs font-bold" ref={titleRef}>
+                {compareLayerData.title}
               </div>
-              {!isGeostory && <RemoveLayer className="pl-2" />}
+              <div
+                className="flex space-x-2 divide-x divide-secondary-800"
+                data-testid="map-legend-item-toolbar"
+              >
+                <div className="flex space-x-2">
+                  <OpacitySetting
+                    defaultValue={compareLayers?.[0].opacity}
+                    onChange={handleCompareOpacity}
+                  />
+                  {!isGeostory && <LayerVisibility />}
+                </div>
+                {!isGeostory && <RemoveLayer className="pl-2" />}
+              </div>
             </div>
+            <ScrollArea className="max-h-[216px]">
+              {isLoadingCompare && (
+                <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
+              )}
+
+              {!isLoadingCompare && !isErrorCompare && isFetchedCompare && (
+                <LegendGraphic dataLayer={layerDataCompare} dataLegend={legendDataCompare} />
+              )}
+              {children}
+            </ScrollArea>
           </div>
-          <ScrollArea className="max-h-[216px]">
-            {isLoadingCompare && (
-              <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
-            )}
-            {!isLoadingCompare && !isErrorCompare && isFetchedCompare && (
-              <LegendGraphic dataLayer={layerDataCompare} dataLegend={legendDataCompare} />
-            )}
-            <LegendTimeseries />
-            {children}
-          </ScrollArea>
-        </div>
-      )}
+        )}
+        <LegendTimeseries />
+      </ScrollArea>
     </div>
   );
 };

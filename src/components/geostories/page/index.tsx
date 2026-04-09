@@ -59,12 +59,13 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   return (
     <>
       <div className="relative hidden md:block">
-        <Sidebar className="w-[448px] overflow-y-auto bg-black-400 px-9 py-12">
-          <ScrollArea>
-            <div className="font-satoshi">
-              <div className="sticky top-0 z-10 gap-2 bg-black-400 pb-4">
-                <BackToMonitorsAndGeostories />
-                {!isGeostoryLoading && <CardHeader type="geostory" {...geostoryData} />}
+        <Sidebar className="w-[448px] bg-black-400 px-9 py-12">
+          <div className="flex h-full min-h-0 flex-col font-satoshi">
+            <div className="sticky top-0 z-20 bg-black-400 pb-4">
+              <BackToMonitorsAndGeostories />
+
+              <div className="relative -left-9 w-[calc(100%+80px)]">
+                {!isGeostoryLoading && <GeostoryHeader {...geostoryData} />}
               </div>
             </div>
 
