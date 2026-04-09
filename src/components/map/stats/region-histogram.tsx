@@ -5,8 +5,11 @@ import { FC, useCallback, useMemo } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { XIcon } from 'lucide-react';
 import { FiDownload } from 'react-icons/fi';
+import { HiOutlineExternalLink } from 'react-icons/hi';
 
 import { cn } from '@/lib/classnames';
+import { transformNuqsData } from '@/lib/utils';
+
 import {
   compareFunctionalityAtom,
   nutsDataParamsAtom,
@@ -16,15 +19,18 @@ import {
   nutsDataResponseCompareAtom,
   histogramVisibilityAtom,
 } from '@/app/store';
+
+import { CATEGORIES_COLORS } from '@/constants/categories';
+
 import { downloadCSV, downloadCSVCompare } from '@/hooks/datasets';
 import { useLayer, useNutsLayerData } from '@/hooks/layers';
+
+import LineChart from '@/components/line-chart';
 import Loading from '@/components/loading';
+import CompareGeolocationInfoPopup from '@/components/map/compare-geolocation-info';
+import { NutsProperties } from '@/components/map/types';
 import { Button } from '@/components/ui/button';
-import LineChart from '../../line-chart';
-import CompareGeolocationInfoPopup from '../compare-geolocation-info';
-import { transformNuqsData } from '../../../lib/utils';
-import { CATEGORIES_COLORS } from '@/constants/categories';
-import { NutsProperties } from '../types';
+
 import { AnalysisSVG } from '@/SVGS/analysis';
 
 type HistogramTypes = {
@@ -36,6 +42,7 @@ type HistogramTypes = {
   onCompareClose?: () => void;
   color?: string;
   title: string;
+  id: string;
 };
 
 type LayerColors = {
@@ -81,7 +88,7 @@ const LocationPill: FC<LocationPillProps> = ({ name, color, bgColor, onClose }) 
   );
 };
 
-const RegionsHistogram: FC<HistogramTypes> = ({ title, onCompareClose, color }) => {
+const RegionsHistogram: FC<HistogramTypes> = ({ id, title, onCompareClose, color }) => {
   const [compareFunctionalityInfo, setCompareFunctionalityInfo] = useAtom(compareFunctionalityAtom);
   const setHistogramVisibility = useSetAtom(histogramVisibilityAtom);
 
@@ -112,6 +119,8 @@ const RegionsHistogram: FC<HistogramTypes> = ({ title, onCompareClose, color }) 
       enabled: Boolean(nutsDataParamsCompare?.NUTS_ID && nutsDataParamsCompare?.LAYER_ID),
     }
   );
+
+  const { data: layerData } = useLayer({ layer_id: id });
 
   const histogramDataRegion = useMemo(() => {
     if (!histogramDataRegionRaw || isLoadingDataHistogram || isErrorDataHistogram) return undefined;
@@ -247,8 +256,42 @@ const RegionsHistogram: FC<HistogramTypes> = ({ title, onCompareClose, color }) 
             Close analysis
           </button>
         </div>
+        <div className="flex items-center justify-end gap-2">
+          {!!layerData?.download_url && (
+            <a
+              href={layerData.download_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="dataset-download-button"
+              title="Go to download dataset site"
+              className="group/link inline-flex items-center overflow-hidden"
+            >
+              <HiOutlineExternalLink
+                className="h-4 w-4 shrink-0 text-secondary-500"
+                aria-label="Go to dataset"
+              />
+              <span className="ml-2 max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 ease-in-out group-hover/link:max-w-[110px] group-hover/link:opacity-100">
+                <span className="inline-block text-xs">Go to dataset</span>
+              </span>
+            </a>
+          )}
 
-        <div className="flex items-center justify-start gap-4">
+          <button
+            type="button"
+            onClick={handleDownload}
+            className={cn('group/download inline-flex items-center overflow-hidden', {
+              'opacity-50': !histogramDataRegion,
+            })}
+            disabled={!histogramDataRegion}
+          >
+            <FiDownload className="h-4 w-4 shrink-0" />
+            <span className="ml-2 max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 ease-in-out group-hover/download:max-w-[40px] group-hover/download:opacity-100">
+              <span className="inline-block font-inter text-xs">CSV</span>
+            </span>
+          </button>
+        </div>
+
+        <div className="flex items-center justify-start gap-2">
           <LocationPill
             name={nutsResponse?.NAME_LATN}
             color={mainLayerData.color}
@@ -264,18 +307,6 @@ const RegionsHistogram: FC<HistogramTypes> = ({ title, onCompareClose, color }) 
             />
           )}
         </div>
-
-        <button
-          type="button"
-          onClick={handleDownload}
-          className={cn('flex w-full items-center justify-end space-x-2', {
-            'opacity-50': !histogramDataRegion,
-          })}
-          disabled={!histogramDataRegion}
-        >
-          <FiDownload className="h-6 w-6" />
-          <span className="font-inter text-xs">CSV</span>
-        </button>
 
         {isLoading && <Loading />}
 

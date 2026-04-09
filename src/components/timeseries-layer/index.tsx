@@ -86,6 +86,7 @@ const TimeSeriesSameLayer: FC<{
   );
 
   const date = layers?.[0]?.date;
+
   const compareDate = compareLayers?.[0]?.date;
 
   const currentRange = useMemo(
@@ -110,8 +111,8 @@ const TimeSeriesSameLayer: FC<{
       {/* Select dates */}
       <div className="flex flex-col space-y-2 text-secondary-500">
         <span className="text-sm">Select date:</span>
-        <div className="flex w-full items-center justify-between">
-          {currentRange && (
+        <div className="flex w-full items-center justify-between gap-6">
+          {currentRange && range.length > 1 && (
             <Select
               value={currentRange.value}
               onValueChange={handleSelect}
@@ -145,11 +146,24 @@ const TimeSeriesSameLayer: FC<{
               </SelectContent>
             </Select>
           )}
+          {currentRange && range.length === 1 && (
+            <div className="w-fit text-xs font-semibold">
+              <div
+                className={cn(
+                  buttonVariants({ variant: 'outline', size: 'sm' }),
+                  'w-full justify-between hover:bg-transparent'
+                )}
+              >
+                {currentRange?.label}
+              </div>
+            </div>
+          )}
           {!isCompareActive && (
             <Button
               variant="outline"
               size="sm"
               className="text-xs font-semibold"
+              disabled={range.length <= 1}
               onClick={() => {
                 setPlaying(false);
                 setCompareLayers([{ id: layerId, opacity, date: range[0].value }]);
@@ -158,7 +172,7 @@ const TimeSeriesSameLayer: FC<{
               Compare
             </Button>
           )}
-          {compareCurrentRange && (
+          {compareCurrentRange && range.length > 1 && (
             <Select
               value={compareCurrentRange?.value || range[0].value}
               disabled={isPlaying}

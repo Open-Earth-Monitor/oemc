@@ -70,7 +70,7 @@ const Timeline: FC<{
               <LuCirclePlay className="h-6 w-6 text-secondary-500" />
             )}
           </button>
-          <div className="relative flex w-full flex-col space-y-2 bg-white-950 sm:max-w-[248px]">
+          <div className="relative flex w-full flex-col space-y-2 bg-white-950">
             <div className="max-w flex w-full  overflow-hidden">
               {range.map((r) => (
                 <div key={r.value} className="flex w-full items-center justify-center">

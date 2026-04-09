@@ -47,7 +47,7 @@ export function useLayers(queryOptions?: UseQueryOptions<Layer[], Error, LayerPa
 }
 
 export function useLayer<TData = LayerParsed>(
-  params: { layer_id: string },
+  params: { layer_id: string; compare?: boolean },
   queryOptions?: UseQueryOptions<Layer, Error, TData>
 ) {
   const fetchLayer = () =>

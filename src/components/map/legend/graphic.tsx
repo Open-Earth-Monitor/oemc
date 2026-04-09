@@ -20,7 +20,6 @@ export const LegendGraphic: React.FC<{
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
-  console.log({ dataLayer, dataLegend });
   // Only show layers with position right
   // const geostoryLayers = useMemo(
   //   () => layersData?.filter(({ position }) => position === 'right' || !position),

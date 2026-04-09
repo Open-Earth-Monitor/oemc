@@ -18,8 +18,8 @@ import { NUTS_INITIAL_STATE } from '@/components/map/constants';
 import PointHistogram from '@/components/map/stats/point-histogram';
 import RegionsHistogram from '@/components/map/stats/region-histogram';
 
-type HistogramProps = { title: string; color: string; id: string };
-const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => {
+type HistogramProps = { title: string; color: string; id: string; isGeostory?: boolean };
+const Histogram: FC<HistogramProps> = ({ title, color, id, isGeostory }: HistogramProps) => {
   const setCompareMode = useSetAtom(compareFunctionalityAtom);
   const nutsDataParams = useAtomValue(nutsDataParamsAtom);
   const setNutsCompareDataParams = useSetAtom(nutsDataParamsCompareAtom);
@@ -53,8 +53,9 @@ const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => 
       {isLoadingDataHistogram && (
         <p className="text-center text-sm text-gray-500">Loading histogram data...</p>
       )}
+
       {!isLoadingDataHistogram && isRegionsLayerActive && histogramDataRegionRaw && (
-        <RegionsHistogram color={color} title={title} onCompareClose={onCloseCompareInfo} />
+        <RegionsHistogram id={id} color={color} title={title} onCompareClose={onCloseCompareInfo} />
       )}
       {((!isLoadingDataHistogram && !isRegionsLayerActive) ||
         (isRegionsLayerActive && !histogramDataRegionRaw)) && (
