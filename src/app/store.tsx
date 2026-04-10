@@ -6,6 +6,7 @@ import { NutsProperties } from '@/components/map/types';
 
 export const histogramVisibilityAtom = atom<boolean>(false);
 export const regionsLayerVisibilityAtom = atom<boolean>(false);
+export const regionsBannerVisibilityAtom = atom<boolean>(true);
 
 export const lonLatAtom = atom<number[]>([null, null]);
 export const resolutionAtom = atom<number>(null);

@@ -1,10 +1,15 @@
 import Link from 'next/link';
 
+import { ChevronRight } from 'lucide-react';
+
 import CardHeader from '@/components/sidebar/card-header';
 
-function DatasetCardMonitor({ showMore, theme, title, geostories, color, id, monitor_bbox }) {
+function DatasetCardMonitor({ theme, title, geostories, color, id, monitor_bbox }) {
   return (
-    <div className="space-y-2.5 divide-y divide-white-900 font-satoshi">
+    <div
+      className="group/monitor-card space-y-2 border-l p-[18px] font-satoshi transition-all duration-200 hover:border-l-4"
+      style={{ borderLeftColor: color }}
+    >
       <CardHeader
         theme={theme}
         title={title}
@@ -13,21 +18,35 @@ function DatasetCardMonitor({ showMore, theme, title, geostories, color, id, mon
         id={id}
         bbox={monitor_bbox}
       />
-      {!showMore && !!geostories.length && (
-        <div className="space-y-4 pt-1 text-xs">
-          <p>Geostories</p>
+      {!!geostories.length && (
+        <div className="space-y-2 pt-1 text-xs">
+          <p className="text-white-500/50">Related geostories</p>
           <ul className="space-y-2.5">
-            {geostories.map((geostory) => (
-              <li key={geostory.id} className="font-bold underline">
+            {geostories.map((geostory, index) => (
+              <li key={geostory.id} className="flex w-full justify-between font-bold">
                 <Link
                   href={`/explore/geostory/${geostory.id}${
                     geostory.geostory_bbox ? `?bbox=${geostory.geostory_bbox.join(',')}` : ''
                   }`}
-                  className="font-bold underline decoration-gray-400 
-    hover:decoration-white-500 hover:decoration-2"
+                  className="font-bold underline
+    decoration-gray-400 hover:decoration-white-500 hover:decoration-2"
                 >
                   {geostory.title}
                 </Link>
+                {geostories.length === index + 1 && (
+                  <Link
+                    href={`/explore/monitor/${id}${
+                      geostory.geostory_bbox ? `?bbox=${geostory.geostory_bbox.join(',')}` : ''
+                    }`}
+                    className="flex items-center"
+                  >
+                    <span className="ml-2 inline-block w-0 overflow-hidden whitespace-nowrap font-inter text-xs text-white-500/50 opacity-0 transition-all duration-300 ease-in-out group-hover/monitor-card:w-full group-hover/monitor-card:opacity-100">
+                      Go to monitor
+                    </span>
+
+                    <ChevronRight className="inline h-6 w-6 shrink-0 text-white-500/50 group-hover/monitor-card:text-accent-green" />
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

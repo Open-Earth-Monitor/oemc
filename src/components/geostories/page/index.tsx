@@ -2,6 +2,12 @@
 
 import { useEffect, useMemo } from 'react';
 
+import { useAtom, useAtomValue } from 'jotai';
+
+import cn from '@/lib/classnames';
+
+import { histogramVisibilityAtom, regionsBannerVisibilityAtom } from '@/app/store';
+
 import { useGeostoryParsed, useGeostoryLayers } from '@/hooks/geostories';
 import { useSyncLayersSettings, useSyncCompareLayersSettings } from '@/hooks/sync-query';
 
@@ -16,8 +22,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sidebar, SidebarTrigger } from '@/components/ui/sidebar';
 
 const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
+  const isRegionsBannerVisible = useAtomValue(regionsBannerVisibilityAtom);
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
+  const [isHistogramActive] = useAtom(histogramVisibilityAtom);
 
   const { data: geostoryData, isLoading: isGeostoryLoading } = useGeostoryParsed({ geostory_id });
   const { data: layersData } = useGeostoryLayers({ geostory_id });
@@ -69,7 +77,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
               </div>
             </div>
 
-            <ScrollArea className="min-h-0 flex-1">
+            <ScrollArea className={cn({ 'min-h-0 flex-1': true, 'pb-10': isHistogramActive })}>
               {isGeostoryLoading ? (
                 <Loading />
               ) : (
@@ -81,7 +89,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
               )}
             </ScrollArea>
           </div>
-          <RegionsBanner />
+          {isRegionsBannerVisible && <RegionsBanner />}
         </Sidebar>
 
         <div className="w-full">

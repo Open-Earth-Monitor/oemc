@@ -37,15 +37,13 @@ const CardHeader: React.FC<CardHeaderProps> = ({
 
   return (
     <div
-      className={cn('flex flex-col space-y-4 font-medium', {
+      className={cn('z-20 flex flex-col space-y-4 font-medium', {
         [className]: !!className,
       })}
     >
-      <div className="flex items-center space-x-5 divide-x divide-white-900">
-        <span>{type === 'monitor' ? 'Monitor' : 'Geostory'}</span>
-        <span className="pl-5" style={{ color }}>
-          {theme}
-        </span>
+      <div className="flex items-center space-x-3 divide-x divide-white-500/[0.2] text-xs">
+        <span className="text-white-500">{type === 'monitor' ? 'Monitor' : 'Geostory'}</span>
+        <span className="pl-3">{theme}</span>
       </div>
       <Link
         href={`/explore/${type === 'monitor' ? 'monitor' : 'geostory'}/${id}?bbox=${bbox}`}
@@ -53,11 +51,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({
       >
         <h2
           style={{ color }}
-          className="relative inline-block text-[22px] 
-      before:absolute before:bottom-0 before:left-0
-      before:h-[2px] before:w-0 before:bg-current
-      before:transition-all before:duration-300
-      hover:before:w-full"
+          className="relative inline-block before:h-[2px] before:w-0 before:bg-current before:transition-all before:duration-300 group-hover/monitor-card:translate-x-2 group-hover/monitor-card:before:w-full"
         >
           {title}
         </h2>
