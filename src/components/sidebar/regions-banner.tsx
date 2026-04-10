@@ -1,27 +1,111 @@
-import React from 'react';
-
 import Image from 'next/image';
 
-import { LuX } from 'react-icons/lu';
+import { useAtom, useSetAtom } from 'jotai';
+import { LuInfo, LuX } from 'react-icons/lu';
+
+import { histogramVisibilityAtom, regionsBannerVisibilityAtom } from '@/app/store';
+
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 export const RegionsBanner: React.FC = () => {
+  const [isHistogramActive] = useAtom(histogramVisibilityAtom);
+  const setRegionsBannerVisibility = useSetAtom(regionsBannerVisibilityAtom);
+
+  const handleClickClose = () => {
+    setRegionsBannerVisibility(false);
+  };
+
   return (
-    <div className="fixed bottom-0 -mx-6 flex max-w-[420px] items-center justify-between space-x-4 rounded-t-2xl bg-white-500 px-4 py-2 text-center text-sm text-black-500">
-      <Image
-        src="/svgs/region.svg"
-        alt="Regions banner"
-        width={56}
-        height={52}
-        className="mx-auto -mt-4 mb-2"
-      />
-      <p>
-        Click on the map to select a region and <span className="font-bold">analyze </span>it based
-        on the active layer.
+    <section
+      aria-label="Regions analysis help"
+      className="fixed bottom-0 -mx-6 flex max-w-[420px] items-start justify-between space-x-2 rounded-t-2xl bg-white-500 px-4 py-2 text-sm text-black-500"
+    >
+      {!isHistogramActive && (
+        <Image
+          src="/svgs/region.svg"
+          alt=""
+          aria-hidden="true"
+          width={56}
+          height={52}
+          className="mx-auto -mt-4 mb-2 shrink-0"
+        />
+      )}
+
+      {isHistogramActive && (
+        <Image
+          src="/svgs/region-comparison.svg"
+          alt=""
+          aria-hidden="true"
+          width={80}
+          height={64}
+          className="mx-auto -mt-4 mb-2 shrink-0"
+        />
+      )}
+
+      <p id="regions-banner-description" className="pr-4">
+        Click on the map to select a point or a region and{' '}
+        <span className="font-bold">analyze</span> it based on the active layer.
       </p>
-      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-black-100 font-medium">
-        <LuX className="h-4 w-4 shrink-0 cursor-pointer text-black-100" />
+
+      <div className="flex items-center gap-2">
+        <Dialog>
+          <DialogTrigger asChild>
+            <button
+              type="button"
+              aria-label="Open help about analyzing regions"
+              aria-describedby="regions-banner-description"
+              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+            >
+              <LuInfo aria-hidden="true" className="h-5 w-5 text-black-100" />
+            </button>
+          </DialogTrigger>
+
+          <DialogContent
+            role="dialog"
+            aria-labelledby="regions-help-title"
+            className="max-h-[400px]"
+          >
+            <div className="space-y-4">
+              <h2 id="regions-help-title" className="text-lg font-bold text-white-500">
+                How to analyze locations?
+              </h2>
+
+              <p className="text-sm text-white-500">
+                To <span className="font-bold">analyze a point</span>, click on the map where a data
+                layer is available. Once selected, you can explore the available data layers and
+                gain insights for that specific location.
+              </p>
+
+              <p className="text-sm text-white-500">
+                To <span className="font-bold">analyze a region</span>, first enable the Regions
+                layer. You can find it on the right side of the map inside Map settings. Once the
+                layer is active, click on a region to select it and view its data.
+              </p>
+
+              <p className="text-sm text-white-500">
+                To <span className="font-bold">compare different regions</span>, select a region on
+                the map. Once a region is selected, clicking on another region will add it to the
+                comparison.
+              </p>
+
+              <p className="text-sm text-white-500">
+                Remember, the available data layers may vary depending on the region you select, so
+                feel free to explore and discover the insights hidden within the map.
+              </p>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <button
+          type="button"
+          aria-label="Close regions help banner"
+          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-black-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+          onClick={handleClickClose}
+        >
+          <LuX aria-hidden="true" className="h-3 w-3 text-black-100" />
+        </button>
       </div>
-    </div>
+    </section>
   );
 };
 

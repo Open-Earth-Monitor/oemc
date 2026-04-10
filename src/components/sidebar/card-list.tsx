@@ -16,8 +16,8 @@ export default function CardList({ data, showMore, className }: CardListProps) {
       {data?.map((parsed) => (
         <li key={parsed.id} className="mb-4">
           <SidebarDatasetCard {...parsed}>
-            {parsed.type === 'monitor' && <DatasetCardMonitor showMore={showMore} {...parsed} />}
-            {parsed.type === 'geostory' && <DatasetCardGeostory showMore={showMore} {...parsed} />}
+            {parsed.type === 'monitor' && <DatasetCardMonitor {...parsed} />}
+            {parsed.type === 'geostory' && <DatasetCardGeostory {...parsed} />}
           </SidebarDatasetCard>
         </li>
       ))}
