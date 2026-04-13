@@ -16,7 +16,7 @@ const SidebarThemeFilters = () => {
   return (
     <aside
       aria-label="Theme filters"
-      className="fixed bottom-0 left-0 top-0 z-10 flex w-full flex-col justify-start gap-y-3 bg-black-400 py-8 text-white-500"
+      className="fixed bottom-0 left-0 top-0 z-10 flex w-full flex-col justify-start gap-y-3 bg-black-400 py-12 text-white-500"
       style={{ width: SIDEBAR_THEME_FILTERS }}
     >
       <span className="mx-auto flex items-center text-center text-xs text-white-500/50">
