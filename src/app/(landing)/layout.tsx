@@ -28,13 +28,13 @@ function GlobeLayoutDesktop() {
       </div>
 
       {/* Right sidebar - Social Media */}
-      <div className="pointer-events-none absolute right-0 top-28 z-[1000] hidden animate-in fade-in-0 slide-in-from-right-5 duration-700 ease-out fill-mode-both delay-150 px-5 xl:block">
+      <div className="pointer-events-none absolute right-0 top-28 z-[1000] hidden px-5 animate-in fade-in-0 slide-in-from-right-5 duration-700 delay-150 ease-out fill-mode-both xl:block">
         <GlobeSocialMedia />
       </div>
 
       {/* Bottom controls — extra wrapper keeps centering transform separate from animation */}
       <div className="pointer-events-none absolute bottom-20 left-1/2 z-[1000] hidden -translate-x-1/2 xl:block">
-        <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-300 space-y-4">
+        <div className="space-y-4 animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-300 ease-out fill-mode-both">
           <div className="-translate-y-6">
             <CategoriesFilters />
           </div>

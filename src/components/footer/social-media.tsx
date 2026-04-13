@@ -33,7 +33,7 @@ export const SocialMedia: FC<{
   isMobile?: boolean; // The testid must be different for mobile and desktop
 }> = ({ theme = 'light', size = 'md', isMobile = false }) => {
   return (
-    <div className="flex items-center space-x-5">
+    <div className="flex items-center space-x-5" data-testid="social-media">
       <a
         target="_blank"
         rel="noopener noreferrer"

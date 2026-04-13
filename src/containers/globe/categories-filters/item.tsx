@@ -49,10 +49,8 @@ const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
   return (
     <button
       className={cn(
-        'group flex cursor-pointer items-center gap-2.5 rounded-full border border-white-950 bg-transparent p-1 transition-colors duration-300',
-        isActive
-          ? 'border-transparent'
-          : 'hover:border-[var(--category-color)] hover:text-white-500',
+        'group/sidebar flex h-12 w-12 items-center justify-center rounded-full border bg-white-950 text-white-700 transition-all duration-500 hover:text-white-500',
+        { 'bg-custom-gradient text-black-500': isActive },
         className
       )}
       onClick={handleCategory}
@@ -86,7 +84,8 @@ const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
 
       <div
         className={cn({
-          'mr-4 flex whitespace-nowrap font-medium text-white-500 transition-colors duration-300': true,
+          'mr-4 flex whitespace-nowrap font-medium text-white-500 transition-colors duration-300':
+            true,
           'text-black-400': isActive && theme !== 'plain',
         })}
       >

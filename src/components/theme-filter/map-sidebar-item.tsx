@@ -1,8 +1,8 @@
-import { FC, useCallback, useMemo } from 'react';
+import { FC } from 'react';
 
 import { cn } from '@/lib/classnames';
 
-import type { ALL_CATEGORY, CategoryId } from '@/constants/categories';
+import { ALL_CATEGORY, CategoryId, CATEGORIES_COLORS } from '@/constants/categories';
 
 import { useSyncCategories } from '@/hooks/sync-query';
 
@@ -25,50 +25,28 @@ const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
   const [categories, setCategory] = useSyncCategories();
 
   const category = categories?.[0] ?? null;
-
-  const handleClick = useCallback(
-    (type: CategoryId | typeof ALL_CATEGORY.id) => {
-      setCategory(type as CategoryId[] | 'All');
-    },
-    [setCategory]
-  );
-
-  const isActive = useMemo(() => {
-    return category === button.id;
-  }, [category, button.id]);
+  const isActive = category === button.id;
 
   return (
     <button
-      key={button.id}
       className={cn(
-        'group/sidebar h-full w-full grow overflow-hidden p-3.5 text-white-700 transition-all duration-500 hover:bg-white-950 hover:text-white-500',
-        { 'bg-custom-gradient text-black-500': isActive }
+        'flex h-12 w-12 items-center justify-center rounded-full bg-white-950 text-white-700 transition-all duration-300 hover:text-white-500',
+        { 'text-black-500': isActive }
       )}
-      onClick={() => handleClick(button.id)}
+      onClick={() => setCategory([button.id] as CategoryId[] | 'All')}
     >
       <div
-        className={cn({
-          'group flex flex-col items-center space-y-4 transition-transform duration-300': true,
-          'text-black-500': isActive,
-        })}
+        className={cn(
+          'group flex flex-col items-center space-y-4 rounded-full bg-white-950 p-2 transition-transform duration-300'
+        )}
+        style={{ color: isActive ? 'text-black-500' : CATEGORIES_COLORS[button.id]?.base }}
       >
         <Icon
-          className={cn({
-            'h-10 w-10  fill-current text-white-500': true,
-            'text-black-500': isActive,
-            'group-hover/sidebar:text-white-500': !isActive,
-          })}
+          style={{ color: isActive ? 'text-black-500' : CATEGORIES_COLORS[button.id]?.base }}
+          className="h-6 w-6 fill-current stroke-black-100 stroke-[0.2px]"
         />
 
-        <span
-          className={cn({
-            'text-xs font-medium  transition-none ': true,
-            'text-black-500': isActive,
-            'group-hover/sidebar:text-white-500': !isActive,
-          })}
-        >
-          {button.label}
-        </span>
+        <span className="sr-only">{button.label}</span>
       </div>
     </button>
   );
