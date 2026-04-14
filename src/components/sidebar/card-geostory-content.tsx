@@ -13,7 +13,8 @@ function DatasetCardGeostory({ theme, title, color, id, geostory_bbox }) {
   return (
     <div className="relative">
       <div
-        className="group/monitor-card relative h-40 space-y-2 border-l bg-cover bg-center p-[18px] font-satoshi transition-all duration-200 hover:border-l-4"
+        data-testid={`sidebar-geostory-card-${id}`}
+      className="group/monitor-card relative h-40 space-y-2 border-l bg-cover bg-center p-[18px] font-satoshi transition-all duration-200 hover:border-l-4"
         style={{ borderLeftColor: color, backgroundImage: `url(/images/geostories/${id}.jpg)` }}
       >
         {/* overlay */}
@@ -38,7 +39,7 @@ function DatasetCardGeostory({ theme, title, color, id, geostory_bbox }) {
               className="flex items-center justify-end"
             >
               <span className="ml-2 inline-block w-0 overflow-hidden whitespace-nowrap font-inter text-xs text-white-500/50 opacity-0 transition-all duration-300 ease-in-out group-hover/monitor-card:w-full group-hover/monitor-card:opacity-100">
-                Go to monitor
+                Go to geostory
               </span>
 
               <ChevronRight className="inline h-6 w-6 shrink-0 text-white-500/50 group-hover/monitor-card:text-accent-green" />

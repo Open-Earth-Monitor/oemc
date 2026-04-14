@@ -42,12 +42,17 @@ const CardHeader: React.FC<CardHeaderProps> = ({
       })}
     >
       <div className="flex items-center space-x-3 divide-x divide-white-500/[0.2] text-xs">
-        <span className="text-white-500">{type === 'monitor' ? 'Monitor' : 'Geostory'}</span>
-        <span className="pl-3">{theme}</span>
+        <span className="text-white-500" data-testid={`card-type-${id}`}>
+          {type === 'monitor' ? 'Monitor' : 'Geostory'}
+        </span>
+        <span className="pl-3" data-testid={`card-theme-${id}`}>
+          {theme}
+        </span>
       </div>
       <Link
         href={`/explore/${type === 'monitor' ? 'monitor' : 'geostory'}/${id}?bbox=${bbox}`}
         onClick={handleClick}
+        data-testid={`card-title-link-${id}`}
       >
         <h2
           style={{ color }}

@@ -40,7 +40,7 @@ const GeostoryItem: FC<Geostory & { color: string }> = ({ id, color, title, geos
             geostory
           </div>
           <h2 className="font-satoshi text-2xl font-bold" data-testid={`geostory-title-${id}`}>
-            {title}
+            {title}holi
           </h2>
         </motion.div>
       </AnimatePresence>
