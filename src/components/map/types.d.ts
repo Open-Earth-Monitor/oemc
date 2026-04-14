@@ -1,6 +1,5 @@
 import { Bbox } from 'ol/extent';
 import type { RMapProps } from 'rlayers/RMap';
-import type { RView } from 'rlayers/RMap';
 
 import type { GeostoryParsed } from '@/types/geostories';
 import type { LayerDateRange, LayerParsed } from '@/types/layers';

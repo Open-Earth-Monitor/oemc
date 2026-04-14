@@ -1,13 +1,13 @@
+import type { Coordinate } from 'ol/coordinate';
 import type { Extent } from 'ol/extent';
 import { fromLonLat } from 'ol/proj';
-import { RView } from 'rlayers/RMap';
 
 import type { MonitorTooltipInfo } from '@/components/map/types';
 
 export type InitialViewport = {
   bbox: Extent;
-  center: RView['center'];
-  zoom: RView['zoom'];
+  center: Coordinate;
+  zoom: number;
 };
 
 /**
