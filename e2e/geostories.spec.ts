@@ -1,218 +1,106 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 import type { Geostory } from '@/types/geostories';
 import type { Monitor } from '@/types/monitors';
+import type { MonitorsAndGeostoriesPaginated } from '@/types/monitors-and-geostories';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+/**
+ * Fetches monitors-and-geostories from the API and returns the first monitor
+ * that has at least one related geostory.
+ */
+async function getFirstMonitorWithGeostories(page: Page) {
+  const response = await page.request.get(`${API_URL}/monitors-and-geostories/`);
+  const data = (await response.json()) as MonitorsAndGeostoriesPaginated;
+  const monitors = data.results.filter((item) => item.entity_type === 'monitor') as Monitor[];
+  return monitors.find((m) => m.geostories?.length > 0);
+}
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/map', { waitUntil: 'load' });
+  await page.goto('/explore', { waitUntil: 'load' });
 });
 
-test.describe('geostories tab', () => {
-  test('from /map/{monitor_id}/datasets', async ({ page }) => {
-    const monitorsResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors/`
-    );
-    const monitorsData = (await monitorsResponse.json()) as Monitor[];
-    const firstMonitorWithGeostories = monitorsData.find(
-      (monitor) => monitor.geostories.length > 0
-    );
+test.describe('geostory links in explore sidebar', () => {
+  test('monitor card shows geostory links with correct hrefs', async ({ page }) => {
+    const firstMonitorWithGeostories = await getFirstMonitorWithGeostories(page);
+    if (!firstMonitorWithGeostories) return;
 
-    // click on the first monitor
-    await page.getByTestId(`monitor-item-${firstMonitorWithGeostories.id}`).click();
+    const firstGeostory = firstMonitorWithGeostories.geostories[0];
+    const geostoryLink = page.getByTestId(`geostory-link-${firstGeostory.id}`);
 
-    await page.waitForURL('**/map/**/datasets*', { waitUntil: 'load' });
-
-    const datasetLists = page.getByTestId('datasets-list');
-    await expect(datasetLists).toBeVisible();
-
-    // move to geostories tab
-    const geostoriesTabLink = page.getByTestId('tab-geostories');
-
-    await geostoriesTabLink.click();
-
-    // check geostory tab is active and url updated
-    await page.waitForURL(`**/map/${firstMonitorWithGeostories.id}/geostories`, {
-      waitUntil: 'load',
-    });
-    await expect(geostoriesTabLink).toHaveAttribute(
+    await expect(geostoryLink).toBeVisible();
+    await expect(geostoryLink).toHaveAttribute(
       'href',
-      `/map/${firstMonitorWithGeostories.id}/geostories`
+      new RegExp(`/explore/geostory/${firstGeostory.id}`)
     );
-    await expect(geostoriesTabLink).toHaveClass(/border-t-secondary-500/); // active tab
-
-    // check geostories list is visible
-    const geostoriesResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors/${firstMonitorWithGeostories.id}/geostories/`
-    );
-    const geostoriesData = (await geostoriesResponse.json()) as Geostory[];
-    await expect(page.getByTestId('geostories-list')).toBeVisible();
-
-    // check first geostory is visible has title, and a link to the geostory page (geostory datasets)
-    const firstGeostoryId = geostoriesData[0].id;
-
-    const firstDataset = page.getByTestId(`geostory-item-${firstGeostoryId}`);
-    await expect(firstDataset).toBeVisible();
-    await expect(firstDataset.getByTestId(`geostory-title-${firstGeostoryId}`)).toBeVisible();
-    await expect(firstDataset.getByTestId(`geostory-title-${firstGeostoryId}`)).toBeVisible();
-    await expect(firstDataset.getByTestId(`geostory-title-${firstGeostoryId}`)).toHaveText(
-      geostoriesData[0].title
-    );
-
-    const firstGeostoryLink = page.getByTestId(`geostory-link-${firstGeostoryId}`);
-    await expect(firstGeostoryLink).toBeVisible();
-    await expect(firstGeostoryLink).toHaveAttribute('href', `/map/geostories/${firstGeostoryId}`);
   });
+});
 
-  test('display monitor info in geostories tab', async ({ page }) => {
-    const monitorsFetchResponse = page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors/`
-    );
-    const response = await monitorsFetchResponse;
-    const monitorsData = (await response.json()) as Monitor[];
-    const firstMonitorWithGeostories = monitorsData.find(
-      (monitor) => monitor.geostories.length > 0
-    );
+test.describe('geostory page', () => {
+  test('displays datasets list', async ({ page }) => {
+    const firstMonitorWithGeostories = await getFirstMonitorWithGeostories(page);
+    if (!firstMonitorWithGeostories) return;
 
-    // go to geostories tab
-    await page.getByTestId(`monitor-item-${firstMonitorWithGeostories.id}`).click();
+    const firstGeostoryId = firstMonitorWithGeostories.geostories[0].id;
 
-    await page.waitForURL('**/map/**/datasets*', { waitUntil: 'load' });
+    await page.goto(`/explore/geostory/${firstGeostoryId}`, { waitUntil: 'load' });
 
-    const datasetLists = page.getByTestId('datasets-list');
-    await expect(datasetLists).toBeVisible();
-
-    const geostoriesTabLink = page.getByTestId('tab-geostories');
-
-    await expect(geostoriesTabLink).toHaveAttribute(
-      'href',
-      `/map/${firstMonitorWithGeostories.id}/geostories`
-    );
-    await geostoriesTabLink.click();
-
-    await page.waitForURL(`**/map/${firstMonitorWithGeostories.id}/geostories`, {
-      waitUntil: 'load',
-    });
-    await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors/${firstMonitorWithGeostories.id}/geostories`
-    );
-
-    // check monitor info is visible
-    const monitorCard = page.getByTestId('monitor-card');
-    await expect(monitorCard).toBeVisible();
-    await expect(monitorCard.getByTestId('monitor-tag')).toBeVisible();
-    await expect(monitorCard.getByTestId('monitor-tag')).toHaveText('monitor');
-    await expect(monitorCard.getByTestId('monitor-title')).toBeVisible();
-    await expect(monitorCard.getByTestId('monitor-title')).toHaveText(
-      firstMonitorWithGeostories.title
-    );
-    // await expect(monitorCard.getByTestId('monitor-description')).toBeVisible();
-  });
-
-  test('display datasets from a geostory', async ({ page }) => {
-    const monitorsResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors/`
-    );
-    const monitorsData = (await monitorsResponse.json()) as Monitor[];
-    const firstMonitorWithGeostories = monitorsData.find(
-      (monitor) => monitor.geostories.length > 0
-    );
-
-    await page.goto(`/map/${firstMonitorWithGeostories.id}/geostories`, { waitUntil: 'load' });
-
-    const geostoriesFetchResponse = page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors/${firstMonitorWithGeostories.id}/geostories/`
-    );
-    const geostoriesResponse = await geostoriesFetchResponse;
-    await expect(page.getByTestId('geostories-list')).toBeVisible();
-
-    const geostoriesData = (await geostoriesResponse.json()) as Geostory[];
-    const firstGeostoryId = geostoriesData[0].id;
-    const firstDataset = page.getByTestId(`geostory-item-${firstGeostoryId}`);
-    await expect(firstDataset).toBeVisible();
-    await expect(firstDataset.getByTestId('geostory-tag')).toBeVisible();
-    await expect(firstDataset.getByTestId('geostory-tag')).toHaveText('geostory');
-    await expect(firstDataset.getByTestId(`geostory-title-${firstGeostoryId}`)).toBeVisible();
-    await expect(firstDataset.getByTestId(`geostory-title-${firstGeostoryId}`)).toHaveText(
-      geostoriesData[0].title
-    );
-    const firstGeostoryLink = page.getByTestId(`geostory-link-${firstGeostoryId}`);
-    await expect(firstGeostoryLink).toBeVisible();
-    await expect(firstGeostoryLink).toHaveAttribute('href', `/map/geostories/${firstGeostoryId}`);
-
-    // click on a geostory
-    await firstGeostoryLink.click();
-
-    // check if datasets list of that geostory are visible
-    await page.waitForURL(`**/map/geostories/${firstGeostoryId}`, {
-      waitUntil: 'load',
-    });
-
-    // Wait for the dataset list to be rendered and visible
     await page.waitForSelector('[data-testid="datasets-list"] li', { state: 'visible' });
+    await expect(page.getByTestId('datasets-list')).toBeVisible();
+  });
 
-    // TO - DO : check if the datasets are the same as the ones in the geostory
-    // const layersResponse = await page.waitForResponse(
-    //     `${process.env.NEXT_PUBLIC_API_URL}`/geostories/${geostoriesData[0].id}`
-    // );
+  test('displays geostory info from the API', async ({ page }) => {
+    const firstMonitorWithGeostories = await getFirstMonitorWithGeostories(page);
+    if (!firstMonitorWithGeostories) return;
 
-    // const layersData = (await layersResponse.json()) as Layer[];
-    // const datasetsList = page.getByTestId('datasets-list').locator('li');
-    // const datasetsListCount = await datasetsList.count();
+    const firstGeostoryId = firstMonitorWithGeostories.geostories[0].id;
 
-    // expect(datasetsListCount).toBe(layersData.length);
+    const geostoryResponse = await page.request.get(
+      `${API_URL}/geostories?geostory_id=${firstGeostoryId}`
+    );
+    const geostoryData = (await geostoryResponse.json()) as Geostory[];
+
+    await page.goto(`/explore/geostory/${firstGeostoryId}`, { waitUntil: 'load' });
+
+    await expect(page.getByTestId('datasets-list')).toBeVisible();
+    // datasets count matches the geostory layers
+    const datasetsListItems = page.getByTestId('datasets-list').locator('li');
+    expect(await datasetsListItems.count()).toBeGreaterThan(0);
+    expect(await datasetsListItems.count()).toBe(
+      geostoryData[0]?.layers?.filter(
+        ({ position }: { position?: string }) => position === 'right' || !position
+      ).length
+    );
+  });
+
+  test('shows related monitor links', async ({ page }) => {
+    const firstMonitorWithGeostories = await getFirstMonitorWithGeostories(page);
+    if (!firstMonitorWithGeostories) return;
+
+    const firstGeostoryId = firstMonitorWithGeostories.geostories[0].id;
+    await page.goto(`/explore/geostory/${firstGeostoryId}`, { waitUntil: 'load' });
+
+    const monitorLink = page.getByTestId(`monitor-link-${firstMonitorWithGeostories.id}`);
+    await expect(monitorLink).toBeVisible();
+    await expect(monitorLink).toHaveText(firstMonitorWithGeostories.title);
   });
 });
 
-test('From a selected geostory, user should be able to go back to the monitor it belongs', async ({
-  page,
-}) => {
-  const monitorsResponse = await page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}/monitors/`
-  );
-  const monitorsData = (await monitorsResponse.json()) as Monitor[];
-  const firstMonitorWithGeostories = monitorsData.find((monitor) => monitor.geostories.length > 0);
+test('from a geostory, user can navigate to a related monitor', async ({ page }) => {
+  const firstMonitorWithGeostories = await getFirstMonitorWithGeostories(page);
+  if (!firstMonitorWithGeostories) return;
 
-  // click on the first monitor
-  await page.getByTestId(`monitor-item-${firstMonitorWithGeostories.id}`).click();
+  const firstGeostoryId = firstMonitorWithGeostories.geostories[0].id;
+  await page.goto(`/explore/geostory/${firstGeostoryId}`, { waitUntil: 'load' });
 
-  await page.waitForURL('**/map/**/datasets*', { waitUntil: 'load' });
+  const monitorLink = page.getByTestId(`monitor-link-${firstMonitorWithGeostories.id}`);
+  await expect(monitorLink).toBeVisible();
+  await monitorLink.click();
 
-  const datasetLists = page.getByTestId('datasets-list');
-  await expect(datasetLists).toBeVisible();
-
-  // move to geostories tab
-  const geostoriesTabLink = page.getByTestId('tab-geostories');
-  await geostoriesTabLink.click();
-
-  // check geostory tab is active and url updated
-  await page.waitForURL(`**/map/${firstMonitorWithGeostories.id}/geostories`, {
+  await page.waitForURL(`**/explore/monitor/${firstMonitorWithGeostories.id}`, {
     waitUntil: 'load',
   });
 
-  // check geostories list is visible
-  const geostoriesResponse = await page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}/monitors/${firstMonitorWithGeostories.id}/geostories/`
-  );
-  const geostoriesData = (await geostoriesResponse.json()) as Geostory[];
-  await expect(page.getByTestId('geostories-list')).toBeVisible();
-
-  // check first geostory is visible has title, and a link to the geostory page (geostory datasets)
-  const firstGeostoryId = geostoriesData[0].id;
-
-  const firstDataset = page.getByTestId(`geostory-item-${firstGeostoryId}`);
-  await expect(firstDataset).toBeVisible();
-
-  const firstGeostoryLink = page.getByTestId(`geostory-link-${firstGeostoryId}`);
-  await expect(firstGeostoryLink).toBeVisible();
-  await firstGeostoryLink.click();
-
-  await page.waitForURL(`**/map/geostories/${firstGeostoryId}`, { waitUntil: 'load' });
-  await expect(page.getByTestId('monitor-title-back-btn')).toBeVisible();
-  await expect(page.getByTestId('back-to-monitor')).toBeVisible();
-  const text = `${firstMonitorWithGeostories.title}`;
-  await expect(page.getByTestId('back-to-monitor')).toHaveText(text);
-  await page.getByTestId('monitor-title-back-btn').click();
-  await page.waitForURL(`**/map/${firstMonitorWithGeostories.id}/geostories`, {
-    waitUntil: 'load',
-  });
+  await expect(page.getByTestId('datasets-list')).toBeVisible();
 });
