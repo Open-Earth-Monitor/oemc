@@ -53,7 +53,7 @@
     "@visx/text": "^3.3.0",
     "@visx/tooltip": "^3.12.0",
     "@visx/visx": "^3.11.0",
-    "axios": "^1.13.5",
+    "axios": "1.15.0",
     "cesium": "^1.137.0",
     "class-variance-authority": "^0.6.1",
     "clsx": "^2.0.0",
