@@ -75,7 +75,7 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
         </DialogContent>
       </Dialog>
       <Dialog>
-        <DialogTrigger asChild data-testid="disclaimer">
+        <DialogTrigger asChild data-testid="disclaimer-link">
           <div className={ATTRIBUTION_STYLES}>Disclaimer</div>
         </DialogTrigger>
         <DialogContent className="top-1/2 w-[665px] -translate-y-[50%] transform bg-secondary-500 text-brand-500">

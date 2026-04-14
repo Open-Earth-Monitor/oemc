@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 import type { Monitor } from '@/types/monitors';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/map', { waitUntil: 'load' });
+  await page.goto('/explore', { waitUntil: 'load' });
 });
 
 // test.describe('monitors navigation', () => {

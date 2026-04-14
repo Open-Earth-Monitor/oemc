@@ -11,7 +11,10 @@ const NavLinks = () => {
   const pathname = usePathname();
 
   return (
-    <ul className="relative flex w-full flex-col gap-1 py-0 text-2xl font-medium">
+    <ul
+      className="relative flex w-full flex-col gap-1 py-0 text-2xl font-medium"
+      data-testid="main-navigation"
+    >
       {navLinks.map(({ name, ...props }) => {
         const isActive = `/${pathname.split('/')[1]}` === props.href;
         return (

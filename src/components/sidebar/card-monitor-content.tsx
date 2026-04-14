@@ -28,6 +28,7 @@ function DatasetCardMonitor({ theme, title, geostories, color, id, monitor_bbox 
                   href={`/explore/geostory/${geostory.id}${
                     geostory.geostory_bbox ? `?bbox=${geostory.geostory_bbox.join(',')}` : ''
                   }`}
+                  data-testid={`geostory-link-${geostory.id}`}
                   className="font-bold underline
     decoration-gray-400 hover:decoration-white-500 hover:decoration-2"
                 >

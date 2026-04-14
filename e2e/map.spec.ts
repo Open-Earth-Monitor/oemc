@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test('legend', async ({ page }) => {
   // assuming layer_id l1 is a valid layer already added to the map
   await page.goto(
-    '/explore/m1/datasets?layers=[{"id":"l1","opacity":1,"date":"20000101_20001231"}]',
+    '/explore/monitor/m1?layers=[{"id":"l1","opacity":1,"date":"20000101_20001231"}]',
     {
       waitUntil: 'load',
     }
@@ -47,7 +47,7 @@ test('legend', async ({ page }) => {
 test('opacity 1 from url', async ({ page }) => {
   // assuming layer_id l1 is a valid layer already added to the map
   await page.goto(
-    '/explore/m1/datasets?layers=[{"id":"l1","opacity":1,"date":"20000101_20001231"}]',
+    '/explore/monitor/m1?layers=[{"id":"l1","opacity":1,"date":"20000101_20001231"}]',
     {
       waitUntil: 'load',
     }
@@ -68,7 +68,7 @@ test('opacity 1 from url', async ({ page }) => {
 test('opacity 0 from url', async ({ page }) => {
   // assuming layer_id l1 is a valid layer already added to the map
   await page.goto(
-    '/explore/m1/datasets?layers=[{"id":"l1","opacity":0,"date":"20000101_20001231"}]',
+    '/explore/monitor/m1?layers=[{"id":"l1","opacity":0,"date":"20000101_20001231"}]',
     {
       waitUntil: 'load',
     }
@@ -89,7 +89,7 @@ test('opacity 0 from url', async ({ page }) => {
 test('opacity 0.5 from url', async ({ page }) => {
   // assuming layer_id l1 is a valid layer already added to the map
   await page.goto(
-    '/explore/m1/datasets?layers=[{"id":"l1","opacity":0.5,"date":"20000101_20001231"}]',
+    '/explore/monitor/m1?layers=[{"id":"l1","opacity":0.5,"date":"20000101_20001231"}]',
     { waitUntil: 'load' }
   );
   await expect(page.getByTestId('map-legend')).toBeVisible();
@@ -107,11 +107,11 @@ test('opacity 0.5 from url', async ({ page }) => {
 
 test.describe('general information in map page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/map/m1/datasets', { waitUntil: 'load' });
+    await page.goto('/explore/monitor/m1', { waitUntil: 'load' });
   });
 
   test('attributtions', async ({ page }) => {
-    await page.goto('/explore/m1/datasets', { waitUntil: 'load' });
+    await page.goto('/explore/monitor/m1', { waitUntil: 'load' });
     const attributions = page.getByTestId('attributions');
     await expect(attributions).toBeVisible();
     await attributions.click();
@@ -124,8 +124,8 @@ test.describe('general information in map page', () => {
   });
 
   test('disclaimer', async ({ page }) => {
-    await page.goto('/explore/m1/datasets', { waitUntil: 'load' });
-    const disclaimer = page.getByTestId('disclaimer');
+    await page.goto('/explore/monitor/m1', { waitUntil: 'load' });
+    const disclaimer = page.getByTestId('disclaimer-link');
     await expect(disclaimer).toBeVisible();
     await disclaimer.click();
 
@@ -143,7 +143,7 @@ test.describe('general information in map page', () => {
   });
 
   test('OEMC contact us', async ({ page }) => {
-    await page.goto('/explore/m1/datasets', { waitUntil: 'load' });
+    await page.goto('/explore/monitor/m1', { waitUntil: 'load' });
 
     const contactUs = page.getByTestId('contact-link');
     await contactUs.click();

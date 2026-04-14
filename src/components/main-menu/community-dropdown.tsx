@@ -25,7 +25,7 @@ const CommunityDropdown = () => {
         <LuChevronDown className="h-5 w-6 font-bold group-data-[state=open]:rotate-180" />
       </CollapsibleTrigger>
       <CollapsibleContent className="p-0">
-        <nav className="flex w-full flex-col" data-testid="main-navigation">
+        <nav className="flex w-full flex-col" data-testid="community-navigation">
           {navSubLinksCommunity.map(({ name, ...props }) => {
             const isActive = `/${pathname.split('/')[1]}` === props.href;
             return (

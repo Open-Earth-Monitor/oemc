@@ -79,7 +79,12 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
           <ul className="space-y-2.5">
             {monitors.map((monitor) => (
               <li key={monitor.id} className="font-bold underline">
-                <Link href={`/explore/monitor/${monitor.id}`}>{monitor.title}</Link>
+                <Link
+                  href={`/explore/monitor/${monitor.id}`}
+                  data-testid={`monitor-link-${monitor.id}`}
+                >
+                  {monitor.title}
+                </Link>
               </li>
             ))}
           </ul>

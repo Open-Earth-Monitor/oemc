@@ -1,15 +1,15 @@
 import { test, expect } from '@playwright/test';
 
 import type { Monitor } from 'types/monitors';
+import type { MonitorsAndGeostoriesPaginated } from '@/types/monitors-and-geostories';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/map', { waitUntil: 'load' });
-  const monitorsResponse = await page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}/monitors/`
+  const response = await page.request.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/`
   );
-  const monitorsData = (await monitorsResponse.json()) as Monitor[];
-  await page.getByTestId(`monitor-item-${monitorsData[0].id}`).click();
-  await page.waitForURL('**/map/**/datasets', { waitUntil: 'load' });
+  const data = (await response.json()) as MonitorsAndGeostoriesPaginated;
+  const firstMonitor = data.results.find((item): item is Monitor => item.entity_type === 'monitor');
+  await page.goto(`/explore/monitor/${firstMonitor.id}`, { waitUntil: 'load' });
 });
 
 test.describe('user should be able to copy and share current url', () => {
