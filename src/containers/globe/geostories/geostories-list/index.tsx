@@ -28,7 +28,10 @@ const GeostoriesList = ({ geostoriesList, isLoading }) => {
   return (
     <div className="h-full w-full flex-1 overflow-y-auto lg:max-w-md">
       <div className="space-y-3 pr-8">
-        <p className="text-xs font-medium text-accent-green">
+        <p
+          className="text-xs font-medium text-accent-green"
+          data-testid="featured-geostories-count"
+        >
           {filteredGeostoriesList?.length === 1 &&
             `${filteredGeostoriesList?.length} Feature Geostory`}
           {filteredGeostoriesList?.length > 1 &&
@@ -43,7 +46,7 @@ const GeostoriesList = ({ geostoriesList, isLoading }) => {
               <GeostoryItem key={geostory.id} {...geostory} />
             ))}
           {!isLoading && filteredGeostoriesList?.length === 0 && (
-            <p className="text-sm text-white-500/20">
+            <p data-testid="no-geostories-found" className="text-sm text-white-500/20">
               We couldn’t find any geostories for your search. Try different keywords or remove some
               filters.
             </p>
