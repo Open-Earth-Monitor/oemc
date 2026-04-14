@@ -1,40 +1,97 @@
 import { test, expect } from '@playwright/test';
 
-import type { MonitorsAndGeostoriesPaginated } from '@/types/monitors-and-geostories';
+const FEATURED_GEOSTORY_IDS = [
+  'g1',
+  'g2',
+  'g3',
+  'g4',
+  'g5',
+  'g7',
+  'g10',
+  'g11',
+  'g12',
+  'g19',
+  'g21',
+  'g23',
+  'g31',
+  'g32',
+];
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
 
-test.describe('search of monitors and geostories', () => {
-  test('search by title', async ({ page }) => {
-    const response = await page.waitForResponse(`${API_URL}/monitors-and-geostories/*`);
-    const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
+test.describe('featured geostories on landing page', () => {
+  test('displays only featured geostories', async ({ page }) => {
+    // Wait for geostory items to appear
+    await page.waitForSelector('[data-testid^="geostory-item-"]');
+
+    const items = page.locator('[data-testid^="geostory-item-"]');
+    const count = await items.count();
+    expect(count).toBeGreaterThan(0);
+
+    // Every visible item must be in the featured list
+    for (let i = 0; i < count; i++) {
+      const testId = await items.nth(i).getAttribute('data-testid');
+      const id = testId?.replace('geostory-item-', '');
+      expect(FEATURED_GEOSTORY_IDS).toContain(id);
+    }
+  });
+
+  test('shows correct count label for featured geostories', async ({ page }) => {
+    await page.waitForSelector('[data-testid^="geostory-item-"]');
+
+    const countEl = page.getByTestId('featured-geostories-count');
+    await expect(countEl).toBeVisible();
+
+    const items = page.locator('[data-testid^="geostory-item-"]');
+    const count = await items.count();
+
+    if (count === 1) {
+      await expect(countEl).toHaveText('1 Feature Geostory');
+    } else if (count > 1) {
+      await expect(countEl).toHaveText(`${count} Featured Geostories`);
+    }
+  });
+
+  test('shows no-results message when search yields no featured geostories', async ({ page }) => {
     const searchInput = page.getByTestId('search-input');
+    await searchInput.fill('zzz_no_match_query_xyz');
 
-    await searchInput.fill(datasetsData.results[0].title);
-    const searchPromise = page.waitForResponse(`${API_URL}/monitors-and-geostories/?title=*`);
-    const filteredResponse = await searchPromise;
-    const inputValue = await searchInput.inputValue();
-    const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
+    // Wait for results to settle
+    await page.waitForTimeout(500);
 
-    expect(filteredJson.results[0].title).toEqual(inputValue);
+    const noResults = page.getByTestId('no-geostories-found');
+    await expect(noResults).toBeVisible();
+    await expect(noResults).toContainText(
+      "We couldn't find any geostories for your search. Try different keywords or remove some filters."
+    );
+  });
 
-    // check that the number of results is displayed accurately
-    await expect(page.getByTestId('datasets-result')).toBeVisible();
-    if (filteredJson.results.length === 1) {
-      await expect(page.getByTestId('datasets-result')).toHaveText('1 result');
-    } else if (filteredJson['monitors and geostories'].length > 1) {
-      await expect(page.getByTestId('datasets-result')).toHaveText(
-        `${filteredJson['monitors and geostories']['results'].length} results`
-      );
+  test('filters displayed geostories when searching by title', async ({ page }) => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const response = await page.waitForResponse(`${API_URL}/monitors-and-geostories/*`);
+    const data = await response.json();
+
+    // Find a geostory from the featured list in the API response
+    const featuredResult = data.results?.find(
+      (item) => item.type === 'geostory' && FEATURED_GEOSTORY_IDS.includes(item.id)
+    );
+
+    if (!featuredResult) {
+      test.skip(true, 'No featured geostory found in API response to search for');
+      return;
     }
 
-    // check that the no results disclaimer is displayed
-    const noResultsDisclaimer = page.getByTestId('no-results-found');
-    if (!filteredJson['results'].length) {
-      await expect(noResultsDisclaimer).toBeVisible();
-    }
+    const searchInput = page.getByTestId('search-input');
+    await searchInput.fill(featuredResult.title);
+
+    // At least one matching item should be visible
+    const matchingItem = page.getByTestId(`geostory-item-${featuredResult.id}`);
+    await expect(matchingItem).toBeVisible();
+
+    // Count label should reflect visible results
+    const countEl = page.getByTestId('featured-geostories-count');
+    await expect(countEl).toBeVisible();
   });
 });
