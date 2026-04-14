@@ -8350,10 +8350,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash-es@npm:^4.17.23":
-  version: 4.17.23
-  resolution: "lodash-es@npm:4.17.23"
-  checksum: b1bd1d141bbde8ffc72978e34b364065675806b0ca42ab99477d247fb2ae795faeed81db9283bf18ae1f096c2b6611ec0589e0503fa9724bf82e3dce947bad69
+"lodash-es@npm:4.18.0":
+  version: 4.18.0
+  resolution: "lodash-es@npm:4.18.0"
+  checksum: 5ca0e65f4f831d659cffb3851caad416eb32b83d942de59d84dcc3dec5f695edc2242f6ee4ddf1440fc884175ff241c0512deadb8412e741f679d77631baee77
   languageName: node
   linkType: hard
 
@@ -9789,7 +9789,7 @@ __metadata:
     eslint-plugin-prettier: ^5.2.1
     framer-motion: 12.23.12
     jotai: ^2.10.0
-    lodash-es: ^4.17.23
+    lodash-es: 4.18.0
     lucide-react: ^0.257.0
     next: 16.2.3
     next-plausible: 3.12.4
