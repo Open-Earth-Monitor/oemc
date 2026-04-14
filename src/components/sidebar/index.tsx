@@ -33,7 +33,7 @@ function MapSidebar() {
           </h1>
 
           <Badge className="justify-end place-self-end">
-            <span>{results?.length}</span>
+            <span data-testid="results-count-number">{results?.length}</span>
             {}
             {!isLoading && isFetched && <span>{results?.length === 1 ? 'result' : 'results'}</span>}
           </Badge>
