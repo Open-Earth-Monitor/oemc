@@ -5,7 +5,7 @@ import { cn } from '@/lib/classnames';
 import { useSyncSearchGeostoriesGlobe } from '@/hooks/sync-query';
 
 import { FilterPill } from '@/containers/filter-pill';
-import { CategoriesFiltersContent } from '@/containers/globe/categories-filters/categories-filters-content';
+import { CategoriesFiltersContent } from '@/containers/globe/filters/categories-filters-content';
 import GlobeSearch from '@/containers/globe/geostories/geostories-search';
 
 const CategoriesFiltersMobile = ({ className }: { className?: string }) => {

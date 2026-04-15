@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
-import CategoriesFilters from '@/containers/globe/categories-filters';
-import CategoriesFiltersMobile from '@/containers/globe/categories-filters/mobile';
+import CategoriesFilters from '@/containers/globe/filters';
+import CategoriesFiltersMobile from '@/containers/globe/filters/mobile';
 import GlobeExploreData from '@/containers/globe/explore-data';
 import Geostories from '@/containers/globe/geostories';
 import GlobeSocialMedia from '@/containers/globe/social-media/desktop';
