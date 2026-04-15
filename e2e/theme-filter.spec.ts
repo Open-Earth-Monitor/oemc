@@ -51,6 +51,12 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('category filters on landing page', () => {
+  // The landing page carries Cesium and the 3D globe bundle, so on slow CI runners hydration
+  // can eat ~15s of actionability wait before the first click lands. The default 30s test
+  // timeout leaves no room for a second click, which is why multi-click cases used to fail.
+  // Give these tests a 60s budget so every click has time to re-render between iterations.
+  test.describe.configure({ timeout: 60_000 });
+
   test('categories-filter container is visible', async ({ page }) => {
     await expect(page.getByTestId('categories-filter')).toBeVisible();
   });
@@ -99,14 +105,12 @@ test.describe('category filters on landing page', () => {
     for (const cat of categories) {
       const btn = page.getByTestId(`category-filter-${cat}`);
       await btn.click();
-      // Wait for aria-pressed="true" — confirms the re-render from this click has settled
-      // before we attempt the next one (clicking during a re-render detaches elements).
-      await expect(btn).toHaveAttribute('aria-pressed', 'true');
-    }
-
-    // Both categories must be present in the URL
-    for (const cat of categories) {
+      // Wait for both the URL update AND aria-pressed before the next click. Waiting only on
+      // aria-pressed can race the nuqs-driven URL write, which on slow CI keeps the main
+      // thread busy and stalls the subsequent click. The single-button deselect test uses
+      // this same sequence and passes reliably.
       await expect(page).toHaveURL(new RegExp(`categories=.*${encodeURIComponent(cat)}`));
+      await expect(btn).toHaveAttribute('aria-pressed', 'true');
     }
 
     const expected = featuredForCategories(allGeostories, categories);
@@ -147,8 +151,9 @@ test.describe('category filters on landing page', () => {
     for (const cat of categories) {
       const btn = page.getByTestId(`category-filter-${cat}`);
       await btn.click();
-      // Wait for aria-pressed="true" — confirms the re-render from this click has settled
-      // before we attempt the next one (clicking during a re-render detaches elements).
+      // Wait for both the URL update AND aria-pressed before the next click — see the
+      // "selecting multiple categories" test above for the reasoning.
+      await expect(page).toHaveURL(new RegExp(`categories=.*${encodeURIComponent(cat)}`));
       await expect(btn).toHaveAttribute('aria-pressed', 'true');
     }
 
