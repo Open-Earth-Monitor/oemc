@@ -164,7 +164,9 @@ test('opacity 0.5 from url', async ({ page }) => {
 test.describe('general information in map page', () => {
   test.beforeEach(async ({ page }) => {
     await mockAPIs(page);
-    await page.goto('/explore/monitor/m1', { waitUntil: 'load' });
+    // Use networkidle so React Query fetches settle and the page stops re-rendering
+    // before any test interaction — prevents elements detaching mid-click.
+    await page.goto('/explore/monitor/m1', { waitUntil: 'networkidle' });
   });
 
   test('attributions', async ({ page }) => {

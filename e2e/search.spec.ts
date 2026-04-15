@@ -30,9 +30,12 @@ test.describe('featured geostories on landing page', () => {
     const count = await items.count();
     expect(count).toBeGreaterThan(0);
 
-    // Every visible item must be in the featured list
-    for (let i = 0; i < count; i++) {
-      const testId = await items.nth(i).getAttribute('data-testid');
+    // Snapshot all test-ids in one page evaluation to avoid re-render races
+    // (iterating with .nth(i).getAttribute() can detach mid-loop if the list re-renders).
+    const testIds = await items.evaluateAll((els) =>
+      els.map((el) => el.getAttribute('data-testid'))
+    );
+    for (const testId of testIds) {
       const id = testId?.replace('geostory-item-', '');
       expect(FEATURED_GEOSTORY_IDS).toContain(id);
     }
@@ -58,10 +61,10 @@ test.describe('featured geostories on landing page', () => {
     const searchInput = page.getByTestId('search-input');
     await searchInput.fill('zzz_no_match_query_xyz');
 
-    // The search is debounced by 500ms; use a polling assertion with enough headroom
-    // instead of a fixed timeout that races against the debounce.
+    // The search is debounced by 500ms then hits the real API on CI — allow 10s for the
+    // request to return and the empty-state element to render.
     const noResults = page.getByTestId('no-geostories-found');
-    await expect(noResults).toBeVisible({ timeout: 3000 });
+    await expect(noResults).toBeVisible({ timeout: 10000 });
     await expect(noResults).toContainText(
       "We couldn't find any geostories for your search. Try different keywords or remove some filters."
     );

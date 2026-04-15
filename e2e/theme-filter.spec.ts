@@ -81,7 +81,11 @@ test.describe('category filters on landing page', () => {
     const categories = ['Soil', 'Water'];
 
     for (const cat of categories) {
-      await page.getByTestId(`category-filter-${cat}`).click();
+      const btn = page.getByTestId(`category-filter-${cat}`);
+      await btn.click();
+      // Wait for aria-pressed="true" — confirms the re-render from this click has settled
+      // before we attempt the next one (clicking during a re-render detaches elements).
+      await expect(btn).toHaveAttribute('aria-pressed', 'true');
     }
 
     // Both categories must be present in the URL
@@ -123,10 +127,11 @@ test.describe('category filters on landing page', () => {
     const categories = ['Forest', 'Agriculture', 'Biodiversity'];
 
     for (const cat of categories) {
-      await page.getByTestId(`category-filter-${cat}`).click();
-      // Wait for the URL to reflect each selection before clicking the next filter —
-      // rapid sequential clicks can race against the nuqs URL state commit on CI.
-      await expect(page).toHaveURL(new RegExp(`categories=.*${encodeURIComponent(cat)}`));
+      const btn = page.getByTestId(`category-filter-${cat}`);
+      await btn.click();
+      // Wait for aria-pressed="true" — confirms the re-render from this click has settled
+      // before we attempt the next one (clicking during a re-render detaches elements).
+      await expect(btn).toHaveAttribute('aria-pressed', 'true');
     }
 
     const expected = featuredForCategories(allGeostories, categories);
