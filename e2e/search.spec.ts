@@ -33,6 +33,12 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('featured geostories on landing page', () => {
+  // The landing page ships the Cesium 3D globe; on slow CI runners hydration plus the
+  // 500ms search debounce plus the /geostories API round-trip can exceed the default 30s
+  // test budget (the no-results test previously flaked for exactly this reason). Give the
+  // landing-page tests a 60s budget.
+  test.describe.configure({ timeout: 60_000 });
+
   test('displays only featured geostories', async ({ page }) => {
     // Wait for geostory items to appear
     await page.waitForSelector('[data-testid^="geostory-item-"]');
