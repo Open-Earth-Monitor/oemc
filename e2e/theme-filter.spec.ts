@@ -1,122 +1,174 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
-import type { MonitorsAndGeostoriesPaginated } from '@/types/monitors-and-geostories';
+import type { Geostory } from '@/types/geostories';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+const FEATURED_GEOSTORY_IDS = [
+  'g1',
+  'g2',
+  'g3',
+  'g4',
+  'g5',
+  'g7',
+  'g10',
+  'g11',
+  'g12',
+  'g19',
+  'g21',
+  'g23',
+  'g31',
+  'g32',
+];
+
+async function fetchGeostories(page: Page): Promise<Geostory[]> {
+  const response = await page.request.get(`${API_URL}/geostories`);
+  return response.json();
+}
+
+function featuredForCategories(geostories: Geostory[], categories: string[]) {
+  return geostories.filter(
+    (g) => FEATURED_GEOSTORY_IDS.includes(g.id) && categories.includes(g.theme)
+  );
+}
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/', { waitUntil: 'load' });
 });
 
-test.describe('filter monitors and geostories by different theme', () => {
-  test('Filter by theme Soil', async ({ page, request }) => {
-    const response = await request.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?theme=Soil&pagination=true`
-    );
-    const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
-
-    await page.getByTestId('themes-filter').click();
-    await page.getByTestId('Soil-checkbox').setChecked(true);
-
-    const filteredResponse = await page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/?theme=Soil*`
-    );
-    const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
-
-    expect(filteredJson.results).toEqual(datasetsData.results);
-
-    // check that the badge is displayed accurately
-    await expect(page.getByTestId('Soil-button')).toBeVisible();
+test.describe('category filters on landing page', () => {
+  test('categories-filter container is visible', async ({ page }) => {
+    await expect(page.getByTestId('categories-filter')).toBeVisible();
   });
-});
 
-test(`Filter by themes Agriculture and Climate & Health`, async ({ page, request }) => {
-  const response = await request.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?theme=Climate+%26+Health,Agriculture&pagination=true`
-  );
-  const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
-
-  await page.getByTestId('themes-filter').click();
-  await page.getByTestId('Agriculture-checkbox').setChecked(true);
-  await page.getByTestId('Climate & Health-checkbox').setChecked(true);
-
-  const responsePromise = page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/?theme=Climate+%26+Health,Agriculture*`
-  );
-  const filteredResponse = await responsePromise;
-  const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
-
-  expect(filteredJson['monitors and geostories']).toEqual(datasetsData['monitors and geostories']);
-
-  // check that the badge is displayed accurately
-  await expect(page.getByTestId('Agriculture-button')).toBeVisible();
-  await expect(page.getByTestId('Climate & Health-button')).toBeVisible();
-});
-
-test(`Filter by themes Soil and Water`, async ({ page, request }) => {
-  const response = await request.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?theme=Water,Soil&pagination=true`
-  );
-  const datasetsData = (await response.json()) as MonitorsAndGeostoriesPaginated;
-
-  await page.getByTestId('themes-filter').click();
-  await page.getByTestId('Soil-checkbox').setChecked(true);
-  await page.getByTestId('Water-checkbox').setChecked(true);
-
-  const responsePromise = page.waitForResponse(
-    `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?*theme=Water,Soil*`
-  );
-  const filteredResponse = await responsePromise;
-  const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
-
-  expect(filteredJson['monitors and geostories']).toEqual(datasetsData['monitors and geostories']);
-
-  // check that the badge is displayed accurately
-  await expect(page.getByTestId('Soil-button')).toBeVisible();
-  await expect(page.getByTestId('Water-button')).toBeVisible();
-});
-
-test.describe('Cards and badges displayed according selected themes', () => {
-  test('According to themes Water and Soil', async ({ page }) => {
-    await page.getByTestId('themes-filter').click();
-    await page.getByTestId('Soil-checkbox').setChecked(true);
-    await page.getByTestId('Water-checkbox').setChecked(true);
-
-    const responsePromise = page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories/?theme=Water,Soil*`
-    );
-    const filteredResponse = await responsePromise;
-    const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
-
-    // check that the cards are displayed accurately
-    const datasetsLists = page.getByTestId('datasets-list');
-    const datasetsListsItems = await datasetsLists.locator('> li').count();
-
-    expect(datasetsListsItems).toBe(filteredJson.results?.length);
-
-    // check that the badges are displayed accurately
-    await expect(page.getByTestId('Soil-button')).toBeVisible();
-    await expect(page.getByTestId('Water-button')).toBeVisible();
+  test('each category button is visible', async ({ page }) => {
+    const categories = [
+      'Agriculture',
+      'Water',
+      'Climate & Health',
+      'Soil',
+      'Forest',
+      'Biodiversity',
+    ];
+    for (const id of categories) {
+      await expect(page.getByTestId(`category-filter-${id}`)).toBeVisible();
+    }
   });
-  test('According to themes Forest, Agriculture, and Biodiversity', async ({ page }) => {
-    await page.getByTestId('themes-filter').click();
-    await page.getByTestId('Biodiversity-checkbox').setChecked(true);
-    await page.getByTestId('Forest-checkbox').setChecked(true);
-    await page.getByTestId('Agriculture-checkbox').setChecked(true);
 
-    const responsePromise = page.waitForResponse(
-      `${process.env.NEXT_PUBLIC_API_URL}/monitors-and-geostories?*theme=Agriculture,Forest,Biodiversity*`
+  test('selecting one category filters the list and updates the URL', async ({ page }) => {
+    const allGeostories = await fetchGeostories(page);
+    const category = 'Forest';
+
+    await page.getByTestId(`category-filter-${category}`).click();
+
+    // URL must contain the selected category
+    await expect(page).toHaveURL(new RegExp(`categories=.*${encodeURIComponent(category)}`));
+
+    const expected = featuredForCategories(allGeostories, [category]);
+    const countEl = page.getByTestId('featured-geostories-count');
+
+    if (expected.length === 1) {
+      await expect(countEl).toHaveText('1 Feature Geostory');
+    } else if (expected.length > 1) {
+      await expect(countEl).toHaveText(`${expected.length} Featured Geostories`);
+    } else {
+      await expect(page.getByTestId('no-geostories-found')).toBeVisible();
+    }
+  });
+
+  test('selecting multiple categories is accumulative and updates the URL', async ({ page }) => {
+    const allGeostories = await fetchGeostories(page);
+    const categories = ['Soil', 'Water'];
+
+    for (const cat of categories) {
+      await page.getByTestId(`category-filter-${cat}`).click();
+    }
+
+    // Both categories must be present in the URL
+    for (const cat of categories) {
+      await expect(page).toHaveURL(new RegExp(`categories=.*${encodeURIComponent(cat)}`));
+    }
+
+    const expected = featuredForCategories(allGeostories, categories);
+    const countEl = page.getByTestId('featured-geostories-count');
+
+    if (expected.length === 1) {
+      await expect(countEl).toHaveText('1 Feature Geostory');
+    } else if (expected.length > 1) {
+      await expect(countEl).toHaveText(`${expected.length} Featured Geostories`);
+    } else {
+      await expect(page.getByTestId('no-geostories-found')).toBeVisible();
+    }
+  });
+
+  test('deselecting a category removes it from the URL', async ({ page }) => {
+    const btn = page.getByTestId('category-filter-Agriculture');
+
+    await btn.click();
+    await expect(page).toHaveURL(/categories=.*Agriculture/);
+    await expect(btn).toHaveAttribute('aria-pressed', 'true');
+
+    await btn.click();
+    // After deselecting, Agriculture must no longer appear in the categories param
+    const url = page.url();
+    const params = new URL(url).searchParams.get('categories');
+    expect(params ?? '').not.toContain('Agriculture');
+    await expect(btn).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('selecting three categories shows only matching featured geostories and all are in the URL', async ({
+    page,
+  }) => {
+    const allGeostories = await fetchGeostories(page);
+    const categories = ['Forest', 'Agriculture', 'Biodiversity'];
+
+    for (const cat of categories) {
+      await page.getByTestId(`category-filter-${cat}`).click();
+    }
+
+    for (const cat of categories) {
+      await expect(page).toHaveURL(new RegExp(`categories=.*${encodeURIComponent(cat)}`));
+    }
+
+    const expected = featuredForCategories(allGeostories, categories);
+    const countEl = page.getByTestId('featured-geostories-count');
+
+    if (expected.length === 1) {
+      await expect(countEl).toHaveText('1 Feature Geostory');
+    } else if (expected.length > 1) {
+      await expect(countEl).toHaveText(`${expected.length} Featured Geostories`);
+    } else {
+      await expect(page.getByTestId('no-geostories-found')).toBeVisible();
+    }
+  });
+
+  test('no-results message shown when no featured geostory matches the selected category', async ({
+    page,
+  }) => {
+    const allGeostories = await fetchGeostories(page);
+
+    const allCategories = [
+      'Agriculture',
+      'Water',
+      'Climate & Health',
+      'Soil',
+      'Forest',
+      'Biodiversity',
+    ];
+    const emptyCategory = allCategories.find(
+      (cat) => featuredForCategories(allGeostories, [cat]).length === 0
     );
-    const filteredResponse = await responsePromise;
-    const filteredJson = (await filteredResponse.json()) as MonitorsAndGeostoriesPaginated;
 
-    // check that the cards are displayed accurately
-    const datasetsLists = page.getByTestId('datasets-list');
-    const datasetsListsItems = await datasetsLists.locator('> li').count();
+    if (!emptyCategory) {
+      test.skip(true, 'All categories have at least one featured geostory');
+      return;
+    }
 
-    expect(datasetsListsItems).toBe(filteredJson.results.length);
-
-    // check that the badges are displayed accurately
-    await expect(page.getByTestId('Biodiversity-button')).toBeVisible();
-    await expect(page.getByTestId('Forest-button')).toBeVisible();
-    await expect(page.getByTestId('Agriculture-button')).toBeVisible();
+    await page.getByTestId(`category-filter-${emptyCategory}`).click();
+    await expect(page).toHaveURL(new RegExp(`categories=.*${encodeURIComponent(emptyCategory)}`));
+    await expect(page.getByTestId('no-geostories-found')).toBeVisible();
+    await expect(page.getByTestId('no-geostories-found')).toContainText(
+      "We couldn't find any geostories for your search. Try different keywords or remove some filters."
+    );
   });
 });

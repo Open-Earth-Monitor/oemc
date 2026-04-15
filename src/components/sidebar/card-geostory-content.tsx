@@ -14,7 +14,7 @@ function DatasetCardGeostory({ theme, title, color, id, geostory_bbox }) {
     <div className="relative">
       <div
         data-testid={`sidebar-geostory-card-${id}`}
-      className="group/monitor-card relative h-40 space-y-2 border-l bg-cover bg-center p-[18px] font-satoshi transition-all duration-200 hover:border-l-4"
+        className="group/monitor-card relative h-40 space-y-2 border-l bg-cover bg-center p-[18px] font-satoshi transition-all duration-200 hover:border-l-4"
         style={{ borderLeftColor: color, backgroundImage: `url(/images/geostories/${id}.jpg)` }}
       >
         {/* overlay */}

@@ -48,6 +48,8 @@ const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
 
   return (
     <button
+      data-testid={`category-filter-${id}`}
+      aria-pressed={isActive}
       className={cn(
         'group flex cursor-pointer items-center gap-2.5 rounded-full border border-white-950 bg-transparent p-1 transition-colors duration-300',
         isActive

@@ -7,7 +7,7 @@ import { mobile } from '@/lib/media-queries';
 import { useSyncMediaFilter } from '@/hooks/sync-query';
 
 import { FilterPill } from '@/containers/filter-pill';
-import { LiveUpdatesFiltersContent } from '@/containers/globe/categories-filters/live-updates-filters-content';
+import { LiveUpdatesFiltersContent } from '@/containers/globe/filters/live-updates-filters-content';
 
 import SocialMedia from './social-media';
 
