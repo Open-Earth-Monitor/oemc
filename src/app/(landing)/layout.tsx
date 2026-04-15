@@ -1,15 +1,8 @@
 import { Metadata } from 'next';
 
-import CategoriesFilters from '@/containers/globe/filters';
-import CategoriesFiltersMobile from '@/containers/globe/filters/mobile';
-import GlobeExploreData from '@/containers/globe/explore-data';
-import Geostories from '@/containers/globe/geostories';
-import GlobeSocialMedia from '@/containers/globe/social-media/desktop';
-
 import Header from '@/components/header';
 
-import GeostoriesGlobeMobile from './geostories-mobile';
-import LiveUpdatesGlobeMobile from './live-updates-mobile';
+import { GlobeLayoutResponsive } from './globe-layout-responsive';
 
 export const metadata: Metadata = {
   title:
@@ -18,45 +11,6 @@ export const metadata: Metadata = {
   description:
     'It supports sustainable land management, ecological monitoring, and spatial modeling through standardized, ready-to-use geospatial layers. The most extensive version of the data is hosted on OpenLandMap.org, while a selection of layers that can support on-the-ground activities / serving specific OEMC use-cases and partner organizations, will be made available in combination with other layers from Tier 2 stream.',
 };
-
-function GlobeLayoutDesktop() {
-  return (
-    <div className="px-5">
-      {/* Left sidebar - Geostories */}
-      <div className="pointer-events-none absolute left-0 top-28 z-[1000] hidden xl:block">
-        <Geostories />
-      </div>
-
-      {/* Right sidebar - Social Media */}
-      <div className="pointer-events-none absolute right-0 top-28 z-[1000] hidden px-5 animate-in fade-in-0 slide-in-from-right-5 duration-700 delay-150 ease-out fill-mode-both xl:block">
-        <GlobeSocialMedia />
-      </div>
-
-      {/* Bottom controls — extra wrapper keeps centering transform separate from animation */}
-      <div className="pointer-events-none absolute bottom-20 left-1/2 z-[1000] hidden -translate-x-1/2 xl:block">
-        <div className="space-y-4 animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-300 ease-out fill-mode-both">
-          <div className="-translate-y-6">
-            <CategoriesFilters />
-          </div>
-          <GlobeExploreData />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function GlobeLayoutMobile() {
-  return (
-    <>
-      <CategoriesFiltersMobile className="absolute right-0 top-24 flex w-full xl:hidden" />
-
-      <div className="absolute bottom-40 right-5 flex flex-col items-end gap-4 xl:hidden">
-        <GeostoriesGlobeMobile />
-        <LiveUpdatesGlobeMobile />
-      </div>
-    </>
-  );
-}
 
 export default function GlobeLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -69,8 +23,7 @@ export default function GlobeLayout({ children }: { children: React.ReactNode })
         <Header className="px-5" />
       </div>
 
-      <GlobeLayoutDesktop />
-      <GlobeLayoutMobile />
+      <GlobeLayoutResponsive />
     </div>
   );
 }
