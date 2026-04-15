@@ -1,8 +1,8 @@
 import { test, expect, type Page } from '@playwright/test';
 
 import type { Geostory } from '@/types/geostories';
-import type { MonitorsAndGeostories } from '@/types/monitors-and-geostories';
 import type { Monitor } from '@/types/monitors';
+import type { MonitorsAndGeostories } from '@/types/monitors-and-geostories';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 

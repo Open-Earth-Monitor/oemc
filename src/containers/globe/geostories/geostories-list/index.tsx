@@ -47,7 +47,8 @@ const GeostoriesList = ({ geostoriesList, isLoading }) => {
             ))}
           {!isLoading && filteredGeostoriesList?.length === 0 && (
             <p data-testid="no-geostories-found" className="text-sm text-white-500/20">
-              We couldn’t find any geostories for your search. Try different keywords or remove some
+              {/* eslint-disable-next-line react/no-unescaped-entities */}
+              We couldn't find any geostories for your search. Try different keywords or remove some
               filters.
             </p>
           )}

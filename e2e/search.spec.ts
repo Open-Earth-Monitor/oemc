@@ -70,13 +70,13 @@ test.describe('featured geostories on landing page', () => {
 
   test('filters displayed geostories when searching by title', async ({ page }) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    const response = await page.waitForResponse(`${API_URL}/monitors-and-geostories/*`);
+    const response = await page.request.get(`${API_URL}/monitors-and-geostories/`);
     const data = await response.json();
 
-    // Find a geostory from the featured list in the API response
-    const featuredResult = data.results?.find(
-      (item) => item.type === 'geostory' && FEATURED_GEOSTORY_IDS.includes(item.id)
-    );
+    // Find a geostory from the featured list in the API response (plain array)
+    const featuredResult = Array.isArray(data)
+      ? data.find((item) => item.id?.startsWith('g') && FEATURED_GEOSTORY_IDS.includes(item.id))
+      : undefined;
 
     if (!featuredResult) {
       test.skip(true, 'No featured geostory found in API response to search for');
