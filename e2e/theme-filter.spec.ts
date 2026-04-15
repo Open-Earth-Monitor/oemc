@@ -32,6 +32,20 @@ function featuredForCategories(geostories: Geostory[], categories: string[]) {
   );
 }
 
+/**
+ * On slow CI runners the landing page takes ~13s to become interactive because of
+ * React hydration, the Cesium 3D globe, slide-in CSS animations, and Next.js RSC
+ * prefetches. Until the page settles, Playwright's `locator.click` spends its entire
+ * test-timeout budget on actionability checks for the first click. Waiting for the
+ * geostories panel to render is a reliable signal that hydration and data fetching
+ * have finished, so subsequent clicks dispatch immediately.
+ */
+async function waitForLandingReady(page: Page) {
+  await page
+    .getByTestId('featured-geostories-count')
+    .waitFor({ state: 'attached', timeout: 30000 });
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/', { waitUntil: 'load' });
 });
@@ -59,6 +73,7 @@ test.describe('category filters on landing page', () => {
     const allGeostories = await fetchGeostories(page);
     const category = 'Forest';
 
+    await waitForLandingReady(page);
     await page.getByTestId(`category-filter-${category}`).click();
 
     // URL must contain the selected category
@@ -80,6 +95,7 @@ test.describe('category filters on landing page', () => {
     const allGeostories = await fetchGeostories(page);
     const categories = ['Soil', 'Water'];
 
+    await waitForLandingReady(page);
     for (const cat of categories) {
       const btn = page.getByTestId(`category-filter-${cat}`);
       await btn.click();
@@ -106,6 +122,7 @@ test.describe('category filters on landing page', () => {
   });
 
   test('deselecting a category removes it from the URL', async ({ page }) => {
+    await waitForLandingReady(page);
     const btn = page.getByTestId('category-filter-Agriculture');
 
     await btn.click();
@@ -126,6 +143,7 @@ test.describe('category filters on landing page', () => {
     const allGeostories = await fetchGeostories(page);
     const categories = ['Forest', 'Agriculture', 'Biodiversity'];
 
+    await waitForLandingReady(page);
     for (const cat of categories) {
       const btn = page.getByTestId(`category-filter-${cat}`);
       await btn.click();
@@ -168,6 +186,7 @@ test.describe('category filters on landing page', () => {
       return;
     }
 
+    await waitForLandingReady(page);
     await page.getByTestId(`category-filter-${emptyCategory}`).click();
     await expect(page).toHaveURL(new RegExp(`categories=.*${encodeURIComponent(emptyCategory)}`));
     await expect(page.getByTestId('no-geostories-found')).toBeVisible();

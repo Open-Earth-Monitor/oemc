@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 const FEATURED_GEOSTORY_IDS = [
   'g1',
@@ -16,6 +16,17 @@ const FEATURED_GEOSTORY_IDS = [
   'g31',
   'g32',
 ];
+
+/**
+ * Wait for the landing page's geostories panel to render — a reliable signal that
+ * React hydration and initial data fetching have finished, so subsequent actions
+ * don't burn test-timeout budget waiting on a half-hydrated page on slow CI.
+ */
+async function waitForLandingReady(page: Page) {
+  await page
+    .getByTestId('featured-geostories-count')
+    .waitFor({ state: 'attached', timeout: 30000 });
+}
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -58,6 +69,7 @@ test.describe('featured geostories on landing page', () => {
   });
 
   test('shows no-results message when search yields no featured geostories', async ({ page }) => {
+    await waitForLandingReady(page);
     const searchInput = page.getByTestId('search-input');
     await searchInput.fill('zzz_no_match_query_xyz');
 
@@ -85,6 +97,7 @@ test.describe('featured geostories on landing page', () => {
       return;
     }
 
+    await waitForLandingReady(page);
     const searchInput = page.getByTestId('search-input');
     await searchInput.fill(featuredResult.title);
 
