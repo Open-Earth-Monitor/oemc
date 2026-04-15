@@ -1,15 +1,83 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+// Minimal layer fixture — enough for the legend to render.
+// gs_base_wms is intentionally empty to disable the useLegendGraphic WMS query.
+const LAYER_L1 = {
+  layer_id: 'l1',
+  title: 'Land Cover 2000',
+  gs_base_wms: '',
+  gs_name: '',
+  gs_dimension: 'time',
+  gs_style: [{ color: '#1a9641', label: 'Forest' }],
+  range: ['20000101_20001231'],
+  range_labels: ['2000'],
+  author: null,
+  coverage: 'Global',
+  description: '',
+  download_url: '',
+  filename: '',
+  geo_story: '',
+  license: '',
+  location_query_url: '',
+  metadata_url: '',
+  monitor: 'm1',
+  monitor_id: 'm1',
+  polygon_query_url: '',
+  regex: '',
+  srv_path: '',
+  theme: 'Forest',
+  unit: '',
+  use_case: '',
+  position: 'left',
+  value_society: '',
+  data_meaning: '',
+  usage_examples: '',
+};
+
+const MONITOR_M1 = {
+  id: 'm1',
+  title: 'Forest Monitor',
+  author: '',
+  coverage: 'Global',
+  date_created: '2020-01-01',
+  description: '',
+  geostories: [],
+  entity_type: 'monitor',
+  ready: true,
+  metadata_url: '',
+  notebooks_url: '',
+  publications: [],
+  use_case_link: [],
+  monitor_bbox: [-25, 24, 45, 72],
+  theme: 'Forest',
+};
+
+/** Intercept all backend API calls used by the monitor/map page. */
+async function mockAPIs(page: Page) {
+  // Layer detail — used by legend (useLayerParsedSource)
+  await page.route(new RegExp(`${API_URL}/layers`), (route) => route.fulfill({ json: [LAYER_L1] }));
+  // Monitor layers — used by the sidebar layer list
+  await page.route(new RegExp(`${API_URL}/monitors/m1/layers`), (route) =>
+    route.fulfill({ json: [LAYER_L1] })
+  );
+  // Monitor geostories — used by the sidebar geostory list
+  await page.route(new RegExp(`${API_URL}/monitors/m1/geostories`), (route) =>
+    route.fulfill({ json: [] })
+  );
+  // Monitor detail — used by useMonitor hook
+  await page.route(new RegExp(`${API_URL}/monitors/m1$`), (route) =>
+    route.fulfill({ json: [MONITOR_M1] })
+  );
+}
+
+const LAYER_URL = '/explore/monitor/m1?layers=[{"id":"l1","opacity":1,"date":"20000101_20001231"}]';
 
 test('legend', async ({ page }) => {
-  // assuming layer_id l1 is a valid layer already added to the map
-  await page.goto(
-    '/explore/monitor/m1?layers=[{"id":"l1","opacity":1,"date":"20000101_20001231"}]',
-    {
-      waitUntil: 'load',
-    }
-  );
+  await mockAPIs(page);
+  await page.goto(LAYER_URL, { waitUntil: 'load' });
 
-  await page.waitForResponse(`${process.env.NEXT_PUBLIC_API_URL}/layers?layer_id=l1`);
   await expect(page.getByTestId('map-legend')).toBeVisible();
 
   // should be 1 layer in the legend
@@ -17,7 +85,8 @@ test('legend', async ({ page }) => {
 
   // legend actions
   await expect(page.getByTestId('map-legend-item-toolbar')).toBeVisible();
-  // toggle visibility
+
+  // toggle visibility off
   await page.getByTestId('map-legend-item').getByTestId('layer-visibility').first().click();
   await expect(
     page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
@@ -28,6 +97,8 @@ test('legend', async ({ page }) => {
       'gi'
     )
   );
+
+  // toggle visibility on
   await page.getByTestId('map-legend-item').getByTestId('layer-visibility').first().click();
   await expect(
     page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
@@ -38,80 +109,65 @@ test('legend', async ({ page }) => {
       'g'
     )
   );
-  // opacity
+
+  // opacity button visible
   await expect(
     page.getByTestId('map-legend-item').getByTestId('layer-opacity-button')
   ).toBeVisible();
 });
 
 test('opacity 1 from url', async ({ page }) => {
-  // assuming layer_id l1 is a valid layer already added to the map
-  await page.goto(
-    '/explore/monitor/m1?layers=[{"id":"l1","opacity":1,"date":"20000101_20001231"}]',
-    {
-      waitUntil: 'load',
-    }
-  );
-  await expect(page.getByTestId('map-legend')).toBeVisible();
+  await mockAPIs(page);
+  await page.goto(LAYER_URL, { waitUntil: 'load' });
 
+  await expect(page.getByTestId('map-legend')).toBeVisible();
   await expect(
     page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
   ).toHaveAttribute('data-active', 'true');
 
-  await expect(
-    page.getByTestId('map-legend-item').getByTestId('layer-opacity-button')
-  ).toBeVisible();
   await page.getByTestId('map-legend-item').getByTestId('layer-opacity-button').click();
   await expect(page.getByTestId('slider-current-value')).toHaveText('100%');
 });
 
 test('opacity 0 from url', async ({ page }) => {
-  // assuming layer_id l1 is a valid layer already added to the map
+  await mockAPIs(page);
   await page.goto(
     '/explore/monitor/m1?layers=[{"id":"l1","opacity":0,"date":"20000101_20001231"}]',
-    {
-      waitUntil: 'load',
-    }
+    { waitUntil: 'load' }
   );
-  await expect(page.getByTestId('map-legend')).toBeVisible();
 
+  await expect(page.getByTestId('map-legend')).toBeVisible();
   await expect(
     page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
   ).toHaveAttribute('data-active', 'false');
 
-  await expect(
-    page.getByTestId('map-legend-item').getByTestId('layer-opacity-button')
-  ).toBeVisible();
   await page.getByTestId('map-legend-item').getByTestId('layer-opacity-button').click();
   await expect(page.getByTestId('slider-current-value')).toHaveText('0%');
 });
 
 test('opacity 0.5 from url', async ({ page }) => {
-  // assuming layer_id l1 is a valid layer already added to the map
+  await mockAPIs(page);
   await page.goto(
     '/explore/monitor/m1?layers=[{"id":"l1","opacity":0.5,"date":"20000101_20001231"}]',
     { waitUntil: 'load' }
   );
-  await expect(page.getByTestId('map-legend')).toBeVisible();
 
+  await expect(page.getByTestId('map-legend')).toBeVisible();
   await expect(
     page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
   ).toHaveAttribute('data-active', 'true');
 
-  await expect(
-    page.getByTestId('map-legend-item').getByTestId('layer-opacity-button')
-  ).toBeVisible();
   await page.getByTestId('map-legend-item').getByTestId('layer-opacity-button').click();
   await expect(page.getByTestId('slider-current-value')).toHaveText('50%');
 });
 
 test.describe('general information in map page', () => {
   test.beforeEach(async ({ page }) => {
+    await mockAPIs(page);
     await page.goto('/explore/monitor/m1', { waitUntil: 'load' });
   });
 
-  test('attributtions', async ({ page }) => {
-    await page.goto('/explore/monitor/m1', { waitUntil: 'load' });
+  test('attributions', async ({ page }) => {
     const attributions = page.getByTestId('attributions');
     await expect(attributions).toBeVisible();
     await attributions.click();
@@ -124,7 +180,6 @@ test.describe('general information in map page', () => {
   });
 
   test('disclaimer', async ({ page }) => {
-    await page.goto('/explore/monitor/m1', { waitUntil: 'load' });
     const disclaimer = page.getByTestId('disclaimer-link');
     await expect(disclaimer).toBeVisible();
     await disclaimer.click();
@@ -135,7 +190,7 @@ test.describe('general information in map page', () => {
       'Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or European Commission.'
     );
     await expect(page.getByTestId('disclaimer-content-2')).toHaveText(
-      'Neither the European Union nor the granting authority can be held responsible for them. The data is provided “as is”. Open-Earth-Monitor Cyberinfrastructure (OEMC) project consortium and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement.'
+      'Neither the European Union nor the granting authority can be held responsible for them. The data is provided \u201cas is\u201d. Open-Earth-Monitor Cyberinfrastructure (OEMC) project consortium and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement.'
     );
     await expect(page.getByTestId('disclaimer-content-3')).toHaveText(
       'Neither OEMC project Consortium nor its suppliers and licensors, makes any warranty that the Website will be error free or that access thereto will be continuous or uninterrupted. You understand that you download from, or otherwise obtain content or services through, the Website at your own discretion and risk.'
@@ -143,8 +198,6 @@ test.describe('general information in map page', () => {
   });
 
   test('OEMC contact us', async ({ page }) => {
-    await page.goto('/explore/monitor/m1', { waitUntil: 'load' });
-
     const contactUs = page.getByTestId('contact-link');
     await contactUs.click();
     await expect(contactUs).toHaveAttribute('href', 'https://earthmonitor.org/contact-us/');

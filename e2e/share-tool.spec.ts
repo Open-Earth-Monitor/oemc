@@ -114,8 +114,9 @@ test.describe('share tool — social media', () => {
 
     await popup.waitForLoadState('domcontentloaded');
     expect(popup.url()).toMatch(/twitter\.com|x\.com/);
-    // The share popup URL must encode the current page URL
-    expect(decodeURIComponent(popup.url())).toContain(new URL(currentUrl).pathname);
+    // X/Twitter may redirect to a login page; decode fully to find our pathname in any nesting level.
+    const fullyDecoded = decodeURIComponent(decodeURIComponent(popup.url()));
+    expect(fullyDecoded).toContain(new URL(currentUrl).pathname);
   });
 
   test('LinkedIn button is visible and opens share popup with current URL', async ({ page }) => {
@@ -128,6 +129,9 @@ test.describe('share tool — social media', () => {
 
     await popup.waitForLoadState('domcontentloaded');
     expect(popup.url()).toContain('linkedin.com');
-    expect(decodeURIComponent(popup.url())).toContain(new URL(currentUrl).pathname);
+    // LinkedIn may redirect to a login page; the share URL (with our pathname) is still present,
+    // but may be double-encoded inside a session_redirect param — decode fully before asserting.
+    const fullyDecoded = decodeURIComponent(decodeURIComponent(popup.url()));
+    expect(fullyDecoded).toContain(new URL(currentUrl).pathname);
   });
 });
