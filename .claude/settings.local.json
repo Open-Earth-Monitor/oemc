@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sed -i.bak '154,436d' /Users/miguelbarrenecheasanchez/Projects/oemc/CLAUDE.md)"
+    ]
+  }
+}
