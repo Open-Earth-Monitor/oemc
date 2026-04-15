@@ -124,9 +124,8 @@ test.describe('category filters on landing page', () => {
 
     for (const cat of categories) {
       await page.getByTestId(`category-filter-${cat}`).click();
-    }
-
-    for (const cat of categories) {
+      // Wait for the URL to reflect each selection before clicking the next filter —
+      // rapid sequential clicks can race against the nuqs URL state commit on CI.
       await expect(page).toHaveURL(new RegExp(`categories=.*${encodeURIComponent(cat)}`));
     }
 

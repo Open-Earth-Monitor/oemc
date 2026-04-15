@@ -58,11 +58,10 @@ test.describe('featured geostories on landing page', () => {
     const searchInput = page.getByTestId('search-input');
     await searchInput.fill('zzz_no_match_query_xyz');
 
-    // Wait for results to settle
-    await page.waitForTimeout(500);
-
+    // The search is debounced by 500ms; use a polling assertion with enough headroom
+    // instead of a fixed timeout that races against the debounce.
     const noResults = page.getByTestId('no-geostories-found');
-    await expect(noResults).toBeVisible();
+    await expect(noResults).toBeVisible({ timeout: 3000 });
     await expect(noResults).toContainText(
       "We couldn't find any geostories for your search. Try different keywords or remove some filters."
     );
