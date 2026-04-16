@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { ChevronRight } from 'lucide-react';
 
+import { getGeostoryImageUrl } from '@/hooks/geostories';
 import CardHeader from '@/components/sidebar/card-header';
 import type { GeostoryParsed } from '@/types/geostories';
 
@@ -16,7 +17,7 @@ function DatasetCardGeostory({ theme, title, color, id, geostory_bbox }: Geostor
       <div
         data-testid={`sidebar-geostory-card-${id}`}
         className="group/monitor-card relative h-40 space-y-2 border-l bg-cover bg-center p-[18px] font-satoshi transition-all duration-200 hover:border-l-4"
-        style={{ borderLeftColor: color, backgroundImage: `url(/images/geostories/${id}.jpg)` }}
+        style={{ borderLeftColor: color, backgroundImage: `url(${getGeostoryImageUrl(id)})` }}
       >
         {/* overlay */}
         <div className="pointer-events-none absolute inset-0 bg-black-500/60" />

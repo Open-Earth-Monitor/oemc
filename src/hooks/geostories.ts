@@ -10,6 +10,13 @@ import { parseBBox } from '@/utils/bbox';
 import { normalizeLayers } from '@/utils/layers';
 import API from 'services/api';
 
+/**
+ * Constructs the URL for a geostory's cover image from the media API.
+ * Example: getGeostoryImageUrl('g1') → '{API_URL}/media/g1.jpg'
+ */
+export const getGeostoryImageUrl = (geostoryId: string | number): string =>
+  `${process.env.NEXT_PUBLIC_API_URL}/media/${geostoryId}.jpg`;
+
 export type GeostoriesParams = {
   geostory_id?: string | number;
   title?: string;

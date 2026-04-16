@@ -62,7 +62,7 @@ export function useGeostoryPins(params: GeostoriesParams): GeostoryPin[] {
         return {
           geostory_id: String((story as any).id),
           coordinates: [lon, lat],
-          category: (((story as any).theme ?? 'Unknown') as CategoryId) ?? 'Unknown',
+          category: ((story as any).theme ?? 'Unknown') as CategoryId,
         } satisfies GeostoryPin;
       })
       .filter(Boolean) as GeostoryPin[];
