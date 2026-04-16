@@ -165,6 +165,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const layerLeftRef = useRef(null);
   const layerRightRef = useRef(null);
+  const hasInitializedComparativeGeostory = useRef(false);
 
   const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TOOLTIP_INITIAL_STATE);
 
@@ -348,24 +349,26 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   // activates timeseries and comparative mode if geostory is comparative and just the first time
   // after that, the user should manage timeseries and comparative mode
   useEffect(() => {
-    if (isComparativeGeostory) {
-      setIsCompareMode(true);
-      setCompareLayers([
-        {
-          id: layerPositionLeft?.layer_id,
-          ...(!!layerPositionLeft?.range && { date: layerPositionLeft?.range[0] }),
-          opacity: 1,
-        },
-      ]);
-      setLayers([
-        {
-          id: layerPositionRight?.layer_id,
-          ...(!!layerPositionRight?.range && { date: layerPositionRight?.range[0] }),
-          opacity: 1,
-        },
-      ]);
-      setBbox(geostoryData?.geostory_bbox || undefined);
-    }
+    if (hasInitializedComparativeGeostory.current) return;
+    if (!isComparativeGeostory) return;
+
+    hasInitializedComparativeGeostory.current = true;
+    setIsCompareMode(true);
+    setCompareLayers([
+      {
+        id: layerPositionLeft?.layer_id,
+        ...(!!layerPositionLeft?.range && { date: layerPositionLeft?.range[0] }),
+        opacity: 1,
+      },
+    ]);
+    setLayers([
+      {
+        id: layerPositionRight?.layer_id,
+        ...(!!layerPositionRight?.range && { date: layerPositionRight?.range[0] }),
+        opacity: 1,
+      },
+    ]);
+    setBbox(geostoryData?.geostory_bbox || undefined);
   }, [layerId, geostoryData, isComparativeGeostory]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const resolution = mapRef.current?.ol.getView?.()?.getResolution?.();
@@ -537,12 +540,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
         {isRegionsLayerActive && <NutsLayer />}
 
-        {basemap === 'world_imagery' && (
-          <RLayerTile
-            zIndex={100}
-            url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-          />
-        )}
 
         <RLayerTile zIndex={100} url={labelUrl} />
 

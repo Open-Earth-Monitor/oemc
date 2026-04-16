@@ -41,67 +41,38 @@ export const BASEMAPS: BasemapProps[] = [
   {
     id: 'gray_scale',
     label: 'Gray scale',
-    attributions: '© OpenStreetMap contributors © Carto',
+    attributions:
+      '© <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions" target="_blank">CARTO</a>',
     url: 'https://basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
     thumb: 'https://carto.com/help/images/building-maps/basemaps/light_all.png',
   },
-
-  // {
-  //   id: 'world_imagery',
-  //   label: 'Satellite',
-  //   attributions: '© OpenStreetMap contributors © Carto',
-  //   url: 'https://basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png',
-  //   thumb: 'https://carto.com/help/images/building-maps/basemaps/dark_all.png',
-  // },
-
-  // {
-  //   id: 'world_imagery',
-  //   label: 'Satellite',
-  //   attributions: 'Map tiles by Stamen Design, © OpenStreetMap contributors',
-  //   url: 'https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png',
-  //   thumb: 'https://stamen-tiles.a.ssl.fastly.net/terrain/4/2/5.png',
-  // },
-
-  // {
-  //   id: 'gray_scale',
-  //   label: 'Gray scale',
-  //   attributions: '© OpenStreetMap contributors © Wikimedia',
-  //   url: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png',
-  //   thumb: 'https://maps.wikimedia.org/osm-intl/4/8/5.png',
-  // },
   {
     id: 'world_imagery',
     label: 'Satellite',
     attributions:
-      'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer" target="_blank">Esri</a>',
+      'Tiles &copy; <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer" target="_blank">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     thumb: 'https://ecodatacube.eu/images/osm_overview.png',
   },
-
-  // {
-  //   id: 'world_imagery',
-  //   label: 'Satellite',
-  //   attributions:
-  //     'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer" target="_blank">Esri</a>',
-  //   url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  //   thumb: 'https://opentopomap.org/img/preview.png',
-  // },
 ];
 
 export const LABELS: LabelProps[] = [
   {
     id: 'dark',
     label: 'Dark',
+    // CARTO Dark Matter labels-only overlay — OSM data, CC BY open license
     attributions:
-      'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-    url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer/tile/{z}/{y}/{x}',
+      '© <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions" target="_blank">CARTO</a>',
+    url: 'https://basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png',
     thumb: '',
   },
   {
     id: 'light',
     label: 'Light',
-    attributions: '© OpenStreetMap contributors, © CartoDB',
-    url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+    // CARTO Voyager labels-only overlay — cleaner/minimal, fewer sea/ocean translations
+    attributions:
+      '© <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions" target="_blank">CARTO</a>',
+    url: 'https://basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png',
     thumb: 'https://ecodatacube.eu/images/osm_overview.png',
   },
   {
