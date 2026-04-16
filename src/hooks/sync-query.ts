@@ -45,7 +45,7 @@ export const useSyncDatasetType = () =>
 export const useSyncBasemapLabelsSettings = () =>
   useQueryState(
     'basemap-labels',
-    parseAsJson<'dark' | 'light' | 'no-label'>().withDefault('light')
+    parseAsJson<'dark' | 'light' | 'no-label'>().withDefault('no-label')
   );
 
 export const useSyncSearchGeostoriesGlobe = () =>

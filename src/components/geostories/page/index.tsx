@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { useAtom, useAtomValue } from 'jotai';
 
@@ -26,6 +26,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
   const [isHistogramActive] = useAtom(histogramVisibilityAtom);
+  const hasInitialized = useRef(false);
 
   const { data: geostoryData, isLoading: isGeostoryLoading } = useGeostoryParsed({ geostory_id });
   const { data: layersData } = useGeostoryLayers({ geostory_id });
@@ -41,7 +42,15 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
   );
 
   useEffect(() => {
-    if (geostoryLayers?.length && !layers) {
+    // Guard: only auto-initialize layers once per geostory mount.
+    // Without this, removing a layer sets `layers` to null which re-triggers
+    // this effect and re-adds the layer the user just removed.
+    if (hasInitialized.current) return;
+    if (!geostoryLayers?.length) return;
+
+    hasInitialized.current = true;
+
+    if (!layers) {
       void setLayers(
         [
           {
