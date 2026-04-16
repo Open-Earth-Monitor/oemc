@@ -1,18 +1,19 @@
-import { FC } from 'react';
+'use client';
 
-import { cn } from '@/lib/classnames';
+import { FC, useState } from 'react';
 
 import { ALL_CATEGORY, CategoryId, CATEGORIES_COLORS } from '@/constants/categories';
-
 import { useSyncCategories } from '@/hooks/sync-query';
 
-type SidebarProps = {
-  type?: CategoryId | typeof ALL_CATEGORY.id;
-  enabled?: boolean;
-};
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+
+const GRADIENT = 'linear-gradient(132deg, #1EEDBF 0%, #75A1FF 100%)';
+const GRADIENT_GLOW = '0 0 14px 3px rgba(30, 237, 191, 0.35)';
+// black-400 — sidebar bg, used in gradient border trick
+const SIDEBAR_BG = '#0B1825';
 
 type SidebarButtonProps = {
-  id: SidebarProps['type'];
+  id: CategoryId | typeof ALL_CATEGORY.id;
   label: string;
 };
 
@@ -21,34 +22,86 @@ export type SidebarItemProps = {
   button: SidebarButtonProps;
 };
 
-const SidebarItem = ({ Icon, button }: SidebarItemProps) => {
+const SidebarItem = ({ Icon, button: btn }: SidebarItemProps) => {
   const [categories, setCategory] = useSyncCategories();
+  const [isHovered, setIsHovered] = useState(false);
 
-  const category = categories?.[0] ?? null;
-  const isActive = category === button.id;
+  const isActive = categories?.[0] === btn.id;
+  const isAll = btn.id === ALL_CATEGORY.id;
+  const categoryColor = CATEGORIES_COLORS[btn.id]?.base ?? CATEGORIES_COLORS['Unknown']?.base;
+
+  const handleClick = () => setCategory([btn.id] as CategoryId[] | 'All');
+
+  /**
+   * Outer button style — border-2 + p-[2px] always present (constant size = 40px).
+   * Only colors change per state. Total: inner 32px + padding 4px + border 4px = 40px.
+   *
+   * Active:   border + bg both = categoryColor (or gradient for All)
+   * Hover:    border = categoryColor, bg = transparent
+   * Inactive: border = white/20%, bg = transparent
+   */
+  const outerStyle = (): React.CSSProperties => {
+    if (isActive) {
+      if (isAll) {
+        return {
+          border: '1px solid transparent',
+          background: GRADIENT,
+          backgroundOrigin: 'border-box',
+          boxShadow: GRADIENT_GLOW,
+        };
+      }
+      return {
+        border: `1px solid ${categoryColor}`,
+        background: categoryColor,
+        boxShadow: `0 0 14px 4px ${categoryColor}55`,
+      };
+    }
+
+    if (isHovered) {
+      if (isAll) {
+        return {
+          border: '1px solid transparent',
+          background: `linear-gradient(${SIDEBAR_BG}, ${SIDEBAR_BG}) padding-box, ${GRADIENT} border-box`,
+        };
+      }
+      return { border: `1px solid ${categoryColor}` };
+    }
+
+    return { border: '1px solid rgba(255, 255, 230, 0.2)' };
+  };
 
   return (
-    <button
-      className={cn(
-        'flex h-12 w-12 items-center justify-center rounded-full bg-white-950 text-white-700 transition-all duration-300 hover:text-white-500',
-        { 'text-black-500': isActive }
-      )}
-      onClick={() => setCategory([button.id] as CategoryId[] | 'All')}
-    >
-      <div
-        className={cn(
-          'group flex flex-col items-center space-y-4 rounded-full bg-white-950 p-2 transition-transform duration-300'
-        )}
-        style={{ color: isActive ? 'text-black-500' : CATEGORIES_COLORS[button.id]?.base }}
+    <Tooltip delayDuration={300}>
+      <TooltipTrigger asChild>
+        <button
+          className="rounded-full p-2 transition-all duration-300"
+          style={outerStyle()}
+          onClick={handleClick}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {/* Inner — always 32px (h-8 w-8), bg + icon color change per state */}
+          <span
+            className="flex h-8 w-8 items-center justify-center rounded-full p-2 transition-all duration-300"
+            style={{
+              background: isActive ? '#FFFFE6' : 'rgba(255, 255, 230, 0.2)',
+              // color cascades into SVG stroke-current + fill-current
+              color: isActive ? '#09131D' : categoryColor,
+            }}
+          >
+            <Icon className="h-6 w-6 fill-current stroke-current stroke-[0.2px]" />
+            <span className="sr-only">{btn.label}</span>
+          </span>
+        </button>
+      </TooltipTrigger>
+      <TooltipContent
+        side="right"
+        sideOffset={12}
+        className="rounded-full bg-white-500 px-3 py-2 font-satoshi text-xs font-medium text-black-500 shadow-none"
       >
-        <Icon
-          style={{ color: isActive ? 'text-black-500' : CATEGORIES_COLORS[button.id]?.base }}
-          className="h-6 w-6 fill-current stroke-black-100 stroke-[0.2px]"
-        />
-
-        <span className="sr-only">{button.label}</span>
-      </div>
-    </button>
+        {btn.label}
+      </TooltipContent>
+    </Tooltip>
   );
 };
 

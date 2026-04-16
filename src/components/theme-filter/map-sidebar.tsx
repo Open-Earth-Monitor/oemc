@@ -1,10 +1,8 @@
 'use client';
 
-import { cn } from '@/lib/classnames';
-
 import { useSyncCategories } from '@/hooks/sync-query';
 
-import { ALL_CATEGORY, CATEGORIES, CATEGORIES_COLORS } from '@/constants/categories';
+import { ALL_CATEGORY, CATEGORIES } from '@/constants/categories';
 import { SIDEBAR_THEME_FILTERS } from '@/constants/sidebar';
 
 import SidebarItem from './map-sidebar-item';
@@ -27,33 +25,18 @@ const SidebarThemeFilters = () => {
         className="mx-auto flex h-full flex-col items-center justify-start space-y-2 p-2"
       >
         <ul role="list" className="flex w-full flex-col items-center space-y-3">
-          {[ALL_CATEGORY, ...CATEGORIES].map((category) => {
-            const Icon = category.Icon;
-            return (
-              <li
-                key={category.id}
-                className={cn({
-                  '-outline-offset- w-full rounded-full border border-white-950 outline outline-4':
-                    true,
-                })}
-                style={{
-                  outlineColor:
-                    selectedCategory === category.id
-                      ? CATEGORIES_COLORS[selectedCategory]?.base ||
-                        CATEGORIES_COLORS['Unknown']?.base
-                      : '#09131d',
-                }}
-              >
-                <SidebarItem
-                  Icon={Icon}
-                  button={{
-                    id: category.id,
-                    label: category.label,
-                  }}
-                />
-              </li>
-            );
-          })}
+          {[ALL_CATEGORY, ...CATEGORIES].map((category) => (
+            <li
+              key={category.id}
+              className="flex w-full items-center justify-center"
+              aria-current={selectedCategory === category.id ? 'true' : undefined}
+            >
+              <SidebarItem
+                Icon={category.Icon}
+                button={{ id: category.id, label: category.label }}
+              />
+            </li>
+          ))}
         </ul>
       </nav>
     </aside>
