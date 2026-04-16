@@ -14,6 +14,7 @@ import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/syn
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const TIMEOUT_STEP_DURATION = 2500;
+const TICK_THRESHOLD = 20;
 
 const Timeline: FC<{
   layerId: LayerParsed['layer_id'];
@@ -38,6 +39,11 @@ const Timeline: FC<{
     [date, range]
   );
 
+  const currentIndex = useMemo(
+    () => Math.max(0, range.findIndex((r) => r.value === currentRange?.value)),
+    [range, currentRange]
+  );
+
   const isCompareActive = useMemo(
     () => compareLayers?.[0]?.id === layerId,
     [layerId, compareLayers]
@@ -49,6 +55,21 @@ const Timeline: FC<{
       void setLayers([{ ...layers?.[0], date: nextRange.value }]);
     },
     isPlaying ? TIMEOUT_STEP_DURATION : null
+  );
+
+  const handleTickClick = useCallback(
+    (value: string) => {
+      if (isCompareActive) return;
+      void setLayers([{ ...layers?.[0], date: value }]);
+    },
+    [isCompareActive, layers, setLayers]
+  );
+
+  const handleSliderChange = useCallback(
+    (index: number) => {
+      void setLayers([{ ...layers?.[0], date: range[index].value }]);
+    },
+    [layers, setLayers, range]
   );
 
   const startRangelabel = useMemo(() => range && range[0]?.label, [range]);
@@ -71,16 +92,39 @@ const Timeline: FC<{
             )}
           </button>
           <div className="relative flex w-full flex-col space-y-2 bg-white-950">
-            <div className="max-w flex w-full  overflow-hidden">
-              {range.map((r) => (
-                <div key={r.value} className="flex w-full items-center justify-center">
+            <div className="max-w flex w-full overflow-hidden">
+              {range.length <= TICK_THRESHOLD ? (
+                range.map((r) => (
                   <div
-                    className={cn('h-[6px] w-[1px] bg-white-800', {
-                      'w-[1.5px] bg-accent-green': r.value === currentRange?.value,
+                    key={r.value}
+                    className={cn('flex w-full items-center justify-center', {
+                      'cursor-pointer': !isCompareActive,
                     })}
-                  />
-                </div>
-              ))}
+                    onClick={() => handleTickClick(r.value)}
+                  >
+                    <div
+                      className={cn('h-[6px] w-[1px] bg-white-800', {
+                        'w-[1.5px] bg-accent-green': r.value === currentRange?.value,
+                      })}
+                    />
+                  </div>
+                ))
+              ) : (
+                <input
+                  type="range"
+                  min={0}
+                  max={range.length - 1}
+                  value={currentIndex}
+                  disabled={isCompareActive}
+                  onChange={(e) => handleSliderChange(Number(e.target.value))}
+                  className={cn(
+                    'h-[6px] w-full cursor-pointer appearance-none rounded-none bg-white-800',
+                    '[&::-webkit-slider-thumb]:h-[6px] [&::-webkit-slider-thumb]:w-[3px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:bg-accent-green',
+                    '[&::-moz-range-thumb]:h-[6px] [&::-moz-range-thumb]:w-[3px] [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:bg-accent-green',
+                    'disabled:cursor-not-allowed disabled:opacity-50'
+                  )}
+                />
+              )}
               <div className="absolute left-0 right-0 top-2 flex justify-between font-satoshi text-sm tracking-tight text-secondary-500">
                 <div>{startRangelabel}</div>
                 <div>{endRangelabel}</div>

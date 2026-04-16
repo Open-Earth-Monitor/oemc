@@ -5,10 +5,11 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 
 import CardHeader from '@/components/sidebar/card-header';
+import type { GeostoryParsed } from '@/types/geostories';
 
 // import { getValidPublications } from '@/utils/geostories';
 
-function DatasetCardGeostory({ theme, title, color, id, geostory_bbox }) {
+function DatasetCardGeostory({ theme, title, color, id, geostory_bbox }: GeostoryParsed) {
   // const validPublications = useMemo(() => getValidPublications(publications), [publications]);
   return (
     <div className="relative">

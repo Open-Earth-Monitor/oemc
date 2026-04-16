@@ -5,6 +5,7 @@ import { Monitor } from '@/types/monitors';
 
 import DatasetCard from '@/components/datasets/card';
 import MonitorDialog from '@/components/monitors/dialog';
+import DatasetCardGeostory from '@/components/sidebar/card-geostory-content';
 
 interface MonitorViewProps {
   data: Monitor & {
@@ -15,7 +16,7 @@ interface MonitorViewProps {
 }
 
 const MonitorView: FC<MonitorViewProps> = ({ data, geostoryLayers }) => {
-  const { color, description } = data || {};
+  const { color, description, geostories } = data || {};
 
   return (
     <>
@@ -27,7 +28,7 @@ const MonitorView: FC<MonitorViewProps> = ({ data, geostoryLayers }) => {
       </div>
       {/* Datasets/layers cards */}
       {!!geostoryLayers?.length ? (
-        <div className="border-t border-white-900">
+        <div>
           <h2 className="py-2 font-medium">Datasets</h2>
           <ul className="space-y-4 sm:space-y-6" data-testid="datasets-list">
             {geostoryLayers?.map((dataset) => {
@@ -46,6 +47,21 @@ const MonitorView: FC<MonitorViewProps> = ({ data, geostoryLayers }) => {
         </div>
       ) : (
         <p>No layers available for this monitor.</p>
+      )}
+      {/* Geostories cards */}
+      {!!geostories?.length && (
+        <div>
+          <h2 className="py-2 font-medium">Geostories</h2>
+          <ul className="space-y-4 sm:space-y-6" data-testid="geostories-list">
+            {geostories?.map((geostory) => {
+              return (
+                <li key={geostory?.id}>
+                  <DatasetCardGeostory {...geostory} color={color} />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       )}
     </>
   );

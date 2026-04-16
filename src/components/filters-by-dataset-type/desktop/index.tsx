@@ -25,7 +25,7 @@ const FilterByDatasetType = ({
 }: FilterByDatasetTypeProps) => {
   return (
     <div className={cn('flex items-center justify-between gap-2.5', className)}>
-      <span>Show:</span>
+      <span className="text-xs text-white-500/50">Show:</span>
       <Select value={active} onValueChange={handleDatasetTypeChange}>
         <SelectTrigger>
           <SelectValue

@@ -110,12 +110,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
         </div>
       </div>
 
-      <p
-        data-testid="dataset-description"
-        className="border-b border-black-100 pb-3 text-secondary-500"
-      >
-        {description}
-      </p>
+      <p data-testid="dataset-description">{description}</p>
 
       {id && isHistogramActive && isActive && (
         <Histogram color={color} title={title} id={id} isGeostory={isGeostory} />

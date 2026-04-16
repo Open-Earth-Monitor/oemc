@@ -16,7 +16,6 @@ import Badge from '@/components/badge';
 import FilterByDatasetType from '@/components/filters-by-dataset-type/desktop';
 import Loading from '@/components/loading';
 import CardList from '@/components/sidebar/card-list';
-import SidebarCheckbox from '@/components/sidebar/checkbox';
 import SortBy from '@/components/sort-by';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -88,13 +87,11 @@ const MobileGlobeBar = () => {
                   handleDatasetTypeChange={setDatasetType}
                   className="gap-10"
                 />
-                <div className="flex items-center justify-between">
-                  <SidebarCheckbox setShowDetail={setShowDetail} />
-                  <SortBy
-                    sortingCriteria={sortingCriteria}
-                    handleSortingCriteria={setSortingCriteria}
-                  />
-                </div>
+
+                <SortBy
+                  sortingCriteria={sortingCriteria}
+                  handleSortingCriteria={setSortingCriteria}
+                />
               </section>
             </header>
 
