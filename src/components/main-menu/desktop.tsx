@@ -13,7 +13,7 @@ const MainMenuDesktop = () => {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
-        className="flex items-center space-x-3.5 rounded-full border border-black-100 bg-black-300 px-5 py-2.5 font-satoshi hover:bg-black-100"
+        className="flex items-center space-x-3.5 rounded-full border border-black-100 bg-black-300 px-5 py-2.5 font-satoshi hover:bg-black-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green focus-visible:ring-offset-2 focus-visible:ring-offset-black-500"
         data-testid="main-navigation-trigger"
       >
         <MainMenuTrigger open={open} />

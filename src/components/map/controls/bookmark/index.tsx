@@ -79,9 +79,10 @@ export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
   return (
     <Sheet>
       <SheetTrigger
+        aria-label="Open bookmarks"
         className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
       >
-        <AiOutlineStar size={22} strokeWidth={2} />
+        <AiOutlineStar size={22} strokeWidth={2} aria-hidden="true" />
       </SheetTrigger>
       <SheetContent
         side="right"
@@ -95,8 +96,12 @@ export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
             {isInputVisible && (
               <div>
                 <div className="flex items-center">
-                  <AiFillStar className="h-5 w-5" />
+                  <AiFillStar className="h-5 w-5" aria-hidden="true" />
+                  <label htmlFor="bookmark-name" className="sr-only">
+                    Bookmark name
+                  </label>
                   <input
+                    id="bookmark-name"
                     type="text"
                     defaultValue=""
                     placeholder="Insert bookmark name..."
@@ -148,8 +153,13 @@ export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
                       {name}
                     </a>
                   </div>
-                  <button type="button" onClick={() => handleRemoveBookmark(name)}>
-                    <Cross2Icon className="h-3 w-3" />
+                  <button
+                    type="button"
+                    aria-label={`Remove bookmark: ${name}`}
+                    onClick={() => handleRemoveBookmark(name)}
+                    className="focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
+                  >
+                    <Cross2Icon className="h-3 w-3" aria-hidden="true" />
                   </button>
                 </li>
               ))}

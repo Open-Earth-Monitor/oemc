@@ -53,6 +53,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({
         href={`/explore/${type === 'monitor' ? 'monitor' : 'geostory'}/${id}?bbox=${bbox}`}
         onClick={handleClick}
         data-testid={`card-title-link-${id}`}
+        className="focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
       >
         <h2
           style={{ color }}

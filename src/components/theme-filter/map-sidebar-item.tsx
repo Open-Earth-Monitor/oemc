@@ -74,7 +74,9 @@ const SidebarItem = ({ Icon, button: btn }: SidebarItemProps) => {
     <Tooltip delayDuration={300}>
       <TooltipTrigger asChild>
         <button
-          className="rounded-full p-2 transition-all duration-300"
+          aria-label={btn.label}
+          aria-pressed={isActive}
+          className="rounded-full p-2 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green focus-visible:ring-offset-2 focus-visible:ring-offset-black-500"
           style={outerStyle()}
           onClick={handleClick}
           onMouseEnter={() => setIsHovered(true)}

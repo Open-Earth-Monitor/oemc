@@ -46,7 +46,7 @@ const ShareControl: FC<{
           aria-label="share tool"
           className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
         >
-          <HiOutlineShare size={22} />
+          <HiOutlineShare size={22} aria-hidden="true" />
         </button>
       </PopoverTrigger>
       <PopoverContent

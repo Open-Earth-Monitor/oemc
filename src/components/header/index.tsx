@@ -6,7 +6,7 @@ import MainMenuDesktop from '@/components/main-menu/desktop';
 
 const Header = ({ className }: { className?: string }) => {
   return (
-    <div
+    <header
       className={cn(
         'pointer-events-auto z-[1000] m-auto flex w-full flex-1 items-center px-4 py-2.5 sm:py-5',
         className
@@ -16,7 +16,7 @@ const Header = ({ className }: { className?: string }) => {
         <Logo />
         <MainMenuDesktop />
       </div>
-    </div>
+    </header>
   );
 };
 

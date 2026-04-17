@@ -5,11 +5,17 @@ import { Geostory } from '@/types/geostories';
 
 import { CATEGORIES_COLORS } from '@/constants/categories';
 
+import { getGeostoryImageUrl } from '@/hooks/geostories';
+
 const GeostoryItem = (props: Geostory) => {
   const { id, title: label, theme } = props;
 
   return (
-    <Link href={`explore/geostory/${id}`} data-testid={`geostory-item-${id}`} className="group/item flex cursor-pointer items-start">
+    <Link
+      href={`explore/geostory/${id}`}
+      data-testid={`geostory-item-${id}`}
+      className="group/item flex cursor-pointer items-start"
+    >
       <div
         className="mr-2 h-[79px] w-px shrink-0 whitespace-normal transition-[width] duration-200 ease-out group-hover/item:w-1"
         style={{ backgroundColor: CATEGORIES_COLORS[theme].base || '#FFFFFF' }}
@@ -17,7 +23,7 @@ const GeostoryItem = (props: Geostory) => {
 
       <div className="relative mr-4 h-[79px] w-[79px] shrink-0">
         <Image
-          src={`/images/geostories/${id}.jpg`}
+          src={getGeostoryImageUrl(id)}
           alt={label}
           width={79}
           height={79}

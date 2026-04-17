@@ -23,7 +23,7 @@ import type { ControlsProps } from './types';
 
 type ControlsPropsWithChildren = PropsWithChildren<ControlsProps>;
 const ATTRIBUTION_STYLES =
-  'cursor-pointer text-5xl text-[10px] text-secondary-500 shadow-brand-500 drop-shadow-[2px_2px_2px_var(--tw-shadow-color)] whitespace-nowrap';
+  'cursor-pointer text-5xl text-[10px] text-secondary-500 shadow-brand-500 drop-shadow-[2px_2px_2px_var(--tw-shadow-color)] whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded';
 export const Controls: FC<ControlsPropsWithChildren> = ({
   className = 'absolute bottom-3 space-x-4',
 }: ControlsPropsWithChildren) => {
@@ -37,7 +37,7 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
     >
       <Dialog>
         <DialogTrigger asChild data-testid="attributions">
-          <div className={ATTRIBUTION_STYLES}>Attributions</div>
+          <button type="button" className={ATTRIBUTION_STYLES}>Attributions</button>
         </DialogTrigger>
         <DialogContent className="top-1/2 w-[740px] -translate-y-[50%] transform bg-secondary-500 text-brand-500">
           <DialogHeader className="space-y-5">
@@ -60,7 +60,7 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
                     href="https://cordis.europa.eu/project/id/101059548"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline focus:outline-secondary-600"
+                    className="underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
                     data-test-id="OEMC-factsheet-link"
                   >
                     grant agreement No. 101059548.
@@ -76,7 +76,7 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
       </Dialog>
       <Dialog>
         <DialogTrigger asChild data-testid="disclaimer-link">
-          <div className={ATTRIBUTION_STYLES}>Disclaimer</div>
+          <button type="button" className={ATTRIBUTION_STYLES}>Disclaimer</button>
         </DialogTrigger>
         <DialogContent className="top-1/2 w-[665px] -translate-y-[50%] transform bg-secondary-500 text-brand-500">
           <DialogHeader className="space-y-5">
@@ -137,7 +137,7 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
       </a>
       <Popover>
         <PopoverTrigger asChild data-testid="social-media">
-          <div className={ATTRIBUTION_STYLES}>Follow us</div>
+          <button type="button" className={ATTRIBUTION_STYLES}>Follow us</button>
         </PopoverTrigger>
         <PopoverContent
           align={isTablet ? 'end' : 'center'}

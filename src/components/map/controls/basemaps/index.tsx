@@ -44,6 +44,7 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
       <Popover>
         <TooltipTrigger asChild>
           <PopoverTrigger
+            aria-label="Map settings"
             className={cn({
               'group bg-brand-500 stroke-secondary-500 hover:stroke-brand-500': true,
               [CONTROL_BUTTON_STYLES.mobile]: isMobile,
@@ -56,6 +57,7 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
             >
               <path
                 d="M20.5852 14.7002H16.4992C16.0218 14.7002 15.564 14.8898 15.2264 15.2274C14.8889 15.565 14.6992 16.0228 14.6992 16.5002V20.5862"
