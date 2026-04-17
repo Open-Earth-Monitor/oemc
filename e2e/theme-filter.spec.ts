@@ -22,7 +22,9 @@ const FEATURED_GEOSTORY_IDS = [
 ];
 
 async function fetchGeostories(page: Page): Promise<Geostory[]> {
+  if (!API_URL) throw new Error('NEXT_PUBLIC_API_URL is not set');
   const response = await page.request.get(`${API_URL}/geostories`);
+  if (!response.ok()) throw new Error(`Failed to fetch geostories: ${response.status()}`);
   return response.json();
 }
 

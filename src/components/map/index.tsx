@@ -540,6 +540,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
         {isRegionsLayerActive && <NutsLayer />}
 
+        {basemap === 'world_imagery' && (
+          <RLayerTile
+            zIndex={99}
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{z}/{y}/{x}"
+          />
+        )}
 
         <RLayerTile zIndex={100} url={labelUrl} />
 
