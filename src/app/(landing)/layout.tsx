@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 export default function GlobeLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative flex-1 overflow-hidden bg-[url('/images/landing/bg.png')] bg-cover bg-right-bottom text-primary">
+      <h1 className="sr-only">Open Earth Monitor – Geospatial Data Explorer</h1>
       {/* Globe - full-screen base layer */}
       <div className="absolute inset-0 z-0">{children}</div>
 

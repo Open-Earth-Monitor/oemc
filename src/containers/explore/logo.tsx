@@ -11,7 +11,7 @@ export default function Logo({ className }: { className?: string }) {
       href="/"
       aria-label="Go to homepage"
       title="Go to homepage"
-      className={cn('block h-[35px] w-[140px] shrink-0', className)}
+      className={cn('block h-[35px] w-[140px] shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded', className)}
     >
       <Image
         alt="Open-earth-monitor"

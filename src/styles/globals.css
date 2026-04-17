@@ -169,11 +169,12 @@
 }
 
 .ol-control button:hover {
-  outline: none !important;
+  outline: none;
 }
 
-.ol-control button:focus {
-  outline: none !important;
+.ol-control button:focus-visible {
+  outline: 2px solid hsl(167, 85%, 52%) !important;
+  outline-offset: 2px !important;
 }
 
 .ol-zoom {
@@ -273,6 +274,17 @@
   height: 15px;
   width: 15px;
   background-color: hsl(60, 100%, 95%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @keyframes shimmer {

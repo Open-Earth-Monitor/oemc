@@ -59,8 +59,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${satoshi.variable} ${inter.variable}`}>
       <body className="mx-auto min-h-screen overflow-x-hidden bg-black-500 font-inter">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-[9999] focus:rounded focus:bg-accent-green focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-black-500 focus:outline-none"
+        >
+          Skip to main content
+        </a>
         <div className="flex min-h-screen flex-col">
-          <main className="relative flex flex-1 flex-col">
+          <main id="main-content" className="relative flex flex-1 flex-col">
             <Providers>
               <LayoutClient>{children}</LayoutClient>
             </Providers>

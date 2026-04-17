@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 export default function ExploreLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative">
+      <h1 className="sr-only">Explore – Open Earth Monitor</h1>
       <SidebarProvider>
         <SidebarWrapper>{children}</SidebarWrapper>
       </SidebarProvider>

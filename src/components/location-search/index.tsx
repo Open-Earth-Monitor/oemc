@@ -71,6 +71,7 @@ function LocationSearchComponent({
     <div>
       <Popover>
         <PopoverTrigger
+          aria-label="Search location"
           className={cn(
             'z-50',
             isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default,
@@ -105,12 +106,19 @@ function LocationSearchComponent({
             />
 
             {locationSearch && (
-              <button onClick={handleReset} className="absolute right-6 text-brand-500">
-                <LuX className="h-4 w-4" />
+              <button
+                onClick={handleReset}
+                aria-label="Clear search"
+                className="absolute right-6 text-brand-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
+              >
+                <LuX className="h-4 w-4" aria-hidden="true" />
               </button>
             )}
           </div>
           <div
+            role="status"
+            aria-live="polite"
+            aria-label="Location search results"
             className={cn({
               'right-0 top-[17px] z-50 max-h-[40vh] flex-1 overflow-y-auto rounded-b-2xl bg-white-500 font-inter leading-4 text-secondary-700 shadow-lg':
                 true,
@@ -125,7 +133,7 @@ function LocationSearchComponent({
                     role="option"
                     aria-selected="false"
                     tabIndex={0}
-                    className="cursor-pointer p-2 text-sm text-brand-500 hover:bg-alert"
+                    className="cursor-pointer p-2 text-sm text-brand-500 hover:bg-alert focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-green"
                     onClick={() => handleOptionClick(option)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {

@@ -47,9 +47,9 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
     <Dialog>
       <DialogTrigger
         data-testid={`card-button-${id}`}
-        className="flex items-center space-x-3 text-xs font-bold"
+        className="flex items-center space-x-3 text-xs font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
       >
-        <LuInfo className="h-6 w-6" />
+        <LuInfo className="h-6 w-6" aria-hidden="true" />
         <span>More info</span>
       </DialogTrigger>
       <DialogContent
