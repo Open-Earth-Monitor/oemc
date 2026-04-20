@@ -6,6 +6,7 @@ import { Geostory } from '@/types/geostories';
 import { LayerParsed, Layer } from '@/types/layers';
 
 import DatasetCard from '@/components/datasets/card';
+import DatasetCardMonitor from '@/components/sidebar/card-monitor-content';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
@@ -22,16 +23,21 @@ interface GeostoriesViewProps {
 }
 const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, comparisonLayer }) => {
   const [datasetStatus, setStatus] = useState<'open' | 'closed'>('open');
+  const [monitorStatus, setMonitorStatus] = useState<'open' | 'closed'>('open');
   const { color, description, monitors } = data || {};
 
   const handleDatasetsToggle = () => {
     setStatus((prevStatus) => (prevStatus === 'open' ? 'closed' : 'open'));
   };
 
+  console.log(monitors);
+
   return (
     <>
       <div className="relative space-y-6 py-3">
-        <p className="text-sm font-medium text-white-50" data-testid="geostory-description">{description}</p>
+        <p className="text-sm font-medium text-white-50" data-testid="geostory-description">
+          {description}
+        </p>
         <div className="flex w-full justify-end space-y-4">
           <GeostoryDialog {...data} />
         </div>
@@ -74,21 +80,36 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
       )}
       {/* Monitors list */}
       {!!monitors?.length && (
-        <div className="space-y-4 pt-1 text-xs">
-          <p>Monitors</p>
-          <ul className="space-y-2.5">
-            {monitors.map((monitor) => (
-              <li key={monitor.id} className="font-bold underline">
-                <Link
-                  href={`/explore/monitor/${monitor.id}`}
-                  data-testid={`monitor-link-${monitor.id}`}
-                >
-                  {monitor.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Collapsible
+          defaultOpen={true}
+          onOpenChange={(open) => setMonitorStatus(open ? 'open' : 'closed')}
+        >
+          <div className="flex w-full items-center justify-between">
+            <h2 className="py-2 font-medium">Monitors</h2>
+            <CollapsibleTrigger
+              className="w-fit p-0 data-[state=open]:bg-transparent"
+              data-testid="collapse-monitors-button"
+            >
+              <Button variant={monitorStatus === 'open' ? 'outline' : 'default'} size="sm">
+                {monitorStatus === 'open' ? 'Collapse' : 'Expand'}
+              </Button>
+            </CollapsibleTrigger>
+          </div>
+          <CollapsibleContent className="pt-4 transition-all duration-500 ease-in-out data-[state=closed]:-translate-y-2 data-[state=open]:translate-y-0 data-[state=closed]:opacity-0 data-[state=open]:opacity-100">
+            <ul className="space-y-2.5">
+              {monitors.map((monitor) => (
+                <li key={monitor.id} className="text-xs font-bold underline">
+                  <Link
+                    href={`/explore/monitor/${monitor.id}`}
+                    data-testid={`monitor-link-${monitor.id}`}
+                  >
+                    <DatasetCardMonitor {...monitor} color={color} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </CollapsibleContent>
+        </Collapsible>
       )}
     </>
   );

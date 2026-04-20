@@ -19,25 +19,20 @@ const MainMenuDesktop = () => {
         <MainMenuTrigger open={open} />
       </PopoverTrigger>
       <PopoverContent
-        className="b z-[2000] min-w-fit  overflow-hidden border-none bg-secondary-500
-    px-0
-    py-1
-    font-inter
-    text-black-500
+        className="z-[2000] min-w-fit  overflow-hidden border-none bg-secondary-500 px-0 py-1 font-inter text-black-500
+        data-[state=open]:animate-in
+        data-[state=closed]:animate-out
+        data-[state=closed]:fade-out-0
+        data-[state=open]:fade-in-0
+        data-[state=closed]:zoom-out-95
+        data-[state=open]:zoom-in-95
 
-    data-[state=open]:animate-in
-    data-[state=closed]:animate-out
-    data-[state=closed]:fade-out-0
-    data-[state=open]:fade-in-0
-    data-[state=closed]:zoom-out-95
-    data-[state=open]:zoom-in-95
-
-    data-[side=bottom]:slide-in-from-top-10
-    data-[side=left]:slide-in-from-right-10
-    data-[side=right]:slide-in-from-left-10
-    data-[side=top]:slide-in-from-bottom-10
+        data-[side=bottom]:slide-in-from-top-10
+        data-[side=left]:slide-in-from-right-10
+        data-[side=right]:slide-in-from-left-10
+        data-[side=top]:slide-in-from-bottom-10
         data-[state=closed]:duration-500
-    data-[state=open]:duration-500"
+        data-[state=open]:duration-500"
         sideOffset={0}
         align="end"
       >

@@ -4,9 +4,11 @@ import Link from 'next/link';
 
 import { ChevronRight } from 'lucide-react';
 
-import { getGeostoryImageUrl } from '@/hooks/geostories';
-import CardHeader from '@/components/sidebar/card-header';
 import type { GeostoryParsed } from '@/types/geostories';
+
+import { getGeostoryImageUrl } from '@/hooks/geostories';
+
+import CardHeader from '@/components/sidebar/card-header';
 
 // import { getValidPublications } from '@/utils/geostories';
 
