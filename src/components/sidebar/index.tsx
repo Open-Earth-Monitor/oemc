@@ -10,8 +10,7 @@ import SortBy from '@/components/sort-by';
 import { SidebarContent, SidebarHeader } from '@/components/ui/sidebar';
 
 function MapSidebar() {
-  const { results, isLoading, isFetched, sortingCriteria, showDetail, setSortingCriteria } =
-    useDatasets();
+  const { results, isLoading, isFetched, sortingCriteria, setSortingCriteria } = useDatasets();
 
   return (
     <>
@@ -38,7 +37,7 @@ function MapSidebar() {
         </div>
         {/* Cards - Monitors & Geostories */}
         {isLoading && !isFetched && <Loading />}
-        {!isLoading && isFetched && results && <CardList data={results} showMore={showDetail} />}
+        {!isLoading && isFetched && results && <CardList data={results} />}
       </SidebarContent>
     </>
   );

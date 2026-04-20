@@ -6,17 +6,16 @@ import DatasetCardMonitor from '@/components/sidebar/card-monitor-content';
 
 interface CardListProps {
   data: MonitorsAndGeostoriesParsed;
-  showMore: boolean;
   className?: HTMLDivElement['className'];
 }
 
-export default function CardList({ data, showMore, className }: CardListProps) {
+export default function CardList({ data, className }: CardListProps) {
   return (
     <ul className={className}>
       {data?.map((parsed) => (
         <li key={parsed.id} className="mb-4">
           <SidebarDatasetCard {...parsed}>
-            {parsed.type === 'monitor' && <DatasetCardMonitor {...parsed} />}
+            {parsed.type === 'monitor' && <DatasetCardMonitor {...parsed} mainContent={true} />}
             {parsed.type === 'geostory' && <DatasetCardGeostory {...parsed} />}
           </SidebarDatasetCard>
         </li>

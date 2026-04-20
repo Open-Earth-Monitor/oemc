@@ -2,9 +2,25 @@ import Link from 'next/link';
 
 import { ChevronRight } from 'lucide-react';
 
+import { useMonitor } from '@/hooks/monitors';
+
+import Loading from '@/components/loading';
 import CardHeader from '@/components/sidebar/card-header';
 
-function DatasetCardMonitor({ theme, title, geostories, color, id, monitor_bbox }) {
+function DatasetCardMonitor({
+  color,
+  id,
+  mainContent,
+}: {
+  color: string;
+  id: string;
+  mainContent?: boolean;
+}) {
+  const { data: monitorData, isLoading: isLoadingMonitor } = useMonitor({ monitor_id: id });
+  const { theme, title, geostories, monitor_bbox } = monitorData || {};
+
+  if (!monitorData) return null;
+
   return (
     <div
       className="group/monitor-card space-y-2 border-l p-[18px] font-satoshi transition-all duration-200 hover:border-l-4"
@@ -18,7 +34,8 @@ function DatasetCardMonitor({ theme, title, geostories, color, id, monitor_bbox 
         id={id}
         bbox={monitor_bbox}
       />
-      {!!geostories.length && (
+      {isLoadingMonitor && <Loading />}
+      {!!geostories.length && !isLoadingMonitor && mainContent && (
         <div className="space-y-2 pt-1 text-xs">
           <p className="text-white-500/50">Related geostories</p>
           <ul className="space-y-2.5">
@@ -29,8 +46,7 @@ function DatasetCardMonitor({ theme, title, geostories, color, id, monitor_bbox 
                     geostory.geostory_bbox ? `?bbox=${geostory.geostory_bbox.join(',')}` : ''
                   }`}
                   data-testid={`geostory-link-${geostory.id}`}
-                  className="font-bold underline
-    decoration-gray-400 hover:decoration-white-500 hover:decoration-2"
+                  className="font-bold underline decoration-gray-400 hover:decoration-white-500 hover:decoration-2"
                 >
                   {geostory.title}
                 </Link>
