@@ -110,5 +110,5 @@ export type NutsDataset = {
 };
 
 export type NuqsData = {
-  dataset: NutsDataset[];
+  dataset?: NutsDataset[];
 };
