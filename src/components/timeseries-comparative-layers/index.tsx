@@ -77,7 +77,7 @@ const TimeSeriesComparativeLayers: FC<{
       {/* Select dates */}
       <div className="flex flex-col space-y-2 text-secondary-500">
         <span className="text-sm">Select date:</span>
-        <div className="flex w-full items-center justify-between gap-6">
+        <div className="flex w-full items-center justify-between gap-4">
           {currentRange && (
             <Select
               value={currentRange.value}
@@ -85,12 +85,13 @@ const TimeSeriesComparativeLayers: FC<{
               open={contentVisibility}
               onOpenChange={setContentVisibility}
             >
-              <SelectTrigger className="w-fit text-xs font-semibold">
+              <SelectTrigger className="min-w-0 max-w-[50%] text-xs font-semibold">
                 <div
                   className={cn(
                     buttonVariants({ variant: 'outline', size: 'sm' }),
-                    'w-full justify-between hover:bg-transparent'
+                    'w-full justify-between overflow-hidden hover:bg-transparent'
                   )}
+                  title={currentRange?.label}
                 >
                   <SelectValue>{currentRange?.label}</SelectValue>
                   <SelectIcon />

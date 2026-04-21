@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import type { FC } from 'react';
+import type { FC, MouseEvent } from 'react';
 
 import { TooltipPortal } from '@radix-ui/react-tooltip';
 import { LuCirclePlay, LuCirclePause } from 'react-icons/lu';
@@ -28,9 +28,13 @@ const Timeline: FC<{
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers] = useSyncCompareLayersSettings();
 
-  const handleTogglePlay = useCallback(() => {
-    void setPlaying((prev) => !prev);
-  }, [isPlaying, setPlaying]);
+  const handleTogglePlay = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation();
+      setPlaying((prev) => !prev);
+    },
+    [setPlaying]
+  );
 
   const date = layers?.[0]?.date;
 
@@ -58,7 +62,8 @@ const Timeline: FC<{
   );
 
   const handleTickClick = useCallback(
-    (value: string) => {
+    (e: MouseEvent, value: string) => {
+      e.stopPropagation();
       if (isCompareActive) return;
       void setLayers([{ ...layers?.[0], date: value }]);
     },
@@ -100,7 +105,7 @@ const Timeline: FC<{
                     className={cn('flex w-full items-center justify-center', {
                       'cursor-pointer': !isCompareActive,
                     })}
-                    onClick={() => handleTickClick(r.value)}
+                    onClick={(e) => handleTickClick(e, r.value)}
                   >
                     <div
                       className={cn('h-[6px] w-[1px] bg-white-800', {

@@ -74,9 +74,11 @@ const MonitorTooltip: FC<TooltipProps> = ({
   };
 
   const dateLabel = leftData.range?.find(({ value }) => value === leftData.date)?.label;
+
   const compareDateLabel =
     rightData.date && leftData.range?.find(({ value }) => value === rightData.date)?.label;
   if (!position || (!leftData?.value && leftData?.value !== 0)) return null;
+
   return (
     <>
       <div className="relative space-y-4">
@@ -101,24 +103,14 @@ const MonitorTooltip: FC<TooltipProps> = ({
           </span>
         )}
         {!!leftData?.value && !isRegionsLayerActive && leftData.range && (
-          <Button
-            variant="default"
-            onClick={handleClick}
-            className="w-full font-inter text-xs"
-            disabled={!leftData.value}
-          >
-            See point-based summary
+          <Button variant="outline" onClick={handleClick} disabled={!leftData.value}>
+            Show point histogram
           </Button>
         )}
 
         {!!leftData?.value && isRegionsLayerActive && leftData.range && (
-          <Button
-            variant="default"
-            onClick={handleHistogram}
-            className="p-2 font-inter text-xs"
-            disabled={!leftData.value}
-          >
-            See regions-based summary
+          <Button variant="outline" onClick={handleHistogram} disabled={!leftData.value}>
+            Show region histogram
           </Button>
         )}
 

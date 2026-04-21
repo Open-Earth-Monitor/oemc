@@ -3,12 +3,12 @@
 import { FC, useCallback, useMemo } from 'react';
 
 import { format } from 'd3-format';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { FiDownload } from 'react-icons/fi';
 
 import { cn } from '@/lib/classnames';
 
-import { lonLatAtom } from '@/app/store';
+import { histogramVisibilityAtom, lonLatAtom } from '@/app/store';
 
 import { downloadCSV } from '@/hooks/datasets';
 import { useLayerParsedSource } from '@/hooks/layers';
@@ -16,6 +16,7 @@ import { usePointData } from '@/hooks/map';
 
 import LineChart from '../../line-chart';
 import Loading from '../../loading';
+import { AnalysisSVG } from '@/SVGS/analysis';
 
 const numberFormat = format(',.2f');
 
@@ -28,6 +29,7 @@ type GeostoryTooltipInfo = {
 
 const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryTooltipInfo) => {
   const lonLat = useAtomValue(lonLatAtom);
+  const setHistogramVisibility = useSetAtom(histogramVisibilityAtom);
 
   const { data } = useLayerParsedSource(
     {
@@ -83,9 +85,21 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryT
     }
   }, [histogramData, histogramPointData, id, title]);
 
+  const handleCloseAnalysis = () => setHistogramVisibility(false);
+
   return (
     <div className="relative space-y-2">
-      <div className="space-y-4 font-satoshi">
+      <div className="space-y-3 font-satoshi font-bold">
+        <div className="flex w-full items-center justify-between gap-4">
+          <div className="flex items-center gap-1 text-white-500">
+            <AnalysisSVG className="h-6 w-6" />
+            <span>Analysis</span>
+          </div>
+
+          <button className="text-xs text-accent-green underline" onClick={handleCloseAnalysis}>
+            Close analysis
+          </button>
+        </div>
         <div className="flex items-center justify-between">
           <h4 className="font-medium" style={{ color }}>
             Location {numberFormat(lonLat[0])}, {numberFormat(lonLat[1])}

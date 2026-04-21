@@ -47,7 +47,7 @@ const isValidDate = (dateStr: string) => {
 export const transformNuqsData = (data: NuqsData) => {
   return (
     data?.dataset?.reduce((acc, { label, avg, max, min }) => {
-      if (Number.isNaN(Number(avg))) return acc;
+      if (avg === null || !Number.isFinite(avg)) return acc;
       let date = label;
       if (!isValidDate(label)) {
         const range = label.split('-');
@@ -61,8 +61,8 @@ export const transformNuqsData = (data: NuqsData) => {
         {
           x: date,
           y: avg,
-          max,
-          min,
+          max: Number.isFinite(max) ? max : null,
+          min: Number.isFinite(min) ? min : null,
         },
       ];
     }, []) || []

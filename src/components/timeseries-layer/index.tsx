@@ -111,7 +111,7 @@ const TimeSeriesSameLayer: FC<{
       {/* Select dates */}
       <div className="flex flex-col space-y-2 text-secondary-500">
         <span className="text-sm">Select date:</span>
-        <div className="flex w-full items-center justify-between gap-6">
+        <div className="flex w-full items-center justify-between gap-4">
           {currentRange && range.length > 1 && (
             <Select
               value={currentRange.value}
@@ -119,12 +119,13 @@ const TimeSeriesSameLayer: FC<{
               open={contentVisibility}
               onOpenChange={setContentVisibility}
             >
-              <SelectTrigger className="w-fit text-xs font-semibold">
+              <SelectTrigger className="min-w-0 max-w-[50%] text-xs font-semibold">
                 <div
                   className={cn(
                     buttonVariants({ variant: 'outline', size: 'sm' }),
-                    'w-full justify-between hover:bg-transparent'
+                    'w-full justify-between overflow-hidden hover:bg-transparent'
                   )}
+                  title={currentRange?.label}
                 >
                   <SelectValue>{currentRange?.label}</SelectValue>
                   <SelectIcon />
@@ -147,12 +148,13 @@ const TimeSeriesSameLayer: FC<{
             </Select>
           )}
           {currentRange && range.length === 1 && (
-            <div className="w-fit text-xs font-semibold">
+            <div className="min-w-0 max-w-[50%] text-xs font-semibold">
               <div
                 className={cn(
                   buttonVariants({ variant: 'outline', size: 'sm' }),
-                  'w-full justify-between hover:bg-transparent'
+                  'w-full justify-between hover:bg-transparent truncate'
                 )}
+                title={currentRange?.label}
               >
                 {currentRange?.label}
               </div>
@@ -182,14 +184,17 @@ const TimeSeriesSameLayer: FC<{
                 setContentCompareVisibility((prev) => !prev);
               }}
             >
-              <SelectTrigger className="w-fit text-xs font-semibold ">
+              <SelectTrigger className="min-w-0 max-w-[50%] text-xs font-semibold">
                 <div
                   className={cn(
                     buttonVariants({ variant: 'outline', size: 'sm' }),
-                    'w-full justify-between hover:bg-transparent'
+                    'w-full justify-between overflow-hidden hover:bg-transparent'
                   )}
+                  title={compareCurrentRange?.label || range[0].label}
                 >
-                  <SelectValue>{compareCurrentRange?.label || range[0].label}</SelectValue>
+                  <SelectValue>
+                    {compareCurrentRange?.label || range[0].label}
+                  </SelectValue>
                   <div className="flex items-center space-x-2">
                     <LuX
                       className="pointer-events-auto h-4 w-4 text-accent-green"

@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useAtom } from 'jotai';
 
@@ -42,7 +42,7 @@ const DatasetCard: FC<DatasetCardProps> = ({
   const isCompareActive = useMemo(() => compareLayers?.[1]?.id === id, [id, compareLayers]);
 
   const [isHistogramActive] = useAtom(histogramVisibilityAtom);
-  // isActive is based on the url
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const layerToCompareId = useMemo(() => {
     if (!comparisonLayer) return null;
@@ -85,8 +85,17 @@ const DatasetCard: FC<DatasetCardProps> = ({
     compareLayers,
   ]);
 
+  useEffect(() => {
+    if (!isHistogramActive || !isActive || !cardRef.current) return;
+    requestAnimationFrame(() => {
+      cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }, [isHistogramActive, isActive]);
+
   return (
     <div
+      ref={cardRef}
+      id={`histogram-anchor-${id}`}
       className="space-y-3 rounded-3xl border border-black-100 p-3.5 text-sm font-medium text-white-50"
       data-testid={`dataset-item-${id}`}
     >

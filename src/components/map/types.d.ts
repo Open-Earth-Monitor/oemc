@@ -103,10 +103,10 @@ export type NutsProperties = {
 };
 
 export type NutsDataset = {
-  avg: number;
+  avg: number | null;
   label: string;
-  max: number;
-  min: number;
+  max: number | null;
+  min: number | null;
 };
 
 export type NuqsData = {

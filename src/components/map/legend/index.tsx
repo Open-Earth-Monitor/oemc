@@ -67,7 +67,9 @@ export const Legend: React.FC<{
               className="relative flex flex-1 items-start justify-between space-x-4 text-white-500"
               data-testid="map-legend-item"
             >
-              <div data-testid="map-legend-item-title">{title}</div>
+              <div data-testid="map-legend-item-title" className="min-w-0 truncate" title={title}>
+                {title}
+              </div>
               <div
                 className="flex space-x-2 divide-x divide-secondary-800"
                 data-testid="map-legend-item-toolbar"
