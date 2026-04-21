@@ -56,10 +56,9 @@ import {
 } from './constants';
 // map controls
 import Controls from './controls';
+import NutsLayer from './layers/nuts';
 import Legend from './legend';
 import MapTooltip from './tooltip';
-import { Nut } from 'lucide-react';
-import NutsLayer from './layers/nuts';
 
 function buildWmsSource(url: string, layerName: string) {
   return new TileWMS({
@@ -403,6 +402,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     queryFn: ({ signal }) => fetchFeatureInfo(leftUrl, signal),
     enabled: Boolean(leftUrl && tooltipInfo.position),
     staleTime: 30_000,
+    keepPreviousData: true,
   });
 
   const qRight = useQuery({
@@ -416,6 +416,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     queryFn: ({ signal }) => fetchFeatureInfo(rightUrl, signal),
     enabled: Boolean(rightUrl && tooltipInfo.position),
     staleTime: 30_000,
+    keepPreviousData: true,
   });
 
   const qNuts = useQuery({
@@ -565,7 +566,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       {dataMeta && (
         <MapTooltip
           {...tooltipInfo}
-          data={tooltipSide === 'left' ? tooltipInfo.leftData : tooltipInfo.rightData}
+          data={
+            tooltipSide === 'right' && isCompareLayerActive
+              ? tooltipInfo.rightData
+              : tooltipInfo.leftData
+          }
           onCloseTooltip={handleCloseTooltip}
         />
       )}

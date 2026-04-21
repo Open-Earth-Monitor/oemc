@@ -30,10 +30,8 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
     setStatus((prevStatus) => (prevStatus === 'open' ? 'closed' : 'open'));
   };
 
-  console.log(monitors);
-
   return (
-    <>
+    <div className="space-y-6 py-3">
       <div className="relative space-y-6 py-3">
         <p className="text-sm font-medium text-white-50" data-testid="geostory-description">
           {description}
@@ -85,7 +83,7 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
           onOpenChange={(open) => setMonitorStatus(open ? 'open' : 'closed')}
         >
           <div className="flex w-full items-center justify-between">
-            <h2 className="py-2 font-medium">Monitors</h2>
+            <h2 className="font-medium">Monitors</h2>
             <CollapsibleTrigger
               className="w-fit p-0 data-[state=open]:bg-transparent"
               data-testid="collapse-monitors-button"
@@ -111,7 +109,7 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
           </CollapsibleContent>
         </Collapsible>
       )}
-    </>
+    </div>
   );
 };
 

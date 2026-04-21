@@ -63,7 +63,7 @@ export const LegendTimeseries: React.FC = () => {
   );
 
   return (
-    <div>
+    <div className="w-full overflow-hidden">
       {baseLayerData?.range && !!baseLayerData.range.length && (
         <TimeSeriesSameLayer
           layerId={mainLayer?.layer_id || ''}

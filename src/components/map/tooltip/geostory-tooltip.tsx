@@ -68,6 +68,7 @@ const GeostoryTooltip: FC<TooltipProps> = ({
       crossOrigin: 'anonymous',
     });
   }, []);
+
   if (!position || !leftData?.value) return null;
 
   return (
@@ -96,18 +97,13 @@ const GeostoryTooltip: FC<TooltipProps> = ({
             )}
           </div>
           {leftData?.value && !isRegionsLayerActive && leftData.range && (
-            <Button
-              variant="default"
-              onClick={handleClick}
-              className="w-full p-2 font-inter text-xs"
-              disabled={!leftData.value}
-            >
-              See point-based summary
+            <Button variant="outline" onClick={handleClick} disabled={!leftData.value}>
+              Show point histogram
             </Button>
           )}
           {leftData?.value && isRegionsLayerActive && (
-            <Button variant="default" onClick={handleHistogram} className="p-2 font-inter text-xs">
-              See regions-based summary
+            <Button variant="outline" onClick={handleHistogram}>
+              Show region histogram
             </Button>
           )}
         </div>
@@ -123,24 +119,13 @@ const GeostoryTooltip: FC<TooltipProps> = ({
               </div>
             </div>
             {!isRegionsLayerActive && rightData.range && (
-              <Button
-                variant="default"
-                onClick={handleClick}
-                className="font-inter text-xs"
-                // disabled={true}
-              >
-                See point-based summary
+              <Button variant="outline" onClick={handleClick}>
+                Show point histogram
               </Button>
             )}
             {!!isRegionsLayerActive && rightData.range && (
-              <Button
-                variant="default"
-                onClick={handleHistogram}
-                className="font-inter text-xs"
-                // disabled={!rightData.value}
-                // disabled={true}
-              >
-                See regions-based summary
+              <Button variant="outline" onClick={handleHistogram}>
+                Show region histogram
               </Button>
             )}
           </div>

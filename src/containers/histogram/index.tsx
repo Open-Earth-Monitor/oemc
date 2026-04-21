@@ -54,11 +54,23 @@ const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => 
         <p className="text-center text-sm text-gray-500">Loading histogram data...</p>
       )}
 
-      {!isLoadingDataHistogram && isRegionsLayerActive && histogramDataRegionRaw && (
-        <RegionsHistogram id={id} color={color} title={title} onCompareClose={onCloseCompareInfo} />
+      {!isLoadingDataHistogram &&
+        isRegionsLayerActive &&
+        !isErrorDataHistogram &&
+        histogramDataRegionRaw?.dataset?.length > 0 && (
+          <RegionsHistogram
+            id={id}
+            color={color}
+            title={title}
+            onCompareClose={onCloseCompareInfo}
+          />
+        )}
+      {!isLoadingDataHistogram && isRegionsLayerActive && isErrorDataHistogram && (
+        <p className="text-center text-sm text-secondary-500">
+          No statistics found for the given NUTS ID and layer ID
+        </p>
       )}
-      {((!isLoadingDataHistogram && !isRegionsLayerActive) ||
-        (isRegionsLayerActive && !histogramDataRegionRaw)) && (
+      {!isLoadingDataHistogram && !isRegionsLayerActive && (
         <PointHistogram color={color} title={title} id={id} />
       )}
     </div>

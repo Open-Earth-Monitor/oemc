@@ -35,8 +35,14 @@ export const LineChart = ({
   color,
   compareColor,
 }: {
-  data: { title?: string; data: { x: string | number | Date; y: number; unit: string }[] };
-  dataCompare?: { title?: string; data: { x: string | number | Date; y: number; unit: string }[] };
+  data: {
+    title?: string;
+    data: { x: string | number | Date; y: number | null; unit?: string }[];
+  };
+  dataCompare?: {
+    title?: string;
+    data: { x: string | number | Date; y: number | null; unit?: string }[];
+  };
   color: string;
   compareColor?: string;
 }) => {
@@ -44,6 +50,15 @@ export const LineChart = ({
     scroll: true,
     detectBounds: true,
   });
+  const validData = useMemo(
+    () => data?.data?.filter((d) => d.y != null && Number.isFinite(d.y)) ?? [],
+    [data]
+  );
+  const validCompareData = useMemo(
+    () => dataCompare?.data?.filter((d) => d.y != null && Number.isFinite(d.y)) ?? [],
+    [dataCompare]
+  );
+
   const theme = buildChartTheme({
     backgroundColor: 'transparent',
     gridColor: '#9CA3AF',
@@ -51,7 +66,7 @@ export const LineChart = ({
     colors: [color, '#ffffe6'],
     tickLength: 5,
   });
-  const xSample = data?.data?.[0]?.x;
+  const xSample = validData[0]?.x;
   const isDate = !isNaN(Date.parse(String(xSample)));
   const isNumber = typeof xSample === 'number';
 
@@ -64,14 +79,14 @@ export const LineChart = ({
 
   const allY = useMemo(
     () => [
-      ...data.data.map(accessors.yAccessor),
-      ...(dataCompare?.data ?? []).map(accessors.yAccessor),
+      ...validData.map(accessors.yAccessor),
+      ...validCompareData.map(accessors.yAccessor),
     ],
-    [data, dataCompare, accessors.yAccessor]
+    [validData, validCompareData, accessors.yAccessor]
   );
-  const yMin = useMemo(() => Math.min(...allY), [allY]);
-  const yMax = useMemo(() => Math.max(...allY), [allY]);
-  const unit = data.data[0]?.unit || '';
+  const yMin = useMemo(() => (allY.length ? Math.min(...allY) : 0), [allY]);
+  const yMax = useMemo(() => (allY.length ? Math.max(...allY) : 0), [allY]);
+  const unit = validData[0]?.unit || '';
   return (
     <div ref={containerRef} className="relative h-72 w-full text-white-500">
       <ParentSize>
@@ -118,15 +133,15 @@ export const LineChart = ({
 
             <AnimatedLineSeries
               dataKey={data?.title}
-              data={data.data}
+              data={validData}
               xAccessor={accessors.xAccessor}
               yAccessor={accessors.yAccessor}
               colorAccessor={() => color}
             />
-            {dataCompare && (
+            {dataCompare && validCompareData.length > 0 && (
               <AnimatedLineSeries
                 dataKey={dataCompare.title}
-                data={dataCompare.data}
+                data={validCompareData}
                 xAccessor={accessors.xAccessor}
                 yAccessor={accessors.yAccessor}
                 colorAccessor={() => compareColor || '#ffffe6'}

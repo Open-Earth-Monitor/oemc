@@ -85,7 +85,7 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
 
   return (
     <div
-      className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500 p-4"
+      className="flex w-full flex-col space-y-4 overflow-hidden rounded-b-sm border-gray-600 bg-brand-500 p-4"
       style={{ minWidth: legendWidth }}
     >
       <ScrollArea className={cn({ 'max-h-[216px]': !isLoadingLayerData })}>
@@ -107,7 +107,12 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
               className="relative flex items-center justify-between space-x-4 text-secondary-500"
               data-testid="map-legend-item"
             >
-              <div data-testid="map-legend-item-title" className="text-xs font-bold" ref={titleRef}>
+              <div
+                data-testid="map-legend-item-title"
+                className="min-w-0 truncate text-xs font-bold"
+                ref={titleRef}
+                title={compareLayerData.title}
+              >
                 {compareLayerData.title}
               </div>
               <div

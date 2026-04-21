@@ -112,10 +112,21 @@ export function useLayerParsedSource(
   });
 }
 
+function toNumberOrNull(val: unknown): number | null {
+  if (val === null || val === undefined) return null;
+  if (typeof val === 'string' && val.toUpperCase() === 'NO DATA') return null;
+  const n = Number(val);
+  return Number.isFinite(n) ? n : null;
+}
+
 export function useNutsLayerData(
   params: { NUTS_ID?: string; LAYER_ID?: string; key: 'regular' | 'compare' } | undefined,
   queryOptions?: UseQueryOptions<
-    { dataset: { avg: number; label: string; max: number; min: number }[]; layer_id: string },
+    {
+      dataset?: { avg: number | null; label: string; max: number | null; min: number | null }[];
+      layer_id?: string;
+      error?: string;
+    },
     Error
   >
 ) {
@@ -131,7 +142,16 @@ export function useNutsLayerData(
         url: '/stats',
         params: { NUTS_ID: id, LAYER_ID: layer },
       });
-      return res.data;
+      const data = res.data;
+      if (data?.dataset) {
+        data.dataset = data.dataset.map((d: Record<string, unknown>) => ({
+          ...d,
+          avg: toNumberOrNull(d.avg),
+          min: toNumberOrNull(d.min),
+          max: toNumberOrNull(d.max),
+        }));
+      }
+      return data;
     },
     enabled: Boolean(NUTS_ID && LAYER_ID) && (queryOptions?.enabled ?? true),
     ...DEFAULT_QUERY_OPTIONS,
