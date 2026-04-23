@@ -80,6 +80,7 @@ export const LegendTimeseries: React.FC = () => {
           layerId={comparisonLayerId}
           range={mainLayer?.range}
           isActive={true}
+          hideTimeline={!!baseLayerData?.range?.length}
         />
       )}
     </div>

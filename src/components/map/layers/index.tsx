@@ -10,7 +10,7 @@ import * as ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import { Size } from 'ol/size';
 import TileWMS from 'ol/source/TileWMS';
-import { RLayerTile, RLayerWMS } from 'rlayers';
+import { RLayerTile } from 'rlayers';
 
 import { fetchFeatureInfo, getFeatureInfoUrl, firstPropertyValue } from '@/lib/wms';
 
@@ -38,6 +38,7 @@ import type { CustomMapProps, MonitorTooltipInfo } from '@/components/map/types'
 import BasemapLayer from '../basemap';
 import { DEFAULT_VIEWPORT, TOOLTIP_INITIAL_STATE, WMS_INFO_FORMAT, WMS_CRS } from '../constants';
 
+import BufferedTileWMS from './buffered-tile-wms';
 import NutsLayer from './nuts';
 
 function buildWmsSource(url: string, layerName: string) {
@@ -131,8 +132,6 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
     };
   }> = useRef(null as unknown as any);
 
-  const layerLeftRef = useRef(null);
-  const layerRightRef = useRef(null);
   const nutsLayer = useRef(null);
 
   const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TOOLTIP_INITIAL_STATE);
@@ -362,41 +361,14 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
       <BasemapLayer />
 
       {dataMeta && !isLoadingLayerFromURL && isLayerActive && !!gs_name && (
-        <RLayerWMS
-          ref={layerLeftRef}
-          properties={{ label: gs_name, date }}
-          url={gs_base_wms}
-          opacity={opacity ?? 1}
-          params={{
-            FORMAT: 'image/png',
-            SERVICE: 'WMS',
-            VERSION: '1.3.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: gs_name,
-            DIM_DATE: date,
-            CRS: WMS_CRS,
-            BBOX: 'bbox-epsg-3857',
-          }}
-        />
+        <BufferedTileWMS url={gs_base_wms} layerName={gs_name} date={date} opacity={opacity ?? 1} />
       )}
       {dataMeta && !isLoadingLayerFromURL && isCompareLayerActive && !!compareGsName && (
-        <RLayerWMS
-          ref={layerRightRef}
-          properties={{ label: compareGsName }}
+        <BufferedTileWMS
           url={compareGsBaseWms}
+          layerName={compareGsName}
+          date={compareDate}
           opacity={opacity ?? 1}
-          params={{
-            FORMAT: 'image/png',
-            SERVICE: 'WMS',
-            VERSION: '1.3.0',
-            REQUEST: 'GetMap',
-            TRANSPARENT: true,
-            LAYERS: compareGsName,
-            CRS: WMS_CRS,
-            BBOX: 'bbox-epsg-3857',
-          }}
-          visible={isCompareLayerActive}
         />
       )}
 

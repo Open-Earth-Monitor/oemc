@@ -39,12 +39,12 @@ const Timeline: FC<{
   const date = layers?.[0]?.date;
 
   const currentRange = useMemo(
-    () => range.find((r) => r.value === date) ?? range[0],
+    () => range?.find((r) => r.value === date) ?? range?.[0],
     [date, range]
   );
 
   const currentIndex = useMemo(
-    () => Math.max(0, range.findIndex((r) => r.value === currentRange?.value)),
+    () => Math.max(0, range?.findIndex((r) => r.value === currentRange?.value) ?? 0),
     [range, currentRange]
   );
 
@@ -55,6 +55,7 @@ const Timeline: FC<{
 
   useInterval(
     () => {
+      if (!range?.length) return;
       const nextRange = range[(range.indexOf(currentRange) + 1) % range.length];
       void setLayers([{ ...layers?.[0], date: nextRange.value }]);
     },
@@ -72,7 +73,7 @@ const Timeline: FC<{
 
   const handleSliderChange = useCallback(
     (index: number) => {
-      void setLayers([{ ...layers?.[0], date: range[index].value }]);
+      void setLayers([{ ...layers?.[0], date: range?.[index]?.value }]);
     },
     [layers, setLayers, range]
   );
@@ -81,25 +82,20 @@ const Timeline: FC<{
   const endRangelabel = useMemo(() => range && range[range.length - 1]?.label, [range]);
 
   return (
-    <Tooltip delayDuration={0}>
-      <TooltipTrigger disabled={isCompareActive} asChild>
-        <div className="flex w-full items-center space-x-3 py-3.5">
-          <button
-            type="button"
-            onClick={handleTogglePlay}
-            disabled={isCompareActive}
-            className="pointer-events-auto"
-          >
-            {isPlaying && isActive ? (
-              <LuCirclePause className="h-6 w-6 text-accent-green" />
-            ) : (
-              <LuCirclePlay className="h-6 w-6 text-secondary-500" />
-            )}
-          </button>
+    <div className="flex w-full items-center space-x-3 py-3.5">
+      <button type="button" onClick={handleTogglePlay}>
+        {isPlaying && isActive ? (
+          <LuCirclePause className="h-6 w-6 text-accent-green" />
+        ) : (
+          <LuCirclePlay className="h-6 w-6 text-secondary-500" />
+        )}
+      </button>
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger asChild>
           <div className="relative flex w-full flex-col space-y-2 bg-white-950">
             <div className="max-w flex w-full overflow-hidden">
-              {range.length <= TICK_THRESHOLD ? (
-                range.map((r) => (
+              {(range?.length ?? 0) <= TICK_THRESHOLD ? (
+                range?.map((r) => (
                   <div
                     key={r.value}
                     className={cn('flex w-full items-center justify-center', {
@@ -118,7 +114,7 @@ const Timeline: FC<{
                 <input
                   type="range"
                   min={0}
-                  max={range.length - 1}
+                  max={(range?.length ?? 1) - 1}
                   value={currentIndex}
                   disabled={isCompareActive}
                   onChange={(e) => handleSliderChange(Number(e.target.value))}
@@ -136,30 +132,30 @@ const Timeline: FC<{
               </div>
             </div>
           </div>
-        </div>
-      </TooltipTrigger>
+        </TooltipTrigger>
 
-      <TooltipPortal>
-        <TooltipContent
-          sideOffset={20}
-          side="left"
-          align="center"
-          className={cn({
-            'border-none bg-black-400 text-white-500': true,
-            hidden: !isCompareActive,
-          })}
-        >
-          <div className="max-w-xs text-sm">
-            <p>
-              When the layer comparison functionality is enabled, the timeline is automatically
-              paused .
-            </p>
-            <p>To activate the timeline again, comparison mode must first be disabled.</p>
-          </div>
-          <TooltipArrow />
-        </TooltipContent>
-      </TooltipPortal>
-    </Tooltip>
+        <TooltipPortal>
+          <TooltipContent
+            sideOffset={20}
+            side="left"
+            align="center"
+            className={cn({
+              'border-none bg-black-400 text-white-500': true,
+              hidden: !isCompareActive,
+            })}
+          >
+            <div className="max-w-xs text-sm">
+              <p>
+                When the layer comparison functionality is enabled, the timeline is automatically
+                paused .
+              </p>
+              <p>To activate the timeline again, comparison mode must first be disabled.</p>
+            </div>
+            <TooltipArrow />
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
+    </div>
   );
 };
 
