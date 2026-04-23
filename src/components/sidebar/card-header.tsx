@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import cn from '@/lib/classnames';
 
@@ -26,6 +25,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({
   bbox,
 }) => {
   const params = useParams();
+  const router = useRouter();
   const geostoryId = params.geostory_id;
 
   const handleClick = () => {
@@ -33,6 +33,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({
       geostory_id: geostoryId,
     });
     console.info('WT2 -', type, id);
+    router.push(`/explore/${type === 'monitor' ? 'monitor' : 'geostory'}/${id}?bbox=${bbox}`);
   };
 
   return (
@@ -49,11 +50,11 @@ const CardHeader: React.FC<CardHeaderProps> = ({
           {theme}
         </span>
       </div>
-      <Link
-        href={`/explore/${type === 'monitor' ? 'monitor' : 'geostory'}/${id}?bbox=${bbox}`}
+      <button
+        type="button"
         onClick={handleClick}
         data-testid={`card-title-link-${id}`}
-        className="focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
+        className="text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
       >
         <h2
           style={{ color }}
@@ -61,7 +62,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({
         >
           {title}
         </h2>
-      </Link>
+      </button>
     </div>
   );
 };

@@ -49,7 +49,8 @@ export function usePointData(
         return response.data;
       })
       .catch((error: CanceledError<unknown> | AxiosError) => {
-        console.error('Error fetching region data:', error);
+        if (error instanceof CanceledError) return;
+        throw error;
       });
 
   return useQuery(['region-data', params], fetchRegionData, {
