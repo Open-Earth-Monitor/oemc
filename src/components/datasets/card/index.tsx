@@ -39,15 +39,10 @@ const DatasetCard: FC<DatasetCardProps> = ({
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
   // isActive is based on the url
   const isActive = useMemo(() => layers?.[0]?.id === id, [id, layers]);
-  const isCompareActive = useMemo(() => compareLayers?.[1]?.id === id, [id, compareLayers]);
+  const hasCompare = !!compareLayers?.[0]?.id;
 
   const [isHistogramActive] = useAtom(histogramVisibilityAtom);
   const cardRef = useRef<HTMLDivElement>(null);
-
-  const layerToCompareId = useMemo(() => {
-    if (!comparisonLayer) return null;
-    return compareLayers?.[0]?.id || comparisonLayer.layer_id || null;
-  }, [comparisonLayer, compareLayers]);
 
   const handleToggleLayer = useCallback(() => {
     if (!isActive) {
@@ -58,13 +53,15 @@ const DatasetCard: FC<DatasetCardProps> = ({
           date: range?.[0]?.value,
         },
       ]);
-      if (!isGeostory && range.length <= 1) void setCompareLayers(null);
-      if (!isGeostory && range.length > 1 && isCompareActive) {
+      if (!isGeostory && range.length <= 1) {
+        void setCompareLayers(null);
+      } else if (!isGeostory && hasCompare && range.length > 1) {
+        const newCompareId = comparisonLayer ? comparisonLayer.layer_id : id;
         void setCompareLayers([
           {
-            id: layerToCompareId,
+            id: newCompareId,
             opacity: compareLayers?.[0]?.opacity || 1,
-            date: range[range?.length - 1].value,
+            date: range[range.length - 1].value,
           },
         ]);
       }
@@ -75,13 +72,13 @@ const DatasetCard: FC<DatasetCardProps> = ({
   }, [
     id,
     isActive,
-    isCompareActive,
+    hasCompare,
     isGeostory,
     layers,
     range,
     setCompareLayers,
     setLayers,
-    layerToCompareId,
+    comparisonLayer,
     compareLayers,
   ]);
 

@@ -10,9 +10,10 @@ import type { MapBrowserEvent } from 'ol';
 import * as ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import { toLonLat } from 'ol/proj';
+import TileLayer from 'ol/layer/Tile';
 import { Size } from 'ol/size';
 import TileWMS from 'ol/source/TileWMS';
-import { RLayerTile, RLayerWMS, RMap } from 'rlayers';
+import { RLayerTile, RMap } from 'rlayers';
 
 import { getHistogramData } from '@/lib/utils';
 import { fetchFeatureInfo, getFeatureInfoUrl, firstPropertyValue } from '@/lib/wms';
@@ -56,6 +57,7 @@ import {
 } from './constants';
 // map controls
 import Controls from './controls';
+import BufferedTileWMS from './layers/buffered-tile-wms';
 import NutsLayer from './layers/nuts';
 import Legend from './legend';
 import MapTooltip from './tooltip';
@@ -162,8 +164,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     };
   }> = useRef(null as unknown as any);
 
-  const layerLeftRef = useRef(null);
-  const layerRightRef = useRef(null);
+  const [olLayerLeft, setOlLayerLeft] = useState<TileLayer<TileWMS> | null>(null);
+  const [olLayerRight, setOlLayerRight] = useState<TileLayer<TileWMS> | null>(null);
   const hasInitializedComparativeGeostory = useRef(false);
 
   const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TOOLTIP_INITIAL_STATE);
@@ -178,7 +180,10 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const compareDate = compareLayers?.[0]?.date;
   const isCompareLayerActive = !!compareLayerId;
 
-  const { data: compareData } = useLayer({ layer_id: compareLayerId });
+  const { data: compareData } = useLayer(
+    { layer_id: compareLayerId },
+    { enabled: !!compareLayerId }
+  );
 
   const {
     gs_name: compareGsName,
@@ -499,43 +504,21 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         <BasemapLayer />
 
         {!isLoading && isLayerActive && !!gs_name && (
-          <RLayerWMS
-            ref={layerLeftRef}
-            properties={{ label: gs_name, date }}
+          <BufferedTileWMS
             url={gs_base_wms}
+            layerName={gs_name}
+            date={date}
             opacity={opacity ?? 1}
-            params={{
-              FORMAT: 'image/png',
-              SERVICE: 'WMS',
-              VERSION: '1.3.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: gs_name,
-              DIM_DATE: date,
-              CRS: WMS_CRS,
-              BBOX: 'bbox-epsg-3857',
-            }}
+            onLayerChange={setOlLayerLeft}
           />
         )}
-
         {!isLoading && isCompareLayerActive && !!compareGsName && (
-          <RLayerWMS
-            ref={layerRightRef}
-            properties={{ label: compareGsName, date: compareDate }}
+          <BufferedTileWMS
             url={compareGsBaseWms}
+            layerName={compareGsName}
+            date={compareDate}
             opacity={opacity ?? 1}
-            params={{
-              FORMAT: 'image/png',
-              SERVICE: 'WMS',
-              VERSION: '1.3.0',
-              REQUEST: 'GetMap',
-              TRANSPARENT: true,
-              LAYERS: compareGsName,
-              // DIM_DATE: compareDate,
-              CRS: WMS_CRS,
-              BBOX: 'bbox-epsg-3857',
-            }}
-            visible={isCompareLayerActive}
+            onLayerChange={setOlLayerRight}
           />
         )}
 
@@ -552,8 +535,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
         <Controls
           mapRef={mapRef}
-          layerLeftRef={layerLeftRef}
-          layerRightRef={layerRightRef}
+          olLayerLeft={olLayerLeft}
+          olLayerRight={olLayerRight}
           data={dataMeta}
           isLoading={isLoading}
         />

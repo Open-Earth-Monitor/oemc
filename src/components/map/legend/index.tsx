@@ -46,7 +46,7 @@ export const Legend: React.FC<{
   return (
     <div
       className={cn({
-        'absolute bottom-0 right-0  hidden w-full justify-end border-t border-secondary-900 bg-brand-500 sm:max-w-sm sm:space-y-1 sm:border-0 sm:bg-transparent sm:shadow-lg md:flex':
+        'absolute bottom-0 right-0 hidden w-full justify-end border-t border-secondary-900 bg-brand-500 sm:max-w-md sm:space-y-1 sm:border-0 sm:bg-transparent sm:shadow-lg md:flex':
           true,
         'z-[700]': isMobile,
         'z-[50]': !isMobile,
@@ -67,11 +67,15 @@ export const Legend: React.FC<{
               className="relative flex flex-1 items-start justify-between space-x-4 text-white-500"
               data-testid="map-legend-item"
             >
-              <div data-testid="map-legend-item-title" className="min-w-0 truncate" title={title}>
+              <div
+                data-testid="map-legend-item-title"
+                className="min-w-0 max-w-[60%] line-clamp-2"
+                title={title}
+              >
                 {title}
               </div>
               <div
-                className="flex space-x-2 divide-x divide-secondary-800"
+                className="flex shrink-0 space-x-2 divide-x divide-secondary-800"
                 data-testid="map-legend-item-toolbar"
               >
                 <div className="flex space-x-2">

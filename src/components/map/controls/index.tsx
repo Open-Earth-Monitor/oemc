@@ -3,7 +3,9 @@ import { useState, useMemo, FC, useCallback, ChangeEvent, lazy } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
 import { Extent } from 'ol/extent';
+import TileLayer from 'ol/layer/Tile';
 import { fromLonLat } from 'ol/proj';
+import TileWMS from 'ol/source/TileWMS';
 import { RControl } from 'rlayers';
 
 import { cn } from '@/lib/classnames';
@@ -23,8 +25,8 @@ const SwipeControl = lazy(() => import('@/components/map/controls/swipe'));
 type ControlsProps = {
   className?: string;
   mapRef?: React.RefObject<any>;
-  layerRightRef?: React.RefObject<any>;
-  layerLeftRef?: React.RefObject<any>;
+  olLayerLeft?: TileLayer<TileWMS> | null;
+  olLayerRight?: TileLayer<TileWMS> | null;
   data?: any;
   isLoading?: boolean;
 };
@@ -36,8 +38,8 @@ interface ClickEvent {
 export const Controls: FC<ControlsProps> = ({
   className,
   mapRef,
-  layerLeftRef,
-  layerRightRef,
+  olLayerLeft,
+  olLayerRight,
   data,
   isLoading = false,
 }: ControlsProps) => {
@@ -137,7 +139,7 @@ export const Controls: FC<ControlsProps> = ({
         <ShareControl isMobile={isMobile} />
       </div>
       {isCompareLayerActive && data && !isLoading && (
-        <SwipeControl layerLeft={layerLeftRef} layerRight={layerRightRef} />
+        <SwipeControl olLayerLeft={olLayerLeft} olLayerRight={olLayerRight} />
       )}
     </div>
   );

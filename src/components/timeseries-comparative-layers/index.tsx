@@ -1,4 +1,8 @@
-import { useEffect, useMemo, useCallback, useState } from 'react';
+import { useMemo, useCallback, useState } from 'react';
+
+import { useAtom } from 'jotai';
+
+import { timeSeriesPlaybackAtom } from '@/app/store';
 import type { FC } from 'react';
 
 import { LuX } from 'react-icons/lu';
@@ -27,37 +31,32 @@ const TimeSeriesComparativeLayers: FC<{
   layerId: LayerParsed['layer_id'];
   range: LayerParsed['range'];
   isActive: boolean;
-}> = ({ range, isActive, layerId }) => {
+  hideTimeline?: boolean;
+}> = ({ range, isActive, layerId, hideTimeline = false }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [comparisonLayers, setComparisonLayers] = useSyncCompareLayersSettings();
 
-  const keyFor = (id: string) => `timeseries:${id}:playing`;
-
-  const [isPlaying, setPlaying] = useState<boolean>(true);
+  const [isPlaying, setPlaying] = useAtom(timeSeriesPlaybackAtom);
 
   const comparisonLayerId = useMemo(() => comparisonLayers?.[0]?.id, [comparisonLayers]);
-
-  useEffect(() => {
-    if (!layerId) return;
-    sessionStorage.setItem(keyFor(layerId), JSON.stringify(isPlaying));
-  }, [layerId, isPlaying]);
 
   const opacity = layers?.[0]?.opacity;
   const [contentVisibility, setContentVisibility] = useState<boolean>(false);
 
   const handleSelect = useCallback(
     (value: string) => {
-      const nextRange = range.find((r) => r.value === value);
+      setPlaying(false);
+      const nextRange = range?.find((r) => r.value === value);
       void setLayers([{ id: layerId, opacity, date: nextRange?.value }]);
       setContentVisibility(false);
     },
-    [layerId, opacity, range, setLayers, setContentVisibility]
+    [layerId, opacity, range, setLayers, setContentVisibility, setPlaying]
   );
 
   const date = layers?.[0]?.date;
 
   const currentRange = useMemo(
-    () => range.find((r) => r.value === date) ?? range[0],
+    () => range?.find((r) => r.value === date) ?? range?.[0],
     [date, range]
   );
 
@@ -104,7 +103,7 @@ const TimeSeriesComparativeLayers: FC<{
                 style={{ width: 'calc(100% - 2rem)' }}
               >
                 <ScrollArea className="max-h-[200px] w-full">
-                  {range.map((r: LayerDateRange) => (
+                  {range?.map((r: LayerDateRange) => (
                     <SelectItem key={r.value} value={r.value} className="px-2">
                       {r?.label}
                     </SelectItem>
@@ -144,16 +143,18 @@ const TimeSeriesComparativeLayers: FC<{
           )}
         </div>
       </div>
-      {/* Timeline */}
-      <Timeline
-        layerId={layerId}
-        range={range}
-        isActive={isActive}
-        defaultActive={true}
-        autoPlay={true}
-        isPlaying={isPlaying}
-        setPlaying={setPlaying}
-      />
+      {/* Timeline — hidden when TimeSeriesSameLayer already provides one */}
+      {!hideTimeline && (
+        <Timeline
+          layerId={layerId}
+          range={range}
+          isActive={isActive}
+          defaultActive={true}
+          autoPlay={true}
+          isPlaying={isPlaying}
+          setPlaying={setPlaying}
+        />
+      )}
     </div>
   );
 };

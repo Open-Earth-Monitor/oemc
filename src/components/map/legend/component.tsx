@@ -13,8 +13,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import LegendGraphic from './graphic';
 import OpacitySetting from './opacity';
 import RemoveLayer from './remove';
-import LayerVisibility from './visibility';
 import LegendTimeseries from './timelime';
+import LayerVisibility from './visibility';
 
 export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [layers] = useSyncLayersSettings();
@@ -98,7 +98,7 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
           isFetchedLayerData &&
           !isLoadingLegendData &&
           isFetchedLegendData && <LegendGraphic dataLayer={layerData} dataLegend={legendData} />}
-        {isGeostory && compareLayerData && (
+        {isGeostory && compareLayerData && compareLayers?.[0]?.id !== layerId && (
           <div
             className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
             style={{ minWidth: legendWidth }}
@@ -109,14 +109,14 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
             >
               <div
                 data-testid="map-legend-item-title"
-                className="min-w-0 truncate text-xs font-bold"
+                className="min-w-0 max-w-[60%] line-clamp-2 text-xs font-bold"
                 ref={titleRef}
                 title={compareLayerData.title}
               >
                 {compareLayerData.title}
               </div>
               <div
-                className="flex space-x-2 divide-x divide-secondary-800"
+                className="flex shrink-0 space-x-2 divide-x divide-secondary-800"
                 data-testid="map-legend-item-toolbar"
               >
                 <div className="flex space-x-2">
