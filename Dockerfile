@@ -25,7 +25,8 @@ FROM deps AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
-ENV NEXT_PUBLIC_API_URL https://g3w.earthmonitor.org/dev
+ENV NEXT_PUBLIC_API_URL https://api.earthmonitor.org/dev
+ENV NEXT_PUBLIC_API_IMAGES_URL https://api.earthmonitor.org
 /
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED 1
