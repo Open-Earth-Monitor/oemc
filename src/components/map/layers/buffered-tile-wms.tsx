@@ -4,17 +4,13 @@ import { FC, useEffect, useRef } from 'react';
 
 import TileLayer from 'ol/layer/Tile';
 import TileWMS from 'ol/source/TileWMS';
-import { useOL } from 'rlayers';
+import { RLayerTileWMSProps, useOL } from 'rlayers';
 
 import { WMS_CRS } from '../constants';
 
-interface BufferedTileWMSProps {
-  url: string;
+interface BufferedTileWMSProps extends RLayerTileWMSProps {
   layerName: string;
   date: string | undefined;
-  opacity?: number;
-  zIndex?: number;
-  visible?: boolean;
   onLayerChange?: (layer: TileLayer<TileWMS> | null) => void;
 }
 
@@ -24,11 +20,21 @@ interface BufferedTileWMSProps {
  */
 const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
   url,
+  params,
   layerName,
   date,
   opacity = 1,
   zIndex = 1,
   visible = true,
+  minResolution,
+  maxResolution,
+  minZoom,
+  maxZoom,
+  projection,
+  attributions,
+  cacheSize,
+  wrapX,
+  properties,
   onLayerChange,
 }) => {
   const { map } = useOL();
@@ -50,9 +56,14 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
         TILED: true,
         DIM_DATE: dateRef.current,
         CRS: WMS_CRS,
+        ...params,
       },
       serverType: 'geoserver',
       crossOrigin: 'anonymous',
+      projection,
+      attributions,
+      cacheSize,
+      wrapX,
     });
 
     const layer = new TileLayer({
@@ -60,6 +71,11 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
       opacity,
       zIndex,
       visible,
+      minResolution,
+      maxResolution,
+      minZoom,
+      maxZoom,
+      properties,
     });
 
     layerRef.current = layer;

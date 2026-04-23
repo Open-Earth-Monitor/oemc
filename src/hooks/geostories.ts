@@ -15,7 +15,7 @@ import API from 'services/api';
  * Example: getGeostoryImageUrl('g1') → '{API_URL}/media/g1.jpg'
  */
 export const getGeostoryImageUrl = (geostoryId: string | number): string =>
-  `${process.env.NEXT_PUBLIC_API_URL}/media/${geostoryId}.jpg`;
+  `${process.env.NEXT_PUBLIC_API_IMAGES_URL}/media/${geostoryId}.jpg`;
 
 export type GeostoriesParams = {
   geostory_id?: string | number;

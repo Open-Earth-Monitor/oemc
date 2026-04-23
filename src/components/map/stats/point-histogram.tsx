@@ -50,12 +50,13 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryT
     regex,
   };
 
-  const { data: histogramData, isLoading: isLoadingHistogram } = usePointData(
-    layerPointInfoPayload,
-    {
-      enabled: !!lonLat,
-    }
-  );
+  const {
+    data: histogramData,
+    isLoading: isLoadingHistogram,
+    error: histogramError,
+  } = usePointData(layerPointInfoPayload, {
+    enabled: !!lonLat && !!regex,
+  });
 
   const histogramPointData = useMemo(() => {
     return {
@@ -109,16 +110,23 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryT
             onClick={handleClick}
             className={cn({
               'flex w-full items-center justify-end space-x-2': true,
-              'opacity-50': !histogramData,
+              'opacity-50': !histogramData || !!histogramError,
             })}
-            disabled={!histogramData}
+            disabled={!histogramData || !!histogramError}
           >
             <FiDownload className="h-3.5 w-3.5" />
             <span className="font-inter text-xs">CSV</span>
           </button>
         </div>
         {isLoadingHistogram && <Loading />}
-        {!isLoadingHistogram && (
+        {!isLoadingHistogram && histogramError && (
+          <p className="text-sm text-alert-error">
+            Error occurred while fetching the data:{' '}
+            {(histogramError.response?.data as { message?: string })?.message ||
+              histogramError.message}
+          </p>
+        )}
+        {!isLoadingHistogram && !histogramError && (
           <div className="relative h-full w-full">
             <LineChart data={histogramPointData} color={color} />
           </div>
