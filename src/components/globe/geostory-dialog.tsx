@@ -45,6 +45,7 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
 
   const color = getCategoryColor(geostory.theme);
   const firstPublication = geostory.publications?.[0];
+  const publications = geostory.publications || [];
   const useCases = (geostory.use_case_link ?? []).filter((item) => item?.title || item?.url) || [];
   const doi = (geostory.use_case_link ?? []).filter((item) => item?.title || item?.url);
 
@@ -75,7 +76,19 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
           </h3>
 
           {/* Publication link */}
-          {firstPublication?.url && firstPublication?.title && (
+          {!!publications.length &&
+            publications.map((pub, i) => (
+              <a
+                key={i}
+                href={pub.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white truncate text-xs text-white-500 underline"
+              >
+                {pub.title}
+              </a>
+            ))}
+          {/* {firstPublication?.url && firstPublication?.title && (
             <a
               href={firstPublication.url}
               target="_blank"
@@ -84,7 +97,7 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
             >
               {firstPublication.title}
             </a>
-          )}
+          )} */}
 
           {/* Use cases link */}
           {!!useCases.length &&
