@@ -38,11 +38,12 @@ const MonitorView: FC<MonitorViewProps> = ({ data, geostoryLayers }) => {
         >
           <div className="flex w-full items-center justify-between">
             <h2 className="py-2 font-medium">Datasets</h2>
-            <CollapsibleTrigger
-              className="w-fit p-0 data-[state=open]:bg-transparent"
-              data-testid="collapse-datasets-button"
-            >
-              <Button variant={datasetStatus === 'open' ? 'outline' : 'default'} size="sm">
+            <CollapsibleTrigger asChild data-testid="collapse-datasets-button">
+              <Button
+                variant={datasetStatus === 'open' ? 'outline' : 'default'}
+                size="sm"
+                className="w-fit p-0 data-[state=open]:bg-transparent"
+              >
                 {datasetStatus === 'open' ? 'Collapse' : 'Expand'}
               </Button>
             </CollapsibleTrigger>
@@ -75,11 +76,12 @@ const MonitorView: FC<MonitorViewProps> = ({ data, geostoryLayers }) => {
         >
           <div className="flex w-full items-center justify-between">
             <h2 className="py-2 font-medium">Geostories</h2>
-            <CollapsibleTrigger
-              className="w-fit p-0 data-[state=open]:bg-transparent"
-              data-testid="collapse-geostories-button"
-            >
-              <Button variant={geostoryStatus === 'open' ? 'outline' : 'default'} size="sm">
+            <CollapsibleTrigger asChild data-testid="collapse-geostories-button">
+              <Button
+                variant={geostoryStatus === 'open' ? 'outline' : 'default'}
+                size="sm"
+                className="w-fit p-0 data-[state=open]:bg-transparent"
+              >
                 {geostoryStatus === 'open' ? 'Collapse' : 'Expand'}
               </Button>
             </CollapsibleTrigger>

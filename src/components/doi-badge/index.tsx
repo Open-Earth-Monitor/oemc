@@ -5,7 +5,10 @@ import { UseCase } from '@/types/monitors-and-geostories';
 const DoiBadge: React.FC<{
   doi: UseCase['doi'][number];
 }> = ({ doi }) => {
-  const d = doi.split('https://doi.org/')[1] || doi;
+  const d = doi.split('https://doi.org/')[1];
+
+  if (!d) return null;
+
   return (
     <Link
       href={doi}
