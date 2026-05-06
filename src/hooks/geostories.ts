@@ -14,8 +14,10 @@ import API from 'services/api';
  * Constructs the URL for a geostory's cover image from the media API.
  * Example: getGeostoryImageUrl('g1') → '{API_URL}/media/g1.jpg'
  */
-export const getGeostoryImageUrl = (geostoryId: string | number): string =>
-  `${process.env.NEXT_PUBLIC_API_IMAGES_URL}/media/${geostoryId}.jpg`;
+export const getGeostoryImageUrl = (geostoryId: string | number): string => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_IMAGES_URL || 'https://api.earthmonitor.org/';
+  return `${baseUrl}/media/${geostoryId}.jpg`;
+};
 
 export type GeostoriesParams = {
   geostory_id?: string | number;
