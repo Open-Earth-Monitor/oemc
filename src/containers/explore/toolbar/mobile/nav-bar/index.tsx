@@ -49,11 +49,11 @@ const MobileExploreNavbar = () => {
   return (
     <div className="fixed bottom-0 left-0 z-50 w-full text-sm">
       <div
-        className="z-50 max-h-[80vh] overflow-auto bg-black-500 text-white-500 transition-transform"
+        className="z-50 max-h-[calc(100dvh-72px)] overflow-auto bg-black-500 text-white-500 transition-transform"
         style={{ transform: isOpen ? 'translateY(0)' : 'translateY(100%)' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className={cn('relative p-4', showTheme && 'min-h-[80vh]')}>
+        <div className={cn('relative p-4', showTheme && 'min-h-[calc(100dvh-72px)]')}>
           <div
             className={cn(
               'absolute inset-0 overflow-hidden transition-all duration-300 ease-in-out',
