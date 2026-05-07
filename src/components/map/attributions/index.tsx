@@ -37,7 +37,9 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
     >
       <Dialog>
         <DialogTrigger asChild data-testid="attributions">
-          <button type="button" className={ATTRIBUTION_STYLES}>Attributions</button>
+          <button type="button" className={ATTRIBUTION_STYLES}>
+            Attributions
+          </button>
         </DialogTrigger>
         <DialogContent className="top-1/2 w-[740px] -translate-y-[50%] transform bg-secondary-500 text-brand-500">
           <DialogHeader className="space-y-5">
@@ -60,7 +62,7 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
                     href="https://cordis.europa.eu/project/id/101059548"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
+                    className="rounded underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
                     data-test-id="OEMC-factsheet-link"
                   >
                     grant agreement No. 101059548.
@@ -76,7 +78,9 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
       </Dialog>
       <Dialog>
         <DialogTrigger asChild data-testid="disclaimer-link">
-          <button type="button" className={ATTRIBUTION_STYLES}>Disclaimer</button>
+          <button type="button" className={ATTRIBUTION_STYLES}>
+            Disclaimer
+          </button>
         </DialogTrigger>
         <DialogContent className="top-1/2 w-[665px] -translate-y-[50%] transform bg-secondary-500 text-brand-500">
           <DialogHeader className="space-y-5">
@@ -137,7 +141,9 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
       </a>
       <Popover>
         <PopoverTrigger asChild data-testid="social-media">
-          <button type="button" className={ATTRIBUTION_STYLES}>Follow us</button>
+          <button type="button" className={ATTRIBUTION_STYLES}>
+            Follow us
+          </button>
         </PopoverTrigger>
         <PopoverContent
           align={isTablet ? 'end' : 'center'}

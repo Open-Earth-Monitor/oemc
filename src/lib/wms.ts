@@ -1,9 +1,9 @@
 import axios from 'axios';
-import TileWMS from 'ol/source/TileWMS';
 import type { Coordinate } from 'ol/coordinate';
+import TileWMS from 'ol/source/TileWMS';
 
-import type { FeatureInfoResponse } from '@/components/map/types';
 import { WMS_CRS, WMS_INFO_FORMAT } from '@/components/map/constants';
+import type { FeatureInfoResponse } from '@/components/map/types';
 
 export function buildWmsSource(url: string, layerName: string) {
   return new TileWMS({

@@ -1,13 +1,14 @@
 import { useMemo } from 'react';
 
-import TimeSeriesSameLayer from '@/components/timeseries-layer';
-
-import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
-import TimeSeriesComparativeLayers from '@/components/timeseries-comparative-layers';
-import { useLayer } from '@/hooks/layers';
 import { useParams, usePathname } from 'next/navigation';
+
 import { useGeostory } from '@/hooks/geostories';
+import { useLayer } from '@/hooks/layers';
 import { useMonitor } from '@/hooks/monitors';
+import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
+
+import TimeSeriesComparativeLayers from '@/components/timeseries-comparative-layers';
+import TimeSeriesSameLayer from '@/components/timeseries-layer';
 
 export const LegendTimeseries: React.FC = () => {
   const [layers, setLayers] = useSyncLayersSettings();

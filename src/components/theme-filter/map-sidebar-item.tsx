@@ -3,6 +3,7 @@
 import { FC, useState } from 'react';
 
 import { ALL_CATEGORY, CategoryId, CATEGORIES_COLORS } from '@/constants/categories';
+
 import { useSyncCategories } from '@/hooks/sync-query';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';

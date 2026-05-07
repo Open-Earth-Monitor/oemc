@@ -1,7 +1,10 @@
 import { PopoverTrigger } from '@radix-ui/react-popover';
 import { TooltipPortal } from '@radix-ui/react-tooltip';
+import { useAtom } from 'jotai';
 
 import { cn } from '@/lib/classnames';
+
+import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
 
 import { useSyncBasemapLabelsSettings, useSyncBasemapSettings } from '@/hooks/sync-query';
 
@@ -12,8 +15,6 @@ import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 import { BASEMAPS, LABELS, LabelProps, BasemapProps } from './constants';
-import { useAtom } from 'jotai';
-import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
 
 const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
   const [selectedBasemap, setBasemap] = useSyncBasemapSettings();

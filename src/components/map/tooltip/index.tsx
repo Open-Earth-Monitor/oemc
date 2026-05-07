@@ -6,9 +6,6 @@ import { format } from 'd3-format';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { LuX } from 'react-icons/lu';
 
-import { useCountryName } from '@/hooks/countries';
-import { useLayer } from '@/hooks/layers';
-
 import {
   histogramVisibilityAtom,
   nutsDataResponseAtom,
@@ -16,6 +13,9 @@ import {
 } from '@/app/store';
 
 import { CATEGORIES_COLORS } from '@/constants/categories';
+
+import { useCountryName } from '@/hooks/countries';
+import { useLayer } from '@/hooks/layers';
 
 import type { MonitorTooltipInfo } from '@/components/map/types';
 import { Button } from '@/components/ui/button';

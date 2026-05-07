@@ -25,7 +25,7 @@ export const FooterDesktop: FC = () => {
             href="https://cordis.europa.eu/project/id/101059548"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center space-x-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
+            className="flex items-center space-x-2.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
             data-test-id="OEMC-factsheet-link"
           >
             <Image

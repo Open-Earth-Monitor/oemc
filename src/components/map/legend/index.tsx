@@ -69,7 +69,7 @@ export const Legend: React.FC<{
             >
               <div
                 data-testid="map-legend-item-title"
-                className="min-w-0 max-w-[60%] line-clamp-2"
+                className="line-clamp-2 min-w-0 max-w-[60%]"
                 title={title}
               >
                 {title}

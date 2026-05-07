@@ -109,7 +109,7 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
             >
               <div
                 data-testid="map-legend-item-title"
-                className="min-w-0 max-w-[60%] line-clamp-2 text-xs font-bold"
+                className="line-clamp-2 min-w-0 max-w-[60%] text-xs font-bold"
                 ref={titleRef}
                 title={compareLayerData.title}
               >

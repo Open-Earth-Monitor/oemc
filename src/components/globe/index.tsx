@@ -4,8 +4,6 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
-import cn from '@/lib/classnames';
-
 import * as Cesium from 'cesium';
 import {
   BillboardGraphics,
@@ -18,6 +16,8 @@ import {
   SkyAtmosphere,
   Viewer,
 } from 'resium';
+
+import cn from '@/lib/classnames';
 
 import type { GeostoryPin } from '@/app/(landing)/geostory-pins';
 

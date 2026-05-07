@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 
 import { useMediaQuery } from 'react-responsive';
 
+import GlobeExploreData from '@/containers/globe/explore-data';
 import CategoriesFilters from '@/containers/globe/filters';
 import CategoriesFiltersMobile from '@/containers/globe/filters/mobile';
-import GlobeExploreData from '@/containers/globe/explore-data';
 import Geostories from '@/containers/globe/geostories';
 import GlobeSocialMedia from '@/containers/globe/social-media/desktop';
 

@@ -2,18 +2,17 @@
 
 import { useMediaQuery } from 'react-responsive';
 
+import { orderBy } from 'lodash';
+
 import { mobile } from '@/lib/media-queries';
 
+import { useSocialMedia } from '@/hooks/social-media';
 import { useSyncMediaFilter } from '@/hooks/sync-query';
 
 import { FilterPill } from '@/containers/filter-pill';
 import { LiveUpdatesFiltersContent } from '@/containers/globe/filters/live-updates-filters-content';
 
 import SocialMedia from './social-media';
-
-import { orderBy } from 'lodash';
-
-import { useSocialMedia } from '@/hooks/social-media';
 
 export const LiveUpdatesContent = () => {
   const [mediaFilter] = useSyncMediaFilter();

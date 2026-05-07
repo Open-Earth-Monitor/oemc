@@ -109,7 +109,7 @@ function LocationSearchComponent({
               <button
                 onClick={handleReset}
                 aria-label="Clear search"
-                className="absolute right-6 text-brand-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
+                className="absolute right-6 rounded text-brand-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
               >
                 <LuX className="h-4 w-4" aria-hidden="true" />
               </button>

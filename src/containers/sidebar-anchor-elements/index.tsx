@@ -1,12 +1,12 @@
 'use client';
 
-import Logo from '@/containers/explore/logo';
-
-import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
-
 import { usePathname } from 'next/navigation';
 
 import { SIDEBAR_WIDTH, SIDEBAR_THEME_FILTERS } from '@/constants/sidebar';
+
+import Logo from '@/containers/explore/logo';
+
+import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
 
 const LOGO_PADDING = 10;
 
