@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
@@ -14,6 +14,7 @@ import {
   ScreenSpaceEvent,
   ScreenSpaceEventHandler,
   SkyAtmosphere,
+  useCesium,
   Viewer,
 } from 'resium';
 
@@ -52,6 +53,37 @@ export type GlobeClickEvent = {
   position?: { lonLat: [number, number] | null };
 };
 
+function GlobeClickHandler({ onClick }: { onClick?: (evt: GlobeClickEvent) => void }) {
+  const { scene } = useCesium();
+
+  const handleClick = useCallback(
+    (evt: { position: Cesium.Cartesian2 }) => {
+      if (!scene) return;
+      const picked = scene.pick(evt.position);
+
+      if (picked) {
+        if (typeof picked.id === 'string') {
+          onClick?.({ type: 'globe-click', geostoryId: picked.id });
+          return;
+        }
+        if (picked.id instanceof Cesium.Entity && typeof picked.id.id === 'string') {
+          onClick?.({ type: 'globe-click', geostoryId: picked.id.id });
+          return;
+        }
+      }
+
+      onClick?.({ type: 'globe-click', position: { lonLat: null } });
+    },
+    [scene, onClick]
+  );
+
+  return (
+    <ScreenSpaceEventHandler>
+      <ScreenSpaceEvent type={Cesium.ScreenSpaceEventType.LEFT_CLICK} action={handleClick} />
+    </ScreenSpaceEventHandler>
+  );
+}
+
 export type FlyTarget = {
   lonLat: [number, number];
   key: string;
@@ -89,27 +121,6 @@ export default function Map3D({
 
   const [isGlobeReady, setIsGlobeReady] = useState(false);
   const handleGlobeReady = useCallback(() => setIsGlobeReady(true), []);
-
-  const entityClickedRef = useRef(false);
-
-  const handleEntityClick = useCallback(
-    (geostoryId: string) => {
-      entityClickedRef.current = true;
-      onClick?.({ type: 'globe-click', geostoryId });
-    },
-    [onClick]
-  );
-
-  const handleGlobeClick = useCallback(() => {
-    if (entityClickedRef.current) {
-      entityClickedRef.current = false;
-      return;
-    }
-    onClick?.({
-      type: 'globe-click',
-      position: { lonLat: null },
-    });
-  }, [onClick]);
 
   return (
     <div
@@ -166,12 +177,7 @@ export default function Map3D({
           />
         )}
 
-        <ScreenSpaceEventHandler>
-          <ScreenSpaceEvent
-            type={Cesium.ScreenSpaceEventType.LEFT_CLICK}
-            action={handleGlobeClick}
-          />
-        </ScreenSpaceEventHandler>
+        <GlobeClickHandler onClick={onClick} />
 
         <PulseLayer pins={pins} />
 
@@ -181,8 +187,8 @@ export default function Map3D({
           return (
             <Entity
               key={pin.geostory_id}
+              id={pin.geostory_id}
               position={Cesium.Cartesian3.fromDegrees(pin.coordinates[0], pin.coordinates[1])}
-              onClick={() => handleEntityClick(pin.geostory_id)}
             >
               <BillboardGraphics image={image} width={12} height={12} />
             </Entity>
