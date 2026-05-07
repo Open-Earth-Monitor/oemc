@@ -55,7 +55,7 @@ export const GeostoriesGlobeMobile = () => {
       <DrawerTrigger className="focus:text-white data-[s] group shrink-0 rounded-full border border-accent-green p-3 text-accent-green hover:text-white-500 focus:outline-none active:bg-accent-green data-[state=open]:bg-accent-green data-[state=open]:text-white-500">
         <ListSVG className="h-6 w-6 text-accent-green" />
       </DrawerTrigger>
-      <DrawerContent className="space-y-5 bg-black-500 p-5 text-white-500">
+      <DrawerContent className="max-h-[calc(100dvh-72px)] space-y-5 bg-black-500 p-5 text-white-500">
         <DrawerHeader className="flex flex-row items-center justify-between p-0">
           <DrawerTitle className="inline-flex text-white-500">Geostories</DrawerTitle>
           <DrawerClose className="flex items-center gap-2.5  px-2 py-1 text-sm  focus:outline-none">
