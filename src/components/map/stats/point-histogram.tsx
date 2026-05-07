@@ -14,9 +14,10 @@ import { downloadCSV } from '@/hooks/datasets';
 import { useLayerParsedSource } from '@/hooks/layers';
 import { usePointData } from '@/hooks/map';
 
+import { AnalysisSVG } from '@/SVGS/analysis';
+
 import LineChart from '../../line-chart';
 import Loading from '../../loading';
-import { AnalysisSVG } from '@/SVGS/analysis';
 
 const numberFormat = format(',.2f');
 
@@ -120,7 +121,7 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryT
         </div>
         {isLoadingHistogram && <Loading />}
         {!isLoadingHistogram && histogramError && (
-          <p className="text-sm text-alert-error">
+          <p className="text-alert-error text-sm">
             Error occurred while fetching the data:{' '}
             {(histogramError.response?.data as { message?: string })?.message ||
               histogramError.message}

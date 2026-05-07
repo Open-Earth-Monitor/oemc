@@ -157,7 +157,7 @@ export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
                     type="button"
                     aria-label={`Remove bookmark: ${name}`}
                     onClick={() => handleRemoveBookmark(name)}
-                    className="focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
+                    className="rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
                   >
                     <Cross2Icon className="h-3 w-3" aria-hidden="true" />
                   </button>

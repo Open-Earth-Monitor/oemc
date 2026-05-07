@@ -78,10 +78,7 @@ export const LineChart = ({
   };
 
   const allY = useMemo(
-    () => [
-      ...validData.map(accessors.yAccessor),
-      ...validCompareData.map(accessors.yAccessor),
-    ],
+    () => [...validData.map(accessors.yAccessor), ...validCompareData.map(accessors.yAccessor)],
     [validData, validCompareData, accessors.yAccessor]
   );
   const yMin = useMemo(() => (allY.length ? Math.min(...allY) : 0), [allY]);

@@ -1,15 +1,14 @@
 import { useMemo, useCallback, useState } from 'react';
-
-import { useAtom } from 'jotai';
-
-import { timeSeriesPlaybackAtom } from '@/app/store';
 import type { FC } from 'react';
 
+import { useAtom } from 'jotai';
 import { LuX } from 'react-icons/lu';
 
 import cn from '@/lib/classnames';
 
 import type { LayerDateRange, LayerParsed } from '@/types/layers';
+
+import { timeSeriesPlaybackAtom } from '@/app/store';
 
 import { useLayer } from '@/hooks/layers';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';

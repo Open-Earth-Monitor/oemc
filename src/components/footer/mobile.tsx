@@ -18,7 +18,7 @@ export const FooterMobile: FC = () => {
           href="https://cordis.europa.eu/project/id/101059548"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex space-x-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded"
+          className="flex space-x-2.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
           data-test-id="OEMC-factsheet-link"
         >
           <Image src="/images/landing/EU.svg" width={53} height={35} alt="European Union Logo" />
@@ -28,7 +28,10 @@ export const FooterMobile: FC = () => {
         </a>
       </div>
       <Popover>
-        <PopoverTrigger aria-label="Open social media links" className="focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green rounded">
+        <PopoverTrigger
+          aria-label="Open social media links"
+          className="rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+        >
           <ShareSVG className="h-6 w-6" aria-hidden="true" />
         </PopoverTrigger>
         <PopoverContent

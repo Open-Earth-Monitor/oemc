@@ -1,9 +1,9 @@
 'use client';
 
-import { useSyncCategories } from '@/hooks/sync-query';
-
 import { ALL_CATEGORY, CATEGORIES } from '@/constants/categories';
 import { SIDEBAR_THEME_FILTERS } from '@/constants/sidebar';
+
+import { useSyncCategories } from '@/hooks/sync-query';
 
 import SidebarItem from './map-sidebar-item';
 

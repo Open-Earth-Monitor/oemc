@@ -4,12 +4,13 @@ import { unescapeHtml } from '@/lib/format';
 
 import { LayerParsed, ParsedLegend } from '@/types/layers';
 
+import { useLayer } from '@/hooks/layers';
+import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
+
 import { RampLegend } from '@/components/map/legend/types/gradient';
 import { IntervalsLegend } from '@/components/map/legend/types/intervals';
-import TimeSeriesSameLayer from '@/components/timeseries-layer';
-import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 import TimeSeriesComparativeLayers from '@/components/timeseries-comparative-layers';
-import { useLayer } from '@/hooks/layers';
+import TimeSeriesSameLayer from '@/components/timeseries-layer';
 
 export const LegendGraphic: React.FC<{
   dataLayer: LayerParsed;
