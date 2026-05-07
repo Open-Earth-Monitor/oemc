@@ -15,7 +15,7 @@ import API from 'services/api';
  * Example: getGeostoryImageUrl('g1') → '{API_URL}/media/g1.jpg'
  */
 export const getGeostoryImageUrl = (geostoryId: string | number): string => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_IMAGES_URL || 'https://api.earthmonitor.org/';
+  const baseUrl = process.env.NEXT_PUBLIC_API_IMAGES_URL || 'https://api.earthmonitor.org';
   return `${baseUrl}/media/${geostoryId}.jpg`;
 };
 
