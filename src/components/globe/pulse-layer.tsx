@@ -64,6 +64,7 @@ export default function PulseLayer({ pins }: Props) {
       const offset = phaseOffsetFromId(pin.geostory_id);
 
       const billboard = collection.add({
+        id: pin.geostory_id,
         position: Cesium.Cartesian3.fromDegrees(pin.coordinates[0], pin.coordinates[1]),
         image: imageUrl,
         width: 12,
