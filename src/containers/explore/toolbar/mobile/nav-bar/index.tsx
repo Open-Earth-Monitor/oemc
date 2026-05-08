@@ -53,7 +53,7 @@ const MobileExploreNavbar = () => {
         style={{ transform: isOpen ? 'translateY(0)' : 'translateY(100%)' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className={cn('relative p-4', showTheme && 'min-h-[calc(100dvh-72px)]')}>
+        <div className={cn('relative p-4', showTheme && 'min-h-[calc(100dvh-130px)]')}>
           <div
             className={cn(
               'absolute inset-0 overflow-hidden transition-all duration-300 ease-in-out',
