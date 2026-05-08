@@ -79,10 +79,10 @@ test.describe('featured geostories on landing page', () => {
     const searchInput = page.getByTestId('search-input');
     await searchInput.fill('zzz_no_match_query_xyz');
 
-    // The search is debounced by 500ms then hits the real API on CI — allow 10s for the
-    // request to return and the empty-state element to render.
+    // The search is debounced by 500ms then hits the real API on CI. Slow runners can
+    // take well over 10s for the round-trip, so use 30s — still inside the 60s test budget.
     const noResults = page.getByTestId('no-geostories-found');
-    await expect(noResults).toBeVisible({ timeout: 10000 });
+    await expect(noResults).toBeVisible({ timeout: 30000 });
     await expect(noResults).toContainText(
       "We couldn't find any geostories for your search. Try different keywords or remove some filters."
     );
