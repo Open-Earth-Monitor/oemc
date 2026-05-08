@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { format } from 'd3-format';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
@@ -75,16 +75,43 @@ const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null
     );
   }, [layerData?.theme]);
 
+  const ref = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState<{ left: number; top: number } | null>(null);
+
+  useLayoutEffect(() => {
+    if (!position || !ref.current) return;
+    const el = ref.current;
+    const parent = el.offsetParent as HTMLElement | null;
+    const pw = parent?.clientWidth ?? window.innerWidth;
+    const ph = parent?.clientHeight ?? window.innerHeight;
+    const w = el.offsetWidth;
+    const h = el.offsetHeight;
+    const margin = 8;
+    const gap = 10;
+
+    let left = position[0] - w / 2;
+    let top = position[1] - gap - h;
+
+    if (top < margin) top = position[1] + gap;
+
+    left = Math.max(margin, Math.min(left, pw - w - margin));
+    top = Math.max(margin, Math.min(top, ph - h - margin));
+
+    setCoords((prev) => (prev?.left === left && prev?.top === top ? prev : { left, top }));
+  });
+
   if (!position || (data?.value === undefined && data?.value !== 0)) return null;
 
   const label = [nutsDataResponse?.NUTS_NAME, countryName].filter(Boolean).join(', ');
 
   return (
     <div
-      className="absolute z-50 min-w-[250px] translate-x-[-50%] translate-y-[-100%] rounded-[20px] bg-black-150 p-5 font-satoshi font-medium text-white-500 shadow-md"
+      ref={ref}
+      className="absolute z-50 min-w-[250px] rounded-[20px] bg-black-150 p-5 font-satoshi font-medium text-white-500 shadow-md"
       style={{
-        left: `${position[0]}px`,
-        top: `${position[1] - 10}px`,
+        left: `${coords?.left ?? position[0]}px`,
+        top: `${coords?.top ?? position[1] - 10}px`,
+        visibility: coords ? 'visible' : 'hidden',
       }}
     >
       <div className="space-y-5">
