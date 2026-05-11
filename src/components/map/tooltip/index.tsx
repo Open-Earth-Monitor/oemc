@@ -100,14 +100,16 @@ const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null
     setCoords((prev) => (prev?.left === left && prev?.top === top ? prev : { left, top }));
   });
 
-  if (!position || (data?.value === undefined && data?.value !== 0)) return null;
+  if (!position) return null;
 
+  const hasLayer = !!data?.id;
+  const hasValue = data?.value !== null && data?.value !== undefined && data?.value !== 0;
   const label = [nutsDataResponse?.NUTS_NAME, countryName].filter(Boolean).join(', ');
 
   return (
     <div
       ref={ref}
-      className="absolute z-50 min-w-[250px] rounded-[20px] bg-black-150 p-5 font-satoshi font-medium text-white-500 shadow-md"
+      className="absolute z-50 min-w-[250px] max-w-[320px] rounded-[20px] bg-black-150 p-5 font-satoshi font-medium text-white-500 shadow-md"
       style={{
         left: `${coords?.left ?? position[0]}px`,
         top: `${coords?.top ?? position[1] - 10}px`,
@@ -118,14 +120,21 @@ const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null
         <div className="flex w-full items-start justify-between space-x-2">
           <AnalysisSVG className="h-6 w-6 flex-shrink-0" />
           <h3 style={{ color }} className="break-word flex max-w-[300px] flex-wrap  text-left ">
-            {data.title}
+            {hasLayer ? data.title : 'No layer active'}
           </h3>
 
           <button type="button" onClick={onCloseTooltip}>
             <LuX className="h-6 w-6" />
           </button>
         </div>
-        {data.value !== 0 && (
+
+        {!hasLayer && (
+          <span>
+            Activate at least one layer from the sidebar to see data for this location.
+          </span>
+        )}
+
+        {hasLayer && hasValue && (
           <>
             <div className="flex items-center space-x-2 text-xs">
               {isRegionsLayerActive && (
@@ -143,17 +152,21 @@ const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null
               ) : (
                 data.value
               )}
-              {!!data.unit && !!data.value && <span>{data.unit}</span>}
+              {!!data.unit && <span>{data.unit}</span>}
             </div>
           </>
         )}
-        {!data.value && <span>No data is available at this specific location.</span>}
-        {data?.value && !isRegionsLayerActive && (
-          <Button variant="outline" onClick={handleClick} disabled={!data.value}>
+
+        {hasLayer && !hasValue && (
+          <span>No data is available at this specific location.</span>
+        )}
+
+        {hasLayer && hasValue && !isRegionsLayerActive && (
+          <Button variant="outline" onClick={handleClick}>
             Show point histogram
           </Button>
         )}
-        {data?.value && isRegionsLayerActive && (
+        {hasLayer && hasValue && isRegionsLayerActive && (
           <Button variant="outline" onClick={handleHistogram}>
             Show region histogram
           </Button>
