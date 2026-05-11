@@ -20,6 +20,7 @@ import { fetchFeatureInfo, getFeatureInfoUrl, firstPropertyValue } from '@/lib/w
 
 import {
   coordinateAtom,
+  histogramVisibilityAtom,
   lonLatAtom,
   nutsDataParamsAtom,
   nutsDataParamsCompareAtom,
@@ -83,6 +84,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const setNutsDataResponse = useSetAtom(nutsDataResponseAtom);
   const setCompareNutsProperties = useSetAtom(nutsDataResponseCompareAtom);
+
+  const setHistogramVisibility = useSetAtom(histogramVisibilityAtom);
 
   const setPlaying = useSetAtom(timeSeriesPlaybackAtom);
 
@@ -347,8 +350,52 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   }, [dataBbox, setBbox]);
 
   useEffect(() => {
-    setTooltipInfo((prev) => ({ ...prev, position: null }));
-  }, [layerId, compareLayerId]);
+    if (!isLayerActive) {
+      setHistogramVisibility(false);
+      setNutsDataParams(NUTS_INITIAL_STATE);
+      setNutsDataParamsCompare(NUTS_INITIAL_STATE);
+    }
+  }, [isLayerActive, setHistogramVisibility, setNutsDataParams, setNutsDataParamsCompare]);
+
+  useEffect(() => {
+    if (!isRegionsLayerActive) return;
+    setNutsDataParams((prev) =>
+      prev?.NUTS_ID && prev.LAYER_ID !== layerId ? { ...prev, LAYER_ID: layerId } : prev
+    );
+  }, [layerId, isRegionsLayerActive, setNutsDataParams]);
+
+  useEffect(() => {
+    if (!isRegionsLayerActive) return;
+    if (!tooltipInfo.coordinate || !layerId || !mapRef.current) return;
+    const resolution = mapRef.current.ol.getView?.()?.getResolution?.();
+    if (!resolution) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const res = await getHistogramData(
+          wmsNutsSource,
+          tooltipInfo.coordinate,
+          resolution,
+          layerId
+        );
+        if (cancelled) return;
+        if (res?.nutsDataParams?.NUTS_ID) {
+          setNutsDataParams(res.nutsDataParams);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    isRegionsLayerActive,
+    tooltipInfo.coordinate,
+    layerId,
+    wmsNutsSource,
+    setNutsDataParams,
+  ]);
 
   // activates timeseries and comparative mode if geostory is comparative and just the first time
   // after that, the user should manage timeseries and comparative mode
@@ -545,18 +592,15 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
       </RMap>
 
-      {/* Interactivity */}
-      {dataMeta && (
-        <MapTooltip
-          {...tooltipInfo}
-          data={
-            tooltipSide === 'right' && isCompareLayerActive
-              ? tooltipInfo.rightData
-              : tooltipInfo.leftData
-          }
-          onCloseTooltip={handleCloseTooltip}
-        />
-      )}
+      <MapTooltip
+        {...tooltipInfo}
+        data={
+          tooltipSide === 'right' && isCompareLayerActive
+            ? tooltipInfo.rightData
+            : tooltipInfo.leftData
+        }
+        onCloseTooltip={handleCloseTooltip}
+      />
     </div>
   );
 };
