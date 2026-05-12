@@ -60,7 +60,7 @@ const MapTooltip: FC<MapTooltipProps> = ({
   onCloseTooltip = () => null,
   data,
 }) => {
-  const isHistogramVisibility = useSetAtom(histogramVisibilityAtom);
+  const [isHistogramActive, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
   const nutsDataResponse = useAtomValue(nutsDataResponseAtom);
   const countryName = useCountryName(nutsDataResponse?.CNTR_CODE);
 
@@ -68,18 +68,42 @@ const MapTooltip: FC<MapTooltipProps> = ({
     layer_id: data.id,
   });
 
+  const revealHistogram = useCallback(
+    (id?: string) => {
+      if (!id) return;
+      setHistogramVisibility(true);
+      // Defer until after the visibility state flips and the histogram is in
+      // the DOM, otherwise the anchor can't be found.
+      requestAnimationFrame(() => {
+        scrollToHistogram(id);
+      });
+    },
+    [setHistogramVisibility]
+  );
+
   const handleHistogram = useCallback(() => {
-    isHistogramVisibility(true);
-  }, [isHistogramVisibility]);
+    revealHistogram(data?.id);
+  }, [revealHistogram, data?.id]);
 
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
   const handleClick = useCallback(() => {
-    isHistogramVisibility(true);
+    revealHistogram(data?.id);
+  }, [revealHistogram, data?.id]);
+
+  // Clicking a new map location refreshes this tooltip with new coordinates.
+  // If the histogram panel is already visible the user expects it to follow
+  // the new selection, so scroll the sidebar to the corresponding anchor.
+  const lastScrolledKey = useRef<string | null>(null);
+  useEffect(() => {
+    if (!isHistogramActive || !data?.id || !position) return;
+    const key = `${data.id}:${position[0]}:${position[1]}`;
+    if (lastScrolledKey.current === key) return;
+    lastScrolledKey.current = key;
     requestAnimationFrame(() => {
-      scrollToHistogram(data?.id);
+      scrollToHistogram(data.id);
     });
-  }, [isHistogramVisibility, data?.id]);
+  }, [isHistogramActive, data?.id, position]);
 
   const color = useMemo(() => {
     return (
