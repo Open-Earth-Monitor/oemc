@@ -27,11 +27,19 @@ const SidebarItem = ({ Icon, button: btn }: SidebarItemProps) => {
   const [categories, setCategory] = useSyncCategories();
   const [isHovered, setIsHovered] = useState(false);
 
-  const isActive = categories?.[0] === btn.id;
   const isAll = btn.id === ALL_CATEGORY.id;
+  const isActive = isAll
+    ? categories === 'All' || categories == null
+    : Array.isArray(categories) && categories[0] === btn.id;
   const categoryColor = CATEGORIES_COLORS[btn.id]?.base ?? CATEGORIES_COLORS['Unknown']?.base;
 
-  const handleClick = () => setCategory([btn.id] as CategoryId[] | 'All');
+  const handleClick = () => {
+    if (isAll) {
+      setCategory('All');
+      return;
+    }
+    setCategory([btn.id] as CategoryId[]);
+  };
 
   /**
    * Outer button style — border-2 + p-[2px] always present (constant size = 40px).
@@ -75,11 +83,15 @@ const SidebarItem = ({ Icon, button: btn }: SidebarItemProps) => {
     <Tooltip delayDuration={300}>
       <TooltipTrigger asChild>
         <button
+          type="button"
+          data-testid={`map-sidebar-category-${btn.id}`}
           aria-label={btn.label}
           aria-pressed={isActive}
-          className="rounded-full p-2 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green focus-visible:ring-offset-2 focus-visible:ring-offset-black-500"
+          className="relative rounded-full p-2 transition-all duration-300 before:absolute before:-inset-0.5 before:content-[''] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green focus-visible:ring-offset-2 focus-visible:ring-offset-black-500"
           style={outerStyle()}
           onClick={handleClick}
+          onFocus={() => setIsHovered(true)}
+          onBlur={() => setIsHovered(false)}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
