@@ -1,12 +1,14 @@
 'use client';
 
-import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
+import { FC, useCallback, useEffect, useMemo } from 'react';
 
 import { useAtom } from 'jotai';
 
 import { Geostory } from '@/types/geostories';
 import type { LayerParsed } from '@/types/layers';
 import { Monitor, MonitorParsed } from '@/types/monitors';
+
+import { scrollToHistogram } from '@/lib/scroll-to-histogram';
 
 import { histogramVisibilityAtom } from '@/app/store';
 
@@ -42,7 +44,6 @@ const DatasetCard: FC<DatasetCardProps> = ({
   const hasCompare = !!compareLayers?.[0]?.id;
 
   const [isHistogramActive] = useAtom(histogramVisibilityAtom);
-  const cardRef = useRef<HTMLDivElement>(null);
 
   const handleToggleLayer = useCallback(() => {
     if (!isActive) {
@@ -83,15 +84,12 @@ const DatasetCard: FC<DatasetCardProps> = ({
   ]);
 
   useEffect(() => {
-    if (!isHistogramActive || !isActive || !cardRef.current) return;
-    requestAnimationFrame(() => {
-      cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  }, [isHistogramActive, isActive]);
+    if (!isHistogramActive || !isActive || !id) return;
+    requestAnimationFrame(() => scrollToHistogram(id));
+  }, [isHistogramActive, isActive, id]);
 
   return (
     <div
-      ref={cardRef}
       id={`histogram-anchor-${id}`}
       className="space-y-3 rounded-3xl border border-black-100 p-3.5 text-sm font-medium text-white-50"
       data-testid={`dataset-item-${id}`}
