@@ -1,12 +1,13 @@
 'use client';
 
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { format } from 'd3-format';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { FiDownload } from 'react-icons/fi';
 
 import { cn } from '@/lib/classnames';
+import { scrollToHistogram } from '@/lib/scroll-to-histogram';
 
 import { histogramVisibilityAtom, lonLatAtom } from '@/app/store';
 
@@ -89,6 +90,18 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryT
 
   const handleCloseAnalysis = () => setHistogramVisibility(false);
 
+  // Reveal the histogram card when an error is rendered for a new
+  // location — without this, the inline error can land below the
+  // current scroll position and the user thinks nothing happened.
+  const lastScrolledErrorKey = useRef<string | null>(null);
+  useEffect(() => {
+    if (!histogramError || !id || !lonLat) return;
+    const key = `${id}:${lonLat[0]}:${lonLat[1]}`;
+    if (lastScrolledErrorKey.current === key) return;
+    lastScrolledErrorKey.current = key;
+    requestAnimationFrame(() => scrollToHistogram(id));
+  }, [histogramError, id, lonLat]);
+
   return (
     <div className="relative space-y-2">
       <div className="space-y-3 font-satoshi font-bold">
@@ -121,7 +134,11 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryT
         </div>
         {isLoadingHistogram && <Loading />}
         {!isLoadingHistogram && histogramError && (
-          <p className="text-alert-error text-sm">
+          <p
+            data-testid="point-histogram-error"
+            role="alert"
+            className="text-alert-error text-sm"
+          >
             Error occurred while fetching the data:{' '}
             {(histogramError.response?.data as { message?: string })?.message ||
               histogramError.message}
