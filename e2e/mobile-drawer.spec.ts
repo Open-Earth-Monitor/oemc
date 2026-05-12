@@ -1,11 +1,13 @@
-import { test, expect, devices, type Page } from '@playwright/test';
+import { test, expect, devices, type BrowserContextOptions, type Page } from '@playwright/test';
 
-const VIEWPORTS = [
-  { name: 'iPhone SE', ...devices['iPhone SE'] },
-  { name: 'iPhone 14 Pro', ...devices['iPhone 14 Pro'] },
-  { name: 'Pixel 7', ...devices['Pixel 7'] },
-  { name: 'tablet', viewport: { width: 768, height: 1024 } },
-  { name: 'small laptop (< xl)', viewport: { width: 1100, height: 800 } },
+type ViewportCase = { name: string; context: BrowserContextOptions };
+
+const VIEWPORTS: ViewportCase[] = [
+  { name: 'iPhone SE', context: devices['iPhone SE'] },
+  { name: 'iPhone 14 Pro', context: devices['iPhone 14 Pro'] },
+  { name: 'Pixel 7', context: devices['Pixel 7'] },
+  { name: 'tablet', context: { viewport: { width: 768, height: 1024 } } },
+  { name: 'small laptop (< xl)', context: { viewport: { width: 1100, height: 800 } } },
 ];
 
 async function waitForLandingReady(page: Page) {
@@ -45,13 +47,7 @@ test.describe('landing — mobile drawer height', () => {
 
   for (const v of VIEWPORTS) {
     test(`geostories drawer opens below the header (${v.name})`, async ({ browser }) => {
-      const context = await browser.newContext({
-        viewport: v.viewport,
-        userAgent: v.userAgent,
-        deviceScaleFactor: v.deviceScaleFactor,
-        isMobile: v.isMobile,
-        hasTouch: v.hasTouch,
-      });
+      const context = await browser.newContext(v.context);
       const page = await context.newPage();
       await page.goto('/', { waitUntil: 'load' });
       await waitForLandingReady(page);

@@ -303,5 +303,12 @@ test.describe('map tooltip', () => {
       'Show point histogram'
     );
     await expect(page.getByTestId('map-tooltip-region-histogram')).toHaveCount(0);
+
+    // Point queries can't be named — show coordinates so the user knows where
+    // they clicked. Expect "lat°, lon°" with at least one decimal place each.
+    const coords = page.getByTestId('map-tooltip-coordinates');
+    await expect(coords).toBeVisible();
+    await expect(coords).toContainText('Coordinates:');
+    await expect(coords).toContainText(/-?\d+\.\d+°,\s*-?\d+\.\d+°/);
   });
 });
