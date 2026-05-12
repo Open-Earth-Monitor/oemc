@@ -25,6 +25,7 @@ import { CATEGORIES_COLORS } from '@/constants/categories';
 
 import { useCountryName } from '@/hooks/countries';
 import { useLayer } from '@/hooks/layers';
+import { scrollToHistogram } from '@/lib/scroll-to-histogram';
 
 import type { MonitorTooltipInfo } from '@/components/map/types';
 import { Button } from '@/components/ui/button';
@@ -33,21 +34,6 @@ import { AnalysisSVG } from '@/SVGS/analysis';
 
 interface TooltipProps extends MonitorTooltipInfo {
   onCloseTooltip: () => void;
-}
-
-function scrollToHistogram(theId: string) {
-  const vp = document.getElementById('sidebar-scroll-viewport');
-  const el = document.getElementById(`histogram-anchor-${theId}`);
-
-  if (!vp || !el) return;
-  el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-
-  const sticky = vp.querySelector('.sticky') as HTMLElement | null;
-  const offset = (sticky?.offsetHeight ?? 0) + 8;
-
-  requestAnimationFrame(() => {
-    vp.scrollTo({ top: vp.scrollTop - offset, behavior: 'smooth' });
-  });
 }
 
 type MapTooltipProps = Omit<TooltipProps, 'leftData' | 'rightData'> & {
@@ -202,9 +188,14 @@ const MapTooltip: FC<MapTooltipProps> = ({
           data-testid="map-tooltip-close"
           onClick={onCloseTooltip}
           aria-label="Close tooltip"
-          className="size-[34px] absolute -right-2 -top-2 z-10 flex items-center justify-center rounded-full border border-white-800 bg-black-150 text-white-500 transition-colors hover:border-white-500 hover:text-white-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black-150"
+          className="absolute right-[-17px] top-5 z-10 flex h-[34px] w-[34px] items-center justify-center rounded-full border border-white-500/[0.08] bg-black-150 text-white-500 transition-colors hover:border-white-500 hover:text-white-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black-150"
         >
-          <LuX aria-hidden="true" focusable="false" className="size-4" />
+          <span
+            aria-hidden="true"
+            className="flex h-[18px] w-[18px] items-center justify-center rounded-full border border-white-500"
+          >
+            <LuX focusable="false" className="h-[9px] w-[9px]" strokeWidth={1.5} />
+          </span>
         </button>
 
         <div id={bodyId} className="flex flex-col gap-3">
