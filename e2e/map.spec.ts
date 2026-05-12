@@ -211,3 +211,97 @@ test.describe('general information in map page', () => {
     await expect(privacyPolicy).toHaveAttribute('href', 'https://earthmonitor.org/privacy-policy/');
   });
 });
+
+test.describe('map tooltip', () => {
+  test('shows "No layer active" message when clicking the map with no layer', async ({
+    page,
+  }) => {
+    await mockAPIs(page);
+    await page.goto('/explore/monitor/m1', { waitUntil: 'networkidle' });
+
+    const viewport = page.locator('.ol-viewport').first();
+    await expect(viewport).toBeVisible();
+    const box = await viewport.boundingBox();
+    if (!box) throw new Error('map viewport not laid out');
+    // Click well inside the map, far enough from the sidebar to avoid pointer-event interception.
+    await page.mouse.click(box.x + box.width - 100, box.y + box.height / 2);
+
+    const tooltip = page.getByTestId('map-tooltip');
+    await expect(tooltip).toBeVisible();
+    await expect(page.getByTestId('map-tooltip-title')).toHaveText('No layer active');
+    await expect(page.getByTestId('map-tooltip-no-layer')).toBeVisible();
+    await expect(page.getByTestId('map-tooltip-point-histogram')).toHaveCount(0);
+    await expect(page.getByTestId('map-tooltip-region-histogram')).toHaveCount(0);
+
+    await page.getByTestId('map-tooltip-close').click();
+    await expect(tooltip).toHaveCount(0);
+  });
+
+  test('closes the tooltip on Escape and exposes dialog semantics', async ({ page }) => {
+    await mockAPIs(page);
+    await page.goto('/explore/monitor/m1', { waitUntil: 'networkidle' });
+
+    const viewport = page.locator('.ol-viewport').first();
+    await expect(viewport).toBeVisible();
+    const box = await viewport.boundingBox();
+    if (!box) throw new Error('map viewport not laid out');
+    await page.mouse.click(box.x + box.width - 100, box.y + box.height / 2);
+
+    const tooltip = page.getByTestId('map-tooltip');
+    await expect(tooltip).toBeVisible();
+    await expect(tooltip).toHaveAttribute('role', 'dialog');
+    await expect(tooltip).toHaveAttribute('aria-live', 'polite');
+    await expect(page.getByTestId('map-tooltip-close')).toBeFocused();
+
+    await page.keyboard.press('Escape');
+    await expect(tooltip).toHaveCount(0);
+  });
+
+  test('shows point histogram button when clicking the map with an active layer', async ({
+    page,
+  }) => {
+    // Mock GetFeatureInfo for the WMS layer so a numeric value is returned.
+    await page.route(
+      /geoserver\.earthmonitor\.org\/geoserver\/.*REQUEST=GetFeatureInfo/i,
+      (route) =>
+        route.fulfill({
+          contentType: 'application/json',
+          body: JSON.stringify({
+            type: 'FeatureCollection',
+            features: [{ type: 'Feature', properties: { value: 42 } }],
+          }),
+        })
+    );
+
+    // Override the layer fixture so the GFI request fires (needs gs_name + gs_base_wms).
+    const layerWithWms = {
+      ...LAYER_L1,
+      gs_name: 'oem:landcover',
+      gs_base_wms: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
+    };
+    await mockAPIs(page);
+    await page.route(new RegExp(`${API_URL}/layers`), (route) =>
+      route.fulfill({ json: [layerWithWms] })
+    );
+    await page.route(new RegExp(`${API_URL}/monitors/m1/layers`), (route) =>
+      route.fulfill({ json: [layerWithWms] })
+    );
+
+    await page.goto(LAYER_URL, { waitUntil: 'networkidle' });
+
+    const viewport = page.locator('.ol-viewport').first();
+    await expect(viewport).toBeVisible();
+    const box = await viewport.boundingBox();
+    if (!box) throw new Error('map viewport not laid out');
+    // Click well inside the map, far enough from the sidebar to avoid pointer-event interception.
+    await page.mouse.click(box.x + box.width - 100, box.y + box.height / 2);
+
+    const tooltip = page.getByTestId('map-tooltip');
+    await expect(tooltip).toBeVisible();
+    await expect(page.getByTestId('map-tooltip-title')).toContainText('Land Cover 2000');
+    await expect(page.getByTestId('map-tooltip-point-histogram')).toHaveText(
+      'Show point histogram'
+    );
+    await expect(page.getByTestId('map-tooltip-region-histogram')).toHaveCount(0);
+  });
+});
