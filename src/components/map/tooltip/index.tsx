@@ -12,6 +12,7 @@ import {
 } from 'react';
 
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
+import { toLonLat } from 'ol/proj';
 import { LuX } from 'react-icons/lu';
 
 import {
@@ -53,7 +54,12 @@ type MapTooltipProps = Omit<TooltipProps, 'leftData' | 'rightData'> & {
   data: TooltipProps['leftData'] | TooltipProps['rightData'];
 };
 
-const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null, data }) => {
+const MapTooltip: FC<MapTooltipProps> = ({
+  position,
+  coordinate,
+  onCloseTooltip = () => null,
+  data,
+}) => {
   const isHistogramVisibility = useSetAtom(histogramVisibilityAtom);
   const nutsDataResponse = useAtomValue(nutsDataResponseAtom);
   const countryName = useCountryName(nutsDataResponse?.CNTR_CODE);
@@ -138,6 +144,17 @@ const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null
   const hasValue = data?.value !== null && data?.value !== undefined && data?.value !== 0;
   const label = [countryName, nutsDataResponse?.NUTS_NAME].filter(Boolean).join(', ');
 
+  const lonLat: [number, number] | null = (() => {
+    if (!coordinate || coordinate.length < 2) return null;
+    const [lon, lat] = toLonLat([coordinate[0], coordinate[1]]);
+    if (!Number.isFinite(lon) || !Number.isFinite(lat)) return null;
+    return [lon, lat];
+  })();
+  const formatDeg = (n: number) => `${n.toFixed(4)}°`;
+  // Show a coordinate readout when there's no human-readable place name —
+  // i.e. point queries, and region queries that came back without a NUTS_NAME.
+  const showCoords = !!lonLat && hasLayer && (!isRegionsLayerActive || !nutsDataResponse?.NUTS_NAME);
+
   return (
     <div
       ref={ref}
@@ -182,6 +199,24 @@ const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null
           {!hasLayer && (
             <p data-testid="map-tooltip-no-layer" className="text-xs">
               Activate at least one layer from the sidebar to see data for this location.
+            </p>
+          )}
+
+          {showCoords && lonLat && (
+            <p
+              data-testid="map-tooltip-coordinates"
+              className="flex items-center gap-3 text-xs"
+            >
+              <span className="whitespace-nowrap">Coordinates:</span>
+              <span className="whitespace-nowrap rounded-full bg-white-950 px-2 py-0.5 font-mono">
+                <span aria-label={`Latitude ${lonLat[1].toFixed(4)} degrees`}>
+                  {formatDeg(lonLat[1])}
+                </span>
+                <span aria-hidden="true">, </span>
+                <span aria-label={`Longitude ${lonLat[0].toFixed(4)} degrees`}>
+                  {formatDeg(lonLat[0])}
+                </span>
+              </span>
             </p>
           )}
 
