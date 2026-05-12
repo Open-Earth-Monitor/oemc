@@ -1,7 +1,8 @@
 /**
- * Scroll the sidebar viewport to the `histogram-anchor-${id}` card and
- * compensate for the sticky header that sits at the top of the viewport,
- * so the histogram lands fully visible — not hidden underneath it.
+ * Scroll the sidebar viewport so the dataset card for `id` lands
+ * directly under the sticky header. Computes the target offset
+ * in a single `scrollTo` call to avoid racing with the smooth
+ * animation of `scrollIntoView` + a post-scroll adjustment.
  */
 export function scrollToHistogram(id: string) {
   if (!id) return;
@@ -11,12 +12,12 @@ export function scrollToHistogram(id: string) {
   const el = document.getElementById(`histogram-anchor-${id}`);
   if (!vp || !el) return;
 
-  el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-
   const sticky = vp.querySelector('.sticky') as HTMLElement | null;
   const offset = (sticky?.offsetHeight ?? 0) + 8;
 
-  requestAnimationFrame(() => {
-    vp.scrollTo({ top: vp.scrollTop - offset, behavior: 'smooth' });
-  });
+  const vpRect = vp.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+  const target = vp.scrollTop + (elRect.top - vpRect.top) - offset;
+
+  vp.scrollTo({ top: Math.max(target, 0), behavior: 'smooth' });
 }
