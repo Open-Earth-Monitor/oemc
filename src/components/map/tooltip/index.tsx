@@ -1,8 +1,16 @@
 'use client';
 
-import { FC, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+  FC,
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
-import { format } from 'd3-format';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { LuX } from 'react-icons/lu';
 
@@ -21,8 +29,6 @@ import type { MonitorTooltipInfo } from '@/components/map/types';
 import { Button } from '@/components/ui/button';
 
 import { AnalysisSVG } from '@/SVGS/analysis';
-
-const numberFormat = format(',.2f');
 
 interface TooltipProps extends MonitorTooltipInfo {
   onCloseTooltip: () => void;
@@ -76,7 +82,28 @@ const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null
   }, [layerData?.theme]);
 
   const ref = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
+  const bodyId = useId();
   const [coords, setCoords] = useState<{ left: number; top: number } | null>(null);
+  const [tailOnTop, setTailOnTop] = useState(false);
+
+  useEffect(() => {
+    if (!position) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        onCloseTooltip();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [position, onCloseTooltip]);
+
+  useEffect(() => {
+    if (!position || !coords) return;
+    closeRef.current?.focus({ preventScroll: true });
+  }, [position, coords]);
 
   useLayoutEffect(() => {
     if (!position || !ref.current) return;
@@ -87,90 +114,125 @@ const MapTooltip: FC<MapTooltipProps> = ({ position, onCloseTooltip = () => null
     const w = el.offsetWidth;
     const h = el.offsetHeight;
     const margin = 8;
-    const gap = 10;
+    const gap = 14;
 
     let left = position[0] - w / 2;
     let top = position[1] - gap - h;
+    let flipped = false;
 
-    if (top < margin) top = position[1] + gap;
+    if (top < margin) {
+      top = position[1] + gap;
+      flipped = true;
+    }
 
     left = Math.max(margin, Math.min(left, pw - w - margin));
     top = Math.max(margin, Math.min(top, ph - h - margin));
 
     setCoords((prev) => (prev?.left === left && prev?.top === top ? prev : { left, top }));
+    setTailOnTop((prev) => (prev === flipped ? prev : flipped));
   });
 
   if (!position) return null;
 
   const hasLayer = !!data?.id;
   const hasValue = data?.value !== null && data?.value !== undefined && data?.value !== 0;
-  const label = [nutsDataResponse?.NUTS_NAME, countryName].filter(Boolean).join(', ');
+  const label = [countryName, nutsDataResponse?.NUTS_NAME].filter(Boolean).join(', ');
 
   return (
     <div
       ref={ref}
-      className="absolute z-50 min-w-[250px] max-w-[320px] rounded-[20px] bg-black-150 p-5 font-satoshi font-medium text-white-500 shadow-md"
+      data-testid="map-tooltip"
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby={titleId}
+      aria-describedby={bodyId}
+      aria-live="polite"
+      className="absolute z-50 w-[263px] font-satoshi font-medium text-white-500"
       style={{
         left: `${coords?.left ?? position[0]}px`,
         top: `${coords?.top ?? position[1] - 10}px`,
         visibility: coords ? 'visible' : 'hidden',
       }}
     >
-      <div className="space-y-5">
-        <div className="flex w-full items-start justify-between space-x-2">
-          <AnalysisSVG className="h-6 w-6 flex-shrink-0" />
-          <h3 style={{ color }} className="break-word flex max-w-[300px] flex-wrap  text-left ">
-            {hasLayer ? data.title : 'No layer active'}
-          </h3>
+      <div className="relative rounded-[20px] bg-black-150 p-5 shadow-md">
+        <button
+          ref={closeRef}
+          type="button"
+          data-testid="map-tooltip-close"
+          onClick={onCloseTooltip}
+          aria-label="Close tooltip"
+          className="size-[34px] absolute -right-2 -top-2 z-10 flex items-center justify-center rounded-full border border-white-800 bg-black-150 text-white-500 transition-colors hover:border-white-500 hover:text-white-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black-150"
+        >
+          <LuX aria-hidden="true" focusable="false" className="size-4" />
+        </button>
 
-          <button type="button" onClick={onCloseTooltip}>
-            <LuX className="h-6 w-6" />
-          </button>
+        <div id={bodyId} className="flex flex-col gap-3">
+          <div className="flex items-start gap-1 pr-7">
+            <AnalysisSVG aria-hidden="true" className="size-6 flex-shrink-0" />
+            <h3
+              id={titleId}
+              data-testid="map-tooltip-title"
+              style={{ color }}
+              className="text-xs leading-[1.4]"
+            >
+              {hasLayer ? data.title : 'No layer active'}
+            </h3>
+          </div>
+
+          {!hasLayer && (
+            <p data-testid="map-tooltip-no-layer" className="text-xs">
+              Activate at least one layer from the sidebar to see data for this location.
+            </p>
+          )}
+
+          {hasLayer && hasValue && isRegionsLayerActive && (
+            <p className="flex items-center gap-3 text-xs">
+              <span className="whitespace-nowrap">Location Selected:</span>
+              {!!nutsDataResponse?.NUTS_NAME && (
+                <span
+                  data-testid="map-tooltip-location"
+                  className="whitespace-nowrap rounded-full bg-white-950 px-2 py-0.5"
+                >
+                  {label}
+                </span>
+              )}
+            </p>
+          )}
+
+          {hasLayer && !hasValue && (
+            <p data-testid="map-tooltip-no-data" className="text-xs">
+              No data is available at this specific location.
+            </p>
+          )}
+
+          {hasLayer && hasValue && !isRegionsLayerActive && (
+            <Button
+              data-testid="map-tooltip-point-histogram"
+              variant="outline"
+              onClick={handleClick}
+              className="h-[47px] w-full justify-center px-[14px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black-150"
+            >
+              Show point histogram
+            </Button>
+          )}
+          {hasLayer && hasValue && isRegionsLayerActive && (
+            <Button
+              data-testid="map-tooltip-region-histogram"
+              variant="outline"
+              onClick={handleHistogram}
+              className="h-[47px] w-full justify-center px-[14px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black-150"
+            >
+              Show region histogram
+            </Button>
+          )}
         </div>
 
-        {!hasLayer && (
-          <span>
-            Activate at least one layer from the sidebar to see data for this location.
-          </span>
-        )}
-
-        {hasLayer && hasValue && (
-          <>
-            <div className="flex items-center space-x-2 text-xs">
-              {isRegionsLayerActive && (
-                <span className="whitespace-nowrap">Location selected:</span>
-              )}
-              {isRegionsLayerActive && !!nutsDataResponse?.NUTS_NAME && (
-                <div className="flex space-x-2.5 whitespace-nowrap rounded-full bg-white-950 px-2 py-0.5 text-left font-satoshi font-medium">
-                  {label}
-                </div>
-              )}
-            </div>
-            <div className="space-x-2 text-[22px]">
-              {typeof data.value === 'number' ? (
-                <span>{numberFormat(data.value)}</span>
-              ) : (
-                data.value
-              )}
-              {!!data.unit && <span>{data.unit}</span>}
-            </div>
-          </>
-        )}
-
-        {hasLayer && !hasValue && (
-          <span>No data is available at this specific location.</span>
-        )}
-
-        {hasLayer && hasValue && !isRegionsLayerActive && (
-          <Button variant="outline" onClick={handleClick}>
-            Show point histogram
-          </Button>
-        )}
-        {hasLayer && hasValue && isRegionsLayerActive && (
-          <Button variant="outline" onClick={handleHistogram}>
-            Show region histogram
-          </Button>
-        )}
+        <div
+          aria-hidden
+          className={`size-3.5 absolute left-1/2 -translate-x-1/2 rotate-45 bg-black-150 ${
+            tailOnTop ? '-top-1.5' : '-bottom-1.5'
+          }`}
+        />
       </div>
     </div>
   );
