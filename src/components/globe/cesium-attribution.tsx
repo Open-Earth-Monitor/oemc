@@ -128,7 +128,7 @@ export default function CesiumAttribution() {
   return (
     <div
       data-testid="cesium-attribution"
-      className="pointer-events-auto absolute bottom-5 right-5 z-10 flex items-center gap-3 md:bottom-[72px] xl:bottom-5"
+      className="pointer-events-auto absolute bottom-2 right-5 z-10 flex items-center gap-3 md:bottom-[60px] xl:bottom-2"
     >
       <a
         href="https://cesium.com/"
@@ -140,14 +140,14 @@ export default function CesiumAttribution() {
         <Image
           src="/cesium/Assets/Images/cesium_credit.png"
           alt="Cesium"
-          width={59}
-          height={15}
+          width={88}
+          height={22}
           priority
           unoptimized
         />
       </a>
       {credits.length > 0 && (
-        <Tooltip>
+        <Tooltip delayDuration={0}>
           <TooltipTrigger asChild>
             <button
               type="button"
