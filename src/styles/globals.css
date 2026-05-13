@@ -302,86 +302,11 @@
 }
 
 .cesium-viewer-bottom,
-.cesium-credit-wrapper {
-  bottom: 72px !important;
-}
-
-@media (max-width: 450px) {
-  .cesium-viewer-bottom,
-  .cesium-credit-wrapper {
-    bottom: 72px !important;
-  }
+.cesium-credit-lightbox-overlay {
+  display: none !important;
 }
 
 .cesium-widget,
 .cesium-widget canvas {
   background: transparent !important;
-}
-
-@media (max-width: 450px) {
-  .cesium-credit-lightbox-overlay {
-    z-index: 100000000;
-    position: fixed !important;
-    inset: 0 !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    max-height: 100px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background-image: url('/images/landing/bg.png') !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-  }
-
-  .cesium-credit-lightbox-overlay .cesium-credit-wrapper {
-    background-image: url('/images/landing/bg.png') !important;
-
-    background-size: cover !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-
-    border: none !important;
-    bottom: 10px !important;
-    left: 20px !important;
-  }
-}
-
-@media (min-width: 451px) {
-  .cesium-credit-lightbox-overlay {
-    z-index: 100000000;
-    position: fixed !important;
-
-    left: 50% !important;
-    bottom: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    max-width: 200px;
-    max-height: 100px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-image: url('/images/landing/bg.png') !important;
-    background-position: center !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-  }
-
-  .cesium-credit-lightbox-overlay .cesium-credit-wrapper {
-    background-image: url('/images/landing/bg.png') !important;
-
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-
-    border: none !important;
-    bottom: 10px !important;
-    left: 20px !important;
-    position: absolute !important;
-  }
 }

@@ -23,6 +23,7 @@ import cn from '@/lib/classnames';
 import type { GeostoryPin } from '@/app/(landing)/geostory-pins';
 
 import CameraConstraints from './camera-constraints';
+import CesiumAttribution from './cesium-attribution';
 import { colorForCategory, createDiamondDataUrl } from './diamond-pin';
 import DynamicLighting from './dynamic-lighting';
 import FlyToCenter from './fly-to-center';
@@ -194,6 +195,8 @@ export default function Map3D({
             </Entity>
           );
         })}
+
+        <CesiumAttribution />
       </Viewer>
     </div>
   );
