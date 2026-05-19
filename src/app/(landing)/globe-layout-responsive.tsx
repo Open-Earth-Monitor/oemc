@@ -24,12 +24,12 @@ function GlobeLayoutDesktop() {
         <GlobeSocialMedia />
       </div>
 
-      <div className="pointer-events-none absolute bottom-20 left-1/2 z-[1000] -translate-x-1/2">
-        <div className="space-y-4 animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-300 ease-out fill-mode-both">
+      <div className="pointer-events-none absolute bottom-20 left-1/2 z-[1000] -translate-x-1/2 [@media(max-height:940px)]:bottom-4">
+        <div className="space-y-4 animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-300 ease-out fill-mode-both [@media(max-height:940px)]:space-y-0">
           <div className="-translate-y-6">
             <CategoriesFilters />
           </div>
-          <GlobeExploreData />
+          <GlobeExploreData className="[@media(max-height:940px)]:mt-0" />
         </div>
       </div>
     </div>
@@ -53,8 +53,10 @@ export function GlobeLayoutResponsive() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  // xl breakpoint matches Tailwind's xl (1280px), same threshold used in the previous CSS approach
-  const isDesktop = useMediaQuery({ query: '(min-width: 1280px)' });
+  // xl breakpoint matches Tailwind's xl (1280px), same threshold used in the previous CSS approach.
+  // Short laptops (≤ ~800px height) fall back to mobile layout to avoid the featured-stories list
+  // overlapping the centered categories filter at the bottom of the screen.
+  const isDesktop = useMediaQuery({ query: '(min-width: 1280px) and (min-height: 820px)' });
 
   if (!mounted) return null;
 
