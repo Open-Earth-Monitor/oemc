@@ -28,6 +28,12 @@ async function waitForLandingReady(page: Page) {
     .waitFor({ state: 'attached', timeout: 30000 });
 }
 
+// The landing page renders its mobile layout below 1280×820, where the featured
+// geostories list lives inside a closed drawer and never mounts. These tests target
+// the desktop layout, so pin a viewport tall enough to render it (Desktop Chrome
+// defaults to 720px height, which falls back to mobile).
+test.use({ viewport: { width: 1280, height: 900 } });
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
