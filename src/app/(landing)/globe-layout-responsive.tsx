@@ -45,6 +45,10 @@ function GlobeLayoutMobile() {
         <GeostoriesGlobeMobile />
         <LiveUpdatesGlobeMobile />
       </div>
+
+      <div className="absolute left-5 z-10 md:bottom-[60px]">
+        <GlobeExploreData />
+      </div>
     </>
   );
 }

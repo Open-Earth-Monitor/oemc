@@ -6,6 +6,7 @@ import { GeostoriesParams, useGeostories } from '@/hooks/geostories';
 
 export type GeostoryPin = {
   geostory_id: string;
+  title: string;
   coordinates: [number, number];
   category: CategoryId | 'Unknown';
 };
@@ -61,6 +62,7 @@ export function useGeostoryPins(params: GeostoriesParams): GeostoryPin[] {
 
         return {
           geostory_id: String((story as any).id),
+          title: String((story as any).title ?? ''),
           coordinates: [lon, lat],
           category: ((story as any).theme ?? 'Unknown') as CategoryId,
         } satisfies GeostoryPin;
