@@ -101,16 +101,24 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
 
           {/* Use cases link */}
           {!!useCases.length &&
-            useCases.map((d) => (
-              <Link href={d.url} target="_blank" key={d.url}>
+            useCases.map((d, i) => {
+              const badge = (
                 <span className="bg-white/10 inline-block w-fit rounded-full px-2 py-0.5 text-[10px] text-white-500">
                   {d.title}
                 </span>
-              </Link>
-            ))}
+              );
+              return d.url ? (
+                <Link href={d.url} target="_blank" key={d.url}>
+                  {badge}
+                </Link>
+              ) : (
+                <span key={d.title ?? i}>{badge}</span>
+              );
+            })}
 
           {/* DOI */}
-          {!!doi.length && doi.map((d) => <DoiBadge key={d.url} doi={d.url} />)}
+          {!!doi.length &&
+            doi.map((d) => (d.url ? <DoiBadge key={d.url} doi={d.url} /> : null))}
 
           {/* Tab pills */}
           <div className="flex gap-2">
