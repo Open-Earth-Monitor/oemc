@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
@@ -54,32 +54,104 @@ export type GlobeClickEvent = {
   position?: { lonLat: [number, number] | null };
 };
 
-function GlobeClickHandler({ onClick }: { onClick?: (evt: GlobeClickEvent) => void }) {
+type HoverState = { title: string; x: number; y: number } | null;
+
+function GlobePinInteraction({
+  pinTitles,
+  onHover,
+  onClick,
+}: {
+  pinTitles: Map<string, string>;
+  onHover: (state: HoverState) => void;
+  onClick?: (evt: GlobeClickEvent) => void;
+}) {
   const { scene } = useCesium();
+  // Pin armed by the previous tap/hover; on touch a second tap of the same pin opens it.
+  const activePinId = useRef<string | null>(null);
+  // Touch devices have no pointer-leave, so auto-dismiss the tooltip after a tap.
+  const touchTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const isTouch = useRef(false);
+
+  const pickId = useCallback(
+    (position: Cesium.Cartesian2) => {
+      const picked = scene?.pick(position);
+      if (picked) {
+        if (typeof picked.id === 'string') return picked.id;
+        if (picked.id instanceof Cesium.Entity && typeof picked.id.id === 'string')
+          return picked.id.id;
+      }
+      return undefined;
+    },
+    [scene]
+  );
+
+  const handleMove = useCallback(
+    (evt: { endPosition: Cesium.Cartesian2 } | { position: Cesium.Cartesian2 }) => {
+      if (!scene || isTouch.current) return; // touch handled on click, not hover
+      const endPosition = 'endPosition' in evt ? evt.endPosition : evt.position;
+      const id = pickId(endPosition);
+      const title = id ? pinTitles.get(id) : undefined;
+      scene.canvas.style.cursor = title ? 'pointer' : '';
+      activePinId.current = title ? id! : null;
+      onHover(title ? { title, x: endPosition.x, y: endPosition.y } : null);
+    },
+    [scene, pickId, pinTitles, onHover]
+  );
 
   const handleClick = useCallback(
     (evt: { position: Cesium.Cartesian2 }) => {
       if (!scene) return;
-      const picked = scene.pick(evt.position);
+      const id = pickId(evt.position);
 
-      if (picked) {
-        if (typeof picked.id === 'string') {
-          onClick?.({ type: 'globe-click', geostoryId: picked.id });
-          return;
-        }
-        if (picked.id instanceof Cesium.Entity && typeof picked.id.id === 'string') {
-          onClick?.({ type: 'globe-click', geostoryId: picked.id.id });
-          return;
-        }
+      // Empty globe — clear tooltip and deselect.
+      if (!id) {
+        clearTimeout(touchTimeout.current);
+        activePinId.current = null;
+        onHover(null);
+        onClick?.({ type: 'globe-click', position: { lonLat: null } });
+        return;
       }
 
-      onClick?.({ type: 'globe-click', position: { lonLat: null } });
+      // Mouse: hover already revealed the title, so a click opens immediately.
+      // Touch: open only on the second tap of the already-armed pin.
+      if (!isTouch.current || activePinId.current === id) {
+        clearTimeout(touchTimeout.current);
+        activePinId.current = null;
+        onHover(null);
+        scene.canvas.style.cursor = '';
+        onClick?.({ type: 'globe-click', geostoryId: id });
+        return;
+      }
+
+      // First tap — arm the pin and show its tooltip without opening.
+      const title = pinTitles.get(id);
+      activePinId.current = id;
+      if (title) onHover({ title, x: evt.position.x, y: evt.position.y });
+      clearTimeout(touchTimeout.current);
+      touchTimeout.current = setTimeout(() => {
+        activePinId.current = null;
+        onHover(null);
+      }, 2000);
     },
-    [scene, onClick]
+    [scene, pickId, pinTitles, onHover, onClick]
   );
+
+  useEffect(() => {
+    if (!scene) return;
+    const canvas = scene.canvas;
+    const onPointerDown = (e: PointerEvent) => {
+      isTouch.current = e.pointerType === 'touch';
+    };
+    canvas.addEventListener('pointerdown', onPointerDown, { passive: true });
+    return () => {
+      clearTimeout(touchTimeout.current);
+      canvas.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [scene]);
 
   return (
     <ScreenSpaceEventHandler>
+      <ScreenSpaceEvent type={Cesium.ScreenSpaceEventType.MOUSE_MOVE} action={handleMove} />
       <ScreenSpaceEvent type={Cesium.ScreenSpaceEventType.LEFT_CLICK} action={handleClick} />
     </ScreenSpaceEventHandler>
   );
@@ -120,8 +192,18 @@ export default function Map3D({
     return map;
   }, [pins]);
 
+  const pinTitles = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const pin of pins) {
+      if (pin.title) map.set(pin.geostory_id, pin.title);
+    }
+    return map;
+  }, [pins]);
+
   const [isGlobeReady, setIsGlobeReady] = useState(false);
   const handleGlobeReady = useCallback(() => setIsGlobeReady(true), []);
+
+  const [hover, setHover] = useState<HoverState>(null);
 
   return (
     <div
@@ -178,7 +260,7 @@ export default function Map3D({
           />
         )}
 
-        <GlobeClickHandler onClick={onClick} />
+        <GlobePinInteraction pinTitles={pinTitles} onHover={setHover} onClick={onClick} />
 
         <PulseLayer pins={pins} />
 
@@ -198,6 +280,15 @@ export default function Map3D({
 
         <CesiumAttribution />
       </Viewer>
+
+      {hover && (
+        <div
+          className="pointer-events-none absolute z-10 max-w-xs -translate-x-1/2 -translate-y-full rounded bg-secondary-900/90 px-2 py-1 text-xs font-medium text-white-500 shadow-md"
+          style={{ left: hover.x, top: hover.y - 12 }}
+        >
+          {hover.title}
+        </div>
+      )}
     </div>
   );
 }
