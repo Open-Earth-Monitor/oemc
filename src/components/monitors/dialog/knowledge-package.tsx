@@ -14,16 +14,20 @@ const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }: UseCase) => (
       flex: !doi?.length,
     })}
   >
-    <a
-      href={url}
-      className="hover:text-brand-700 flex items-start gap-2 text-brand-500"
-      target="_blank"
-      rel="noopener noreferrer"
-      title={url ? title : 'empty link'}
-    >
-      <LuLink className="h-6 w-6 shrink-0" />
-      <span className="underline">{title || url}</span>
-    </a>
+    {url ? (
+      <a
+        href={url}
+        className="hover:text-brand-700 flex items-start gap-2 text-brand-500"
+        target="_blank"
+        rel="noopener noreferrer"
+        title={title}
+      >
+        <LuLink className="h-6 w-6 shrink-0" />
+        <span className="underline">{title || url}</span>
+      </a>
+    ) : (
+      <span className="flex items-start text-brand-500">{title}</span>
+    )}
     <span className="flex flex-wrap gap-1">
       {doi &&
         !!doi.length &&
