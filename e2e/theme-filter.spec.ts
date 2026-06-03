@@ -105,7 +105,12 @@ test.describe('category filters on landing page', () => {
     }
   });
 
-  test('selecting multiple categories is accumulative and updates the URL', async ({ page }) => {
+  // Each filter click triggers a Cesium camera fly-to that saturates the main thread, so on the
+  // serial single-worker CI runner one click+URL round-trip can take ~45s. The single-click tests
+  // fit inside the 60s budget, but these multi-click tests need room for two or three round-trips.
+  test('selecting multiple categories is accumulative and updates the URL', {
+    timeout: 120_000,
+  }, async ({ page }) => {
     const allGeostories = await fetchGeostories(page);
     const categories = ['Soil', 'Water'];
 
@@ -149,9 +154,11 @@ test.describe('category filters on landing page', () => {
     await expect(btn).toHaveAttribute('aria-pressed', 'false');
   });
 
-  test('selecting three categories shows only matching featured geostories and all are in the URL', async ({
-    page,
-  }) => {
+  // Three click+URL round-trips; see the "selecting multiple categories" test for why CI needs
+  // more than the 60s describe budget here.
+  test('selecting three categories shows only matching featured geostories and all are in the URL', {
+    timeout: 120_000,
+  }, async ({ page }) => {
     const allGeostories = await fetchGeostories(page);
     const categories = ['Forest', 'Agriculture', 'Biodiversity'];
 
