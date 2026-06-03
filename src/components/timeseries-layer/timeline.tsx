@@ -83,13 +83,27 @@ const Timeline: FC<{
 
   return (
     <div className="flex w-full items-center space-x-3 py-3.5">
-      <button type="button" onClick={handleTogglePlay}>
-        {isPlaying && isActive ? (
-          <LuCirclePause className="h-6 w-6 text-accent-green" />
-        ) : (
-          <LuCirclePlay className="h-6 w-6 text-secondary-500" />
-        )}
-      </button>
+      <Tooltip delayDuration={100}>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            onClick={handleTogglePlay}
+            aria-label={isPlaying && isActive ? 'Pause timeline' : 'Play timeline'}
+          >
+            {isPlaying && isActive ? (
+              <LuCirclePause className="h-6 w-6 text-accent-green" />
+            ) : (
+              <LuCirclePlay className="h-6 w-6 text-secondary-500" />
+            )}
+          </button>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent sideOffset={4} side="top" align="center">
+            <div className="text-sm">{isPlaying && isActive ? 'Pause' : 'Play'}</div>
+            <TooltipArrow />
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
       <Tooltip delayDuration={0}>
         <TooltipTrigger asChild>
           <div className="relative flex w-full flex-col space-y-2 bg-white-950">

@@ -7,6 +7,7 @@ import { cn } from '@/lib/classnames';
 
 import { Slider } from '@/components/slider';
 import { Popover, PopoverArrow, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export const OpacitySetting: FC<{
   defaultValue?: number;
@@ -27,14 +28,21 @@ export const OpacitySetting: FC<{
 
   return (
     <Popover onOpenChange={handleOpacityVisibility}>
-      <PopoverTrigger data-testid="layer-opacity-button">
-        <MdOutlineOpacity
-          className={cn({
-            'h-5 w-5 text-gray-600 hover:text-secondary-500': true,
-            'text-secondary-500': isOpacityPopoverOpen,
-          })}
-        />
-      </PopoverTrigger>
+      <Tooltip delayDuration={100}>
+        <TooltipTrigger asChild>
+          <PopoverTrigger data-testid="layer-opacity-button" aria-label="Adjust layer opacity">
+            <MdOutlineOpacity
+              className={cn({
+                'h-5 w-5 text-gray-600 hover:text-secondary-500': true,
+                'text-secondary-500': isOpacityPopoverOpen,
+              })}
+            />
+          </PopoverTrigger>
+        </TooltipTrigger>
+        <TooltipContent sideOffset={4} side="top" align="center">
+          <div className="text-sm">Adjust layer opacity</div>
+        </TooltipContent>
+      </Tooltip>
       <PopoverContent
         sideOffset={0}
         alignOffset={0}

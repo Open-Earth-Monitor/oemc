@@ -30,6 +30,7 @@ import Loading from '@/components/loading';
 import CompareGeolocationInfoPopup from '@/components/map/compare-geolocation-info';
 import { NutsProperties } from '@/components/map/types';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 import { AnalysisSVG } from '@/SVGS/analysis';
 
@@ -83,7 +84,18 @@ const LocationPill: FC<LocationPillProps> = ({ name, color, bgColor, onClose }) 
       className="flex w-fit items-center gap-2.5 rounded-3xl border px-2 text-xs font-medium"
     >
       <span>{name}</span>
-      {onClose && <XIcon size={12} className="cursor-pointer" onClick={onClose} />}
+      {onClose && (
+        <Tooltip delayDuration={100}>
+          <TooltipTrigger asChild>
+            <button type="button" aria-label="Remove region" onClick={onClose}>
+              <XIcon size={12} className="cursor-pointer" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent sideOffset={4} side="top" align="center">
+            <div className="text-sm">Remove region</div>
+          </TooltipContent>
+        </Tooltip>
+      )}
     </div>
   );
 };

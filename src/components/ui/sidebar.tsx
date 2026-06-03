@@ -293,31 +293,38 @@ const SidebarTrigger = forwardRef<ComponentRef<typeof Button>, ComponentProps<ty
     const { toggleSidebar, open } = useSidebar();
 
     return (
-      <Button
-        ref={ref}
-        data-sidebar="trigger"
-        size="icon"
-        className={cn(
-          {
-            'absolute bottom-2 z-10 flex h-8 w-8 shrink-0 items-center justify-center border-none bg-black-300 p-0 transition-[left] duration-300 ease-in-out':
-              true,
-          },
-          className
-        )}
-        onClick={(event) => {
-          onClick?.(event);
-          toggleSidebar();
-        }}
-        {...props}
-      >
-        <LuCircleArrowRight
-          className={cn({
-            'relative flex h-6 w-6 shrink-0 text-white-500': true,
-            'rotate-180 transform': open,
-          })}
-        />
-        <span className="sr-only">Toggle Sidebar</span>
-      </Button>
+      <Tooltip delayDuration={100}>
+        <TooltipTrigger asChild>
+          <Button
+            ref={ref}
+            data-sidebar="trigger"
+            size="icon"
+            className={cn(
+              {
+                'absolute bottom-2 z-10 flex h-8 w-8 shrink-0 items-center justify-center border-none bg-black-300 p-0 transition-[left] duration-300 ease-in-out':
+                  true,
+              },
+              className
+            )}
+            onClick={(event) => {
+              onClick?.(event);
+              toggleSidebar();
+            }}
+            {...props}
+          >
+            <LuCircleArrowRight
+              className={cn({
+                'relative flex h-6 w-6 shrink-0 text-white-500': true,
+                'rotate-180 transform': open,
+              })}
+            />
+            <span className="sr-only">Toggle Sidebar</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent sideOffset={4} side="right" align="center">
+          {open ? 'Collapse sidebar' : 'Expand sidebar'}
+        </TooltipContent>
+      </Tooltip>
     );
   }
 );
