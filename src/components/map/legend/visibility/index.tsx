@@ -7,7 +7,7 @@ import { cn } from '@/lib/classnames';
 
 import { useSyncLayersSettings } from '@/hooks/sync-query';
 
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { IconTooltip } from '@/components/ui/tooltip';
 
 export const LayerVisibility = () => {
   const [layers, setLayers] = useSyncLayersSettings();
@@ -20,37 +20,32 @@ export const LayerVisibility = () => {
   }, [isLayerVisible, setLayers]);
 
   return (
-    <Tooltip delayDuration={100}>
-      <TooltipTrigger asChild>
-        <button
-          data-testid="layer-visibility"
-          data-active={isLayerVisible}
-          type="button"
-          className="flex items-center justify-center"
-          onClick={onToggleLayerVisibility}
-          aria-label="Toggle layer visibility"
-        >
-          {isLayerVisible ? (
-            <IoMdEye
-              className={cn({
-                'h-5 w-5': true,
-                'text-gray-600': !isLayerVisible,
-              })}
-            />
-          ) : (
-            <IoMdEyeOff
-              className={cn({
-                'h-4 w-4': true,
-                'text-gray-600': !isLayerVisible,
-              })}
-            />
-          )}
-        </button>
-      </TooltipTrigger>
-      <TooltipContent sideOffset={4} side="top" align="center">
-        <div className="text-sm">{isLayerVisible ? 'Hide layer' : 'Show layer'}</div>
-      </TooltipContent>
-    </Tooltip>
+    <IconTooltip label={isLayerVisible ? 'Hide layer' : 'Show layer'}>
+      <button
+        data-testid="layer-visibility"
+        data-active={isLayerVisible}
+        type="button"
+        className="flex items-center justify-center"
+        onClick={onToggleLayerVisibility}
+        aria-label="Toggle layer visibility"
+      >
+        {isLayerVisible ? (
+          <IoMdEye
+            className={cn({
+              'h-5 w-5': true,
+              'text-gray-600': !isLayerVisible,
+            })}
+          />
+        ) : (
+          <IoMdEyeOff
+            className={cn({
+              'h-4 w-4': true,
+              'text-gray-600': !isLayerVisible,
+            })}
+          />
+        )}
+      </button>
+    </IconTooltip>
   );
 };
 
