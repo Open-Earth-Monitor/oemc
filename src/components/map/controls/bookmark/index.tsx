@@ -4,6 +4,7 @@ import type { FC, FormEvent, MouseEvent } from 'react';
 import { usePathname } from 'next/navigation';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
+import { TooltipPortal } from '@radix-ui/react-tooltip';
 import { getWidth } from 'ol/extent';
 import { get as getProjection } from 'ol/proj';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
@@ -12,6 +13,7 @@ import { useLocalStorage } from 'usehooks-ts';
 import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const PREFIX = 'OEMC';
 
@@ -78,12 +80,22 @@ export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
 
   return (
     <Sheet>
-      <SheetTrigger
-        aria-label="Open bookmarks"
-        className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
-      >
-        <AiOutlineStar size={22} strokeWidth={2} aria-hidden="true" />
-      </SheetTrigger>
+      <Tooltip delayDuration={100}>
+        <TooltipTrigger asChild>
+          <SheetTrigger
+            aria-label="Open bookmarks"
+            className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
+          >
+            <AiOutlineStar size={22} strokeWidth={2} aria-hidden="true" />
+          </SheetTrigger>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent sideOffset={0} side="left" align="center">
+            <div className="text-sm">Bookmarks</div>
+            <TooltipArrow />
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
       <SheetContent
         side="right"
         className="relative z-[700] flex h-full max-w-sm flex-col space-y-6 bg-brand-500 bg-opacity-90 sm:pl-10"
@@ -153,14 +165,21 @@ export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
                       {name}
                     </a>
                   </div>
-                  <button
-                    type="button"
-                    aria-label={`Remove bookmark: ${name}`}
-                    onClick={() => handleRemoveBookmark(name)}
-                    className="rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
-                  >
-                    <Cross2Icon className="h-3 w-3" aria-hidden="true" />
-                  </button>
+                  <Tooltip delayDuration={100}>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        aria-label={`Remove bookmark: ${name}`}
+                        onClick={() => handleRemoveBookmark(name)}
+                        className="rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+                      >
+                        <Cross2Icon className="h-3 w-3" aria-hidden="true" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent sideOffset={4} side="left" align="center">
+                      <div className="text-sm">Remove bookmark</div>
+                    </TooltipContent>
+                  </Tooltip>
                 </li>
               ))}
             </ul>

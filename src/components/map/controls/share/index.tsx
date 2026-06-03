@@ -4,6 +4,7 @@ import { FC, useCallback, useState } from 'react';
 
 import { LinkedinShareButton, TwitterShareButton } from 'react-share';
 
+import { TooltipPortal } from '@radix-ui/react-tooltip';
 import { HiOutlineShare } from 'react-icons/hi';
 import { PiLinkSimpleBold } from 'react-icons/pi';
 import { RiTwitterXLine, RiLinkedinFill } from 'react-icons/ri';
@@ -13,6 +14,7 @@ import { cn } from '@/lib/classnames';
 
 import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from '@/components/map/controls/constants';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const TIMEOUT_RESET_COPY_STATE = 3000;
 
@@ -40,15 +42,25 @@ const ShareControl: FC<{
 
   return (
     <Popover>
-      <PopoverTrigger data-testid="share-tool-trigger" asChild>
-        <button
-          type="button"
-          aria-label="share tool"
-          className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
-        >
-          <HiOutlineShare size={22} aria-hidden="true" />
-        </button>
-      </PopoverTrigger>
+      <Tooltip delayDuration={100}>
+        <TooltipTrigger asChild>
+          <PopoverTrigger data-testid="share-tool-trigger" asChild>
+            <button
+              type="button"
+              aria-label="Share map"
+              className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
+            >
+              <HiOutlineShare size={22} aria-hidden="true" />
+            </button>
+          </PopoverTrigger>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent sideOffset={0} side="left" align="center">
+            <div className="text-sm">Share map</div>
+            <TooltipArrow />
+          </TooltipContent>
+        </TooltipPortal>
+      </Tooltip>
       <PopoverContent
         sideOffset={isMobile ? -48 : -34}
         align="end"
@@ -88,9 +100,19 @@ const ShareControl: FC<{
                 aria-label="share in twitter"
                 data-testid="share-twitter-button"
               >
-                <div className={cn(CONTROL_BUTTON_STYLES.default, 'h-[28px] w-[28px]')}>
-                  <RiTwitterXLine className={CONTROL_ICON_STYLES.default} />
-                </div>
+                <Tooltip delayDuration={100}>
+                  <TooltipTrigger asChild>
+                    <div className={cn(CONTROL_BUTTON_STYLES.default, 'h-[28px] w-[28px]')}>
+                      <RiTwitterXLine className={CONTROL_ICON_STYLES.default} />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipPortal>
+                    <TooltipContent sideOffset={4} side="bottom" align="center">
+                      <div className="text-sm">Share on X</div>
+                      <TooltipArrow />
+                    </TooltipContent>
+                  </TooltipPortal>
+                </Tooltip>
               </TwitterShareButton>
 
               <LinkedinShareButton
@@ -100,9 +122,19 @@ const ShareControl: FC<{
                 aria-label="share in linkedin"
                 data-testid="share-linkedin-button"
               >
-                <div className={cn(CONTROL_BUTTON_STYLES.default, 'h-[28px] w-[28px]')}>
-                  <RiLinkedinFill className={CONTROL_ICON_STYLES.default} />
-                </div>
+                <Tooltip delayDuration={100}>
+                  <TooltipTrigger asChild>
+                    <div className={cn(CONTROL_BUTTON_STYLES.default, 'h-[28px] w-[28px]')}>
+                      <RiLinkedinFill className={CONTROL_ICON_STYLES.default} />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipPortal>
+                    <TooltipContent sideOffset={4} side="bottom" align="center">
+                      <div className="text-sm">Share on LinkedIn</div>
+                      <TooltipArrow />
+                    </TooltipContent>
+                  </TooltipPortal>
+                </Tooltip>
               </LinkedinShareButton>
             </div>
           </>
