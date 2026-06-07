@@ -23,7 +23,7 @@ import type { ControlsProps } from './types';
 
 type ControlsPropsWithChildren = PropsWithChildren<ControlsProps>;
 const ATTRIBUTION_STYLES =
-  'inline-flex cursor-pointer items-center whitespace-nowrap rounded px-1.5 py-0.5 text-[10px] text-secondary-500 bg-white-500/15 backdrop-blur-sm shadow-brand-500 drop-shadow-[2px_2px_2px_var(--tw-shadow-color)] transition-colors hover:bg-white-500/30 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green';
+  'inline-flex cursor-pointer items-center whitespace-nowrap rounded px-1.5 py-0.5 text-[10px] text-secondary-500 transition-colors hover:bg-white-500/30 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green';
 export const Controls: FC<ControlsPropsWithChildren> = ({
   className = 'absolute bottom-3 space-x-4',
 }: ControlsPropsWithChildren) => {
@@ -31,7 +31,7 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
   return (
     <div
       className={cn({
-        'flex space-x-4': true,
+        'flex w-fit items-center rounded bg-white-500/15 px-2 py-1 backdrop-blur-sm': true,
         [className]: !!className,
       })}
     >
