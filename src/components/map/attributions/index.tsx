@@ -31,7 +31,7 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
   return (
     <div
       className={cn({
-        'flex w-fit items-center rounded bg-white-500/15 px-2 py-1 backdrop-blur-sm': true,
+        'bg-white-500/15 flex w-fit items-center rounded px-2 py-1 backdrop-blur-sm': true,
         [className]: !!className,
       })}
     >
