@@ -2,6 +2,10 @@ import { FC, useState } from 'react';
 
 import Link from 'next/link';
 
+import { ChevronDown } from 'lucide-react';
+
+import { cn } from '@/lib/classnames';
+
 import { Geostory } from '@/types/geostories';
 import { LayerParsed, Layer } from '@/types/layers';
 
@@ -50,8 +54,18 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
               className="w-fit p-0 data-[state=open]:bg-transparent"
               data-testid="collapse-button"
             >
-              <Button variant={datasetStatus === 'open' ? 'outline' : 'default'} size="sm">
+              <Button
+                variant={datasetStatus === 'open' ? 'outline' : 'default'}
+                size="sm"
+                className="flex items-center gap-1"
+              >
                 {datasetStatus === 'open' ? 'Collapse' : 'Expand'}
+                <ChevronDown
+                  className={cn('h-4 w-4 transition-transform', {
+                    'rotate-180': datasetStatus === 'open',
+                  })}
+                  aria-hidden="true"
+                />
               </Button>
             </CollapsibleTrigger>
           </div>
@@ -88,8 +102,18 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
               className="w-fit p-0 data-[state=open]:bg-transparent"
               data-testid="collapse-monitors-button"
             >
-              <Button variant={monitorStatus === 'open' ? 'outline' : 'default'} size="sm">
+              <Button
+                variant={monitorStatus === 'open' ? 'outline' : 'default'}
+                size="sm"
+                className="flex items-center gap-1"
+              >
                 {monitorStatus === 'open' ? 'Collapse' : 'Expand'}
+                <ChevronDown
+                  className={cn('h-4 w-4 transition-transform', {
+                    'rotate-180': monitorStatus === 'open',
+                  })}
+                  aria-hidden="true"
+                />
               </Button>
             </CollapsibleTrigger>
           </div>
