@@ -1,5 +1,9 @@
 import { FC, useState } from 'react';
 
+import { ChevronDown } from 'lucide-react';
+
+import { cn } from '@/lib/classnames';
+
 import { LayerParsed } from '@/types/layers';
 import { Monitor } from '@/types/monitors';
 
@@ -42,9 +46,15 @@ const MonitorView: FC<MonitorViewProps> = ({ data, geostoryLayers }) => {
               <Button
                 variant={datasetStatus === 'open' ? 'outline' : 'default'}
                 size="sm"
-                className="w-fit p-0 data-[state=open]:bg-transparent"
+                className="flex w-fit items-center gap-1 p-0 data-[state=open]:bg-transparent"
               >
                 {datasetStatus === 'open' ? 'Collapse' : 'Expand'}
+                <ChevronDown
+                  className={cn('h-4 w-4 transition-transform', {
+                    'rotate-180': datasetStatus === 'open',
+                  })}
+                  aria-hidden="true"
+                />
               </Button>
             </CollapsibleTrigger>
           </div>
@@ -80,9 +90,15 @@ const MonitorView: FC<MonitorViewProps> = ({ data, geostoryLayers }) => {
               <Button
                 variant={geostoryStatus === 'open' ? 'outline' : 'default'}
                 size="sm"
-                className="w-fit p-0 data-[state=open]:bg-transparent"
+                className="flex w-fit items-center gap-1 p-0 data-[state=open]:bg-transparent"
               >
                 {geostoryStatus === 'open' ? 'Collapse' : 'Expand'}
+                <ChevronDown
+                  className={cn('h-4 w-4 transition-transform', {
+                    'rotate-180': geostoryStatus === 'open',
+                  })}
+                  aria-hidden="true"
+                />
               </Button>
             </CollapsibleTrigger>
           </div>
