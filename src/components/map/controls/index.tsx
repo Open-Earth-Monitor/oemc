@@ -126,7 +126,14 @@ export const Controls: FC<ControlsProps> = ({
         className="absolute right-0 top-[-134px]"
       />
 
-      <RControl.RZoom className="ol-zoom" key="ol-zoom" zoomOutLabel="-" zoomInLabel="+" />
+      <RControl.RZoom
+        className="ol-zoom"
+        key="ol-zoom"
+        zoomOutLabel="-"
+        zoomInLabel="+"
+        zoomInTipLabel="Zoom in"
+        zoomOutTipLabel="Zoom out"
+      />
 
       <div
         className={cn({

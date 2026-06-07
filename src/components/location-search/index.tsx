@@ -8,6 +8,7 @@ import { cn } from '@/lib/classnames';
 import Loading from '@/components/loading';
 import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import { Input } from '@/components/ui/input';
+import { IconTooltip } from '@/components/ui/tooltip';
 
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
@@ -70,22 +71,24 @@ function LocationSearchComponent({
   return (
     <div>
       <Popover>
-        <PopoverTrigger
-          aria-label="Search location"
-          className={cn(
-            'z-50',
-            isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default,
-            className
-          )}
-        >
-          <LuSearch
-            size={22}
-            className={cn({
-              'cursor-pointer justify-center': true,
-              'group-hover:bg-transparent group-hover:text-secondary-500': inputExpanded,
-            })}
-          />
-        </PopoverTrigger>
+        <IconTooltip label="Search location" side="left">
+          <PopoverTrigger
+            aria-label="Search location"
+            className={cn(
+              'z-50',
+              isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default,
+              className
+            )}
+          >
+            <LuSearch
+              size={22}
+              className={cn({
+                'cursor-pointer justify-center': true,
+                'group-hover:bg-transparent group-hover:text-secondary-500': inputExpanded,
+              })}
+            />
+          </PopoverTrigger>
+        </IconTooltip>
         <PopoverContent
           className="radius overflow-hidden border-none bg-white-500 px-0 py-0"
           side="left"
@@ -106,13 +109,15 @@ function LocationSearchComponent({
             />
 
             {locationSearch && (
-              <button
-                onClick={handleReset}
-                aria-label="Clear search"
-                className="absolute right-6 rounded text-brand-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
-              >
-                <LuX className="h-4 w-4" aria-hidden="true" />
-              </button>
+              <IconTooltip label="Clear search">
+                <button
+                  onClick={handleReset}
+                  aria-label="Clear search"
+                  className="absolute right-6 rounded text-brand-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+                >
+                  <LuX className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </IconTooltip>
             )}
           </div>
           <div
