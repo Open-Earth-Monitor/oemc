@@ -92,7 +92,7 @@ function GlobePinInteraction({
       const id = pickId(endPosition);
       const title = id ? pinTitles.get(id) : undefined;
       scene.canvas.style.cursor = title ? 'pointer' : '';
-      activePinId.current = title ? id! : null;
+      activePinId.current = title ? id ?? null : null;
       onHover(title ? { title, x: endPosition.x, y: endPosition.y } : null);
     },
     [scene, pickId, pinTitles, onHover]
@@ -266,7 +266,8 @@ export default function Map3D({
 
         {pins.map((pin) => {
           const color = colorForCategory(pin.category);
-          const image = pinImages.get(color)!;
+          const image = pinImages.get(color);
+          if (!image) return null;
           return (
             <Entity
               key={pin.geostory_id}
