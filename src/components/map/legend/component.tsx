@@ -85,7 +85,7 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
 
   return (
     <div
-      className="flex w-full flex-col space-y-4 overflow-hidden rounded-b-sm border-gray-600 bg-brand-500 p-4"
+      className="flex w-full flex-col space-y-4 overflow-hidden rounded-b-sm border-gray-600 bg-brand-500 px-4"
       style={{ minWidth: legendWidth }}
     >
       <ScrollArea className={cn({ 'max-h-[216px]': !isLoadingLayerData })}>

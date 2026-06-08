@@ -32,7 +32,7 @@ const GeostoryItem = (props: Geostory) => {
         <div className="absolute inset-0 z-10 bg-black-500/30 transition-opacity duration-300 ease-out group-hover/item:opacity-0" />
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex min-w-0 flex-1 flex-col gap-3">
         <span className="whitespace-nowrap text-xs font-medium text-white-500">{theme}</span>
         <span
           className="font-medium text-white-500"

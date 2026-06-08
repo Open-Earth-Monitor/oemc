@@ -51,7 +51,7 @@ const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
       data-testid={`category-filter-${id}`}
       aria-pressed={isActive}
       className={cn(
-        'group flex cursor-pointer items-center gap-2.5 rounded-full border border-white-950 bg-transparent p-1 transition-colors duration-300',
+        'group/filter flex cursor-pointer items-center gap-2.5 rounded-full border border-white-950 bg-transparent p-1 transition-colors duration-300',
         isActive
           ? 'border-transparent'
           : 'hover:border-[var(--category-color)] hover:text-white-500',
@@ -71,7 +71,7 @@ const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
       <div
         className={cn(
           'flex h-[38px] w-[38px] items-center justify-center rounded-full transition-colors duration-300',
-          isActive ? 'bg-[#ffffe6]' : 'bg-white-950 group-hover:bg-[var(--category-color)]'
+          isActive ? 'bg-[#ffffe6]' : 'bg-white-950 group-hover/filter:bg-[var(--category-color)]'
         )}
         style={{ ['--category-color' as string]: CATEGORIES_COLORS[id]?.light }}
       >

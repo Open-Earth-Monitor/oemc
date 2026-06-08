@@ -13,6 +13,7 @@ import { useSyncLayersSettings } from '@/hooks/sync-query';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { IconTooltip } from '@/components/ui/tooltip';
 
 import LegendComponent from './component';
 import OpacitySetting from './opacity';
@@ -85,10 +86,17 @@ export const Legend: React.FC<{
                 {!isGeostory && <RemoveLayer className="pl-2" />}
               </div>
             </div>
-            <LuChevronDown
-              className="flex h-6 w-6 shrink-0 self-start text-accent-green group-data-[state=closed]:rotate-180"
-              onClick={handleCollapse}
-            />
+            <IconTooltip label={isOpen ? 'Collapse legend' : 'Expand legend'}>
+              <button
+                type="button"
+                data-testid="map-legend-collapse-button"
+                aria-label={isOpen ? 'Collapse legend' : 'Expand legend'}
+                className="flex shrink-0 self-start"
+                onClick={handleCollapse}
+              >
+                <LuChevronDown className="h-6 w-6 text-accent-green transition-colors hover:text-secondary-500 group-data-[state=closed]:rotate-180" />
+              </button>
+            </IconTooltip>
           </div>
         </CollapsibleTrigger>
         <CollapsibleContent className="hidden sm:block">

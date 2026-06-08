@@ -21,12 +21,12 @@ const NavLinks = () => {
           <li
             key={props.href}
             className={cn({
-              'group rounded-3xl px-5 py-4 hover:bg-black-500 hover:text-white-500': true,
+              'group/nav-link rounded-3xl px-5 py-4 hover:bg-black-500 hover:text-white-500': true,
             })}
           >
             <Link {...props} className="flex items-center space-x-2.5">
               {isActive && (
-                <div className="h-2 w-2 rounded-full bg-black-500 group-hover:bg-white-500" />
+                <div className="h-2 w-2 rounded-full bg-black-500 group-hover/nav-link:bg-white-500" />
               )}
               <span>{name}</span>
             </Link>

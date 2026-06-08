@@ -83,7 +83,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
             <div className="sticky top-0 z-20 bg-black-400 pb-4">
               <BackToMonitorsAndGeostories />
 
-              <div className="relative -left-9 w-[calc(100%+80px)]">
+              <div className="relative -left-9 w-[calc(100%+72px)]">
                 {!isGeostoryLoading && <GeostoryHeader {...geostoryData} />}
               </div>
             </div>

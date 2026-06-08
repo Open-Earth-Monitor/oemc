@@ -6,6 +6,14 @@ import { LuInfo, LuX } from 'react-icons/lu';
 import { histogramVisibilityAtom, regionsBannerVisibilityAtom } from '@/app/store';
 
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import {
+  IconTooltip,
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipPortal,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export const RegionsBanner: React.FC = () => {
   const [isHistogramActive] = useAtom(histogramVisibilityAtom);
@@ -49,16 +57,29 @@ export const RegionsBanner: React.FC = () => {
 
       <div className="flex items-center gap-2">
         <Dialog>
-          <DialogTrigger asChild>
-            <button
-              type="button"
-              aria-label="Open help about analyzing regions"
-              aria-describedby="regions-banner-description"
-              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
-            >
-              <LuInfo aria-hidden="true" className="h-5 w-5 text-black-100" />
-            </button>
-          </DialogTrigger>
+          <Tooltip delayDuration={100}>
+            <TooltipTrigger asChild>
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  aria-label="Open help about analyzing regions"
+                  aria-describedby="regions-banner-description"
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+                >
+                  <LuInfo
+                    aria-hidden="true"
+                    className="h-6 w-6 text-black-100 transition-colors hover:text-black-500"
+                  />
+                </button>
+              </DialogTrigger>
+            </TooltipTrigger>
+            <TooltipPortal>
+              <TooltipContent side="top">
+                <div className="text-sm">How to analyze locations?</div>
+                <TooltipArrow />
+              </TooltipContent>
+            </TooltipPortal>
+          </Tooltip>
 
           <DialogContent
             role="dialog"
@@ -96,14 +117,19 @@ export const RegionsBanner: React.FC = () => {
           </DialogContent>
         </Dialog>
 
-        <button
-          type="button"
-          aria-label="Close regions help banner"
-          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-black-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
-          onClick={handleClickClose}
-        >
-          <LuX aria-hidden="true" className="h-3 w-3 text-black-100" />
-        </button>
+        <IconTooltip label="Dismiss">
+          <button
+            type="button"
+            aria-label="Close regions help banner"
+            className="group/dismiss flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-black-100 transition-colors hover:border-black-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+            onClick={handleClickClose}
+          >
+            <LuX
+              aria-hidden="true"
+              className="h-3.5 w-3.5 text-black-100 transition-colors group-hover/dismiss:text-black-500"
+            />
+          </button>
+        </IconTooltip>
       </div>
     </section>
   );

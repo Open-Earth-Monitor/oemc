@@ -1,10 +1,14 @@
 'use client';
 
+import { Fragment } from 'react';
+
 import { useMediaQuery } from 'react-responsive';
 
 import { orderBy } from 'lodash';
 
 import { mobile } from '@/lib/media-queries';
+
+import { LIVE_UPDATES_CONTENT } from '@/constants/live-updates';
 
 import { useSocialMedia } from '@/hooks/social-media';
 import { useSyncMediaFilter } from '@/hooks/sync-query';
@@ -33,6 +37,13 @@ export const LiveUpdatesContent = () => {
     // news: newsData?.length || 0,
     // media: mediaData?.length || 0,
     // events: eventsData?.length || 0,
+  };
+
+  const contentById = {
+    'social-media': <SocialMedia data={socialMediaData} isLoading={isLoadingSocialMedia} />,
+    news: null,
+    media: null,
+    events: null,
   };
 
   const totalResults = mediaFilter.includes('all')
@@ -64,12 +75,14 @@ export const LiveUpdatesContent = () => {
           </FilterPill>
         )}
       </div>
-      {(mediaFilter.includes('social-media') || mediaFilter.includes('all')) && (
-        <SocialMedia data={socialMediaData} isLoading={isLoadingSocialMedia} />
-      )}
-      {(mediaFilter.includes('news') || mediaFilter.includes('all')) && <div>News</div>}
-      {(mediaFilter.includes('media') || mediaFilter.includes('all')) && <div>Media</div>}
-      {(mediaFilter.includes('events') || mediaFilter.includes('all')) && <div>Events</div>}
+      {LIVE_UPDATES_CONTENT.filter(
+        ({ id }) =>
+          id !== 'all' &&
+          contentById[id] != null &&
+          (mediaFilter.includes(id) || mediaFilter.includes('all'))
+      ).map(({ id }) => (
+        <Fragment key={id}>{contentById[id]}</Fragment>
+      ))}
     </div>
   );
 };

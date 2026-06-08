@@ -29,7 +29,7 @@ export const RemoveLayer: FC<{ className?: string }> = ({ className }) => {
         onClick={handleRemoveLayer}
         aria-label="Remove layer"
       >
-        <LuX className="h-6 w-6 text-gray-600 hover:text-secondary-500" />
+        <LuX className="h-6 w-6 text-gray-600 transition-colors hover:text-secondary-500" />
       </button>
     </IconTooltip>
   );
