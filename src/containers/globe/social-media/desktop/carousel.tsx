@@ -8,6 +8,7 @@ import { Post as PostTypes } from '@/hooks/social-media';
 
 import { Carousel, CarouselContent, CarouselItem, useCarousel } from '@/components/ui/carousel';
 import type { CarouselApi } from '@/components/ui/carousel';
+import { IconTooltip } from '@/components/ui/tooltip';
 
 import { Post } from '../post';
 
@@ -17,18 +18,20 @@ const CarouselButton = ({ direction }: { direction: 'prev' | 'next' }) => {
   const isPrev = direction === 'prev';
 
   return (
-    <button
-      onClick={isPrev ? scrollPrev : scrollNext}
-      disabled={isPrev ? !canScrollPrev : !canScrollNext}
-      className="z-10 shrink-0 rounded-full bg-white-950 p-2 shadow-md backdrop-blur-sm disabled:opacity-50"
-      aria-label={isPrev ? 'Previous Slide' : 'Next Slide'}
-    >
-      {isPrev ? (
-        <ChevronLeftIcon size={20} className="text-white-500" />
-      ) : (
-        <ChevronRightIcon size={20} className="text-white-500" />
-      )}
-    </button>
+    <IconTooltip label={isPrev ? 'Previous post' : 'Next post'}>
+      <button
+        onClick={isPrev ? scrollPrev : scrollNext}
+        disabled={isPrev ? !canScrollPrev : !canScrollNext}
+        className="z-10 shrink-0 rounded-full bg-white-950 p-2 shadow-md backdrop-blur-sm disabled:opacity-50"
+        aria-label={isPrev ? 'Previous Slide' : 'Next Slide'}
+      >
+        {isPrev ? (
+          <ChevronLeftIcon size={20} className="text-white-500" />
+        ) : (
+          <ChevronRightIcon size={20} className="text-white-500" />
+        )}
+      </button>
+    </IconTooltip>
   );
 };
 
