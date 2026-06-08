@@ -44,17 +44,6 @@ const GeostoryTooltip: FC<TooltipProps> = ({
     isHistogramVisibility(true);
   };
 
-  const handleHistogram = useCallback(async () => {
-    const { nutsDataParams } = await getHistogramData(
-      wmsNutsSource,
-      coordinate as Coordinate,
-      resolution,
-      leftData.id
-    );
-    setNutsDataParams(nutsDataParams);
-    isHistogramVisibility(true);
-  }, [coordinate, resolution, leftData.id, isHistogramVisibility]);
-
   const wmsNutsSource = useMemo(() => {
     return new TileWMS({
       url: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
@@ -68,6 +57,24 @@ const GeostoryTooltip: FC<TooltipProps> = ({
       crossOrigin: 'anonymous',
     });
   }, []);
+
+  const handleHistogram = useCallback(async () => {
+    const { nutsDataParams } = await getHistogramData(
+      wmsNutsSource,
+      coordinate as Coordinate,
+      resolution,
+      leftData.id
+    );
+    setNutsDataParams(nutsDataParams);
+    isHistogramVisibility(true);
+  }, [
+    coordinate,
+    resolution,
+    leftData.id,
+    isHistogramVisibility,
+    setNutsDataParams,
+    wmsNutsSource,
+  ]);
 
   if (!position || !leftData?.value) return null;
 
