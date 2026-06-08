@@ -1,5 +1,5 @@
 import { useQueryState } from 'next-usequerystate';
-import { parseAsJson, parseAsBoolean } from 'next-usequerystate/parsers';
+import { parseAsJson, parseAsBoolean } from 'next-usequerystate/server';
 import { Extent } from 'ol/extent';
 
 import type { CategoryId } from '@/constants/categories';
