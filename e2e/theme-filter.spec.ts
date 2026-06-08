@@ -53,11 +53,13 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('category filters on landing page', () => {
-  // The landing page carries Cesium and the 3D globe bundle, so on slow CI runners hydration
-  // can eat ~15s of actionability wait before the first click lands. The default 30s test
-  // timeout leaves no room for a second click, which is why multi-click cases used to fail.
-  // Give these tests a 60s budget so every click has time to re-render between iterations.
-  test.describe.configure({ timeout: 60_000 });
+  // The landing page carries Cesium and the 3D globe bundle. On CI the suite runs single-worker
+  // against a software-rendered WebGL globe, so each click triggers a camera fly-to animation that
+  // starves the main thread and stalls the subsequent nuqs URL write and re-render. The two-category
+  // case already consumes ~48s, so the heaviest three-category case overran the old 60s budget and
+  // reported an empty count (the final render simply hadn't committed in time). Give these tests a
+  // 120s budget so every click in the longest sequence has room to settle.
+  test.describe.configure({ timeout: 120_000 });
 
   test('categories-filter container is visible', async ({ page }) => {
     await expect(page.getByTestId('categories-filter')).toBeVisible();
