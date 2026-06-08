@@ -389,13 +389,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     return () => {
       cancelled = true;
     };
-  }, [
-    isRegionsLayerActive,
-    tooltipInfo.coordinate,
-    layerId,
-    wmsNutsSource,
-    setNutsDataParams,
-  ]);
+  }, [isRegionsLayerActive, tooltipInfo.coordinate, layerId, wmsNutsSource, setNutsDataParams]);
 
   // activates timeseries and comparative mode if geostory is comparative and just the first time
   // after that, the user should manage timeseries and comparative mode

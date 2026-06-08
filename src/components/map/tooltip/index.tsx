@@ -15,6 +15,8 @@ import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { toLonLat } from 'ol/proj';
 import { LuX } from 'react-icons/lu';
 
+import { scrollToHistogram } from '@/lib/scroll-to-histogram';
+
 import {
   histogramVisibilityAtom,
   nutsDataResponseAtom,
@@ -25,7 +27,6 @@ import { CATEGORIES_COLORS } from '@/constants/categories';
 
 import { useCountryName } from '@/hooks/countries';
 import { useLayer } from '@/hooks/layers';
-import { scrollToHistogram } from '@/lib/scroll-to-histogram';
 
 import type { MonitorTooltipInfo } from '@/components/map/types';
 import { Button } from '@/components/ui/button';
@@ -163,7 +164,8 @@ const MapTooltip: FC<MapTooltipProps> = ({
   const formatDeg = (n: number) => `${n.toFixed(4)}°`;
   // Show a coordinate readout when there's no human-readable place name —
   // i.e. point queries, and region queries that came back without a NUTS_NAME.
-  const showCoords = !!lonLat && hasLayer && (!isRegionsLayerActive || !nutsDataResponse?.NUTS_NAME);
+  const showCoords =
+    !!lonLat && hasLayer && (!isRegionsLayerActive || !nutsDataResponse?.NUTS_NAME);
 
   return (
     <div
@@ -218,10 +220,7 @@ const MapTooltip: FC<MapTooltipProps> = ({
           )}
 
           {showCoords && lonLat && (
-            <p
-              data-testid="map-tooltip-coordinates"
-              className="flex items-center gap-3 text-xs"
-            >
+            <p data-testid="map-tooltip-coordinates" className="flex items-center gap-3 text-xs">
               <span className="whitespace-nowrap">Coordinates:</span>
               <span className="whitespace-nowrap rounded-full bg-white-950 px-2 py-0.5 font-mono">
                 <span aria-label={`Latitude ${lonLat[1].toFixed(4)} degrees`}>

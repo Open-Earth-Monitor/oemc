@@ -213,9 +213,7 @@ test.describe('general information in map page', () => {
 });
 
 test.describe('map tooltip', () => {
-  test('shows "No layer active" message when clicking the map with no layer', async ({
-    page,
-  }) => {
+  test('shows "No layer active" message when clicking the map with no layer', async ({ page }) => {
     await mockAPIs(page);
     await page.goto('/explore/monitor/m1', { waitUntil: 'networkidle' });
 

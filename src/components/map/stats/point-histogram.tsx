@@ -134,11 +134,7 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryT
         </div>
         {isLoadingHistogram && <Loading />}
         {!isLoadingHistogram && histogramError && (
-          <p
-            data-testid="point-histogram-error"
-            role="alert"
-            className="text-alert-error text-sm"
-          >
+          <p data-testid="point-histogram-error" role="alert" className="text-alert-error text-sm">
             Error occurred while fetching the data:{' '}
             {(histogramError.response?.data as { message?: string })?.message ||
               histogramError.message}

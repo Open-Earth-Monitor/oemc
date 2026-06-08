@@ -26,9 +26,7 @@ test.describe('explore page — map sidebar theme filter', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/explore', { waitUntil: 'load' });
     // Wait for first dataset render so the sidebar is interactive.
-    await page
-      .getByTestId('results-count-number')
-      .waitFor({ state: 'attached', timeout: 30_000 });
+    await page.getByTestId('results-count-number').waitFor({ state: 'attached', timeout: 30_000 });
   });
 
   test('All Categories button is rendered, labeled, and active by default', async ({ page }) => {

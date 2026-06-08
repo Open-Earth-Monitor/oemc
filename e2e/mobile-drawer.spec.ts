@@ -13,9 +13,7 @@ const VIEWPORTS: ViewportCase[] = [
 async function waitForLandingReady(page: Page) {
   // Mobile landing renders only the globe + drawer triggers — no
   // `featured-geostories-count`. Wait on the trigger we're about to click.
-  await page
-    .getByTestId('mobile-geostories-trigger')
-    .waitFor({ state: 'visible', timeout: 30000 });
+  await page.getByTestId('mobile-geostories-trigger').waitFor({ state: 'visible', timeout: 30000 });
 }
 
 /**
@@ -48,9 +46,10 @@ test.describe('landing — mobile drawer height', () => {
       await page.goto('/', { waitUntil: 'load' });
       await waitForLandingReady(page);
 
-      const headerBox = await page.locator('header').first().evaluate((el) =>
-        el.getBoundingClientRect().toJSON()
-      );
+      const headerBox = await page
+        .locator('header')
+        .first()
+        .evaluate((el) => el.getBoundingClientRect().toJSON());
 
       const trigger = page.getByTestId('mobile-geostories-trigger');
       await expect(trigger).toBeVisible();
@@ -74,9 +73,10 @@ test.describe('landing — mobile drawer height', () => {
     await page.goto('/', { waitUntil: 'load' });
     await waitForLandingReady(page);
 
-    const headerBox = await page.locator('header').first().evaluate((el) =>
-      el.getBoundingClientRect().toJSON()
-    );
+    const headerBox = await page
+      .locator('header')
+      .first()
+      .evaluate((el) => el.getBoundingClientRect().toJSON());
 
     const trigger = page.getByTestId('mobile-live-updates-trigger');
     await expect(trigger).toBeVisible();
