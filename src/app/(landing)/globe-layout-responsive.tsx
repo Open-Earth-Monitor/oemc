@@ -29,11 +29,8 @@ function GlobeLayoutDesktop() {
           <div className="-translate-y-6">
             <CategoriesFilters />
           </div>
+          <GlobeExploreData className="[@media(max-height:940px)]:mt-0" />
         </div>
-      </div>
-
-      <div className="pointer-events-none absolute bottom-2 left-5 z-10 md:bottom-[60px] xl:bottom-2">
-        <GlobeExploreData />
       </div>
     </div>
   );
