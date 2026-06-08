@@ -41,6 +41,15 @@ import { DEFAULT_VIEWPORT, TOOLTIP_INITIAL_STATE, WMS_INFO_FORMAT, WMS_CRS } fro
 import BufferedTileWMS from './buffered-tile-wms';
 import NutsLayer from './nuts';
 
+type MapRefValue = {
+  map: ol.Map;
+  ol: {
+    getView: () => ol.View;
+    getSize: () => Size;
+    getPixelFromCoordinate: (coordinate: Coordinate) => [number, number];
+  };
+};
+
 function buildWmsSource(url: string, layerName: string) {
   return new TileWMS({
     url,
@@ -123,14 +132,7 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
   const predefinedBbox =
     type === 'monitor' ? monitorData?.monitor_bbox : geostoryData?.geostory_bbox;
 
-  const mapRef: React.MutableRefObject<{
-    map: ol.Map;
-    ol: {
-      getView: () => ol.View;
-      getSize: () => Size;
-      getPixelFromCoordinate: (coordinate: Coordinate) => [number, number];
-    };
-  }> = useRef(null as unknown as any);
+  const mapRef: React.MutableRefObject<MapRefValue> = useRef(null as unknown as MapRefValue);
 
   const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TOOLTIP_INITIAL_STATE);
 

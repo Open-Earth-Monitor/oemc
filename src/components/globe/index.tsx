@@ -31,7 +31,7 @@ import GlobeReady from './globe-ready';
 import PulseLayer from './pulse-layer';
 
 if (typeof window !== 'undefined') {
-  (window as any).CESIUM_BASE_URL = '/cesium/';
+  (window as Window & { CESIUM_BASE_URL?: string }).CESIUM_BASE_URL = '/cesium/';
   Cesium.Ion.defaultAccessToken = undefined;
 }
 

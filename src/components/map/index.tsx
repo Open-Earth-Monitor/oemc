@@ -63,6 +63,15 @@ import NutsLayer from './layers/nuts';
 import Legend from './legend';
 import MapTooltip from './tooltip';
 
+type MapRefValue = {
+  map: ol.Map;
+  ol: {
+    getView: () => ol.View;
+    getSize: () => Size;
+    getPixelFromCoordinate: (coordinate: Coordinate) => [number, number];
+  };
+};
+
 function buildWmsSource(url: string, layerName: string) {
   return new TileWMS({
     url,
@@ -158,14 +167,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const predefinedBbox =
     type === 'monitor' ? monitorData?.monitor_bbox : geostoryData?.geostory_bbox;
 
-  const mapRef: React.MutableRefObject<{
-    map: ol.Map;
-    ol: {
-      getView: () => ol.View;
-      getSize: () => Size;
-      getPixelFromCoordinate: (coordinate: Coordinate) => [number, number];
-    };
-  }> = useRef(null as unknown as any);
+  const mapRef: React.MutableRefObject<MapRefValue> = useRef(null as unknown as MapRefValue);
 
   const [olLayerLeft, setOlLayerLeft] = useState<TileLayer<TileWMS> | null>(null);
   const [olLayerRight, setOlLayerRight] = useState<TileLayer<TileWMS> | null>(null);
@@ -531,7 +533,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   return (
     <div className="relative h-full w-full">
       <RMap
-        ref={mapRef as unknown as React.RefObject<any>}
+        ref={mapRef as unknown as React.RefObject<RMap>}
         projection="EPSG:3857"
         width="100%"
         height="100%"
