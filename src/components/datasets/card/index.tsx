@@ -4,11 +4,11 @@ import { FC, useCallback, useEffect, useMemo } from 'react';
 
 import { useAtom } from 'jotai';
 
+import { scrollToHistogram } from '@/lib/scroll-to-histogram';
+
 import { Geostory } from '@/types/geostories';
 import type { LayerParsed } from '@/types/layers';
 import { Monitor, MonitorParsed } from '@/types/monitors';
-
-import { scrollToHistogram } from '@/lib/scroll-to-histogram';
 
 import { histogramVisibilityAtom } from '@/app/store';
 

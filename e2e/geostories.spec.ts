@@ -39,7 +39,9 @@ test.describe('explore page — monitors & geostories list', () => {
       await expect(page.getByTestId(`sidebar-geostory-card-${geostory.id}`).first()).toBeVisible();
 
       await expect(page.getByTestId(`card-type-${geostory.id}`).first()).toHaveText('Geostory');
-      await expect(page.getByTestId(`card-theme-${geostory.id}`).first()).toHaveText(geostory.theme);
+      await expect(page.getByTestId(`card-theme-${geostory.id}`).first()).toHaveText(
+        geostory.theme
+      );
 
       const titleLink = page.getByTestId(`card-title-link-${geostory.id}`).first();
       await expect(titleLink).toBeVisible();
@@ -106,6 +108,8 @@ test.describe('geostory detail page', () => {
     await page.goto(`/explore/geostory/${firstGeostoryId}`, { waitUntil: 'load' });
     await page.waitForSelector('[data-testid="datasets-list"] li', { state: 'visible' });
 
-    await expect(page.getByTestId('datasets-list').first().locator('li')).toHaveCount(expectedLayerCount);
+    await expect(page.getByTestId('datasets-list').first().locator('li')).toHaveCount(
+      expectedLayerCount
+    );
   });
 });
