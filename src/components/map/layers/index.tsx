@@ -244,6 +244,9 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
       ]);
       setBbox(geostoryData?.geostory_bbox || undefined);
     }
+    // Intentionally run only once on mount: comparative mode is auto-activated
+    // for comparative geostories the first time, then the user manages it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const resolution = mapRef.current?.ol.getView?.()?.getResolution?.();

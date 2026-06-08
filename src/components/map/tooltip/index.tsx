@@ -147,7 +147,7 @@ const MapTooltip: FC<MapTooltipProps> = ({
 
     setCoords((prev) => (prev?.left === left && prev?.top === top ? prev : { left, top }));
     setTailOnTop((prev) => (prev === flipped ? prev : flipped));
-  });
+  }, [position]);
 
   if (!position) return null;
 

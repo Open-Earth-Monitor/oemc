@@ -331,6 +331,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       isCompareMode,
       wmsNutsSource,
       layerId,
+      compareLayerId,
+      position.x,
       setNutsDataParams,
       setNutsDataParamsCompare,
       setLonLat,
