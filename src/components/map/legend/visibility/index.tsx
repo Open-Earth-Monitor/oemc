@@ -32,14 +32,14 @@ export const LayerVisibility = () => {
         {isLayerVisible ? (
           <IoMdEye
             className={cn({
-              'h-5 w-5': true,
+              'h-5 w-5 transition-colors hover:text-secondary-500': true,
               'text-gray-600': !isLayerVisible,
             })}
           />
         ) : (
           <IoMdEyeOff
             className={cn({
-              'h-4 w-4': true,
+              'h-4 w-4 transition-colors hover:text-secondary-500': true,
               'text-gray-600': !isLayerVisible,
             })}
           />

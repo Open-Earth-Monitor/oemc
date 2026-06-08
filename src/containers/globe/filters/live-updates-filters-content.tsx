@@ -8,8 +8,8 @@ export const LiveUpdatesFiltersContent = () => {
       <div className="text-white-500">Filter by: </div>
 
       <div className="flex flex-wrap gap-4">
-        {LIVE_UPDATES_CONTENT.map((category) => (
-          <Item key={category.id} {...category} />
+        {LIVE_UPDATES_CONTENT.map(({ id, label, content }) => (
+          <Item key={id} id={id} label={label} content={content} />
         ))}
       </div>
     </div>

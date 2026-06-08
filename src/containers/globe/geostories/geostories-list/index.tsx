@@ -2,6 +2,8 @@
 
 import Loading from '@/app/loading';
 
+import { ScrollArea } from '@/components/ui/scroll-area';
+
 import GeostoryItem from './item';
 
 const FEATURED_GEOSTORIES = [
@@ -26,7 +28,7 @@ const GeostoriesList = ({ geostoriesList, isLoading }) => {
     FEATURED_GEOSTORIES.includes(geostory.id)
   );
   return (
-    <div className="h-full w-full flex-1 overflow-y-auto lg:max-w-md">
+    <ScrollArea className="h-full w-full flex-1 lg:max-w-md">
       <div className="space-y-3 pr-8">
         <p
           className="text-xs font-medium text-accent-green"
@@ -54,7 +56,7 @@ const GeostoriesList = ({ geostoriesList, isLoading }) => {
           )}
         </div>
       </div>
-    </div>
+    </ScrollArea>
   );
 };
 

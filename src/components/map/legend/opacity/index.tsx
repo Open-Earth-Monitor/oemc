@@ -32,7 +32,7 @@ export const OpacitySetting: FC<{
         <PopoverTrigger data-testid="layer-opacity-button" aria-label="Adjust layer opacity">
           <MdOutlineOpacity
             className={cn({
-              'h-5 w-5 text-gray-600 hover:text-secondary-500': true,
+              'h-5 w-5 text-gray-600 transition-colors hover:text-secondary-500': true,
               'text-secondary-500': isOpacityPopoverOpen,
             })}
           />

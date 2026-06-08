@@ -30,12 +30,12 @@ const CommunityDropdown = () => {
             const isActive = `/${pathname.split('/')[1]}` === props.href;
             return (
               <Link
-                className="group rounded-[20px] px-6 py-5 font-medium transition-colors hover:bg-black-500 hover:text-white-500"
+                className="group/community-link rounded-[20px] px-6 py-5 font-medium transition-colors hover:bg-black-500 hover:text-white-500"
                 key={props.href}
                 {...props}
               >
                 {isActive && (
-                  <div className="h-2 w-2 rounded-full bg-black-500 group-hover:bg-white-500" />
+                  <div className="h-2 w-2 rounded-full bg-black-500 group-hover/community-link:bg-white-500" />
                 )}
                 <span>{name}</span>
               </Link>
