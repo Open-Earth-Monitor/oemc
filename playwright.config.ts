@@ -46,7 +46,11 @@ export default defineConfig({
   projects: [
     {
       name: 'Chromium',
-      use: { ...devices['Desktop Chrome'], channel: 'chromium' },
+      // Desktop Chrome defaults to 1280x720, but the landing page only mounts its desktop
+      // layout (categories filter, featured geostories panel) above
+      // `(min-width: 1280px) and (min-height: 820px)`. Pin a taller viewport so the desktop
+      // breakpoint is met; the device viewport is spread first, so this override wins.
+      use: { ...devices['Desktop Chrome'], channel: 'chromium', viewport: { width: 1440, height: 900 } },
     },
     // ...(process.env.CI
     //   ? []
