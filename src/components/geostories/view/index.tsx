@@ -1,7 +1,5 @@
 import { FC, useState } from 'react';
 
-import Link from 'next/link';
-
 import { ChevronDown } from 'lucide-react';
 
 import { cn } from '@/lib/classnames';
@@ -50,14 +48,11 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
           <div className="0 flex w-full items-center justify-between">
             <h2 className="py-2 font-medium">Datasets</h2>
 
-            <CollapsibleTrigger
-              className="w-fit p-0 data-[state=open]:bg-transparent"
-              data-testid="collapse-button"
-            >
+            <CollapsibleTrigger asChild data-testid="collapse-button">
               <Button
                 variant={datasetStatus === 'open' ? 'outline' : 'default'}
                 size="sm"
-                className="flex items-center gap-1"
+                className="flex w-fit items-center gap-1 p-0 data-[state=open]:bg-transparent"
               >
                 {datasetStatus === 'open' ? 'Collapse' : 'Expand'}
                 <ChevronDown
@@ -98,14 +93,11 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
         >
           <div className="flex w-full items-center justify-between">
             <h2 className="font-medium">Monitors</h2>
-            <CollapsibleTrigger
-              className="w-fit p-0 data-[state=open]:bg-transparent"
-              data-testid="collapse-monitors-button"
-            >
+            <CollapsibleTrigger asChild data-testid="collapse-monitors-button">
               <Button
                 variant={monitorStatus === 'open' ? 'outline' : 'default'}
                 size="sm"
-                className="flex items-center gap-1"
+                className="flex w-fit items-center gap-1 p-0 data-[state=open]:bg-transparent"
               >
                 {monitorStatus === 'open' ? 'Collapse' : 'Expand'}
                 <ChevronDown
@@ -120,13 +112,12 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
           <CollapsibleContent className="pt-4 transition-all duration-500 ease-in-out data-[state=closed]:-translate-y-2 data-[state=open]:translate-y-0 data-[state=closed]:opacity-0 data-[state=open]:opacity-100">
             <ul className="space-y-2.5">
               {monitors.map((monitor) => (
-                <li key={monitor.id} className="text-xs font-bold underline">
-                  <Link
-                    href={`/explore/monitor/${monitor.id}`}
-                    data-testid={`monitor-link-${monitor.id}`}
-                  >
-                    <DatasetCardMonitor {...monitor} color={color} />
-                  </Link>
+                <li
+                  key={monitor.id}
+                  className="text-xs font-bold underline"
+                  data-testid={`monitor-link-${monitor.id}`}
+                >
+                  <DatasetCardMonitor {...monitor} color={color} />
                 </li>
               ))}
             </ul>
