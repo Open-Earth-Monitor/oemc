@@ -35,7 +35,7 @@ export function createDiamondDataUrl(fillColor: string): string {
   const canvas = document.createElement('canvas');
   canvas.width = PIN_SIZE;
   canvas.height = PIN_SIZE;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
   ctx.clearRect(0, 0, PIN_SIZE, PIN_SIZE);
 
   const half = PIN_SIZE / 2;
@@ -102,7 +102,7 @@ export function createPulseDiamondDataUrl(fillColor: string): string {
   const canvas = document.createElement('canvas');
   canvas.width = PULSE_SIZE;
   canvas.height = PULSE_SIZE;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
   const half = PULSE_SIZE / 2;
 
