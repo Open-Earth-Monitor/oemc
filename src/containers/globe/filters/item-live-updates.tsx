@@ -67,7 +67,7 @@ const Filter = ({
 };
 
 export default function Item({ id, label, content, className }: ItemProps) {
-  const [_, setMediaFilter] = useSyncMediaFilter();
+  const [, setMediaFilter] = useSyncMediaFilter();
   const handleFilter = useCallback(
     (clickedId: string) => {
       setMediaFilter((prev) => {

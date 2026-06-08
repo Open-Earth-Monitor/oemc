@@ -4,8 +4,6 @@ import type { FC, FormEvent, MouseEvent } from 'react';
 import { usePathname } from 'next/navigation';
 
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { getWidth } from 'ol/extent';
-import { get as getProjection } from 'ol/proj';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { useLocalStorage } from 'usehooks-ts';
 
@@ -15,25 +13,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { IconTooltip } from '@/components/ui/tooltip';
 
 const PREFIX = 'OEMC';
-
-const getUrlParameter = (url, name) => {
-  const results = new RegExp('[?&]' + name + '=([^&#]*)').exec(url);
-  return results ? decodeURIComponent(results[1]) : null;
-};
-
-const createBBox = (center, zoom) => {
-  const projection = getProjection('EPSG:3857');
-  const resolution = getWidth(projection.getExtent()) / 256 / Math.pow(2, zoom); // resolution
-  const delta = (resolution * 256) / 2; // We need it to know how much we move in X and Y from that center to get the  Bbox
-
-  const [x, y] = center;
-  const bbox = [
-    [x - delta, y - delta], // bottom left corner
-    [x + delta, y + delta], // top right corner
-  ];
-
-  return bbox;
-};
 
 export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
   isMobile,

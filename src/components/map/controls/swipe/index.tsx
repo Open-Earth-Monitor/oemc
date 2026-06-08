@@ -13,7 +13,7 @@ const SwipeControl: React.FC<{
   olLayerLeft?: TileLayer<TileWMS> | null;
   olLayerRight?: TileLayer<TileWMS> | null;
 }> = ({ olLayerLeft, olLayerRight }) => {
-  const [position, setPosition] = useSyncSwipeControlPosition();
+  const [, setPosition] = useSyncSwipeControlPosition();
   const [sidebarOpen] = useSyncSidebarState();
   const { map } = useOL();
   const swipeRef = useRef<Swipe | null>(null);

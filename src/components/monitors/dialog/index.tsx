@@ -1,13 +1,6 @@
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-
 import { LuInfo } from 'react-icons/lu';
 
-import cn from '@/lib/classnames';
-
 import type { Monitor } from '@/types/monitors';
-
-import { postWebTraffic } from '@/hooks/web-traffic';
 
 import {
   Dialog,
@@ -32,15 +25,6 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
   responsible_partner_name,
   responsible_partner_url,
 }) => {
-  const params = useParams();
-  const monitorId = params?.monitor_id;
-  const handleClick = () => {
-    postWebTraffic({
-      monitor_id: id,
-    });
-    console.info('WT7 -', 'monitors', id);
-  };
-
   const hasValidLink =
     Array.isArray(use_case_link) && use_case_link.some(({ title, url }) => Boolean(title || url));
 

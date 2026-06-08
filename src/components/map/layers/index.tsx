@@ -132,8 +132,6 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
     };
   }> = useRef(null as unknown as any);
 
-  const nutsLayer = useRef(null);
-
   const [tooltipInfo, setTooltipInfo] = useState<MonitorTooltipInfo>(TOOLTIP_INITIAL_STATE);
 
   const [layers, setLayers] = useSyncLayersSettings();

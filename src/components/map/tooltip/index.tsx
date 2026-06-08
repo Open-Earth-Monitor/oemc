@@ -11,7 +11,7 @@ import {
   useState,
 } from 'react';
 
-import { useAtom, useSetAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { toLonLat } from 'ol/proj';
 import { LuX } from 'react-icons/lu';
 

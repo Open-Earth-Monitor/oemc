@@ -1,6 +1,4 @@
-import { test, expect } from '@playwright/test';
-
-import type { Monitor } from '@/types/monitors';
+import { test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/explore', { waitUntil: 'load' });

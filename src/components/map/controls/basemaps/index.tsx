@@ -18,7 +18,7 @@ import { BASEMAPS, LABELS, LabelProps, BasemapProps } from './constants';
 const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
   const [selectedBasemap, setBasemap] = useSyncBasemapSettings();
   const [activeLabels, setActiveLabels] = useSyncBasemapLabelsSettings();
-  const [isHistogramActive, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
+  const [, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
   // isActive is based on the url
   const [regionsLayerVisibility, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 

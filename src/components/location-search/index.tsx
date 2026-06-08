@@ -32,7 +32,7 @@ function LocationSearchComponent({
   className?: string;
 }) {
   const [dropdownVisible, setDropdownVisible] = useState(true);
-  const [inputExpanded, setInputExpanded] = useState(false); // State for input expansion on mobile
+  const [inputExpanded] = useState(false); // State for input expansion on mobile
 
   const handleReset = useCallback(() => {
     handleLocationSearchChange({
