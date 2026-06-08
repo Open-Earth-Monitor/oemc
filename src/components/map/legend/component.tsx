@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, createRef, useLayoutEffect } from 'react';
+import { useState, useCallback, createRef, useLayoutEffect } from 'react';
 
 import { usePathname } from 'next/navigation';
 
@@ -21,9 +21,6 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
   const layerId = layers?.[0]?.id;
-  const opacity = layers?.[0]?.opacity;
-
-  const compareDate = compareLayers?.[0]?.date;
 
   const { data: compareLayerData } = useLayer(
     { layer_id: compareLayers?.[0]?.id, compare: true },
@@ -52,7 +49,6 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
 
   const {
     data: legendData,
-    isError: isErrorLegendData,
     isLoading: isLoadingLegendData,
     isFetched: isFetchedLegendData,
   } = useLegendGraphic({
@@ -60,7 +56,7 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
     gs_base_wms: layerData?.gs_base_wms,
   });
 
-  const { data: legendDataCompare, isError: isErrorCompareLegendData } = useLegendGraphic({
+  const { data: legendDataCompare } = useLegendGraphic({
     gs_base_wms: layerDataCompare?.gs_base_wms,
     gs_name: layerDataCompare?.gs_name,
   });

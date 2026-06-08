@@ -44,7 +44,6 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
   if (!geostory) return null;
 
   const color = getCategoryColor(geostory.theme);
-  const firstPublication = geostory.publications?.[0];
   const publications = geostory.publications || [];
   const useCases = (geostory.use_case_link ?? []).filter((item) => item?.title || item?.url) || [];
   const doi = (geostory.use_case_link ?? []).filter((item) => item?.title || item?.url);

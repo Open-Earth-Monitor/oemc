@@ -25,15 +25,7 @@ const MobileExploreNavbar = () => {
   const [currentDataset, setDatasetType] = useSyncDatasetType();
   const [categories, setCategory] = useSyncCategories();
   const category = categories?.[0] ?? null;
-  const {
-    results,
-    isLoading,
-    isFetched,
-    sortingCriteria,
-    showDetail,
-    setShowDetail,
-    setSortingCriteria,
-  } = useDatasets();
+  const { results, isLoading, isFetched, sortingCriteria, setSortingCriteria } = useDatasets();
 
   const handleClick = useCallback(
     (id: CategoryId | typeof ALL_CATEGORY.id) => {

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useParams, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 import { useGeostory } from '@/hooks/geostories';
 import { useLayer } from '@/hooks/layers';
@@ -11,24 +11,16 @@ import TimeSeriesComparativeLayers from '@/components/timeseries-comparative-lay
 import TimeSeriesSameLayer from '@/components/timeseries-layer';
 
 export const LegendTimeseries: React.FC = () => {
-  const [layers, setLayers] = useSyncLayersSettings();
-  const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
+  const [layers] = useSyncLayersSettings();
+  const [compareLayers] = useSyncCompareLayersSettings();
 
   const isGeostory = usePathname().startsWith('/explore/geostory');
 
   const datasetId = usePathname().split('/')[3];
 
-  const { data: geostoryData } = useGeostory(
-    { geostory_id: datasetId },
-    { enabled: isGeostory && !!datasetId }
-  );
+  useGeostory({ geostory_id: datasetId }, { enabled: isGeostory && !!datasetId });
 
-  const { data: monitorData } = useMonitor(
-    { monitor_id: datasetId },
-    { enabled: !isGeostory && !!datasetId }
-  );
-
-  const datasetData = isGeostory ? geostoryData : monitorData;
+  useMonitor({ monitor_id: datasetId }, { enabled: !isGeostory && !!datasetId });
 
   const baseLayerId = useMemo(() => layers?.[0]?.id, [layers]);
   const comparisonLayerId = useMemo(() => compareLayers?.[0]?.id, [compareLayers]);
