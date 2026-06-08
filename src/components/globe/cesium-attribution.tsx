@@ -109,6 +109,7 @@ export default function CesiumAttribution() {
 
     const tick = () => {
       if (cancelled) return;
+      if (!viewer || viewer.isDestroyed?.()) return;
       const next = collectCreditHtml(viewer.creditDisplay);
       const sig = next.join('||');
       if (sig !== lastSignature) {
