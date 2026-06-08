@@ -47,7 +47,7 @@ const SwipeControl: React.FC<{
 
     return () => {
       swipe.removeEventListener('moving', handleMoving);
-      (swipe as any).removeLayers();
+      (swipe as Swipe & { removeLayers: () => void }).removeLayers();
       map.removeControl(swipe);
       swipeRef.current = null;
     };
@@ -59,7 +59,7 @@ const SwipeControl: React.FC<{
     const swipe = swipeRef.current;
     if (!swipe) return;
 
-    (swipe as any).removeLayers();
+    (swipe as Swipe & { removeLayers: () => void }).removeLayers();
 
     if (olLayerLeft && olLayerRight) {
       swipe.addLayer(olLayerLeft, false);

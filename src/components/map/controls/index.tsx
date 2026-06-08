@@ -6,6 +6,7 @@ import { Extent } from 'ol/extent';
 import TileLayer from 'ol/layer/Tile';
 import { fromLonLat } from 'ol/proj';
 import TileWMS from 'ol/source/TileWMS';
+import type View from 'ol/View';
 import { RControl } from 'rlayers';
 
 import { cn } from '@/lib/classnames';
@@ -24,10 +25,10 @@ const SwipeControl = lazy(() => import('@/components/map/controls/swipe'));
 
 type ControlsProps = {
   className?: string;
-  mapRef?: React.RefObject<any>;
+  mapRef?: React.RefObject<{ ol: { getView: () => View } }>;
   olLayerLeft?: TileLayer<TileWMS> | null;
   olLayerRight?: TileLayer<TileWMS> | null;
-  data?: any;
+  data?: unknown;
   isLoading?: boolean;
 };
 

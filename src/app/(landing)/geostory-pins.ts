@@ -39,7 +39,7 @@ export function useGeostoryPins(params: GeostoriesParams): GeostoryPin[] {
 
     return geostories
       .map((story) => {
-        const bbox = (story as any).geostory_bbox as unknown;
+        const bbox = story.geostory_bbox as unknown;
         if (!Array.isArray(bbox) || bbox.length !== 4) return null;
 
         const [minX, minY, maxX, maxY] = bbox;
@@ -61,10 +61,10 @@ export function useGeostoryPins(params: GeostoriesParams): GeostoryPin[] {
         if (!isValidLonLat(lon, lat)) return null;
 
         return {
-          geostory_id: String((story as any).id),
-          title: String((story as any).title ?? ''),
+          geostory_id: String(story.id),
+          title: String(story.title ?? ''),
           coordinates: [lon, lat],
-          category: ((story as any).theme ?? 'Unknown') as CategoryId,
+          category: (story.theme ?? 'Unknown') as CategoryId,
         } satisfies GeostoryPin;
       })
       .filter(Boolean) as GeostoryPin[];

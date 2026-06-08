@@ -16,6 +16,8 @@ import { format } from 'd3-format';
 
 const numberFormat = format(',.2f');
 
+type LineChartDatum = { x: string | number | Date; y: number | null; unit?: string };
+
 function formatDate(value: unknown): string {
   const date = new Date(value as string);
   if (!isNaN(date.getTime())) {
@@ -73,8 +75,8 @@ export const LineChart = ({
   const xScaleType = isDate ? 'time' : isNumber ? 'linear' : 'point';
 
   const accessors = {
-    xAccessor: isDate ? (d: any) => new Date(d.x) : (d: any) => d.x,
-    yAccessor: (d: any) => d.y,
+    xAccessor: isDate ? (d: LineChartDatum) => new Date(d.x) : (d: LineChartDatum) => d.x,
+    yAccessor: (d: LineChartDatum) => d.y,
   };
 
   const allY = useMemo(
@@ -154,7 +156,7 @@ export const LineChart = ({
               renderTooltip={({ tooltipData, tooltipTop = 0, tooltipLeft = 0 }) => {
                 const nearest = tooltipData?.nearestDatum;
                 if (!nearest) return null;
-                const d = nearest.datum;
+                const d = nearest.datum as LineChartDatum;
 
                 const info = tooltipData.datumByKey[data?.title];
                 const compareInfo = tooltipData.datumByKey[dataCompare?.title];
