@@ -17,7 +17,7 @@ import { NewsSVG } from '@/SVGS/news';
 
 export const LiveUpdatesGlobeMobile = () => {
   return (
-    <Drawer>
+    <Drawer modal={false}>
       <DrawerTrigger
         aria-label="Open live updates feed"
         data-testid="mobile-live-updates-trigger"
