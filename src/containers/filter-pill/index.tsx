@@ -13,7 +13,7 @@ export const FilterPill = ({ children }: { children?: React.ReactNode }) => (
       side="bottom"
       align="end"
       sideOffset={8}
-      className="w-[100vw] max-w-none space-y-5 rounded-none border-t-0 bg-black-500/70 p-4 pt-5 backdrop-blur-lg"
+      className="w-[100vw] max-w-[480px] space-y-5 rounded-none border-0 bg-transparent p-4 pt-5 backdrop-blur-lg"
     >
       {children}
     </PopoverContent>

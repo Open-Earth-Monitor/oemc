@@ -28,7 +28,7 @@ const GeostoriesList = ({ geostoriesList, isLoading }) => {
     FEATURED_GEOSTORIES.includes(geostory.id)
   );
   return (
-    <ScrollArea className="h-full w-full flex-1 lg:max-w-md">
+    <ScrollArea className="h-full w-full flex-1">
       <div className="space-y-3 pr-8">
         <p
           className="text-xs font-medium text-accent-green"

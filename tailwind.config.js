@@ -40,6 +40,9 @@ module.exports = {
     //   '2xl': '1536px',
     // },
     extend: {
+      screens: {
+        xs: '480px',
+      },
       fontFamily: {
         inter: ['var(--font-inter)', 'sans-serif'],
         satoshi: ['var(--font-satoshi)', 'sans-serif'],
