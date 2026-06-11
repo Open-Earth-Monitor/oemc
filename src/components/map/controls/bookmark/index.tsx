@@ -59,11 +59,14 @@ export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
   return (
     <Sheet>
       <IconTooltip label="Bookmarks" side="left">
-        <SheetTrigger
-          aria-label="Open bookmarks"
-          className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
-        >
-          <AiOutlineStar size={22} strokeWidth={2} aria-hidden="true" />
+        <SheetTrigger asChild>
+          <button
+            type="button"
+            aria-label="Open bookmarks"
+            className={isMobile ? CONTROL_BUTTON_STYLES.mobile : CONTROL_BUTTON_STYLES.default}
+          >
+            <AiOutlineStar size={22} strokeWidth={2} aria-hidden="true" />
+          </button>
         </SheetTrigger>
       </IconTooltip>
       <SheetContent
