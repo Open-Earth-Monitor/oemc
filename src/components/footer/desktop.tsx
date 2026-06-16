@@ -7,8 +7,6 @@ import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/classnames';
 
-import { IconTooltip } from '@/components/ui/tooltip';
-
 import SocialMedia from './social-media';
 
 export const FooterDesktop: FC = () => {
@@ -23,25 +21,25 @@ export const FooterDesktop: FC = () => {
     >
       <div className="mx-8 flex w-full items-center justify-between xl:m-auto">
         <div className="flex items-center">
-          <IconTooltip label="Funded by the European Union">
-            <a
-              href="https://cordis.europa.eu/project/id/101059548"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center space-x-2.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
-              data-test-id="OEMC-factsheet-link"
-            >
-              <Image
-                src="/images/landing/EU.svg"
-                width={34}
-                height={22.75}
-                alt="European Union Logo"
-              />
-              <span className="py-4 text-xs font-medium text-white-50 md:whitespace-nowrap">
-                Funded by the European Union
-              </span>
-            </a>
-          </IconTooltip>
+          <a
+            href="https://cordis.europa.eu/project/id/101059548"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Funded by the European Union"
+            className="flex items-center space-x-2.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+            data-test-id="OEMC-factsheet-link"
+          >
+            <Image
+              src="/images/landing/EU.svg"
+              width={34}
+              height={22.75}
+              alt="European Union Logo"
+              style={{ height: 'auto' }}
+            />
+            <span className="py-4 text-xs font-medium text-white-50 md:whitespace-nowrap">
+              Funded by the European Union
+            </span>
+          </a>
         </div>
         <SocialMedia />
       </div>
