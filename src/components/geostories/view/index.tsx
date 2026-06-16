@@ -38,7 +38,7 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
         <p className="text-sm font-medium text-white-50" data-testid="geostory-description">
           {description}
         </p>
-        <div className="flex w-full justify-end space-y-4">
+        <div className="space-y-4">
           <GeostoryDialog {...data} />
         </div>
       </div>
