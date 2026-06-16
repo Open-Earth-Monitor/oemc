@@ -35,7 +35,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
         className="group flex items-center space-x-3 rounded text-xs font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
       >
         <LuInfo
-          className="h-6 w-6 transition-colors group-hover:text-accent-green"
+          className="h-6 w-6 text-white-800 transition-colors group-hover:text-white-500"
           aria-hidden="true"
         />
         <span>More info</span>
