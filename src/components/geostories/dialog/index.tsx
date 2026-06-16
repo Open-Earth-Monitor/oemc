@@ -3,9 +3,12 @@ import { useMemo } from 'react';
 import { compact } from 'lodash-es';
 import { LuInfo } from 'react-icons/lu';
 
+import cn from '@/lib/classnames';
+
 import type { Geostory } from '@/types/geostories';
 
 import UseCases from '@/components/monitors/dialog/knowledge-package';
+import { buttonVariants } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -15,7 +18,6 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
-import { IconTooltip } from '@/components/ui/tooltip';
 
 type GeostoryDialogProps = Partial<Geostory>;
 
@@ -42,15 +44,17 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
 
   return (
     <Dialog>
-      <IconTooltip label="More info">
-        <DialogTrigger
-          data-testid={`card-button-${id}`}
-          className="flex items-center space-x-3 rounded text-xs font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
-        >
-          <LuInfo className="h-6 w-6" aria-hidden="true" />
-          <span>More info</span>
-        </DialogTrigger>
-      </IconTooltip>
+      <DialogTrigger
+        title="More info"
+        data-testid={`card-button-${id}`}
+        className="flex items-center space-x-3 rounded text-xs font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+      >
+        <LuInfo
+          className={cn(buttonVariants({ variant: 'outline', size: 'icon' }), 'h-9 w-9 p-2')}
+          aria-hidden="true"
+        />
+        <span>More info</span>
+      </DialogTrigger>
       <DialogContent
         data-testid={`geostory-card-${id}`}
         className="w-full bg-secondary-500 text-brand-500 sm:w-[665px]"
