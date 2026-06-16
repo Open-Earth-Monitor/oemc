@@ -52,7 +52,7 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
               <Button
                 variant={datasetStatus === 'open' ? 'outline' : 'default'}
                 size="sm"
-                className="flex w-fit items-center gap-1"
+                className="flex w-fit items-center gap-1 rounded-full"
               >
                 {datasetStatus === 'open' ? 'Collapse' : 'Expand'}
                 <ChevronDown
@@ -97,7 +97,7 @@ const GeostoriesView: FC<GeostoriesViewProps> = ({ data, geostoryLayers, compari
               <Button
                 variant={monitorStatus === 'open' ? 'outline' : 'default'}
                 size="sm"
-                className="flex w-fit items-center gap-1"
+                className="flex w-fit items-center gap-1 rounded-full"
               >
                 {monitorStatus === 'open' ? 'Collapse' : 'Expand'}
                 <ChevronDown

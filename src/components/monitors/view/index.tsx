@@ -46,7 +46,7 @@ const MonitorView: FC<MonitorViewProps> = ({ data, geostoryLayers }) => {
               <Button
                 variant={datasetStatus === 'open' ? 'outline' : 'default'}
                 size="sm"
-                className="flex w-fit items-center gap-1"
+                className="flex w-fit items-center gap-1 rounded-full"
               >
                 {datasetStatus === 'open' ? 'Collapse' : 'Expand'}
                 <ChevronDown
@@ -90,7 +90,7 @@ const MonitorView: FC<MonitorViewProps> = ({ data, geostoryLayers }) => {
               <Button
                 variant={geostoryStatus === 'open' ? 'outline' : 'default'}
                 size="sm"
-                className="flex w-fit items-center gap-1"
+                className="flex w-fit items-center gap-1 rounded-full"
               >
                 {geostoryStatus === 'open' ? 'Collapse' : 'Expand'}
                 <ChevronDown
