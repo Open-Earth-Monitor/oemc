@@ -53,7 +53,7 @@ export const LegendGraphic: React.FC<{
           ))}
         </div>
       )}
-      {(unit || unit !== 'no unit') && (
+      {unit && unit.trim().toLowerCase() !== 'no unit' && (
         <div title={unit} className="w-full text-right text-xs text-gray-600">
           {unit}
         </div>
