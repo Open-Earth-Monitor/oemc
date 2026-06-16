@@ -198,7 +198,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   // initial viewport
   const dataBbox = useMemo(
-    () => bbox || predefinedBbox || initialViewState.bbox,
+    () => predefinedBbox || bbox || initialViewState.bbox,
     [bbox, predefinedBbox, initialViewState.bbox]
   );
   const initialViewport = {
@@ -357,8 +357,8 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   useEffect(() => {
     if (!mapRef?.current) return;
     if (fittedEntryRef.current === entryKey) return;
-    // URL bbox wins; otherwise wait for the API-provided predefinedBbox to load.
-    const target = bbox || predefinedBbox;
+    // API-provided predefinedBbox wins; otherwise fall back to the URL bbox.
+    const target = predefinedBbox || bbox;
     if (!target) return;
     fittedEntryRef.current = entryKey;
     setBbox(target);
