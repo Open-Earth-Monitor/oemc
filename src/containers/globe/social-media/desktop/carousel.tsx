@@ -8,7 +8,6 @@ import { Post as PostTypes } from '@/hooks/social-media';
 
 import { Carousel, CarouselContent, CarouselItem, useCarousel } from '@/components/ui/carousel';
 import type { CarouselApi } from '@/components/ui/carousel';
-import { IconTooltip } from '@/components/ui/tooltip';
 
 import { Post } from '../post';
 

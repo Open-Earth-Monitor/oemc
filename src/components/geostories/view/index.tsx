@@ -4,10 +4,6 @@ import { ChevronDown } from 'lucide-react';
 
 import { cn } from '@/lib/classnames';
 
-import { ChevronDown } from 'lucide-react';
-
-import { cn } from '@/lib/classnames';
-
 import { Geostory } from '@/types/geostories';
 import { LayerParsed, Layer } from '@/types/layers';
 

@@ -7,8 +7,6 @@ import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/classnames';
 
-import { IconTooltip } from '@/components/ui/tooltip';
-
 import SocialMedia from './social-media';
 
 export const FooterDesktop: FC = () => {

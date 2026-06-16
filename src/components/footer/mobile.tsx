@@ -5,7 +5,6 @@ import { FC } from 'react';
 import Image from 'next/image';
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { IconTooltip } from '@/components/ui/tooltip';
 
 import ShareSVG from '@/SVGS/share';
 

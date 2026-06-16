@@ -9,8 +9,6 @@ import { RiTwitterXLine, RiGithubFill, RiLinkedinFill } from 'react-icons/ri';
 
 import { cn } from '@/lib/classnames';
 
-import { IconTooltip } from '@/components/ui/tooltip';
-
 import { CONTROL_BUTTON_STYLES, CONTROL_ICON_STYLES } from './constants';
 
 const THEME = {
@@ -52,41 +50,32 @@ export const SocialMedia: FC<{
             [SIZE[size].button]: true,
           })}
         >
-          <div
-            className={cn({
-              [CONTROL_BUTTON_STYLES]: true,
-              [THEME[theme]]: true,
-              [SIZE[size].button]: true,
-            })}
-          >
-            <RiTwitterXLine
-              className={cn({ [CONTROL_ICON_STYLES]: true, [SIZE[size].icon]: true })}
-            />
-          </div>
-        </a>
-      </IconTooltip>
-      <IconTooltip label="OpenGeoHub Linkedin">
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.linkedin.com/in/opengeohub"
-          className="flex h-full items-center justify-center"
-          aria-label="OpenGeoHub Foundation Linkedin"
-          data-testid={!isMobile ? 'linkedin-link' : 'linkedin-link-mobile'}
+          <RiTwitterXLine
+            className={cn({ [CONTROL_ICON_STYLES]: true, [SIZE[size].icon]: true })}
+          />
+        </div>
+      </a>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://www.linkedin.com/in/opengeohub"
+        title="OpenGeoHub Linkedin"
+        className="flex h-full items-center justify-center"
+        aria-label="OpenGeoHub Foundation Linkedin"
+        data-testid={!isMobile ? 'linkedin-link' : 'linkedin-link-mobile'}
+      >
+        <div
+          className={cn({
+            [CONTROL_BUTTON_STYLES]: true,
+            [THEME[theme]]: true,
+            [SIZE[size].button]: true,
+          })}
         >
-          <div
-            className={cn({
-              [CONTROL_BUTTON_STYLES]: true,
-              [THEME[theme]]: true,
-              [SIZE[size].button]: true,
-            })}
-          >
-            <RiLinkedinFill
-              className={cn({ [CONTROL_ICON_STYLES]: true, [SIZE[size].icon]: true })}
-            />
-          </div>
-        </a>
-      </IconTooltip>
+          <RiLinkedinFill
+            className={cn({ [CONTROL_ICON_STYLES]: true, [SIZE[size].icon]: true })}
+          />
+        </div>
+      </a>
 
       {/* TO - DO - There is no Mastodon account provided */}
       {/* <a
@@ -102,14 +91,21 @@ export const SocialMedia: FC<{
         <IoLogoMastodon className={CONTROL_ICON_STYLES} />
       </div>
     </a> */}
-      <IconTooltip label="Open Earth Monitor Cyberinfrastructure project">
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/Open-Earth-Monitor"
-          className="flex h-full items-center justify-center"
-          aria-label="Open Earth Monitor Cyberinfrastructure in GitHub"
-          data-testid={!isMobile ? 'github-link' : 'github-link-mobile'}
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://github.com/Open-Earth-Monitor"
+        title="Open Earth Monitor Cyberinfrastructure project"
+        className="flex h-full items-center justify-center"
+        aria-label="Open Earth Monitor Cyberinfrastructure in GitHub"
+        data-testid={!isMobile ? 'github-link' : 'github-link-mobile'}
+      >
+        <div
+          className={cn({
+            [CONTROL_BUTTON_STYLES]: true,
+            [THEME[theme]]: true,
+            [SIZE[size].button]: true,
+          })}
         >
           {' '}
           <RiGithubFill className={cn({ [CONTROL_ICON_STYLES]: true, [SIZE[size].icon]: true })} />
@@ -137,10 +133,11 @@ export const SocialMedia: FC<{
             viewBox={size === 'md' ? '0 2 25 9' : ' 0 2 25 4'}
             fill="none"
             className={cn({
-              [CONTROL_BUTTON_STYLES]: true,
-              [THEME[theme]]: true,
+              'fill-current text-secondary-800 hover:text-secondary-500 active:bg-brand-200': true,
               [SIZE[size].button]: true,
+              'h-6 w-5': true,
             })}
+            xmlns="http://www.w3.org/2000/svg"
           >
             <g id="Group 1925">
               <g id="Group 1923">
@@ -181,10 +178,10 @@ export const SocialMedia: FC<{
                   }}
                 />
               </g>
-            </svg>
-          </motion.div>
-        </a>
-      </IconTooltip>
+            </g>
+          </svg>
+        </motion.div>
+      </a>
     </div>
   );
 };
