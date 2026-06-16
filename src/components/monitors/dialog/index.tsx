@@ -1,10 +1,7 @@
 import { LuInfo } from 'react-icons/lu';
 
-import cn from '@/lib/classnames';
-
 import type { Monitor } from '@/types/monitors';
 
-import { buttonVariants } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
