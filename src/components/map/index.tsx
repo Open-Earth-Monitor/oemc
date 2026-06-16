@@ -198,7 +198,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   // initial viewport
   const dataBbox = useMemo(
-    () => predefinedBbox || bbox || initialViewState.bbox,
+    () => bbox || predefinedBbox || initialViewState.bbox,
     [bbox, predefinedBbox, initialViewState.bbox]
   );
   const initialViewport = {
@@ -347,11 +347,23 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     setNutsDataParamsCompare({ NUTS_ID: '', LAYER_ID: '' });
   }, [setNutsDataParamsCompare]);
 
+  // Fit once per "entry" (mount / route change). The bbox URL param doubles as the
+  // live viewport (handleMapMove writes calculateExtent on every moveend), so reacting
+  // to it here would feed back into fit() and progressively zoom out. Guarding by entry
+  // key flies to the target on entry and ignores subsequent map-driven bbox updates.
+  const entryKey = `${type ?? ''}:${monitorId || (params.geostory_id as string) || ''}`;
+  const fittedEntryRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (!dataBbox || !mapRef?.current) return;
-    setBbox(dataBbox);
-    mapRef.current.ol.getView()?.fit(dataBbox);
-  }, [dataBbox, setBbox]);
+    if (!mapRef?.current) return;
+    if (fittedEntryRef.current === entryKey) return;
+    // URL bbox wins; otherwise wait for the API-provided predefinedBbox to load.
+    const target = bbox || predefinedBbox;
+    if (!target) return;
+    fittedEntryRef.current = entryKey;
+    setBbox(target);
+    mapRef.current.ol.getView()?.fit(target);
+  }, [entryKey, bbox, predefinedBbox, setBbox]);
 
   useEffect(() => {
     if (!isLayerActive) {
