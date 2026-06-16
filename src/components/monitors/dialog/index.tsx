@@ -1,10 +1,7 @@
 import { LuInfo } from 'react-icons/lu';
 
-import cn from '@/lib/classnames';
-
 import type { Monitor } from '@/types/monitors';
 
-import { buttonVariants } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -35,10 +32,10 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
       <DialogTrigger
         title="More info"
         data-testid={`card-button-${id}`}
-        className="flex items-center space-x-3 rounded text-xs font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+        className="group flex items-center space-x-3 rounded text-xs font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
       >
         <LuInfo
-          className={cn(buttonVariants({ variant: 'outline', size: 'icon' }), 'h-9 w-9 p-2')}
+          className="h-6 w-6 transition-colors group-hover:text-accent-green"
           aria-hidden="true"
         />
         <span>More info</span>
