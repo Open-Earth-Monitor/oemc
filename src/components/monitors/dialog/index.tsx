@@ -32,10 +32,10 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
       <DialogTrigger
         title="More info"
         data-testid={`card-button-${id}`}
-        className="group inline-flex items-center space-x-3 rounded text-xs font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+        className="group/more-info inline-flex items-center space-x-3 rounded text-xs font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
       >
         <LuInfo
-          className="h-6 w-6 text-white-800 transition-colors group-hover:text-white-500"
+          className="h-6 w-6 text-white-800 transition-colors group-hover/more-info:text-white-500"
           aria-hidden="true"
         />
         <span>More info</span>
