@@ -102,15 +102,16 @@ export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
                   <Button
                     type="submit"
                     onClick={handleSaveBookmark}
-                    className="flex w-full items-center"
+                    className="flex w-full items-center justify-center"
                     disabled={!bookmarkName}
                   >
                     Save
                   </Button>
                   <Button
                     type="button"
+                    variant="outline"
                     onClick={() => setInputVisibility(false)}
-                    className="flex w-full items-center"
+                    className="flex w-full items-center justify-center"
                   >
                     Cancel
                   </Button>
@@ -132,12 +133,10 @@ export const BookmarkControl: FC<{ isMobile?: boolean }> = ({
                   key={name}
                   className="border-t-0.5 flex items-center justify-between border-b border-t-[0.5px] border-dashed border-brand-50 py-2.5"
                 >
-                  <div className="flex items-center space-x-2">
-                    <AiFillStar className="h-5 w-5" />
-                    <a data-value={value} href={value}>
-                      {name}
-                    </a>
-                  </div>
+                  <a data-value={value} href={value} className="flex items-center space-x-2">
+                    <AiFillStar className="h-5 w-5" aria-hidden="true" />
+                    <span>{name}</span>
+                  </a>
                   <IconTooltip label="Remove bookmark" side="left">
                     <button
                       type="button"
