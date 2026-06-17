@@ -1,8 +1,15 @@
-import type { NextPage } from 'next';
+import type { Metadata, NextPage } from 'next';
 
 import LiveUpdatesContent from '@/containers/live-updates';
 
 import Header from '@/components/header';
+
+export const metadata: Metadata = {
+  title: 'Live Updates',
+  description:
+    'Live usage statistics and activity updates for the Open Earth Monitor Cyberinfrastructure platform.',
+  alternates: { canonical: '/usage-stats' },
+};
 
 const UsageStatsPage: NextPage = () => {
   return (
