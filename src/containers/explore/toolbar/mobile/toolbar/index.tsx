@@ -30,12 +30,12 @@ const MobileExploreToolbar: FC<PropsWithChildren> = ({ children }) => {
       >
         {showDetails && (
           <div className={cn('relative  overflow-hidden p-4', showDetails && 'min-h-[80vh]')}>
-            <div className="absolute inset-0 z-10 overflow-hidden pb-[60px]">
-              <header className="sticky flex px-6 pb-2 pt-6">
+            <div className="absolute inset-0 z-10 flex flex-col overflow-hidden">
+              <header className="flex shrink-0 px-6 pb-2 pt-6">
                 <BackToMonitorsAndGeostories />
               </header>
-              <ScrollArea className="h-full">
-                <div className="px-4">{children}</div>
+              <ScrollArea className="min-h-0 flex-1">
+                <div className="px-4 pb-4">{children}</div>
               </ScrollArea>
             </div>
           </div>
