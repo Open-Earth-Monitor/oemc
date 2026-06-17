@@ -124,7 +124,7 @@ export const Controls: FC<ControlsProps> = ({
         isLoading={isLoadingLocationData}
         isFetching={isFetchingLocationData}
         isMobile={isMobile}
-        className="absolute right-0 top-[-134px]"
+        className="absolute right-0 top-[-56px] sm:top-[-134px]"
       />
 
       <RControl.RZoom
@@ -138,7 +138,7 @@ export const Controls: FC<ControlsProps> = ({
 
       <div
         className={cn({
-          'absolute top-4 flex w-full flex-col items-end justify-end space-y-1.5 sm:top-[-26px]':
+          'absolute top-0 flex w-full flex-col items-end justify-end space-y-1.5 sm:top-[-26px]':
             true,
         })}
       >
