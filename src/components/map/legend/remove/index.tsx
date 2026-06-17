@@ -27,7 +27,7 @@ export const RemoveLayer: FC<{ className?: string }> = ({ className }) => {
       aria-label="Remove layer"
       title="Remove layer"
     >
-      <LuX className="h-6 w-6 text-gray-600 transition-colors hover:text-secondary-500" />
+      <LuX className="h-5 w-5 text-gray-600 transition-colors hover:text-secondary-500" />
     </button>
   );
 };
