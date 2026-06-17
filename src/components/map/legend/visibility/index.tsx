@@ -3,8 +3,6 @@ import { useCallback, useMemo } from 'react';
 import { IoMdEyeOff } from 'react-icons/io';
 import { IoMdEye } from 'react-icons/io';
 
-import { cn } from '@/lib/classnames';
-
 import { useSyncLayersSettings } from '@/hooks/sync-query';
 
 export const LayerVisibility = () => {
@@ -28,19 +26,9 @@ export const LayerVisibility = () => {
       title={isLayerVisible ? 'Hide layer' : 'Show layer'}
     >
       {isLayerVisible ? (
-        <IoMdEye
-          className={cn({
-            'h-5 w-5 transition-colors hover:text-secondary-500': true,
-            'text-gray-600': !isLayerVisible,
-          })}
-        />
+        <IoMdEye className="h-5 w-5 text-gray-600 transition-colors hover:text-secondary-500" />
       ) : (
-        <IoMdEyeOff
-          className={cn({
-            'h-4 w-4 transition-colors hover:text-secondary-500': true,
-            'text-gray-600': !isLayerVisible,
-          })}
-        />
+        <IoMdEyeOff className="h-4 w-4 text-gray-600 transition-colors hover:text-secondary-500" />
       )}
     </button>
   );
