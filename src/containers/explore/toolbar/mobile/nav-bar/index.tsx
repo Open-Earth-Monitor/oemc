@@ -51,13 +51,13 @@ const MobileExploreNavbar = () => {
         <div className={cn('relative p-4', showTheme && 'min-h-[calc(100dvh-130px)]')}>
           <div
             className={cn(
-              'absolute inset-0 overflow-hidden transition-all duration-300 ease-in-out',
+              'absolute inset-0 flex flex-col overflow-hidden transition-all duration-300 ease-in-out',
               showTheme
                 ? 'pointer-events-auto z-10 scale-100 opacity-100'
                 : 'pointer-events-none z-0 scale-95 opacity-0'
             )}
           >
-            <header className="sticky">
+            <header className="shrink-0">
               <section className="flex items-center justify-between bg-black-300 px-6 py-2">
                 <Button
                   variant="background"
@@ -90,10 +90,10 @@ const MobileExploreNavbar = () => {
               </section>
             </header>
 
-            <ScrollArea className="h-full">
+            <ScrollArea className="min-h-0 flex-1">
               {isLoading && !isFetched && <Loading />}
               {!isLoading && isFetched && results && (
-                <CardList className="px-6 pb-44" data={results} />
+                <CardList className="px-6 pb-24" data={results} />
               )}
             </ScrollArea>
           </div>
