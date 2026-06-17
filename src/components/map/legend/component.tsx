@@ -17,10 +17,17 @@ import LegendTimeseries from './timelime';
 import LayerVisibility from './visibility';
 
 export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  const [layers] = useSyncLayersSettings();
+  const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
   const layerId = layers?.[0]?.id;
+
+  const handleOpacity = useCallback(
+    (nexOpacity: number) => {
+      void setLayers((prevState) => [{ ...prevState?.[0], opacity: nexOpacity }]);
+    },
+    [setLayers]
+  );
 
   const { data: compareLayerData } = useLayer(
     { layer_id: compareLayers?.[0]?.id, compare: true },
@@ -84,6 +91,29 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
       className="flex w-full flex-col space-y-4 overflow-hidden rounded-b-sm border-gray-600 bg-brand-500 px-4"
       style={{ minWidth: legendWidth }}
     >
+      {/* Primary layer toolbar — mobile only (desktop renders it in the legend trigger) */}
+      <div
+        className="relative flex items-center justify-between space-x-4 text-secondary-500 md:hidden"
+        data-testid="map-legend-item"
+      >
+        <div
+          data-testid="map-legend-item-title"
+          className="line-clamp-2 min-w-0 max-w-[60%] text-xs font-bold"
+          title={layerData?.title}
+        >
+          {layerData?.title}
+        </div>
+        <div
+          className="flex shrink-0 space-x-2 divide-x divide-secondary-800"
+          data-testid="map-legend-item-toolbar"
+        >
+          <div className="flex space-x-2">
+            <OpacitySetting defaultValue={layers?.[0]?.opacity} onChange={handleOpacity} />
+            {!isGeostory && <LayerVisibility />}
+          </div>
+          {!isGeostory && <RemoveLayer className="pl-2" />}
+        </div>
+      </div>
       <ScrollArea className={cn({ 'max-h-[216px]': !isLoadingLayerData })}>
         {isLoadingLayerData ||
           (isLoadingLegendData && (
