@@ -83,11 +83,11 @@ const TimeSeriesComparativeLayers: FC<{
               open={contentVisibility}
               onOpenChange={setContentVisibility}
             >
-              <SelectTrigger className="min-w-0 max-w-[50%] text-xs font-semibold">
+              <SelectTrigger className="min-w-0 max-w-full text-xs font-semibold">
                 <div
                   className={cn(
                     buttonVariants({ variant: 'outline', size: 'sm' }),
-                    'w-full justify-between overflow-hidden hover:bg-transparent'
+                    'w-full justify-between gap-2 overflow-hidden hover:bg-transparent'
                   )}
                   title={currentRange?.label}
                 >
