@@ -109,9 +109,9 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
         >
           <div className="flex space-x-2">
             <OpacitySetting defaultValue={layers?.[0]?.opacity} onChange={handleOpacity} />
-            {!isGeostory && <LayerVisibility />}
+            <LayerVisibility />
           </div>
-          {!isGeostory && <RemoveLayer className="pl-2" />}
+          <RemoveLayer className="pl-2" />
         </div>
       </div>
       <ScrollArea className={cn({ 'max-h-[216px]': !isLoadingLayerData })}>
