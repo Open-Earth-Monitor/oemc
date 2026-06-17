@@ -50,7 +50,11 @@ export default defineConfig({
       // layout (categories filter, featured geostories panel) above
       // `(min-width: 1280px) and (min-height: 820px)`. Pin a taller viewport so the desktop
       // breakpoint is met; the device viewport is spread first, so this override wins.
-      use: { ...devices['Desktop Chrome'], channel: 'chromium', viewport: { width: 1440, height: 900 } },
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: 'chromium',
+        viewport: { width: 1440, height: 900 },
+      },
     },
     // ...(process.env.CI
     //   ? []
