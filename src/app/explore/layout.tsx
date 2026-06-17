@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import Header from '@/components/header';
 import MainMenuDesktop from '@/components/main-menu/desktop';
-import Map from '@/components/map/index';
+import Map from '@/components/map/dynamic';
 import SidebarWrapper from '@/components/sidebar-wrapper';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
