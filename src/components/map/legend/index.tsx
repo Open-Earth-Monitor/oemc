@@ -21,7 +21,7 @@ import LayerVisibility from './visibility';
 
 export const Legend: React.FC<{
   isGeostory?: boolean;
-}> = ({ isGeostory = false }) => {
+}> = () => {
   const isMobile = useMediaQuery(mobile);
   const [isOpen, setIsOpen] = useState(true);
 
@@ -80,9 +80,9 @@ export const Legend: React.FC<{
               >
                 <div className="flex space-x-2">
                   <OpacitySetting defaultValue={opacity} onChange={handleOpacity} />
-                  {!isGeostory && <LayerVisibility />}
+                  <LayerVisibility />
                 </div>
-                {!isGeostory && <RemoveLayer className="pl-2" />}
+                <RemoveLayer className="pl-2" />
               </div>
             </div>
             <button
