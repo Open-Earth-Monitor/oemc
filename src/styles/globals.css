@@ -189,7 +189,7 @@
   left: unset !important;
   margin: 0 !important;
   border-radius: 50% !important;
-  @apply !top-[142px] h-[96px] w-[48px] sm:!top-[calc(50%-94px)] sm:h-[68px] sm:w-[34px];
+  @apply !top-[121px] h-[96px] w-[48px] sm:!top-[calc(50%-94px)] sm:h-[68px] sm:w-[34px];
 }
 
 .ol-zoom-in,
