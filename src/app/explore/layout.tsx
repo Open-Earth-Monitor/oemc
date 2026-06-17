@@ -9,6 +9,7 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 export const metadata: Metadata = {
   title: 'Explore',
   description: 'Explore our Monitors & Geostories',
+  alternates: { canonical: '/explore' },
 };
 
 export default function ExploreLayout({ children }: { children: React.ReactNode }) {

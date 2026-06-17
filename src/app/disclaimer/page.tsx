@@ -1,6 +1,13 @@
-import type { NextPage } from 'next';
+import type { Metadata, NextPage } from 'next';
 
 import Header from '@/components/header';
+
+export const metadata: Metadata = {
+  title: 'Disclaimer',
+  description:
+    'Legal disclaimer for the Open Earth Monitor Cyberinfrastructure. Funded by the European Union; data provided “as is” without warranties of any kind.',
+  alternates: { canonical: '/disclaimer' },
+};
 
 const DisclaimerPage: NextPage = () => {
   return (
