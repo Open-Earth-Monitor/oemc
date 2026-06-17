@@ -93,11 +93,11 @@ const TimeSeriesSameLayer: FC<{
               open={contentVisibility}
               onOpenChange={setContentVisibility}
             >
-              <SelectTrigger className="min-w-0 max-w-[50%] text-xs font-semibold">
+              <SelectTrigger className="min-w-0 max-w-full text-xs font-semibold">
                 <div
                   className={cn(
                     buttonVariants({ variant: 'outline', size: 'sm' }),
-                    'w-full justify-between overflow-hidden hover:bg-transparent'
+                    'w-full justify-between gap-2 overflow-hidden hover:bg-transparent'
                   )}
                   title={currentRange?.label}
                 >
@@ -122,7 +122,7 @@ const TimeSeriesSameLayer: FC<{
             </Select>
           )}
           {currentRange && (range?.length ?? 0) === 1 && (
-            <div className="min-w-0 max-w-[50%] text-xs font-semibold">
+            <div className="min-w-0 max-w-full text-xs font-semibold">
               <div
                 className={cn(
                   buttonVariants({ variant: 'outline', size: 'sm' }),
@@ -158,11 +158,11 @@ const TimeSeriesSameLayer: FC<{
                 setContentCompareVisibility((prev) => !prev);
               }}
             >
-              <SelectTrigger className="min-w-0 max-w-[50%] text-xs font-semibold">
+              <SelectTrigger className="min-w-0 max-w-full text-xs font-semibold">
                 <div
                   className={cn(
                     buttonVariants({ variant: 'outline', size: 'sm' }),
-                    'w-full justify-between overflow-hidden hover:bg-transparent'
+                    'w-full justify-between gap-2 overflow-hidden hover:bg-transparent'
                   )}
                   title={compareCurrentRange?.label || range?.[0]?.label}
                 >
