@@ -80,17 +80,18 @@ test('legend', async ({ page }) => {
 
   await expect(page.getByTestId('map-legend')).toBeVisible();
 
-  // should be 1 layer in the legend
-  expect(await page.getByTestId('map-legend-item').count()).toBe(1);
+  // should be 1 visible layer in the legend (markup is duplicated per breakpoint)
+  expect(await page.locator('[data-testid="map-legend-item"]:visible').count()).toBe(1);
 
   // legend actions
-  await expect(page.getByTestId('map-legend-item-toolbar')).toBeVisible();
+  await expect(page.locator('[data-testid="map-legend-item-toolbar"]:visible')).toBeVisible();
 
   // toggle visibility off
-  await page.getByTestId('map-legend-item').getByTestId('layer-visibility').first().click();
-  await expect(
-    page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
-  ).toHaveAttribute('data-active', 'false');
+  const visibleVisibilityToggle = page
+    .locator('[data-testid="map-legend-item"]:visible')
+    .getByTestId('layer-visibility');
+  await visibleVisibilityToggle.click();
+  await expect(visibleVisibilityToggle).toHaveAttribute('data-active', 'false');
   await expect(page).toHaveURL(
     new RegExp(
       /layers=\[{%22id%22:%22l1%22,%22opacity%22:0,%22date%22:%2220000101_20001231%22}\]/,
@@ -99,10 +100,8 @@ test('legend', async ({ page }) => {
   );
 
   // toggle visibility on
-  await page.getByTestId('map-legend-item').getByTestId('layer-visibility').first().click();
-  await expect(
-    page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
-  ).toHaveAttribute('data-active', 'true');
+  await visibleVisibilityToggle.click();
+  await expect(visibleVisibilityToggle).toHaveAttribute('data-active', 'true');
   await expect(page).toHaveURL(
     new RegExp(
       /layers=\[{%22id%22:%22l1%22,%22opacity%22:1,%22date%22:%2220000101_20001231%22}\]/,
@@ -112,7 +111,7 @@ test('legend', async ({ page }) => {
 
   // opacity button visible
   await expect(
-    page.getByTestId('map-legend-item').getByTestId('layer-opacity-button')
+    page.getByTestId('map-legend-toggle-button').getByTestId('layer-opacity-button')
   ).toBeVisible();
 });
 
@@ -125,7 +124,7 @@ test('opacity 1 from url', async ({ page }) => {
     page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
   ).toHaveAttribute('data-active', 'true');
 
-  await page.getByTestId('map-legend-item').getByTestId('layer-opacity-button').click();
+  await page.getByTestId('map-legend-toggle-button').getByTestId('layer-opacity-button').click();
   await expect(page.getByTestId('slider-current-value')).toHaveText('100%');
 });
 
@@ -141,7 +140,7 @@ test('opacity 0 from url', async ({ page }) => {
     page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
   ).toHaveAttribute('data-active', 'false');
 
-  await page.getByTestId('map-legend-item').getByTestId('layer-opacity-button').click();
+  await page.getByTestId('map-legend-toggle-button').getByTestId('layer-opacity-button').click();
   await expect(page.getByTestId('slider-current-value')).toHaveText('0%');
 });
 
@@ -157,7 +156,7 @@ test('opacity 0.5 from url', async ({ page }) => {
     page.getByTestId('map-legend-item').getByTestId('layer-visibility').first()
   ).toHaveAttribute('data-active', 'true');
 
-  await page.getByTestId('map-legend-item').getByTestId('layer-opacity-button').click();
+  await page.getByTestId('map-legend-toggle-button').getByTestId('layer-opacity-button').click();
   await expect(page.getByTestId('slider-current-value')).toHaveText('50%');
 });
 
