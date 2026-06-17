@@ -7,8 +7,6 @@ import { cn } from '@/lib/classnames';
 
 import { useSyncLayersSettings } from '@/hooks/sync-query';
 
-import { IconTooltip } from '@/components/ui/tooltip';
-
 export const LayerVisibility = () => {
   const [layers, setLayers] = useSyncLayersSettings();
   const layerOpacity = layers?.[0]?.opacity;
@@ -20,32 +18,31 @@ export const LayerVisibility = () => {
   }, [isLayerVisible, setLayers]);
 
   return (
-    <IconTooltip label={isLayerVisible ? 'Hide layer' : 'Show layer'}>
-      <button
-        data-testid="layer-visibility"
-        data-active={isLayerVisible}
-        type="button"
-        className="flex items-center justify-center"
-        onClick={onToggleLayerVisibility}
-        aria-label="Toggle layer visibility"
-      >
-        {isLayerVisible ? (
-          <IoMdEye
-            className={cn({
-              'h-5 w-5 transition-colors hover:text-secondary-500': true,
-              'text-gray-600': !isLayerVisible,
-            })}
-          />
-        ) : (
-          <IoMdEyeOff
-            className={cn({
-              'h-4 w-4 transition-colors hover:text-secondary-500': true,
-              'text-gray-600': !isLayerVisible,
-            })}
-          />
-        )}
-      </button>
-    </IconTooltip>
+    <button
+      data-testid="layer-visibility"
+      data-active={isLayerVisible}
+      type="button"
+      className="flex items-center justify-center"
+      onClick={onToggleLayerVisibility}
+      aria-label="Toggle layer visibility"
+      title={isLayerVisible ? 'Hide layer' : 'Show layer'}
+    >
+      {isLayerVisible ? (
+        <IoMdEye
+          className={cn({
+            'h-5 w-5 transition-colors hover:text-secondary-500': true,
+            'text-gray-600': !isLayerVisible,
+          })}
+        />
+      ) : (
+        <IoMdEyeOff
+          className={cn({
+            'h-4 w-4 transition-colors hover:text-secondary-500': true,
+            'text-gray-600': !isLayerVisible,
+          })}
+        />
+      )}
+    </button>
   );
 };
 
