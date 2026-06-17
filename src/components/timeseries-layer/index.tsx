@@ -81,7 +81,7 @@ const TimeSeriesSameLayer: FC<{
   const hasAnyCompare = !!compareLayers?.[0]?.id;
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col py-4">
       {/* Select dates */}
       <div className="flex flex-col space-y-2 text-secondary-500">
         <span className="text-sm">Select date:</span>
@@ -93,7 +93,7 @@ const TimeSeriesSameLayer: FC<{
               open={contentVisibility}
               onOpenChange={setContentVisibility}
             >
-              <SelectTrigger className="min-w-0 max-w-full text-xs font-semibold">
+              <SelectTrigger className="w-fit min-w-0 max-w-full text-xs font-semibold">
                 <div
                   className={cn(
                     buttonVariants({ variant: 'outline', size: 'sm' }),
@@ -122,7 +122,7 @@ const TimeSeriesSameLayer: FC<{
             </Select>
           )}
           {currentRange && (range?.length ?? 0) === 1 && (
-            <div className="min-w-0 max-w-full text-xs font-semibold">
+            <div className="w-fit min-w-0 max-w-full text-xs font-semibold">
               <div
                 className={cn(
                   buttonVariants({ variant: 'outline', size: 'sm' }),
@@ -158,7 +158,7 @@ const TimeSeriesSameLayer: FC<{
                 setContentCompareVisibility((prev) => !prev);
               }}
             >
-              <SelectTrigger className="min-w-0 max-w-full text-xs font-semibold">
+              <SelectTrigger className="w-fit min-w-0 max-w-full text-xs font-semibold">
                 <div
                   className={cn(
                     buttonVariants({ variant: 'outline', size: 'sm' }),
