@@ -2,35 +2,12 @@ import { test, expect, type Page } from '@playwright/test';
 
 import type { Geostory } from '@/types/geostories';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-const FEATURED_GEOSTORY_IDS = [
-  'g1',
-  'g2',
-  'g3',
-  'g4',
-  'g5',
-  'g7',
-  'g10',
-  'g11',
-  'g12',
-  'g19',
-  'g21',
-  'g23',
-  'g31',
-  'g32',
-];
-
-async function fetchGeostories(page: Page): Promise<Geostory[]> {
-  if (!API_URL) throw new Error('NEXT_PUBLIC_API_URL is not set');
-  const response = await page.request.get(`${API_URL}/geostories`);
-  if (!response.ok()) throw new Error(`Failed to fetch geostories: ${response.status()}`);
-  return response.json();
-}
+import { FEATURED_GEOSTORY_IDS, GEOSTORIES_FIXTURE, mockGeostories } from './fixtures/geostories';
 
 function featuredForCategories(geostories: Geostory[], categories: string[]) {
   return geostories.filter(
-    (g) => FEATURED_GEOSTORY_IDS.includes(g.id) && categories.includes(g.theme)
+    (g) =>
+      (FEATURED_GEOSTORY_IDS as readonly string[]).includes(g.id) && categories.includes(g.theme)
   );
 }
 
@@ -49,6 +26,7 @@ async function waitForLandingReady(page: Page) {
 }
 
 test.beforeEach(async ({ page }) => {
+  await mockGeostories(page);
   await page.goto('/', { waitUntil: 'load' });
 });
 
@@ -80,7 +58,7 @@ test.describe('category filters on landing page', () => {
   });
 
   test('selecting one category filters the list and updates the URL', async ({ page }) => {
-    const allGeostories = await fetchGeostories(page);
+    const allGeostories = GEOSTORIES_FIXTURE;
     const category = 'Forest';
 
     await waitForLandingReady(page);
@@ -102,7 +80,7 @@ test.describe('category filters on landing page', () => {
   });
 
   test('selecting multiple categories is accumulative and updates the URL', async ({ page }) => {
-    const allGeostories = await fetchGeostories(page);
+    const allGeostories = GEOSTORIES_FIXTURE;
     const categories = ['Soil', 'Water'];
 
     await waitForLandingReady(page);
@@ -148,7 +126,7 @@ test.describe('category filters on landing page', () => {
   test('selecting three categories shows only matching featured geostories and all are in the URL', async ({
     page,
   }) => {
-    const allGeostories = await fetchGeostories(page);
+    const allGeostories = GEOSTORIES_FIXTURE;
     const categories = ['Forest', 'Agriculture', 'Biodiversity'];
 
     await waitForLandingReady(page);
@@ -176,7 +154,7 @@ test.describe('category filters on landing page', () => {
   test('no-results message shown when no featured geostory matches the selected category', async ({
     page,
   }) => {
-    const allGeostories = await fetchGeostories(page);
+    const allGeostories = GEOSTORIES_FIXTURE;
 
     const allCategories = [
       'Agriculture',

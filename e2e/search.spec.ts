@@ -1,21 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 
-const FEATURED_GEOSTORY_IDS = [
-  'g1',
-  'g2',
-  'g3',
-  'g4',
-  'g5',
-  'g7',
-  'g10',
-  'g11',
-  'g12',
-  'g19',
-  'g21',
-  'g23',
-  'g31',
-  'g32',
-];
+import { FEATURED_GEOSTORY_IDS, GEOSTORIES_FIXTURE, mockGeostories } from './fixtures/geostories';
 
 /**
  * Wait for the landing page's geostories panel to render — a reliable signal that
@@ -29,6 +14,7 @@ async function waitForLandingReady(page: Page) {
 }
 
 test.beforeEach(async ({ page }) => {
+  await mockGeostories(page);
   await page.goto('/');
 });
 
@@ -89,19 +75,10 @@ test.describe('featured geostories on landing page', () => {
   });
 
   test('filters displayed geostories when searching by title', async ({ page }) => {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    const response = await page.request.get(`${API_URL}/monitors-and-geostories/`);
-    const data = await response.json();
-
-    // Find a geostory from the featured list in the API response (plain array)
-    const featuredResult = Array.isArray(data)
-      ? data.find((item) => item.id?.startsWith('g') && FEATURED_GEOSTORY_IDS.includes(item.id))
-      : undefined;
-
-    if (!featuredResult) {
-      test.skip(true, 'No featured geostory found in API response to search for');
-      return;
-    }
+    // The fixture's first entry is a featured geostory; its title is unique enough that
+    // the substring search resolves to a single item.
+    const featuredResult = GEOSTORIES_FIXTURE[0];
+    expect((FEATURED_GEOSTORY_IDS as readonly string[]).includes(featuredResult.id)).toBe(true);
 
     await waitForLandingReady(page);
     const searchInput = page.getByTestId('search-input');
