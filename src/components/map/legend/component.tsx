@@ -88,7 +88,7 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
 
   return (
     <div
-      className="flex w-full flex-col space-y-4 overflow-hidden rounded-b-sm border-gray-600 bg-brand-500 px-4 py-4 md:py-0"
+      className="flex w-full flex-col space-y-4 overflow-hidden border-gray-600 bg-brand-500 px-4 py-4 md:py-0"
       style={{ minWidth: legendWidth }}
     >
       {/* Primary layer toolbar — mobile only (desktop renders it in the legend trigger) */}
@@ -126,7 +126,7 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
           isFetchedLegendData && <LegendGraphic dataLayer={layerData} dataLegend={legendData} />}
         {isGeostory && compareLayerData && compareLayers?.[0]?.id !== layerId && (
           <div
-            className="flex w-full flex-col space-y-4 rounded-b-sm border-gray-600 bg-brand-500"
+            className="flex w-full flex-col space-y-4 border-gray-600 bg-brand-500"
             style={{ minWidth: legendWidth }}
           >
             <div
