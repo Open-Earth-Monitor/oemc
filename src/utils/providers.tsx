@@ -26,7 +26,7 @@ const Providers: ProvidersProps = ({ children }) => {
   return (
     <TooltipProvider>
       <PlausibleProvider
-        domain="https://app.earthmonitor.org/"
+        domain="app.earthmonitor.org"
         trackOutboundLinks
         trackFileDownloads
         selfHosted
