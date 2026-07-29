@@ -110,6 +110,8 @@ const MapTooltip: FC<MapTooltipProps> = ({
     );
   }, [layerData?.theme]);
 
+  const label = [countryName, nutsDataResponse?.NUTS_NAME].filter(Boolean).join(', ');
+
   const ref = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const titleId = useId();
@@ -159,13 +161,14 @@ const MapTooltip: FC<MapTooltipProps> = ({
 
     setCoords((prev) => (prev?.left === left && prev?.top === top ? prev : { left, top }));
     setTailOnTop((prev) => (prev === flipped ? prev : flipped));
-  }, [position]);
+    // `label` is a dependency because a long place name wraps onto a second line,
+    // making the box taller — and the box is positioned from its own height.
+  }, [position, label]);
 
   if (!position) return null;
 
   const hasLayer = !!data?.id;
   const hasValue = data?.value !== null && data?.value !== undefined && data?.value !== 0;
-  const label = [countryName, nutsDataResponse?.NUTS_NAME].filter(Boolean).join(', ');
 
   const lonLat: [number, number] | null = (() => {
     if (!coordinate || coordinate.length < 2) return null;
@@ -246,13 +249,17 @@ const MapTooltip: FC<MapTooltipProps> = ({
             </p>
           )}
 
+          {/* A place name too wide to sit beside the caption wraps onto its own line
+              instead of overflowing the rounded background; one wider than the whole
+              tooltip then truncates, with the full value in `title`. */}
           {hasLayer && hasValue && isRegionsLayerActive && (
-            <p className="flex items-center gap-3 text-xs">
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
               <span className="whitespace-nowrap">Location Selected:</span>
               {!!nutsDataResponse?.NUTS_NAME && (
                 <span
                   data-testid="map-tooltip-location"
-                  className="whitespace-nowrap rounded-full bg-white-950 px-2 py-0.5"
+                  title={label}
+                  className="max-w-full truncate rounded-full bg-white-950 px-2 py-0.5"
                 >
                   {label}
                 </span>
