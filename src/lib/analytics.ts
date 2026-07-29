@@ -34,11 +34,6 @@ export type AnalyticsEvents = {
     title: string;
     parent_type: 'monitor' | 'geostory';
   };
-  'Layer Deactivate': {
-    layer_id: string;
-    title: string;
-    parent_type: 'monitor' | 'geostory';
-  };
 };
 
 /**
