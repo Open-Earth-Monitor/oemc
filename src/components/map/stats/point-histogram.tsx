@@ -8,6 +8,7 @@ import { FiDownload } from 'react-icons/fi';
 
 import { cn } from '@/lib/classnames';
 import { scrollToHistogram } from '@/lib/scroll-to-histogram';
+import { transformPointData } from '@/lib/utils';
 
 import { histogramVisibilityAtom, lonLatAtom } from '@/app/store';
 
@@ -60,33 +61,28 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryT
     enabled: !!lonLat && !!regex,
   });
 
-  const histogramPointData = useMemo(() => {
-    return {
-      data: (Array.isArray(histogramData) ? histogramData : [])
-        .filter((d) => Number.isFinite(d?.value))
-        .map((d) => ({
-          x: d.label,
-          y: d.value,
-          unit: d.unit ?? '',
-        })),
-    };
-  }, [histogramData]);
+  const histogramPointData = useMemo(
+    () => ({ data: transformPointData(histogramData) }),
+    [histogramData]
+  );
 
+  // Export the normalised rows rather than the raw response, so the CSV carries
+  // the same label the chart plots.
   const handleClick = useCallback(() => {
-    if (histogramData) {
-      const data = Array.isArray(histogramData)
-        ? histogramData
-        : histogramPointData?.data?.map((d) => ({
-            layer_id: id,
-            label: d.x,
-            value: d.y,
-            unit: d.unit || '',
-          }));
-      downloadCSV(data, `data-${title}.csv`);
-    } else {
+    if (!histogramPointData.data.length) {
       console.error('No data available for download.');
+      return;
     }
-  }, [histogramData, histogramPointData, id, title]);
+
+    const data = histogramPointData.data.map((d) => ({
+      layer_id: id,
+      label: d.x,
+      value: d.y,
+      unit: d.unit,
+    }));
+
+    downloadCSV(data, `data-${title}.csv`);
+  }, [histogramPointData, id, title]);
 
   const handleCloseAnalysis = () => setHistogramVisibility(false);
 

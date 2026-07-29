@@ -4,19 +4,14 @@ import { getCenter } from 'ol/extent';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import View from 'ol/View';
 
+import { PointDataset } from '@/components/map/types';
+
 import API from 'services/api';
 
 type UseParams = {
   lon: number;
   lat: number;
   layer_id: string;
-};
-
-type RegionData = {
-  label: string;
-  layer_id: string;
-  value: number;
-  unit?: string;
 };
 
 const DEFAULT_QUERY_OPTIONS = {
@@ -29,7 +24,7 @@ const DEFAULT_QUERY_OPTIONS = {
 
 export function usePointData(
   params: UseParams,
-  queryOptions?: UseQueryOptions<RegionData[], AxiosError, RegionData[]>
+  queryOptions?: UseQueryOptions<PointDataset[], AxiosError, PointDataset[]>
 ) {
   const fetchRegionData = ({ signal }: { signal?: AbortSignal }) =>
     API.request({
@@ -39,7 +34,7 @@ export function usePointData(
       signal,
       ...queryOptions,
     })
-      .then((response: AxiosResponse<RegionData[] | string>) => {
+      .then((response: AxiosResponse<PointDataset[] | string>) => {
         // example - Soil moisture index 12,5km resolution HSAF ASCAT h121 over Europe ( layer_id: l25)
         // we could find it in geostory "Drought at high resolution in Europe" (geostory_id: g5)
 
