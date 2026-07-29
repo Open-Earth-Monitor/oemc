@@ -48,15 +48,15 @@ const DatasetCard: FC<DatasetCardProps> = ({
   const track = useTrackEvent();
 
   const handleToggleLayer = useCallback(() => {
-    track(isActive ? 'Layer Deactivate' : 'Layer Activate', {
-      props: {
-        layer_id: id,
-        title,
-        parent_type: isGeostory ? 'geostory' : 'monitor',
-      },
-    });
-
     if (!isActive) {
+      track('Layer Activate', {
+        props: {
+          layer_id: id,
+          title,
+          parent_type: isGeostory ? 'geostory' : 'monitor',
+        },
+      });
+
       void setLayers([
         {
           id,
