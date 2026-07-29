@@ -112,3 +112,10 @@ export type NutsDataset = {
 export type NuqsData = {
   dataset?: NutsDataset[];
 };
+
+export type PointDataset = {
+  label: string;
+  layer_id: string;
+  value: number | null;
+  unit?: string;
+};
