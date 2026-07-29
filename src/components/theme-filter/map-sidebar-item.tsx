@@ -2,6 +2,8 @@
 
 import { FC, useState } from 'react';
 
+import { useTrackEvent } from '@/lib/analytics';
+
 import { ALL_CATEGORY, CategoryId, CATEGORIES_COLORS } from '@/constants/categories';
 
 import { useSyncCategories } from '@/hooks/sync-query';
@@ -26,6 +28,7 @@ export type SidebarItemProps = {
 const SidebarItem = ({ Icon, button: btn }: SidebarItemProps) => {
   const [categories, setCategory] = useSyncCategories();
   const [isHovered, setIsHovered] = useState(false);
+  const track = useTrackEvent();
 
   const isAll = btn.id === ALL_CATEGORY.id;
   const isActive = isAll
@@ -34,6 +37,8 @@ const SidebarItem = ({ Icon, button: btn }: SidebarItemProps) => {
   const categoryColor = CATEGORIES_COLORS[btn.id]?.base ?? CATEGORIES_COLORS['Unknown']?.base;
 
   const handleClick = () => {
+    track('Category Filter', { props: { category: btn.id, source: 'explore-sidebar' } });
+
     if (isAll) {
       setCategory('All');
       return;
