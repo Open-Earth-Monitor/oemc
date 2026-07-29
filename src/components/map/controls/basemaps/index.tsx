@@ -1,6 +1,7 @@
 import { PopoverTrigger } from '@radix-ui/react-popover';
 import { useAtom } from 'jotai';
 
+import { useTrackEvent } from '@/lib/analytics';
 import { cn } from '@/lib/classnames';
 
 import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
@@ -21,20 +22,26 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
   const [, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
   // isActive is based on the url
   const [regionsLayerVisibility, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
+  const track = useTrackEvent();
 
   const handleRegionsLayerVisibility = () => {
+    if (!regionsLayerVisibility) {
+      track('Regions Layer Activate', { props: { source: 'map-controls' } });
+    }
     setIsRegionsLayerActive((prev) => !prev);
     setHistogramVisibility(false);
   };
 
   const handleMapLabels = (value: LabelProps['id']) => {
     if (activeLabels !== value) {
+      track('Map Labels Change', { props: { labels: value, source: 'map-controls' } });
       setActiveLabels(value);
     }
   };
 
   const handleBasemap = (value: BasemapProps['id']) => {
     if (selectedBasemap !== value) {
+      track('Basemap Change', { props: { basemap: value, source: 'map-controls' } });
       setBasemap(value);
     }
   };

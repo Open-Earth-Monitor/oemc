@@ -87,6 +87,13 @@ Set the environment variables needed creating a file `.env.local` in the root of
 |-|-|-|
 | NEXT_PUBLIC_API_URL | URL of the API for datasets Data. | http://localhost:3000 | 
 
+## Analytics
+
+The platform reports pageviews and custom interaction events to a self-hosted
+Plausible instance. See [docs/analytics.md](./docs/analytics.md) for the event
+catalogue, the props each event carries, and the dashboard configuration needed
+to make those props visible.
+
 ## Contributing
 
 Please, **create a PR** for any improvement or feature you want to add. Try not to commit anything directly on the `main` branch.

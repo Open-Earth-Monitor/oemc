@@ -7,6 +7,8 @@ import { useAtom, useSetAtom } from 'jotai';
 import { Coordinate } from 'ol/coordinate';
 import TileWMS from 'ol/source/TileWMS';
 
+import { useTrackEvent } from '@/lib/analytics';
+
 import {
   coordinateAtom,
   histogramVisibilityAtom,
@@ -40,7 +42,17 @@ const GeostoryTooltip: FC<TooltipProps> = ({
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
   const isHistogramVisibility = useSetAtom(histogramVisibilityAtom);
 
+  const track = useTrackEvent();
+
+  // "Show point histogram" — only rendered while the regions layer is off.
   const handleClick = () => {
+    track('Histogram Open', {
+      props: {
+        histogram_type: 'point',
+        layer_id: leftData.id,
+        source: 'geostory-map-tooltip',
+      },
+    });
     isHistogramVisibility(true);
   };
 
@@ -58,7 +70,15 @@ const GeostoryTooltip: FC<TooltipProps> = ({
     });
   }, []);
 
+  // "Show region histogram" — only rendered while the regions layer is on.
   const handleHistogram = useCallback(async () => {
+    track('Histogram Open', {
+      props: {
+        histogram_type: 'region',
+        layer_id: leftData.id,
+        source: 'geostory-map-tooltip',
+      },
+    });
     const { nutsDataParams } = await getHistogramData(
       wmsNutsSource,
       coordinate as Coordinate,
@@ -74,6 +94,7 @@ const GeostoryTooltip: FC<TooltipProps> = ({
     isHistogramVisibility,
     setNutsDataParams,
     wmsNutsSource,
+    track,
   ]);
 
   if (!position || !leftData?.value) return null;

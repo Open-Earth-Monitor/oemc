@@ -15,6 +15,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { toLonLat } from 'ol/proj';
 import { LuX } from 'react-icons/lu';
 
+import { useTrackEvent } from '@/lib/analytics';
 import { scrollToHistogram } from '@/lib/scroll-to-histogram';
 
 import {
@@ -48,6 +49,7 @@ const MapTooltip: FC<MapTooltipProps> = ({
   data,
 }) => {
   const [isHistogramActive, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
+  const track = useTrackEvent();
   const nutsDataResponse = useAtomValue(nutsDataResponseAtom);
   const countryName = useCountryName(nutsDataResponse?.CNTR_CODE);
 
@@ -68,15 +70,25 @@ const MapTooltip: FC<MapTooltipProps> = ({
     [setHistogramVisibility]
   );
 
+  // Bound to the "Show region histogram" button, which only renders while the
+  // regions layer is on.
   const handleHistogram = useCallback(() => {
+    track('Histogram Open', {
+      props: { histogram_type: 'region', layer_id: data?.id, source: 'map-tooltip' },
+    });
     revealHistogram(data?.id);
-  }, [revealHistogram, data?.id]);
+  }, [revealHistogram, data?.id, track]);
 
   const [isRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
 
+  // Bound to the "Show point histogram" button, which only renders while the
+  // regions layer is off.
   const handleClick = useCallback(() => {
+    track('Histogram Open', {
+      props: { histogram_type: 'point', layer_id: data?.id, source: 'map-tooltip' },
+    });
     revealHistogram(data?.id);
-  }, [revealHistogram, data?.id]);
+  }, [revealHistogram, data?.id, track]);
 
   // Clicking a new map location refreshes this tooltip with new coordinates.
   // If the histogram panel is already visible the user expects it to follow

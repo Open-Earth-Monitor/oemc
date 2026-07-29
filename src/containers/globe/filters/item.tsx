@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
+import { useTrackEvent } from '@/lib/analytics';
 import cn from '@/lib/classnames';
 
 import { CATEGORIES, CATEGORIES_COLORS } from '@/constants/categories';
@@ -16,6 +17,7 @@ type ItemProps = {
 
 const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
   const [categoriesFilter, setCategoriesFilter] = useSyncCategories();
+  const track = useTrackEvent();
 
   const categories = useMemo(() => CATEGORIES.map((c) => c.id), []);
   const isActive = useMemo(() => {
@@ -26,6 +28,12 @@ const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
   }, [categoriesFilter, id]);
 
   const handleCategory = useCallback(() => {
+    // Reported outside the updater below: React may invoke a state updater more
+    // than once, which would double-count the event.
+    if (!isActive) {
+      track('Category Filter', { props: { category: id, source: 'landing-globe' } });
+    }
+
     setCategoriesFilter((prev) => {
       if (prev === 'All') {
         const next = categories?.filter((catId) => catId !== id);
@@ -44,7 +52,7 @@ const Filter = ({ id, label, Icon, className, theme }: ItemProps) => {
 
       return next;
     });
-  }, [id, categories, setCategoriesFilter]);
+  }, [id, categories, setCategoriesFilter, isActive, track]);
 
   return (
     <button

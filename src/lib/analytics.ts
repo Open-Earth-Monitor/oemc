@@ -1,5 +1,12 @@
 import { usePlausible } from 'next-plausible';
 
+import { ALL_CATEGORY, type CategoryId } from '@/constants/categories';
+
+import type { BasemapProps, LabelProps } from '@/components/map/controls/basemaps/constants';
+
+/** Mirrors the shape stored by `useSyncDatasetType`. */
+export type DatasetType = 'all' | 'monitors' | 'geostories';
+
 /**
  * Where in the UI the interaction happened. Kept as a closed union so the same
  * surface is always reported under the same name and the Plausible breakdown
@@ -8,10 +15,15 @@ import { usePlausible } from 'next-plausible';
 export type EventSource =
   | 'landing-globe'
   | 'landing-globe-dialog'
+  | 'landing-globe-mobile'
   | 'geostories-page'
   | 'monitors-page'
   | 'monitor-geostories'
-  | 'explore-sidebar';
+  | 'explore-sidebar'
+  | 'explore-mobile'
+  | 'map-controls'
+  | 'map-tooltip'
+  | 'geostory-map-tooltip';
 
 /**
  * Every custom event the app sends, with the custom properties it carries.
@@ -33,6 +45,46 @@ export type AnalyticsEvents = {
     layer_id: string;
     title: string;
     parent_type: 'monitor' | 'geostory';
+  };
+  /**
+   * A category was selected. Clearing a category is not reported, so the
+   * breakdown reads as interest per category rather than raw toggle volume.
+   */
+  'Category Filter': {
+    category: CategoryId | typeof ALL_CATEGORY.id;
+    source: EventSource;
+  };
+  /** The monitors / geostories / all switch changed. */
+  'Dataset Type Filter': {
+    dataset_type: DatasetType;
+    source: EventSource;
+  };
+  /**
+   * A histogram was opened from a map tooltip. `histogram_type` distinguishes
+   * the two buttons, which are mutually exclusive: the point one shows while
+   * the regions layer is off, the region one while it is on.
+   */
+  'Histogram Open': {
+    histogram_type: 'point' | 'region';
+    layer_id: string;
+    source: EventSource;
+  };
+  /**
+   * The regions (NUTS) overlay was switched on. Switching it off is not
+   * reported, matching the layer events.
+   */
+  'Regions Layer Activate': {
+    source: EventSource;
+  };
+  /** The basemap was changed. Only fires on an actual change. */
+  'Basemap Change': {
+    basemap: BasemapProps['id'];
+    source: EventSource;
+  };
+  /** The map label overlay was changed. Only fires on an actual change. */
+  'Map Labels Change': {
+    labels: LabelProps['id'];
+    source: EventSource;
   };
 };
 

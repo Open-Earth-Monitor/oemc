@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 
 import { ChevronDownIcon, ChevronLeftIcon } from 'lucide-react';
 
+import { useTrackEvent, type DatasetType } from '@/lib/analytics';
 import cn from '@/lib/classnames';
 
 import { ALL_CATEGORY, CATEGORIES } from '@/constants/categories';
@@ -26,12 +27,22 @@ const MobileExploreNavbar = () => {
   const [categories, setCategory] = useSyncCategories();
   const category = categories?.[0] ?? null;
   const { results, isLoading, isFetched, sortingCriteria, setSortingCriteria } = useDatasets();
+  const track = useTrackEvent();
 
   const handleClick = useCallback(
     (id: CategoryId | typeof ALL_CATEGORY.id) => {
+      track('Category Filter', { props: { category: id, source: 'explore-mobile' } });
       setCategory(id as CategoryId[] | 'All');
     },
-    [setCategory]
+    [setCategory, track]
+  );
+
+  const handleDatasetTypeChange = useCallback(
+    (type: DatasetType) => {
+      track('Dataset Type Filter', { props: { dataset_type: type, source: 'explore-mobile' } });
+      setDatasetType(type);
+    },
+    [setDatasetType, track]
   );
 
   const toggle = useCallback(() => setIsOpen((v) => !v), []);
@@ -79,7 +90,7 @@ const MobileExploreNavbar = () => {
               <section className="space-y-6 p-6">
                 <FilterByDatasetType
                   active={currentDataset}
-                  handleDatasetTypeChange={setDatasetType}
+                  handleDatasetTypeChange={handleDatasetTypeChange}
                   className="gap-10"
                 />
 
