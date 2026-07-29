@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useTrackEvent } from '@/lib/analytics';
+
 import { Geostory } from '@/types/geostories';
 
 import { CATEGORIES_COLORS } from '@/constants/categories';
@@ -9,12 +11,18 @@ import { getGeostoryImageUrl } from '@/hooks/geostories';
 
 const GeostoryItem = (props: Geostory) => {
   const { id, title: label, theme } = props;
+  const track = useTrackEvent();
 
   return (
     <Link
       href={`explore/geostory/${id}`}
       data-testid={`geostory-item-${id}`}
       className="group/item flex cursor-pointer items-start"
+      onClick={() =>
+        track('Geostory Open', {
+          props: { geostory_id: id, title: label, source: 'landing-globe' },
+        })
+      }
     >
       <div
         className="mr-2 h-[79px] w-px shrink-0 whitespace-normal transition-[width] duration-200 ease-out group-hover/item:w-1"

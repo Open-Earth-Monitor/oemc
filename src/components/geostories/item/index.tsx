@@ -4,6 +4,8 @@ import Link from 'next/link';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
+import { useTrackEvent } from '@/lib/analytics';
+
 import { Geostory } from '@/types/geostories';
 
 import { postWebTraffic } from '@/hooks/web-traffic';
@@ -11,11 +13,15 @@ import { postWebTraffic } from '@/hooks/web-traffic';
 import { TAG_STYLE } from '@/styles/constants';
 
 const GeostoryItem: FC<Geostory & { color: string }> = ({ id, color, title, geostory_bbox }) => {
+  const track = useTrackEvent();
+
   const handleClick = () => {
     postWebTraffic({
       geostory_id: id,
     });
-    console.info('WT5 -', 'geostories', id);
+    track('Geostory Open', {
+      props: { geostory_id: id, title, source: 'geostories-page' },
+    });
   };
   return (
     <Link

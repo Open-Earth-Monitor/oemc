@@ -2,6 +2,8 @@ import Link from 'next/link';
 
 import { ChevronRight } from 'lucide-react';
 
+import { useTrackEvent } from '@/lib/analytics';
+
 import { useMonitor } from '@/hooks/monitors';
 
 import Loading from '@/components/loading';
@@ -18,6 +20,7 @@ function DatasetCardMonitor({
 }) {
   const { data: monitorData, isLoading: isLoadingMonitor } = useMonitor({ monitor_id: id });
   const { theme, title, geostories, monitor_bbox } = monitorData || {};
+  const track = useTrackEvent();
 
   if (!monitorData) return null;
 
@@ -47,6 +50,15 @@ function DatasetCardMonitor({
                   }`}
                   data-testid={`geostory-link-${geostory.id}`}
                   className="font-bold underline decoration-gray-400 hover:decoration-white-500 hover:decoration-2"
+                  onClick={() =>
+                    track('Geostory Open', {
+                      props: {
+                        geostory_id: geostory.id,
+                        title: geostory.title,
+                        source: 'explore-sidebar',
+                      },
+                    })
+                  }
                 >
                   {geostory.title}
                 </Link>
@@ -56,6 +68,11 @@ function DatasetCardMonitor({
                       geostory.geostory_bbox ? `?bbox=${geostory.geostory_bbox.join(',')}` : ''
                     }`}
                     className="flex items-center"
+                    onClick={() =>
+                      track('Monitor Open', {
+                        props: { monitor_id: id, title, source: 'explore-sidebar' },
+                      })
+                    }
                   >
                     <span className="ml-2 inline-block w-0 overflow-hidden whitespace-nowrap font-inter text-xs text-white-500/50 opacity-0 transition-all duration-300 ease-in-out group-hover/monitor-card:w-full group-hover/monitor-card:opacity-100">
                       Go to monitor

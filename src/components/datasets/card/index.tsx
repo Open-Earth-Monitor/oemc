@@ -4,6 +4,7 @@ import { FC, useCallback, useEffect, useMemo } from 'react';
 
 import { useAtom } from 'jotai';
 
+import { useTrackEvent } from '@/lib/analytics';
 import { scrollToHistogram } from '@/lib/scroll-to-histogram';
 
 import { Geostory } from '@/types/geostories';
@@ -44,8 +45,17 @@ const DatasetCard: FC<DatasetCardProps> = ({
   const hasCompare = !!compareLayers?.[0]?.id;
 
   const [isHistogramActive] = useAtom(histogramVisibilityAtom);
+  const track = useTrackEvent();
 
   const handleToggleLayer = useCallback(() => {
+    track(isActive ? 'Layer Deactivate' : 'Layer Activate', {
+      props: {
+        layer_id: id,
+        title,
+        parent_type: isGeostory ? 'geostory' : 'monitor',
+      },
+    });
+
     if (!isActive) {
       void setLayers([
         {
@@ -81,6 +91,8 @@ const DatasetCard: FC<DatasetCardProps> = ({
     setLayers,
     comparisonLayer,
     compareLayers,
+    title,
+    track,
   ]);
 
   useEffect(() => {

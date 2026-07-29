@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence, useAnimationControls } from 'framer-motion';
 import { HiOutlineChevronUp } from 'react-icons/hi';
 
+import { useTrackEvent } from '@/lib/analytics';
 import { cn } from '@/lib/classnames';
 
 import { MonitorParsed } from '@/types/monitors';
@@ -25,11 +26,15 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
     }
   };
 
-  const handleClick = (id) => {
+  const track = useTrackEvent();
+
+  const handleClick = (id: string, title: string) => {
     postWebTraffic({
       geostory_id: id,
     });
-    console.info('WT3 -', 'geostories', id);
+    track('Geostory Open', {
+      props: { geostory_id: id, title, source: 'monitor-geostories' },
+    });
   };
 
   return (
@@ -84,7 +89,12 @@ export const GeostoriesLink = ({ geostories = [], color, colorOpacity }: Monitor
                   whileHover="hover"
                   className="w-fit"
                 >
-                  <a href={href} data-id={geostoryId} className="block" onClick={handleClick}>
+                  <a
+                    href={href}
+                    data-id={geostoryId}
+                    className="block"
+                    onClick={() => handleClick(geostoryId, title)}
+                  >
                     <div className="text-left">
                       <span>{title}</span>
                       <motion.div
