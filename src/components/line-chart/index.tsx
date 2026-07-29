@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 
-import { Label } from '@visx/annotation';
 import { ParentSize } from '@visx/responsive';
 import { Line } from '@visx/shape';
 import { useTooltipInPortal } from '@visx/tooltip';
@@ -135,6 +134,17 @@ export const LineChart = ({
   const unit = validData[0]?.unit || '';
   return (
     <div ref={containerRef} className="relative h-72 w-full text-white-500">
+      {/* The unit sits in the chart's reserved top margin as HTML rather than an SVG
+          annotation: an annotation is positioned from measured text width, so a long
+          unit gets pushed past the left edge of the SVG and clipped mid-glyph. */}
+      {unit && (
+        <span
+          className="pointer-events-none absolute left-0 top-0 block max-w-full truncate text-xs text-[#dfdfdf]"
+          title={unit}
+        >
+          {unit}
+        </span>
+      )}
       <ParentSize>
         {({ width, height }) => {
           const maxXTicks = Math.max(2, Math.floor(width / PIXELS_PER_X_TICK));
@@ -148,14 +158,6 @@ export const LineChart = ({
               yScale={{ type: 'linear', domain: yDomain }}
               margin={{ top: 30, right: 20, bottom: 80, left: 60 }}
             >
-              <Label
-                x={90}
-                y={30}
-                title={unit}
-                titleFontSize={12}
-                fontColor="#dfdfdf"
-                backgroundFill="transparent"
-              />
               <AnimatedAxis
                 orientation="bottom"
                 numTicks={maxXTicks}
