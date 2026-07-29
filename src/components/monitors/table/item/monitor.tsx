@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { motion } from 'framer-motion';
 
+import { useTrackEvent } from '@/lib/analytics';
 import { cn } from '@/lib/classnames';
 
 import { MonitorParsed } from '@/types/monitors';
@@ -17,11 +18,15 @@ export const MonitorLink = ({
   title,
   isMobile,
 }: MonitorParsed & { isMobile?: boolean }) => {
+  const track = useTrackEvent();
+
   const handleClick = () => {
     postWebTraffic({
       monitor_id: id,
     });
-    console.info('WT4 -', 'monitors', id);
+    track('Monitor Open', {
+      props: { monitor_id: id, title, source: 'monitors-page' },
+    });
   };
 
   const { data: monitorsData } = useMonitors();

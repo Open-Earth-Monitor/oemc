@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 import { LuArrowRight, LuX } from 'react-icons/lu';
 
+import { useTrackEvent } from '@/lib/analytics';
 import { cn } from '@/lib/classnames';
 
 import type { Geostory } from '@/types/geostories';
@@ -40,6 +41,7 @@ function getCategoryColor(theme: CategoryId | string): string {
 
 export default function GeostoryDialog({ geostory, open, onOpenChange }: GeostoryDialogProps) {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
+  const track = useTrackEvent();
 
   if (!geostory) return null;
 
@@ -203,6 +205,15 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
           href={`/explore/geostory/${geostory.id}`}
           className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full text-brand-500 transition-opacity hover:opacity-80"
           style={{ backgroundColor: color }}
+          onClick={() =>
+            track('Geostory Open', {
+              props: {
+                geostory_id: geostory.id,
+                title: geostory.title,
+                source: 'landing-globe-dialog',
+              },
+            })
+          }
         >
           <LuArrowRight className="h-4 w-4" />
         </Link>

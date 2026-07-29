@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
+import { useTrackEvent } from '@/lib/analytics';
 import cn from '@/lib/classnames';
 
 import { postWebTraffic } from '@/hooks/web-traffic';
@@ -25,14 +25,20 @@ const CardHeader: React.FC<CardHeaderProps> = ({
   className,
   bbox,
 }) => {
-  const params = useParams();
-  const geostoryId = params.geostory_id;
+  const track = useTrackEvent();
 
   const handleClick = () => {
-    postWebTraffic({
-      geostory_id: geostoryId,
-    });
-    console.info('WT2 -', type, id);
+    postWebTraffic(type === 'monitor' ? { monitor_id: id } : { geostory_id: id });
+
+    if (type === 'monitor') {
+      track('Monitor Open', {
+        props: { monitor_id: id, title, source: 'explore-sidebar' },
+      });
+    } else {
+      track('Geostory Open', {
+        props: { geostory_id: id, title, source: 'explore-sidebar' },
+      });
+    }
   };
 
   return (

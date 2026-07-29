@@ -4,6 +4,8 @@ import Link from 'next/link';
 
 import { ChevronRight } from 'lucide-react';
 
+import { useTrackEvent } from '@/lib/analytics';
+
 import type { GeostoryParsed } from '@/types/geostories';
 
 import { getGeostoryImageUrl } from '@/hooks/geostories';
@@ -14,6 +16,8 @@ import CardHeader from '@/components/sidebar/card-header';
 
 function DatasetCardGeostory({ theme, title, color, id, geostory_bbox }: GeostoryParsed) {
   // const validPublications = useMemo(() => getValidPublications(publications), [publications]);
+  const track = useTrackEvent();
+
   return (
     <div className="relative">
       <div
@@ -41,6 +45,11 @@ function DatasetCardGeostory({ theme, title, color, id, geostory_bbox }: Geostor
                 geostory_bbox ? `?bbox=${geostory_bbox.join(',')}` : ''
               }`}
               className="flex items-center justify-end"
+              onClick={() =>
+                track('Geostory Open', {
+                  props: { geostory_id: id, title, source: 'explore-sidebar' },
+                })
+              }
             >
               <span className="ml-2 inline-block w-0 overflow-hidden whitespace-nowrap font-inter text-xs text-white-500/50 opacity-0 transition-all duration-300 ease-in-out group-hover/monitor-card:w-full group-hover/monitor-card:opacity-100">
                 Go to geostory
