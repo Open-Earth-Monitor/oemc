@@ -4,7 +4,11 @@ import { orderBy } from 'lodash-es';
 
 import { useTrackEvent, type EventSource } from '@/lib/analytics';
 
-import { useLatestPublications, type Publication } from '@/hooks/publications';
+import {
+  useLatestPublications,
+  DEFAULT_PUBLICATIONS_PER_SOURCE,
+  type Publication,
+} from '@/hooks/publications';
 import { useSocialMedia } from '@/hooks/social-media';
 
 import SocialMediaDesktop from '@/containers/globe/social-media/desktop/carousel';
@@ -13,7 +17,14 @@ import Loading from '@/components/loading';
 
 import { toFeedItems } from '../feed-items';
 
-const SocialMediaFeed = ({ source = 'landing-globe' }: { source?: EventSource }) => {
+const SocialMediaFeed = ({
+  source = 'landing-globe',
+  publicationsPerSource = DEFAULT_PUBLICATIONS_PER_SOURCE,
+}: {
+  source?: EventSource;
+  /** Publications fetched from *each* library (Zenodo, Zotero) for the carousel. */
+  publicationsPerSource?: number;
+}) => {
   const { data, isLoading } = useSocialMedia(null, {
     select: (data) => {
       const orderedData = orderBy(data, 'created_at', 'desc');
@@ -25,7 +36,7 @@ const SocialMediaFeed = ({ source = 'landing-globe' }: { source?: EventSource })
 
   // Publications share the carousel with the posts; a slow or failing library
   // just means fewer slides, never a blocked feed.
-  const { data: publications } = useLatestPublications();
+  const { data: publications } = useLatestPublications({ perSource: publicationsPerSource });
   const trackEvent = useTrackEvent();
 
   const handlePublicationSelect = (publication: Publication) =>
