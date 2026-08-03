@@ -1,4 +1,4 @@
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
 import { APIZenodo, APIZotero } from 'services/api';
@@ -15,6 +15,13 @@ const ZOTERO_MAX_PAGE_SIZE = 100;
 
 /** Publications per source in the landing feed when the caller does not say. */
 export const DEFAULT_PUBLICATIONS_PER_SOURCE = 3;
+
+/**
+ * Everything a single request can bring back from both libraries at once —
+ * Zenodo's ceiling is the binding one. Used by the live updates listing, which
+ * shows all it can rather than a handful.
+ */
+export const MAX_PUBLICATIONS_PER_SOURCE = ZENODO_MAX_PAGE_SIZE;
 
 export type PublicationSource = 'zenodo' | 'zotero';
 
@@ -187,20 +194,6 @@ const fetchZenodoRecords = (size: number) =>
   }).then((response: AxiosResponse<ZenodoResponse>) =>
     (response.data?.hits?.hits ?? []).map(normalizeZenodoRecord).sort(byPublicationDateDesc)
   );
-
-/**
- * Every recent Zenodo record in the OEMC community, most recent publication
- * date first. Used by the publications tab on the live updates page.
- */
-export function useZenodoPublications({ size = ZENODO_MAX_PAGE_SIZE }: { size?: number } = {}) {
-  const pageSize = Math.min(size, ZENODO_MAX_PAGE_SIZE);
-
-  return useQuery(
-    ['publications', 'zenodo', 'list', ZENODO_COMMUNITY, pageSize],
-    () => fetchZenodoRecords(pageSize),
-    DEFAULT_QUERY_OPTIONS
-  );
-}
 
 /**
  * The most recent publications from both sources, merged and sorted by

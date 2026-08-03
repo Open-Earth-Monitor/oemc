@@ -4,7 +4,7 @@ import cn from '@/lib/classnames';
 
 import type { Publication } from '@/hooks/publications';
 
-const SOURCE_LABEL: Record<Publication['source'], string> = {
+export const SOURCE_LABEL: Record<Publication['source'], string> = {
   zenodo: 'Zenodo',
   zotero: 'Zotero',
 };
