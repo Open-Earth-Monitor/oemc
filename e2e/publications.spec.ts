@@ -49,15 +49,15 @@ test.describe('recent publications', () => {
     );
   });
 
-  test('shows one card per source under the social feed', async ({ page }) => {
+  test('shows one card per source inside the social feed carousel', async ({ page }) => {
     await page.goto('/', { waitUntil: 'load' });
-
-    const section = page.getByTestId('recent-publications');
-    await expect(section).toBeVisible();
-    await expect(section.getByRole('heading', { name: 'Recent publications' })).toBeVisible();
 
     await expect(page.getByTestId('publication-card-zenodo')).toBeVisible();
     await expect(page.getByTestId('publication-card-zotero')).toBeVisible();
+
+    // Both live in the feed's carousel track rather than in a section of their
+    // own. The post count is live data, so the slide total is not asserted.
+    await expect(page.locator('aside [data-testid="publication-card-zenodo"]')).toHaveCount(1);
   });
 
   test('links out to the record and the publisher', async ({ page }) => {
@@ -74,7 +74,7 @@ test.describe('recent publications', () => {
     );
   });
 
-  test('drops the section when both feeds fail', async ({ page }) => {
+  test('drops the publication slides when both libraries fail', async ({ page }) => {
     await page.unroute('**/zenodo.org/api/records**');
     await page.unroute('**/api.zotero.org/groups/**');
     await page.route('**/zenodo.org/api/records**', (route) => route.abort());
@@ -93,7 +93,9 @@ test.describe('recent publications', () => {
     await page.goto('/', { waitUntil: 'load' });
     await Promise.all([zenodoFailed, zoteroFailed]);
 
-    await expect(page.getByTestId('recent-publications')).toHaveCount(0);
+    // The social feed keeps working; it just has no publication slides.
+    await expect(page.getByTestId('publication-card-zenodo')).toHaveCount(0);
+    await expect(page.getByTestId('publication-card-zotero')).toHaveCount(0);
   });
 
   test('lists Zenodo records newest first in the publications tab', async ({ page }) => {

@@ -4,11 +4,13 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 
-import { Post as PostTypes } from '@/hooks/social-media';
+import type { Publication } from '@/hooks/publications';
 
+import PublicationCard from '@/components/publications/card';
 import { Carousel, CarouselContent, CarouselItem, useCarousel } from '@/components/ui/carousel';
 import type { CarouselApi } from '@/components/ui/carousel';
 
+import type { FeedItem } from '../feed-items';
 import { Post } from '../post';
 
 const CarouselButton = ({ direction }: { direction: 'prev' | 'next' }) => {
@@ -90,10 +92,12 @@ export const SocialMediaContent = ({
   data,
   setCount,
   count,
+  onPublicationSelect,
 }: {
-  data: PostTypes[];
+  data: FeedItem[];
   setCount: React.Dispatch<React.SetStateAction<number>>;
   count: number;
+  onPublicationSelect?: (publication: Publication) => void;
 }) => {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const dataLength = data?.length ?? 0;
@@ -124,13 +128,21 @@ export const SocialMediaContent = ({
         setApi={setApi}
       >
         <CarouselContent className="h-full">
-          {data?.map((post) => (
+          {data?.map((item) => (
             <CarouselItem
-              key={post.id}
+              key={item.id}
               className="flex h-full items-start justify-center  lg:max-w-md xl:max-w-xs"
             >
               <div className="mb-10 h-full w-full overflow-hidden rounded-3xl border border-black-100 bg-black-500  xl:mb-0">
-                <Post post={post} />
+                {item.kind === 'post' ? (
+                  <Post post={item.post} />
+                ) : (
+                  <PublicationCard
+                    publication={item.publication}
+                    onSelect={onPublicationSelect}
+                    className="h-full min-h-[200px] rounded-3xl border-0"
+                  />
+                )}
               </div>
             </CarouselItem>
           ))}
@@ -146,7 +158,13 @@ export const SocialMediaContent = ({
   );
 };
 
-const SocialMediaDesktop = ({ data }: { data: PostTypes[] }) => {
+const SocialMediaDesktop = ({
+  data,
+  onPublicationSelect,
+}: {
+  data: FeedItem[];
+  onPublicationSelect?: (publication: Publication) => void;
+}) => {
   const [count, setCount] = useState(1);
 
   const dataLength = data?.length ?? 0;
@@ -164,7 +182,12 @@ const SocialMediaDesktop = ({ data }: { data: PostTypes[] }) => {
             </span>
           </div>
 
-          <SocialMediaContent data={data} setCount={setCount} count={count} />
+          <SocialMediaContent
+            data={data}
+            setCount={setCount}
+            count={count}
+            onPublicationSelect={onPublicationSelect}
+          />
         </div>
       </div>
     </div>

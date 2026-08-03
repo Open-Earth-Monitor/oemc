@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Recent publications on the homepage under the social media feed, one latest item each from the Zenodo community and the Zotero group [OEMC-439](https://vizzuality.atlassian.net/browse/OEMC-439)
+- Latest publication from the Zenodo community and the Zotero group as slides in the homepage social media feed [OEMC-439](https://vizzuality.atlassian.net/browse/OEMC-439)
 - Publications tab on the live updates page listing Zenodo records newest first [OEMC-439](https://vizzuality.atlassian.net/browse/OEMC-439)
 
 ### Changed
