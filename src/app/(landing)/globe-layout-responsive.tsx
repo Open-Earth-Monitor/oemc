@@ -8,6 +8,7 @@ import GlobeExploreData from '@/containers/globe/explore-data';
 import CategoriesFilters from '@/containers/globe/filters';
 import CategoriesFiltersMobile from '@/containers/globe/filters/mobile';
 import Geostories from '@/containers/globe/geostories';
+import RecentPublications from '@/containers/globe/publications';
 import GlobeSocialMedia from '@/containers/globe/social-media/desktop';
 
 import GeostoriesGlobeMobile from './geostories-mobile';
@@ -20,8 +21,12 @@ function GlobeLayoutDesktop() {
         <Geostories />
       </div>
 
-      <div className="pointer-events-none absolute right-0 top-28 z-[1000] px-5 animate-in fade-in-0 slide-in-from-right-5 duration-700 delay-150 ease-out fill-mode-both">
+      {/* The column is height-bounded so the publications section below the feed
+          stops short of the centered categories filter bar on short screens. */}
+      <div className="pointer-events-none absolute right-0 top-28 z-[1000] flex max-h-[calc(100dvh-19rem)] flex-col px-5 animate-in fade-in-0 slide-in-from-right-5 duration-700 delay-150 ease-out fill-mode-both">
         <GlobeSocialMedia />
+        {/* Sits under the social feed in the same right-hand column, per OEMC-439. */}
+        <RecentPublications source="landing-globe" className="min-h-0 w-full xl:w-[320px]" />
       </div>
 
       <div className="pointer-events-none absolute bottom-20 left-1/2 z-[1000] -translate-x-1/2 [@media(max-height:940px)]:bottom-4">

@@ -86,6 +86,15 @@ export type AnalyticsEvents = {
     labels: LabelProps['id'];
     source: EventSource;
   };
+  /**
+   * A recent publication card was opened. `publication_source` separates the two
+   * feeds so the breakdown shows which library people actually follow through on.
+   */
+  'Publication Open': {
+    publication_source: 'zenodo' | 'zotero';
+    title: string;
+    source: EventSource;
+  };
 };
 
 /**

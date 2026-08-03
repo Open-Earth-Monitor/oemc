@@ -29,4 +29,17 @@ export const APIOpenStreetMapLocation = axios.create({
   headers: {},
 });
 
+export const APIZenodo = axios.create({
+  baseURL: 'https://zenodo.org/api',
+  headers: {},
+});
+
+// Public group libraries are readable anonymously. The API version is pinned via
+// the `v` query param rather than the `Zotero-API-Version` header: a custom header
+// would turn every call into a CORS preflight for no benefit.
+export const APIZotero = axios.create({
+  baseURL: 'https://api.zotero.org',
+  headers: {},
+});
+
 export default API;

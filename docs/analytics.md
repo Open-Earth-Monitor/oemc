@@ -245,6 +245,25 @@ The prop types are imported from
 basemap or label there widens the event type automatically with no runtime
 coupling.
 
+### `Publication Open`
+
+A card in the "Recent publications" section was clicked.
+`publication_source` separates the two libraries, so the breakdown shows which
+one people actually follow through on.
+
+| Prop | Type |
+| --- | --- |
+| `publication_source` | `'zenodo' \| 'zotero'` |
+| `title` | `string` |
+| `source` | [`EventSource`](#event-sources) |
+
+| File | Surface |
+| --- | --- |
+| `containers/globe/publications/index.tsx` | Landing globe, under the social feed (desktop and mobile drawer) |
+
+Plausible also records these as outbound link clicks, since every card is an
+external `<a>`; the custom event adds the source and title breakdown.
+
 ## Event sources
 
 `source` is a closed union rather than a free string, so a surface is always

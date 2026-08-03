@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0-alpha.7 Unreleased
 
+### Added
+
+- Recent publications on the homepage under the social media feed, one latest item each from the Zenodo community and the Zotero group [OEMC-439](https://vizzuality.atlassian.net/browse/OEMC-439)
+- Publications tab on the live updates page listing Zenodo records newest first [OEMC-439](https://vizzuality.atlassian.net/browse/OEMC-439)
+
 ### Changed
 
 - Map controls style update to new designs [OEMC-355](https://vizzuality.atlassian.net/browse/OEMC-355)
