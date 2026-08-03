@@ -10,6 +10,12 @@ const ZOTERO_GROUP_ID = '5705036';
 /** Zenodo answers 400 Bad Request to anything larger. */
 const ZENODO_MAX_PAGE_SIZE = 25;
 
+/** Zotero caps `limit` at 100 and silently truncates above it. */
+const ZOTERO_MAX_PAGE_SIZE = 100;
+
+/** Publications per source in the landing feed when the caller does not say. */
+export const DEFAULT_PUBLICATIONS_PER_SOURCE = 3;
+
 export type PublicationSource = 'zenodo' | 'zotero';
 
 /** Shape both APIs are normalized into so the card renders one thing. */
@@ -51,6 +57,7 @@ type ZoteroItem = {
     key?: string;
     title?: string;
     itemType?: string;
+    abstractNote?: string;
     date?: string;
     url?: string;
     DOI?: string;
@@ -128,17 +135,7 @@ const normalizeZenodoRecord = (record: ZenodoRecord): Publication => ({
   description: stripHtml(record.metadata?.description),
 });
 
-const normalizeZenodo = (response: ZenodoResponse): Publication | null => {
-  const record = response?.hits?.hits?.[0];
-  if (!record) return null;
-
-  return normalizeZenodoRecord(record);
-};
-
-const normalizeZotero = (items: ZoteroItem[]): Publication | null => {
-  const item = items?.[0];
-  if (!item) return null;
-
+const normalizeZoteroItem = (item: ZoteroItem): Publication => {
   const doi = item.data?.DOI;
 
   return {
@@ -155,25 +152,13 @@ const normalizeZotero = (items: ZoteroItem[]): Publication | null => {
       item.links?.alternate?.href ||
       `https://www.zotero.org/groups/${ZOTERO_GROUP_ID}/items/${item.key}`,
     type: humanizeZoteroItemType(item.data?.itemType),
+    // `abstractNote` is plain text and an empty string when the entry has none.
+    description: item.data?.abstractNote?.trim() || null,
   };
 };
 
-const fetchLatestZenodoRecord = () =>
-  APIZenodo.request({
-    method: 'GET',
-    url: '/records',
-    params: { communities: ZENODO_COMMUNITY, sort: 'newest', size: 1 },
-  }).then((response: AxiosResponse<ZenodoResponse>) => normalizeZenodo(response.data));
-
-const fetchLatestZoteroItem = () =>
-  APIZotero.request({
-    method: 'GET',
-    url: `/groups/${ZOTERO_GROUP_ID}/items/top`,
-    params: { limit: 1, sort: 'dateAdded', direction: 'desc', format: 'json', v: 3 },
-  }).then((response: AxiosResponse<ZoteroItem[]>) => normalizeZotero(response.data));
-
 /** Zenodo's own `newest` sort is by upload time, which is not the publication date. */
-const byPublicationDateDesc = (a: Publication, b: Publication) => {
+export const byPublicationDateDesc = (a: Publication, b: Publication) => {
   const timeA = a.date ? new Date(a.date).getTime() : NaN;
   const timeB = b.date ? new Date(b.date).getTime() : NaN;
 
@@ -184,6 +169,15 @@ const byPublicationDateDesc = (a: Publication, b: Publication) => {
 
   return timeB - timeA;
 };
+
+const fetchZoteroItems = (limit: number) =>
+  APIZotero.request({
+    method: 'GET',
+    url: `/groups/${ZOTERO_GROUP_ID}/items/top`,
+    params: { limit, sort: 'date', direction: 'desc', format: 'json', v: 3 },
+  }).then((response: AxiosResponse<ZoteroItem[]>) =>
+    (response.data ?? []).map(normalizeZoteroItem).sort(byPublicationDateDesc)
+  );
 
 const fetchZenodoRecords = (size: number) =>
   APIZenodo.request({
@@ -209,29 +203,47 @@ export function useZenodoPublications({ size = ZENODO_MAX_PAGE_SIZE }: { size?: 
 }
 
 /**
- * Latest publication from each source, in display order (Zenodo, then Zotero).
+ * The most recent publications from both sources, merged and sorted by
+ * publication date, newest first.
+ *
+ * `perSource` is a per-library count, not a total: asking for 3 gives up to 3
+ * Zenodo records and up to 3 Zotero items, so the feed always mixes both rather
+ * than being swept by whichever library published last.
  *
  * The two queries are independent on purpose: if one source is down the other
- * still renders, so the section degrades to a single card instead of vanishing.
+ * still renders, so the section degrades to one library instead of vanishing.
  */
-export function useLatestPublications() {
+export function useLatestPublications({
+  perSource = DEFAULT_PUBLICATIONS_PER_SOURCE,
+}: { perSource?: number } = {}) {
+  const zenodoSize = Math.min(perSource, ZENODO_MAX_PAGE_SIZE);
+  const zoteroLimit = Math.min(perSource, ZOTERO_MAX_PAGE_SIZE);
+
   const results = useQueries({
     queries: [
       {
-        queryKey: ['publications', 'zenodo', ZENODO_COMMUNITY],
-        queryFn: fetchLatestZenodoRecord,
+        queryKey: ['publications', 'zenodo', 'list', ZENODO_COMMUNITY, zenodoSize],
+        queryFn: () => fetchZenodoRecords(zenodoSize),
         ...DEFAULT_QUERY_OPTIONS,
       },
       {
-        queryKey: ['publications', 'zotero', ZOTERO_GROUP_ID],
-        queryFn: fetchLatestZoteroItem,
+        queryKey: ['publications', 'zotero', 'list', ZOTERO_GROUP_ID, zoteroLimit],
+        queryFn: () => fetchZoteroItems(zoteroLimit),
         ...DEFAULT_QUERY_OPTIONS,
       },
     ],
   });
 
   return {
-    data: results.map((result) => result.data).filter(Boolean) as Publication[],
+    data: results
+      .flatMap((result) => result.data ?? [])
+      .sort(byPublicationDateDesc)
+      // Zenodo mirrors some Zotero entries; the sources publish independently so
+      // the same paper can arrive twice under different ids.
+      .filter(
+        (publication, index, all) =>
+          all.findIndex((other) => other.title === publication.title) === index
+      ),
     isLoading: results.some((result) => result.isLoading),
     isError: results.every((result) => result.isError),
   };
