@@ -98,7 +98,9 @@ test.describe('recent publications', () => {
     await expect(page.getByTestId('publication-card-zotero')).toHaveCount(0);
   });
 
-  test('lists Zenodo records newest first in the publications tab', async ({ page }) => {
+  test('lists records from both libraries newest first in the publications tab', async ({
+    page,
+  }) => {
     await page.unroute('**/zenodo.org/api/records**');
     // Deliberately out of order: the hook must sort by publication date, not
     // trust the order Zenodo returns.
@@ -135,8 +137,13 @@ test.describe('recent publications', () => {
     await page.goto('/usage-stats?mediaFilter=%5B%22publications%22%5D', { waitUntil: 'load' });
 
     const cards = page.locator('[data-testid="publications-list"] > div');
-    await expect(cards).toHaveCount(2);
-    await expect(cards.first()).toContainText('Newer record');
-    await expect(cards.last()).toContainText('Older record');
+    // The Zotero item from `beforeEach` is dated 2026-07-03, so it sorts above
+    // both Zenodo records: the tab merges the libraries rather than listing one.
+    await expect(cards).toHaveCount(3);
+    await expect(cards.nth(0)).toContainText('Towards a FAIRer future: insights from Europe');
+    await expect(cards.nth(0)).toContainText('Zotero');
+    await expect(cards.nth(1)).toContainText('Newer record');
+    await expect(cards.nth(1)).toContainText('Zenodo');
+    await expect(cards.nth(2)).toContainText('Older record');
   });
 });

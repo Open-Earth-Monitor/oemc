@@ -10,7 +10,7 @@ import { mobile } from '@/lib/media-queries';
 
 import { LIVE_UPDATES_CONTENT } from '@/constants/live-updates';
 
-import { useZenodoPublications } from '@/hooks/publications';
+import { useLatestPublications, MAX_PUBLICATIONS_PER_SOURCE } from '@/hooks/publications';
 import { useSocialMedia } from '@/hooks/social-media';
 import { useSyncMediaFilter } from '@/hooks/sync-query';
 
@@ -32,7 +32,9 @@ export const LiveUpdatesContent = () => {
     },
   });
 
-  const { data: publicationsData, isLoading: isLoadingPublications } = useZenodoPublications();
+  const { data: publicationsData, isLoading: isLoadingPublications } = useLatestPublications({
+    perSource: MAX_PUBLICATIONS_PER_SOURCE,
+  });
 
   const socialMediaResults = socialMediaData?.length || 0;
 

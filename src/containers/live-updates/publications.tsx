@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 
 import type { Publication } from '@/hooks/publications';
 
-import { formatPublicationDate } from '@/components/publications/card';
+import { formatPublicationDate, SOURCE_LABEL } from '@/components/publications/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 type PublicationsProps = {
@@ -35,7 +35,7 @@ export const Publications = ({ data, isLoading }: PublicationsProps) => {
           >
             <div className="flex w-full flex-col gap-y-4 overflow-hidden p-4">
               <div className="flex items-center justify-between gap-2 text-xs font-medium">
-                <span className="text-accent-green">Zenodo</span>
+                <span className="text-accent-green">{SOURCE_LABEL[publication.source]}</span>
                 {!!publication.type && (
                   <span className="text-white-500/60">{publication.type}</span>
                 )}
