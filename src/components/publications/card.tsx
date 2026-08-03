@@ -1,5 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 
+import cn from '@/lib/classnames';
+
 import type { Publication } from '@/hooks/publications';
 
 const SOURCE_LABEL: Record<Publication['source'], string> = {
@@ -23,11 +25,13 @@ export const formatPublicationDate = (date: string | null) => {
 export const PublicationCard = ({
   publication,
   onSelect,
+  className,
 }: {
   publication: Publication;
   onSelect?: (publication: Publication) => void;
+  className?: string;
 }) => {
-  const { title, authors, date, url, type, source } = publication;
+  const { title, authors, date, url, type, source, description } = publication;
   const formattedDate = formatPublicationDate(date);
 
   return (
@@ -36,23 +40,28 @@ export const PublicationCard = ({
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => onSelect?.(publication)}
-      className="group/publication pointer-events-auto block rounded-2xl border border-black-100 bg-black-500 p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+      className={cn(
+        'group/publication pointer-events-auto flex flex-col gap-y-2 rounded-2xl border border-black-100 bg-black-500 p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green',
+        className
+      )}
       data-testid={`publication-card-${source}`}
     >
-      <div className="flex items-center justify-between gap-2 text-[11px] font-medium">
+      <div className="flex items-center justify-between gap-2 text-xs font-medium">
         <span className="text-accent-green">{SOURCE_LABEL[source]}</span>
         {!!type && <span className="text-white-500/60">{type}</span>}
       </div>
 
-      <h4 className="mt-1.5 line-clamp-2 text-sm font-medium leading-snug text-white-500 group-hover/publication:underline">
+      <h4 className="line-clamp-3 text-sm font-medium leading-snug text-white-500 group-hover/publication:underline">
         {title}
       </h4>
 
       {!!authors.length && (
-        <p className="mt-1 line-clamp-1 text-[11px] text-white-500/60">{authors.join('; ')}</p>
+        <p className="line-clamp-1 text-xs text-white-500/60">{authors.join('; ')}</p>
       )}
 
-      <div className="mt-2 flex items-center justify-between gap-2 text-[11px] text-white-500/60">
+      {!!description && <p className="line-clamp-4 text-xs text-white-500/80">{description}</p>}
+
+      <div className="mt-auto flex items-center justify-between gap-2 pt-1 text-xs text-white-500/60">
         <span>{formattedDate}</span>
         <ArrowUpRight
           size={16}

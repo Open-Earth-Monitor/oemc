@@ -247,7 +247,7 @@ coupling.
 
 ### `Publication Open`
 
-A card in the "Recent publications" section was clicked.
+A publication slide in the landing page live feed was clicked.
 `publication_source` separates the two libraries, so the breakdown shows which
 one people actually follow through on.
 
@@ -259,7 +259,8 @@ one people actually follow through on.
 
 | File | Surface |
 | --- | --- |
-| `containers/globe/publications/index.tsx` | Landing globe, under the social feed (desktop and mobile drawer) |
+| `containers/globe/social-media/desktop/index.tsx` | Landing globe live feed, desktop |
+| `containers/globe/social-media/mobile/index.tsx` | Landing globe live feed, mobile drawer |
 
 Plausible also records these as outbound link clicks, since every card is an
 external `<a>`; the custom event adds the source and title breakdown.
