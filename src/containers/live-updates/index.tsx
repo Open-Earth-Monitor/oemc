@@ -10,12 +10,14 @@ import { mobile } from '@/lib/media-queries';
 
 import { LIVE_UPDATES_CONTENT } from '@/constants/live-updates';
 
+import { useZenodoPublications } from '@/hooks/publications';
 import { useSocialMedia } from '@/hooks/social-media';
 import { useSyncMediaFilter } from '@/hooks/sync-query';
 
 import { FilterPill } from '@/containers/filter-pill';
 import { LiveUpdatesFiltersContent } from '@/containers/globe/filters/live-updates-filters-content';
 
+import Publications from './publications';
 import SocialMedia from './social-media';
 
 export const LiveUpdatesContent = () => {
@@ -30,10 +32,13 @@ export const LiveUpdatesContent = () => {
     },
   });
 
+  const { data: publicationsData, isLoading: isLoadingPublications } = useZenodoPublications();
+
   const socialMediaResults = socialMediaData?.length || 0;
 
   const resultsByFilter = {
     'social-media': socialMediaResults,
+    publications: publicationsData?.length || 0,
     // news: newsData?.length || 0,
     // media: mediaData?.length || 0,
     // events: eventsData?.length || 0,
@@ -41,6 +46,7 @@ export const LiveUpdatesContent = () => {
 
   const contentById = {
     'social-media': <SocialMedia data={socialMediaData} isLoading={isLoadingSocialMedia} />,
+    publications: <Publications data={publicationsData} isLoading={isLoadingPublications} />,
     news: null,
     media: null,
     events: null,

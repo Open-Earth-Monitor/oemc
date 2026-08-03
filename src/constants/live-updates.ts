@@ -10,6 +10,11 @@ export const LIVE_UPDATES_CONTENT = [
     content: true,
   },
   {
+    id: 'publications',
+    label: 'Publications',
+    content: true,
+  },
+  {
     id: 'news',
     label: 'News',
     content: false,

@@ -2,6 +2,7 @@
 
 import { ChevronDown } from 'lucide-react';
 
+import RecentPublications from '@/containers/globe/publications';
 import GlobeSocialMedia from '@/containers/globe/social-media/mobile';
 
 import {
@@ -27,7 +28,7 @@ export const LiveUpdatesGlobeMobile = () => {
       </DrawerTrigger>
       <DrawerContent
         data-testid="mobile-live-updates-drawer"
-        className="max-h-[calc(100dvh-80px)] space-y-5 bg-black-500 p-5 text-white-500 sm:max-h-[calc(100dvh-100px)]"
+        className="max-h-[calc(100dvh-80px)] space-y-5 overflow-y-auto bg-black-500 p-5 text-white-500 sm:max-h-[calc(100dvh-100px)]"
       >
         <DrawerHeader className="flex flex-row items-center justify-between p-0">
           <DrawerTitle className="inline-flex text-white-500">
@@ -41,6 +42,7 @@ export const LiveUpdatesGlobeMobile = () => {
           </DrawerClose>
         </DrawerHeader>
         <GlobeSocialMedia />
+        <RecentPublications source="landing-globe-mobile" />
       </DrawerContent>
     </Drawer>
   );
