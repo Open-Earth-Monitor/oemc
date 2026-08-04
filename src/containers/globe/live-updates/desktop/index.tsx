@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo } from 'react';
 
 import { orderBy } from 'lodash-es';
 
@@ -13,21 +13,19 @@ import {
 } from '@/hooks/publications';
 import { useSocialMedia } from '@/hooks/social-media';
 
-import { SocialMediaContent } from '@/containers/globe/social-media/desktop/carousel';
+import SocialMediaDesktop from '@/containers/globe/live-updates/desktop/carousel';
+import { toFeedItems } from '@/containers/globe/live-updates/feed-items';
 
 import Loading from '@/components/loading';
 
-import { toFeedItems } from '../feed-items';
-
-const SocialMediaFeed = ({
-  source = 'landing-globe-mobile',
+const LiveUpdatesFeed = ({
+  source = 'landing-globe',
   publicationsPerSource = DEFAULT_PUBLICATIONS_PER_SOURCE,
 }: {
   source?: EventSource;
   /** Publications fetched from *each* library (Zenodo, Zotero) for the carousel. */
   publicationsPerSource?: number;
 }) => {
-  const [count, setCount] = useState(1);
   const { data, isLoading } = useSocialMedia(null, {
     select: (data) => {
       const orderedData = orderBy(data, 'created_at', 'desc');
@@ -37,8 +35,14 @@ const SocialMediaFeed = ({
     },
   });
 
+  // Publications share the carousel with the posts; a slow or failing library
+  // just means fewer slides, never a blocked feed.
   const { data: publications } = useLatestPublications({ perSource: publicationsPerSource });
   const trackEvent = useTrackEvent();
+
+  // The merge and sort only depend on the two queries, so they should not re-run
+  // when this component re-renders for any other reason.
+  const feedItems = useMemo(() => toFeedItems(data, publications), [data, publications]);
 
   const handlePublicationSelect = (publication: Publication) =>
     trackEvent('Publication Open', {
@@ -56,15 +60,9 @@ const SocialMediaFeed = ({
           <Loading />
         </div>
       )}
-
-      <SocialMediaContent
-        data={toFeedItems(data, publications)}
-        setCount={setCount}
-        count={count}
-        onPublicationSelect={handlePublicationSelect}
-      />
+      <SocialMediaDesktop data={feedItems} onPublicationSelect={handlePublicationSelect} />
     </aside>
   );
 };
 
-export default SocialMediaFeed;
+export default LiveUpdatesFeed;

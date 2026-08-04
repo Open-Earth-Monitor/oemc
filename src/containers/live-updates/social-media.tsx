@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 
 import { Post as PostTypes } from '@/hooks/social-media';
 
-import { Post } from '@/containers/globe/social-media/post';
+import { Post } from '@/containers/globe/live-updates/post';
 
 import { Skeleton } from '@/components/ui/skeleton';
 

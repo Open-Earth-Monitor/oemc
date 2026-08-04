@@ -8,7 +8,7 @@ import GlobeExploreData from '@/containers/globe/explore-data';
 import CategoriesFilters from '@/containers/globe/filters';
 import CategoriesFiltersMobile from '@/containers/globe/filters/mobile';
 import Geostories from '@/containers/globe/geostories';
-import GlobeSocialMedia from '@/containers/globe/social-media/desktop';
+import GlobeLiveUpdates from '@/containers/globe/live-updates/desktop';
 
 import GeostoriesGlobeMobile from './geostories-mobile';
 import LiveUpdatesGlobeMobile from './live-updates-mobile';
@@ -21,7 +21,7 @@ function GlobeLayoutDesktop() {
       </div>
 
       <div className="pointer-events-none absolute right-0 top-28 z-[1000] px-5 animate-in fade-in-0 slide-in-from-right-5 duration-700 delay-150 ease-out fill-mode-both">
-        <GlobeSocialMedia />
+        <GlobeLiveUpdates />
       </div>
 
       <div className="pointer-events-none absolute bottom-20 left-1/2 z-[1000] -translate-x-1/2 [@media(max-height:940px)]:bottom-4">

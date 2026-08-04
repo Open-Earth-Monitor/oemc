@@ -2,7 +2,7 @@
 
 import { ChevronDown } from 'lucide-react';
 
-import GlobeSocialMedia from '@/containers/globe/social-media/mobile';
+import GlobeLiveUpdates from '@/containers/globe/live-updates/mobile';
 
 import {
   Drawer,
@@ -40,7 +40,7 @@ export const LiveUpdatesGlobeMobile = () => {
             </div>
           </DrawerClose>
         </DrawerHeader>
-        <GlobeSocialMedia />
+        <GlobeLiveUpdates />
       </DrawerContent>
     </Drawer>
   );
