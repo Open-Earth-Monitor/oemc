@@ -171,16 +171,28 @@
  */
 .ol-attribution {
   position: absolute !important;
-  right: 12px !important;
-  bottom: 34px !important;
   left: auto !important;
   top: auto !important;
+  /* Above the 60px mobile toolbar, which is fixed to the bottom of the viewport. */
+  right: 12px !important;
+  bottom: 68px !important;
   max-width: min(70ch, calc(100% - 24px)) !important;
   padding: 2px 6px !important;
   border-radius: 4px;
   background: hsl(184 5% 19% / 0.55) !important;
   backdrop-filter: blur(4px);
   z-index: 40;
+}
+
+/* From `md` the legend occupies the bottom-right corner, so the credits sit
+   alongside it rather than underneath. `max-w-md` is 28rem, plus a gap. */
+@media (min-width: 768px) {
+  .ol-attribution {
+    right: 29rem !important;
+    /* Clear of the footer links, which sit on the `bottom-3` row themselves. */
+    bottom: 44px !important;
+    max-width: min(50ch, calc(100% - 30rem)) !important;
+  }
 }
 
 .ol-attribution ul {
