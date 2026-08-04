@@ -76,6 +76,10 @@ export type AnalyticsEvents = {
   'Regions Layer Activate': {
     source: EventSource;
   };
+  /** The country boundaries overlay was switched on. Never fires on switch-off. */
+  'Boundaries Layer Activate': {
+    source: EventSource;
+  };
   /** The basemap was changed. Only fires on an actual change. */
   'Basemap Change': {
     basemap: BasemapProps['id'];

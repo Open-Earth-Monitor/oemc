@@ -46,6 +46,11 @@ export const useSyncDatasetType = () =>
 export const useSyncBasemapLabelsSettings = () =>
   useQueryState('basemap-labels', parseAsJson<LabelProps['id']>().withDefault('light'));
 
+// Off by default: the gray basemap already draws borders, so the overlay only
+// earns its keep over imagery, which is not the default basemap.
+export const useSyncBoundariesSettings = () =>
+  useQueryState('boundaries', parseAsBoolean.withDefault(false));
+
 export const useSyncSearchGeostoriesGlobe = () =>
   useQueryState('search', parseAsJson<string>().withDefault(''));
 

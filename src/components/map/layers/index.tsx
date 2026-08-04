@@ -25,12 +25,13 @@ import { useLayer, useLayerParsedSource } from '@/hooks/layers';
 import { useMonitor, useMonitorLayers } from '@/hooks/monitors';
 import {
   useSyncBasemapLabelsSettings,
+  useSyncBoundariesSettings,
   useSyncBboxSettings,
   useSyncCompareLayersSettings,
   useSyncLayersSettings,
 } from '@/hooks/sync-query';
 
-import { LABELS } from '@/components/map/controls/basemaps/constants';
+import { BOUNDARIES, LABELS } from '@/components/map/controls/basemaps/constants';
 import type { CustomMapProps, MonitorTooltipInfo } from '@/components/map/types';
 import VectorStyleLayer from '@/components/map/vector-style-layer';
 
@@ -67,6 +68,7 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
   const setCompareNutsProperties = useSetAtom(nutsDataResponseCompareAtom);
 
   const [activeLabels] = useSyncBasemapLabelsSettings();
+  const [areBoundariesActive] = useSyncBoundariesSettings();
   const [bbox, setBbox] = useSyncBboxSettings();
 
   // URL info
@@ -374,6 +376,16 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
       )}
 
       {isRegionsLayerActive && <NutsLayer />}
+
+      {/* zIndex 99: above the data layers, below the labels overlay at 100. */}
+      {areBoundariesActive && (
+        <VectorStyleLayer
+          styleUrl={BOUNDARIES.styleUrl}
+          attributions={BOUNDARIES.attributions}
+          label="Country boundaries"
+          zIndex={99}
+        />
+      )}
 
       {!!activeLabelStyle?.styleUrl && (
         <VectorStyleLayer
