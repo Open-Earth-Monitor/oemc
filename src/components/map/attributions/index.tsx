@@ -7,6 +7,8 @@ import Image from 'next/image';
 import { cn } from '@/lib/classnames';
 import { tablet } from '@/lib/media-queries';
 
+import { useSelectedBasemap } from '@/hooks/basemap';
+
 import SocialMedia from '@/components/footer/social-media';
 import {
   Dialog,
@@ -28,10 +30,19 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
   className = 'absolute bottom-3 space-x-4',
 }: ControlsPropsWithChildren) => {
   const isTablet = useMediaQuery(tablet);
+  // The links are cream, which needs something dark behind them. A translucent
+  // white veil is enough over imagery but disappears over the near-white gray
+  // basemap, so the veil flips with the basemap. `defaultLabels: 'light'` is the
+  // basemaps' own way of saying "I am a light map and need dark text".
+  const basemap = useSelectedBasemap();
+  const isLightBasemap = basemap.defaultLabels === 'light';
+
   return (
     <div
       className={cn({
-        'bg-white-500/15 flex w-fit items-center rounded px-2 py-1 backdrop-blur-sm': true,
+        'flex w-fit items-center rounded px-2 py-1 backdrop-blur-sm': true,
+        'bg-black-500/70': isLightBasemap,
+        'bg-white-500/15': !isLightBasemap,
         [className]: !!className,
       })}
     >
