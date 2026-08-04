@@ -6,7 +6,11 @@ import { cn } from '@/lib/classnames';
 
 import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
 
-import { useSyncBasemapLabelsSettings, useSyncBasemapSettings } from '@/hooks/sync-query';
+import {
+  useSyncBasemapLabelsSettings,
+  useSyncBasemapSettings,
+  useSyncBoundariesSettings,
+} from '@/hooks/sync-query';
 
 import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import { Label } from '@/components/ui/label';
@@ -19,6 +23,7 @@ import { BASEMAPS, LABELS, LabelProps, BasemapProps } from './constants';
 const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
   const [selectedBasemap, setBasemap] = useSyncBasemapSettings();
   const [activeLabels, setActiveLabels] = useSyncBasemapLabelsSettings();
+  const [areBoundariesActive, setBoundariesActive] = useSyncBoundariesSettings();
   const [, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
   // isActive is based on the url
   const [regionsLayerVisibility, setIsRegionsLayerActive] = useAtom(regionsLayerVisibilityAtom);
@@ -37,6 +42,13 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
       track('Map Labels Change', { props: { labels: value, source: 'map-controls' } });
       setActiveLabels(value);
     }
+  };
+
+  const handleBoundaries = () => {
+    if (!areBoundariesActive) {
+      track('Boundaries Layer Activate', { props: { source: 'map-controls' } });
+    }
+    setBoundariesActive((prev) => !prev);
   };
 
   const handleBasemap = (value: BasemapProps['id']) => {
@@ -116,6 +128,19 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
               className="h-4 w-6 shrink-0"
             />
             <Label htmlFor="regions-layer">Regions layer</Label>
+          </div>
+
+          <div
+            key="boundaries-layer"
+            className="flex items-start space-x-2.5 py-6"
+            data-testid="boundaries-layer-button"
+          >
+            <Switch
+              onCheckedChange={handleBoundaries}
+              checked={areBoundariesActive}
+              className="h-4 w-6 shrink-0"
+            />
+            <Label htmlFor="boundaries-layer">Country boundaries</Label>
           </div>
 
           <div className="flex flex-col justify-start space-y-4 py-6">

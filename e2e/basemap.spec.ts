@@ -63,6 +63,26 @@ test.describe('vector basemap', () => {
     }
   });
 
+  test('the boundaries overlay carries national borders only', async ({ request }) => {
+    const response = await request.get('/basemaps/boundaries.json');
+    expect(response.ok()).toBe(true);
+
+    const style = await response.json();
+
+    // Every layer is a line off the boundary source — no fills, no text.
+    expect(style.layers.every((layer) => layer.type === 'line')).toBe(true);
+    expect(style.layers.every((layer) => layer['source-layer'] === 'boundary')).toBe(true);
+
+    // Regional borders belong to the NUTS regions layer, so only admin level 2
+    // and disputed borders are drawn here.
+    expect(style.layers.some((layer) => layer.id.startsWith('boundary_3'))).toBe(false);
+
+    // Each border is drawn twice: a dark casing under a white line, which is
+    // what keeps it visible over both imagery and the gray basemap.
+    const casings = style.layers.filter((layer) => layer.id.endsWith('_casing'));
+    expect(casings.length).toBe(style.layers.length - casings.length);
+  });
+
   test('renders without errors when the tile host is unreachable', async ({ page }) => {
     // The style is served by us, the tiles are not. Blocking them keeps the test
     // offline and proves an unreachable tile host does not break the map.

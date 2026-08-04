@@ -31,6 +31,17 @@ export type LabelProps = {
   thumb: string;
 };
 
+/**
+ * National borders only — regional boundaries are the NUTS regions layer's job.
+ * A white line over a dark casing so it reads over imagery and the gray basemap
+ * alike, the same approach the label styles take with their halo.
+ */
+export const BOUNDARIES = {
+  attributions:
+    '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+  styleUrl: '/basemaps/boundaries.json',
+} as const;
+
 export const BASEMAPS: BasemapProps[] = [
   {
     id: 'gray_scale',
