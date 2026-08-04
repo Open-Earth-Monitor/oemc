@@ -31,8 +31,9 @@ export const useSyncSidebarState = () =>
 
 // The ids come from the basemap list itself: repeating the union here let it
 // drift, so a basemap added to the list was unreachable from the URL.
+// Defaults to the open Sentinel-2 imagery rather than the unlicensed Esri one.
 export const useSyncBasemapSettings = () =>
-  useQueryState('basemap', parseAsJson<BasemapProps['id']>().withDefault('world_imagery'));
+  useQueryState('basemap', parseAsJson<BasemapProps['id']>().withDefault('s2cloudless'));
 
 // API category comes as "theme" from the backend but we use "category" in the URL for clarity
 export type CategoryQueryParam = CategoryId[] | 'All';
@@ -43,13 +44,15 @@ export const useSyncCategories = () =>
 export const useSyncDatasetType = () =>
   useQueryState('datasetType', parseAsJson<'all' | 'monitors' | 'geostories'>().withDefault('all'));
 
+// `dark` is the light-text-on-dark-halo variant, which is what reads over the
+// default satellite imagery. Switching to the gray basemap wants `light`.
 export const useSyncBasemapLabelsSettings = () =>
-  useQueryState('basemap-labels', parseAsJson<LabelProps['id']>().withDefault('light'));
+  useQueryState('basemap-labels', parseAsJson<LabelProps['id']>().withDefault('dark'));
 
-// Off by default: the gray basemap already draws borders, so the overlay only
-// earns its keep over imagery, which is not the default basemap.
+// On by default: imagery carries no borders of its own, so without this the
+// default map has nothing separating one country from the next.
 export const useSyncBoundariesSettings = () =>
-  useQueryState('boundaries', parseAsBoolean.withDefault(false));
+  useQueryState('boundaries', parseAsBoolean.withDefault(true));
 
 export const useSyncSearchGeostoriesGlobe = () =>
   useQueryState('search', parseAsJson<string>().withDefault(''));

@@ -32,9 +32,11 @@ export type LabelProps = {
 };
 
 /**
- * National borders only — regional boundaries are the NUTS regions layer's job.
- * A white line over a dark casing so it reads over imagery and the gray basemap
- * alike, the same approach the label styles take with their halo.
+ * National borders plus subnational ones (states, provinces, regions), which is
+ * what Esri's reference overlay used to draw over the satellite basemap. Drawn
+ * as a white line over a dark casing so it reads over imagery and the gray
+ * basemap alike, the same approach the label styles take with their halo; the
+ * subnational lines are thinner and dimmer so national borders still lead.
  */
 export const BOUNDARIES = {
   attributions:

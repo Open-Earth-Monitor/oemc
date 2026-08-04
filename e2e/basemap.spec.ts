@@ -63,7 +63,7 @@ test.describe('vector basemap', () => {
     }
   });
 
-  test('the boundaries overlay carries national borders only', async ({ request }) => {
+  test('the boundaries overlay carries national and subnational borders', async ({ request }) => {
     const response = await request.get('/basemaps/boundaries.json');
     expect(response.ok()).toBe(true);
 
@@ -73,14 +73,25 @@ test.describe('vector basemap', () => {
     expect(style.layers.every((layer) => layer.type === 'line')).toBe(true);
     expect(style.layers.every((layer) => layer['source-layer'] === 'boundary')).toBe(true);
 
-    // Regional borders belong to the NUTS regions layer, so only admin level 2
-    // and disputed borders are drawn here.
-    expect(style.layers.some((layer) => layer.id.startsWith('boundary_3'))).toBe(false);
+    // National, disputed and subnational, which is what the Esri reference
+    // overlay drew before it was removed.
+    for (const id of ['boundary_2', 'boundary_disputed', 'boundary_3']) {
+      expect(
+        style.layers.some((layer) => layer.id === id),
+        id
+      ).toBe(true);
+    }
 
     // Each border is drawn twice: a dark casing under a white line, which is
     // what keeps it visible over both imagery and the gray basemap.
     const casings = style.layers.filter((layer) => layer.id.endsWith('_casing'));
     expect(casings.length).toBe(style.layers.length - casings.length);
+
+    // Subnational lines must stay subordinate to national ones, or the map reads
+    // as though every province were a country.
+    const opacity = (id: string) =>
+      style.layers.find((layer) => layer.id === id).paint['line-opacity'];
+    expect(opacity('boundary_3')).toBeLessThan(opacity('boundary_2'));
   });
 
   test('renders without errors when the tile host is unreachable', async ({ page }) => {
