@@ -4,6 +4,8 @@ import { Extent } from 'ol/extent';
 
 import type { CategoryId } from '@/constants/categories';
 
+import type { BasemapProps, LabelProps } from '@/components/map/controls/basemaps/constants';
+
 type LayerSettings = {
   id: string;
   opacity: number;
@@ -27,11 +29,10 @@ export const useSyncSwipeControlPosition = () =>
 export const useSyncSidebarState = () =>
   useQueryState('sidebar-open', parseAsBoolean.withDefault(true));
 
+// The ids come from the basemap list itself: repeating the union here let it
+// drift, so a basemap added to the list was unreachable from the URL.
 export const useSyncBasemapSettings = () =>
-  useQueryState(
-    'basemap',
-    parseAsJson<'world_imagery' | 'gray_scale'>().withDefault('world_imagery')
-  );
+  useQueryState('basemap', parseAsJson<BasemapProps['id']>().withDefault('world_imagery'));
 
 // API category comes as "theme" from the backend but we use "category" in the URL for clarity
 export type CategoryQueryParam = CategoryId[] | 'All';
@@ -43,10 +44,7 @@ export const useSyncDatasetType = () =>
   useQueryState('datasetType', parseAsJson<'all' | 'monitors' | 'geostories'>().withDefault('all'));
 
 export const useSyncBasemapLabelsSettings = () =>
-  useQueryState(
-    'basemap-labels',
-    parseAsJson<'dark' | 'light' | 'no-label'>().withDefault('light')
-  );
+  useQueryState('basemap-labels', parseAsJson<LabelProps['id']>().withDefault('light'));
 
 export const useSyncSearchGeostoriesGlobe = () =>
   useQueryState('search', parseAsJson<string>().withDefault(''));
