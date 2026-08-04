@@ -10,7 +10,6 @@ import * as ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import { Size } from 'ol/size';
 import TileWMS from 'ol/source/TileWMS';
-import { RLayerTile } from 'rlayers';
 
 import { fetchFeatureInfo, getFeatureInfoUrl, firstPropertyValue } from '@/lib/wms';
 
@@ -26,7 +25,6 @@ import { useLayer, useLayerParsedSource } from '@/hooks/layers';
 import { useMonitor, useMonitorLayers } from '@/hooks/monitors';
 import {
   useSyncBasemapLabelsSettings,
-  useSyncBasemapSettings,
   useSyncBboxSettings,
   useSyncCompareLayersSettings,
   useSyncLayersSettings,
@@ -34,6 +32,7 @@ import {
 
 import { LABELS } from '@/components/map/controls/basemaps/constants';
 import type { CustomMapProps, MonitorTooltipInfo } from '@/components/map/types';
+import VectorStyleLayer from '@/components/map/vector-style-layer';
 
 import BasemapLayer from '../basemap';
 import { DEFAULT_VIEWPORT, TOOLTIP_INITIAL_STATE, WMS_INFO_FORMAT, WMS_CRS } from '../constants';
@@ -68,7 +67,6 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
   const setCompareNutsProperties = useSetAtom(nutsDataResponseCompareAtom);
 
   const [activeLabels] = useSyncBasemapLabelsSettings();
-  const [basemap] = useSyncBasemapSettings();
   const [bbox, setBbox] = useSyncBboxSettings();
 
   // URL info
@@ -354,8 +352,8 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
   ]);
 
   /* ----- Labels basemap ----- */
-  const labelUrl = useMemo(
-    () => LABELS.find((label) => activeLabels === label.id)?.url,
+  const activeLabelStyle = useMemo(
+    () => LABELS.find((label) => activeLabels === label.id) ?? null,
     [activeLabels]
   );
 
@@ -377,14 +375,14 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
 
       {isRegionsLayerActive && <NutsLayer />}
 
-      {basemap === 'world_imagery' && (
-        <RLayerTile
-          zIndex={99}
-          url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{z}/{y}/{x}"
+      {!!activeLabelStyle?.styleUrl && (
+        <VectorStyleLayer
+          styleUrl={activeLabelStyle.styleUrl}
+          attributions={activeLabelStyle.attributions}
+          label="Labels"
+          zIndex={100}
         />
       )}
-
-      <RLayerTile zIndex={100} url={labelUrl} />
     </>
   );
 };

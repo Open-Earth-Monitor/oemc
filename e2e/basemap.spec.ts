@@ -18,6 +18,31 @@ test.describe('vector basemap', () => {
     expect(style.sources.openmaptiles.url).toContain('tiles.openfreemap.org');
   });
 
+  test('both label styles carry only text layers, recoloured per variant', async ({ request }) => {
+    const variants = { light: '#4a4a4a', dark: '#f2f3f0' };
+
+    for (const [variant, textColor] of Object.entries(variants)) {
+      const response = await request.get(`/basemaps/labels-${variant}.json`);
+      expect(response.ok(), `labels-${variant}.json is served`).toBe(true);
+
+      const style = await response.json();
+
+      // Text only: sprite icons belong to the basemap, and an overlay carrying
+      // them would draw highway shields on top of satellite imagery.
+      expect(style.layers.every((layer) => layer.type === 'symbol')).toBe(true);
+      expect(style.layers.every((layer) => !layer.layout?.['icon-image'])).toBe(true);
+      expect(style.layers.length).toBeGreaterThan(0);
+
+      // Every layer is recoloured for the variant, bar the four that are
+      // deliberately stronger (countries and capitals).
+      const colors = new Set(style.layers.map((layer) => layer.paint['text-color']));
+      expect(colors.has(textColor)).toBe(true);
+
+      // Empty template stops ol-mapbox-style fetching webfonts from a CDN.
+      expect(style.metadata['ol:webfonts']).toBe('');
+    }
+  });
+
   test('renders without errors when the tile host is unreachable', async ({ page }) => {
     // The style is served by us, the tiles are not. Blocking them keeps the test
     // offline and proves an unreachable tile host does not break the map.
@@ -36,7 +61,9 @@ test.describe('vector basemap', () => {
     await page.goto('/explore?basemap=%22gray_scale%22', { waitUntil: 'load' });
 
     expect((await styleRequested).ok()).toBe(true);
-    await expect(page.locator('.ol-viewport canvas').first()).toBeVisible();
+    // The map is mounted and interactive even though nothing can paint: both the
+    // basemap and the labels overlay pull their tiles from the blocked host.
+    await expect(page.locator('.ol-viewport').first()).toBeVisible();
     expect(errors).toEqual([]);
   });
 });
