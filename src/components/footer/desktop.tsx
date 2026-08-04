@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/classnames';
 
+import PoweredBy from './powered-by';
 import SocialMedia from './social-media';
 
 export const FooterDesktop: FC = () => {
@@ -19,8 +20,8 @@ export const FooterDesktop: FC = () => {
         'px-5 md:px-5': pathname === '/',
       })}
     >
-      <div className="mx-8 flex w-full items-center justify-between xl:m-auto">
-        <div className="flex items-center">
+      <div className="mx-8 flex w-full items-center justify-between gap-x-6 xl:m-auto">
+        <div className="flex flex-col items-start gap-y-1 py-3">
           <a
             href="https://cordis.europa.eu/project/id/101059548"
             target="_blank"
@@ -36,10 +37,11 @@ export const FooterDesktop: FC = () => {
               alt="European Union Logo"
               style={{ height: 'auto' }}
             />
-            <span className="py-4 text-xs font-medium text-white-50 md:whitespace-nowrap">
+            <span className="text-xs font-medium text-white-50 md:whitespace-nowrap">
               Funded by the European Union
             </span>
           </a>
+          <PoweredBy />
         </div>
         <SocialMedia />
       </div>
