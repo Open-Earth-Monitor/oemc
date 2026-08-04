@@ -613,7 +613,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         />
 
         {isLayerActive && <Legend />}
-        <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px]" />
+        {/* From 1440 the tile credits take the bottom row (see `.ol-attribution`
+            in globals.css), so the links move up to sit above them. */}
+        <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-3 lg:left-[620px] min-[1440px]:bottom-[76px]" />
       </RMap>
 
       <MapTooltip

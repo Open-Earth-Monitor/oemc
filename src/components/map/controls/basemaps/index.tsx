@@ -122,11 +122,14 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
             data-testid="regions-layer-button"
           >
             <Switch
+              id="regions-layer"
               onCheckedChange={handleRegionsLayerVisibility}
               checked={regionsLayerVisibility}
               className="h-4 w-6 shrink-0"
             />
-            <Label htmlFor="regions-layer">Regions layer</Label>
+            <Label htmlFor="regions-layer" className="cursor-pointer">
+              Regions layer
+            </Label>
           </div>
 
           <div
@@ -135,11 +138,14 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
             data-testid="boundaries-layer-button"
           >
             <Switch
+              id="boundaries-layer"
               onCheckedChange={handleBoundaries}
               checked={areBoundariesActive}
               className="h-4 w-6 shrink-0"
             />
-            <Label htmlFor="boundaries-layer">Country boundaries</Label>
+            <Label htmlFor="boundaries-layer" className="cursor-pointer">
+              Country boundaries
+            </Label>
           </div>
 
           <div className="flex flex-col justify-start space-y-4 py-6">
@@ -156,7 +162,9 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
                   className="h-4 w-6 shrink-0"
                   onCheckedChange={() => handleBasemap(basemap.id)}
                 />
-                <Label htmlFor={basemap.id}>{basemap.label}</Label>
+                <Label htmlFor={basemap.id} className="cursor-pointer">
+                  {basemap.label}
+                </Label>
               </div>
             ))}
           </div>
@@ -175,7 +183,9 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
                   className="h-4 w-6 shrink-0"
                   onCheckedChange={() => handleMapLabels(value.id)}
                 />
-                <Label htmlFor={value.id}>{value.label}</Label>
+                <Label htmlFor={value.id} className="cursor-pointer">
+                  {value.label}
+                </Label>
               </div>
             ))}
           </div>

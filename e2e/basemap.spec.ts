@@ -69,6 +69,40 @@ test.describe('labels follow the basemap', () => {
   });
 });
 
+test.describe('map settings', () => {
+  const openSettings = async (page: import('@playwright/test').Page) => {
+    await page.goto('/explore', { waitUntil: 'load' });
+    await page.getByRole('button', { name: 'Map settings' }).first().click();
+  };
+
+  // Each switch is driven from its label too, so the hit area is the whole row
+  // and not just the 27px control.
+  for (const [testId, label] of [
+    ['regions-layer-button', 'Regions layer'],
+    ['boundaries-layer-button', 'Country boundaries'],
+  ]) {
+    test(`the "${label}" label drives its switch`, async ({ page }) => {
+      await openSettings(page);
+
+      const row = page.getByTestId(testId);
+      const toggle = row.getByRole('switch');
+      const before = await toggle.getAttribute('aria-checked');
+
+      await row.getByText(label).click();
+
+      await expect(toggle).not.toHaveAttribute('aria-checked', before);
+    });
+  }
+
+  test('a basemap label selects that basemap', async ({ page }) => {
+    await openSettings(page);
+
+    await page.getByTestId('gray_scale-button').getByText('Gray scale').click();
+
+    await expect(page).toHaveURL(/basemap=%22gray_scale%22/);
+  });
+});
+
 test.describe('vector basemap', () => {
   test('the bundled style draws no labels of its own', async ({ request }) => {
     const response = await request.get('/basemaps/oemc.json');
