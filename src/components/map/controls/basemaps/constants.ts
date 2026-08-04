@@ -1,5 +1,5 @@
 export type BasemapProps = {
-  id: 'world_imagery' | 'gray_scale' | 's2cloudless' | 'blue_marble';
+  id: 'world_imagery' | 'gray_scale' | 'blue_marble';
   label: string;
   attributions: string;
   /** XYZ raster template. Null on vector basemaps, which are drawn from `styleUrl`. */
@@ -64,25 +64,6 @@ export const BASEMAPS: BasemapProps[] = [
     styleUrl: '/basemaps/oemc.json',
     // Near-white basemap: the dark-text label variant is the readable one.
     defaultLabels: 'light',
-    thumb: '',
-  },
-  {
-    id: 's2cloudless',
-    label: 'Satellite (Sentinel-2)',
-    /**
-     * Attribution string is dictated by EOX and must stay verbatim, year
-     * included. Free use is CC BY-NC-SA 4.0 — non-commercial only, which covers
-     * academic research and educational use; commercial use needs an explicit
-     * licence from EOX. Swapping the year in the URL swaps the mosaic.
-     */
-    attributions:
-      '<a href="https://cloudless.eox.at" target="_blank">EOxCloudless</a> by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2024) &mdash; <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>',
-    // Note the {z}/{y}/{x} order: WMTS paths are TileMatrix/TileRow/TileCol.
-    url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg',
-    // Sentinel-2 is 10 m, so z15 is already past native resolution.
-    maxZoom: 16,
-    // Light text over a dark halo is what reads over imagery.
-    defaultLabels: 'dark',
     thumb: '',
   },
   {

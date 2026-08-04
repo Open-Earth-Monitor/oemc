@@ -31,9 +31,8 @@ export const useSyncSidebarState = () =>
 
 // The ids come from the basemap list itself: repeating the union here let it
 // drift, so a basemap added to the list was unreachable from the URL.
-// Defaults to the open Sentinel-2 imagery rather than the unlicensed Esri one.
 export const useSyncBasemapSettings = () =>
-  useQueryState('basemap', parseAsJson<BasemapProps['id']>().withDefault('s2cloudless'));
+  useQueryState('basemap', parseAsJson<BasemapProps['id']>().withDefault('world_imagery'));
 
 // API category comes as "theme" from the backend but we use "category" in the URL for clarity
 export type CategoryQueryParam = CategoryId[] | 'All';
