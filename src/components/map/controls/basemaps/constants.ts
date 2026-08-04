@@ -2,7 +2,14 @@ export type BasemapProps = {
   id: 'world_imagery' | 'gray_scale';
   label: string;
   attributions: string;
-  url: string;
+  /** XYZ raster template. Null on vector basemaps, which are drawn from `styleUrl`. */
+  url: string | null;
+  /**
+   * MapLibre style document. Its presence is what makes a basemap a vector one:
+   * colours, fonts and which features appear at which zoom all come from here,
+   * so this is the file to edit (in Maputnik) to restyle the map.
+   */
+  styleUrl?: string;
   thumb: string;
 };
 
@@ -15,36 +22,19 @@ export type LabelProps = {
 };
 
 export const BASEMAPS: BasemapProps[] = [
-  // {
-  //   id: 'world_imagery',
-  //   label: 'Satellite',
-  //   attributions:
-  //     'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-  //   url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  //   thumb: '',
-  // },
-  // {
-  //   id: 'gray_scale',
-  //   label: 'Gray scale',
-  //   attributions: '© OpenStreetMap contributors, © CartoDB',
-  //   url: 'https://basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
-  //   thumb: 'https://ecodatacube.eu/images/osm_overview.png',
-  // },
-  // {
-  //   id: 'world_imagery',
-  //   label: 'Satellite',
-  //   attributions: '© OpenStreetMap contributors',
-  //   url: 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  //   thumb: 'https://upload.wikimedia.org/wikipedia/commons/6/6e/OpenStreetMap_Mapnik_Sample.png',
-  // },
-
   {
     id: 'gray_scale',
     label: 'Gray scale',
+    // Required by OpenFreeMap; the tiles are OSM data built with OpenMapTiles.
     attributions:
-      '© <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions" target="_blank">CARTO</a>',
-    url: 'https://basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
-    thumb: 'https://carto.com/help/images/building-maps/basemaps/light_all.png',
+      '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+    url: null,
+    // Our own copy of OpenFreeMap's Positron style, with all 19 `symbol` layers
+    // removed: this basemap draws no labels, so the labels overlay in map
+    // settings is the only thing putting place names on the map. Edit this file
+    // (Maputnik opens it directly) to change colours or bring labels back.
+    styleUrl: '/basemaps/oemc.json',
+    thumb: '',
   },
   {
     id: 'world_imagery',
