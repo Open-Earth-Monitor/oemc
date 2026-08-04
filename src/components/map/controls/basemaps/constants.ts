@@ -16,6 +16,11 @@ export type BasemapProps = {
    * zooming, because the requests 404.
    */
   maxZoom?: number;
+  /**
+   * Which labels overlay reads over this basemap. Used until the user picks one
+   * themselves — dark labels over the light gray basemap are white-on-white.
+   */
+  defaultLabels: LabelProps['id'];
   thumb: string;
 };
 
@@ -57,6 +62,8 @@ export const BASEMAPS: BasemapProps[] = [
     // settings is the only thing putting place names on the map. Edit this file
     // (Maputnik opens it directly) to change colours or bring labels back.
     styleUrl: '/basemaps/oemc.json',
+    // Near-white basemap: the dark-text label variant is the readable one.
+    defaultLabels: 'light',
     thumb: '',
   },
   {
@@ -74,6 +81,8 @@ export const BASEMAPS: BasemapProps[] = [
     url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg',
     // Sentinel-2 is 10 m, so z15 is already past native resolution.
     maxZoom: 16,
+    // Light text over a dark halo is what reads over imagery.
+    defaultLabels: 'dark',
     thumb: '',
   },
   {
@@ -82,6 +91,7 @@ export const BASEMAPS: BasemapProps[] = [
     attributions:
       'Tiles &copy; <a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer" target="_blank">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, USDA FSA, USGS, Aerogrid, IGN, IGP, and the GIS User Community',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    defaultLabels: 'dark',
     thumb: 'https://ecodatacube.eu/images/osm_overview.png',
   },
   {
@@ -94,6 +104,8 @@ export const BASEMAPS: BasemapProps[] = [
     url: 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg',
     // 500 m imagery; GIBS publishes this one to level 8 and 404s above it.
     maxZoom: 8,
+    // Light text over a dark halo is what reads over imagery.
+    defaultLabels: 'dark',
     thumb: '',
   },
 ];

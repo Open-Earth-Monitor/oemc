@@ -44,10 +44,13 @@ export const useSyncCategories = () =>
 export const useSyncDatasetType = () =>
   useQueryState('datasetType', parseAsJson<'all' | 'monitors' | 'geostories'>().withDefault('all'));
 
-// `dark` is the light-text-on-dark-halo variant, which is what reads over the
-// default satellite imagery. Switching to the gray basemap wants `light`.
+/**
+ * Deliberately has no default: `null` means "the user has not chosen", which is
+ * what lets the labels follow the basemap. Read it through `useBasemapLabels`
+ * rather than directly, unless you specifically need the raw choice.
+ */
 export const useSyncBasemapLabelsSettings = () =>
-  useQueryState('basemap-labels', parseAsJson<LabelProps['id']>().withDefault('dark'));
+  useQueryState('basemap-labels', parseAsJson<LabelProps['id']>());
 
 // On by default: imagery carries no borders of its own, so without this the
 // default map has nothing separating one country from the next.

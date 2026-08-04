@@ -20,18 +20,18 @@ import {
   nutsDataResponseCompareAtom,
 } from '@/app/store';
 
+import { useBasemapLabels } from '@/hooks/basemap';
 import { useGeostory, useGeostoryLayers } from '@/hooks/geostories';
 import { useLayer, useLayerParsedSource } from '@/hooks/layers';
 import { useMonitor, useMonitorLayers } from '@/hooks/monitors';
 import {
-  useSyncBasemapLabelsSettings,
   useSyncBoundariesSettings,
   useSyncBboxSettings,
   useSyncCompareLayersSettings,
   useSyncLayersSettings,
 } from '@/hooks/sync-query';
 
-import { BOUNDARIES, LABELS } from '@/components/map/controls/basemaps/constants';
+import { BOUNDARIES } from '@/components/map/controls/basemaps/constants';
 import type { CustomMapProps, MonitorTooltipInfo } from '@/components/map/types';
 import VectorStyleLayer from '@/components/map/vector-style-layer';
 
@@ -67,7 +67,7 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
   const setNutsDataResponse = useSetAtom(nutsDataResponseAtom);
   const setCompareNutsProperties = useSetAtom(nutsDataResponseCompareAtom);
 
-  const [activeLabels] = useSyncBasemapLabelsSettings();
+  const { style: activeLabelStyle } = useBasemapLabels();
   const [areBoundariesActive] = useSyncBoundariesSettings();
   const [bbox, setBbox] = useSyncBboxSettings();
 
@@ -354,11 +354,6 @@ const MapLayers: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) 
   ]);
 
   /* ----- Labels basemap ----- */
-  const activeLabelStyle = useMemo(
-    () => LABELS.find((label) => activeLabels === label.id) ?? null,
-    [activeLabels]
-  );
-
   return (
     <>
       <BasemapLayer />

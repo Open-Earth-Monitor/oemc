@@ -6,11 +6,8 @@ import { cn } from '@/lib/classnames';
 
 import { histogramVisibilityAtom, regionsLayerVisibilityAtom } from '@/app/store';
 
-import {
-  useSyncBasemapLabelsSettings,
-  useSyncBasemapSettings,
-  useSyncBoundariesSettings,
-} from '@/hooks/sync-query';
+import { useBasemapLabels } from '@/hooks/basemap';
+import { useSyncBasemapSettings, useSyncBoundariesSettings } from '@/hooks/sync-query';
 
 import { CONTROL_BUTTON_STYLES } from '@/components/map/controls/constants';
 import { Label } from '@/components/ui/label';
@@ -22,7 +19,9 @@ import { BASEMAPS, LABELS, LabelProps, BasemapProps } from './constants';
 
 const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
   const [selectedBasemap, setBasemap] = useSyncBasemapSettings();
-  const [activeLabels, setActiveLabels] = useSyncBasemapLabelsSettings();
+  // `activeLabels` may be inherited from the basemap rather than chosen, so the
+  // switches show what is actually drawn; clicking one pins it.
+  const { activeLabels, setLabels } = useBasemapLabels();
   const [areBoundariesActive, setBoundariesActive] = useSyncBoundariesSettings();
   const [, setHistogramVisibility] = useAtom(histogramVisibilityAtom);
   // isActive is based on the url
@@ -40,7 +39,7 @@ const BasemapControl = ({ isMobile }: { isMobile?: boolean }) => {
   const handleMapLabels = (value: LabelProps['id']) => {
     if (activeLabels !== value) {
       track('Map Labels Change', { props: { labels: value, source: 'map-controls' } });
-      setActiveLabels(value);
+      setLabels(value);
     }
   };
 
