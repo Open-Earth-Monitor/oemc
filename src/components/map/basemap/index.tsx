@@ -10,7 +10,12 @@ import { BASEMAPS } from '@/components/map/controls/basemaps/constants';
 
 const BasemapLayer = () => {
   const [basemap] = useSyncBasemapSettings();
-  const selectedBasemap = useMemo(() => BASEMAPS.find((b) => b.id === basemap), [basemap]);
+  // `basemap` is a URL param, so it can name a basemap that was renamed or never
+  // existed; without the fallback the map throws instead of drawing something.
+  const selectedBasemap = useMemo(
+    () => BASEMAPS.find((b) => b.id === basemap) ?? BASEMAPS[0],
+    [basemap]
+  );
   return (
     <>
       <RLayerTile
