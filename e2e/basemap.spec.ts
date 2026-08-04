@@ -12,9 +12,9 @@ test.describe('basemap catalogue', () => {
   });
 
   test('imagery basemaps declare the zoom their host stops at', () => {
-    // Both hosts 404 above these levels. Losing the cap makes the imagery vanish
-    // as the user zooms in rather than stretching the deepest level available.
-    const ceilings = { s2cloudless: 16, blue_marble: 8 };
+    // GIBS 404s above this level. Losing the cap makes the imagery vanish as the
+    // user zooms in rather than stretching the deepest level available.
+    const ceilings = { blue_marble: 8 };
 
     for (const [id, maxZoom] of Object.entries(ceilings)) {
       expect(BASEMAPS.find((basemap) => basemap.id === id)?.maxZoom, id).toBe(maxZoom);
@@ -43,7 +43,7 @@ test.describe('labels follow the basemap', () => {
   test('imagery gets the dark labels without asking', async ({ page }) => {
     const requested = labelStyle(page);
 
-    await page.goto('/explore?basemap=%22s2cloudless%22', { waitUntil: 'load' });
+    await page.goto('/explore?basemap=%22world_imagery%22', { waitUntil: 'load' });
     await expect.poll(() => requested, { timeout: 20000 }).toContain('labels-dark');
     expect(requested).not.toContain('labels-light');
   });
