@@ -22,6 +22,53 @@ test.describe('basemap catalogue', () => {
   });
 });
 
+test.describe('labels follow the basemap', () => {
+  const labelStyle = (page: import('@playwright/test').Page) => {
+    const requested: string[] = [];
+    page.on('request', (request) => {
+      const match = request.url().match(/\/basemaps\/(labels-\w+)\.json/);
+      if (match) requested.push(match[1]);
+    });
+    return requested;
+  };
+
+  test('the gray basemap gets the light labels without asking', async ({ page }) => {
+    const requested = labelStyle(page);
+
+    await page.goto('/explore?basemap=%22gray_scale%22', { waitUntil: 'load' });
+    await expect.poll(() => requested, { timeout: 20000 }).toContain('labels-light');
+    expect(requested).not.toContain('labels-dark');
+  });
+
+  test('imagery gets the dark labels without asking', async ({ page }) => {
+    const requested = labelStyle(page);
+
+    await page.goto('/explore?basemap=%22s2cloudless%22', { waitUntil: 'load' });
+    await expect.poll(() => requested, { timeout: 20000 }).toContain('labels-dark');
+    expect(requested).not.toContain('labels-light');
+  });
+
+  test('an explicit choice wins over the basemap', async ({ page }) => {
+    const requested = labelStyle(page);
+
+    // Deliberately the "wrong" pairing: once chosen it must be respected.
+    await page.goto('/explore?basemap=%22gray_scale%22&basemap-labels=%22dark%22', {
+      waitUntil: 'load',
+    });
+    await expect.poll(() => requested, { timeout: 20000 }).toContain('labels-dark');
+    expect(requested).not.toContain('labels-light');
+  });
+
+  test('every basemap declares which labels read over it', () => {
+    for (const basemap of BASEMAPS) {
+      // Imagery is dark, so it needs the light-text variant; the gray basemap is
+      // the only light one and takes the dark-text variant.
+      const expected = basemap.id === 'gray_scale' ? 'light' : 'dark';
+      expect(basemap.defaultLabels, basemap.id).toBe(expected);
+    }
+  });
+});
+
 test.describe('vector basemap', () => {
   test('the bundled style draws no labels of its own', async ({ request }) => {
     const response = await request.get('/basemaps/oemc.json');

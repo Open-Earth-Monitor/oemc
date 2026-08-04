@@ -31,11 +31,11 @@ import {
   nutsDataResponseCompareAtom,
 } from '@/app/store';
 
+import { useBasemapLabels } from '@/hooks/basemap';
 import { useGeostory, useGeostoryLayers } from '@/hooks/geostories';
 import { useLayer, useLayerParsedSource } from '@/hooks/layers';
 import { useMonitor, useMonitorLayers } from '@/hooks/monitors';
 import {
-  useSyncBasemapLabelsSettings,
   useSyncBoundariesSettings,
   useSyncBboxSettings,
   useSyncCompareLayersSettings,
@@ -43,7 +43,7 @@ import {
   useSyncSwipeControlPosition,
 } from '@/hooks/sync-query';
 
-import { BOUNDARIES, LABELS } from '@/components/map/controls/basemaps/constants';
+import { BOUNDARIES } from '@/components/map/controls/basemaps/constants';
 import type { CustomMapProps, MonitorTooltipInfo } from '@/components/map/types';
 import VectorStyleLayer from '@/components/map/vector-style-layer';
 
@@ -99,7 +99,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
   const setPlaying = useSetAtom(timeSeriesPlaybackAtom);
 
-  const [activeLabels] = useSyncBasemapLabelsSettings();
+  const { style: activeLabelStyle } = useBasemapLabels();
   const [areBoundariesActive] = useSyncBoundariesSettings();
   const [bbox, setBbox] = useSyncBboxSettings();
 
@@ -540,11 +540,6 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   ]);
 
   /* ----- Labels basemap ----- */
-  const activeLabelStyle = useMemo(
-    () => LABELS.find((label) => activeLabels === label.id) ?? null,
-    [activeLabels]
-  );
-
   return (
     <div className="relative h-full w-full">
       <RMap
