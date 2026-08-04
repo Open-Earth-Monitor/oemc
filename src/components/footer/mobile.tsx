@@ -8,18 +8,19 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import ShareSVG from '@/SVGS/share';
 
+import PoweredBy from './powered-by';
 import SocialMedia from './social-media';
 
 export const FooterMobile: FC = () => {
   return (
     <footer className="fixed bottom-0 z-[2000] flex w-full items-center justify-between space-y-2 bg-black-500 px-4">
-      <div className="flex-col space-y-9">
+      <div className="flex flex-col gap-y-1 py-3">
         <a
           href="https://cordis.europa.eu/project/id/101059548"
           target="_blank"
           rel="noopener noreferrer"
           title="Funded by the European Union"
-          className="flex space-x-2.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+          className="flex items-center space-x-2.5 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
           data-test-id="OEMC-factsheet-link"
         >
           <Image
@@ -29,10 +30,11 @@ export const FooterMobile: FC = () => {
             alt="European Union Logo"
             style={{ height: 'auto' }}
           />
-          <span className="py-4 text-sm font-medium text-white-50 md:whitespace-nowrap">
+          <span className="text-sm font-medium text-white-50 md:whitespace-nowrap">
             Funded by the European Union
           </span>
         </a>
+        <PoweredBy size="md" />
       </div>
       <Popover>
         <PopoverTrigger
