@@ -661,6 +661,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mapbox/jsonlint-lines-primitives@npm:~2.0.2":
+  version: 2.0.3
+  resolution: "@mapbox/jsonlint-lines-primitives@npm:2.0.3"
+  checksum: 4a8b40b15581607af1b1ad09841edcbc67f8be22ad28b1902c9071431e2d080e50fc5a12791f7a85e11b07613ccc04f215ebae1eef662231d307a11656ca0e66
+  languageName: node
+  linkType: hard
+
+"@mapbox/unitbezier@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@mapbox/unitbezier@npm:1.0.0"
+  checksum: 41371f6edf0c643da0867453c18e1f7070d4c342339817495075bbb841d5283589a1b5492da6f2eb617803e0d6efc2e5354080b302b0eb84b13b3dcd64991230
+  languageName: node
+  linkType: hard
+
+"@maplibre/maplibre-gl-style-spec@npm:^24.4.1":
+  version: 24.10.0
+  resolution: "@maplibre/maplibre-gl-style-spec@npm:24.10.0"
+  dependencies:
+    "@mapbox/jsonlint-lines-primitives": ~2.0.2
+    "@mapbox/unitbezier": ^1.0.0
+    json-stringify-pretty-compact: ^4.0.0
+    minimist: ^1.2.8
+    quickselect: ^3.0.0
+    tinyqueue: ^3.0.0
+  bin:
+    gl-style-format: dist/gl-style-format.mjs
+    gl-style-migrate: dist/gl-style-migrate.mjs
+    gl-style-validate: dist/gl-style-validate.mjs
+  checksum: 9a82d54f5e4db6ad39d0d083580d8d978e8d78ce957ff981d147cfd5e08f79d36b923a3ec7ae800bc255da6e80645cdf49bcc648eb727997f31d49adf8b7f505
+  languageName: node
+  linkType: hard
+
 "@next/env@npm:16.2.3":
   version: 16.2.3
   resolution: "@next/env@npm:16.2.3"
@@ -8130,6 +8162,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json-stringify-pretty-compact@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "json-stringify-pretty-compact@npm:4.0.0"
+  checksum: a10d5c423e467872994a49c5c1b56b073f277ce02d899cf567fc625f3783b89406bee6408bfb3b4bdeeff509b6a562f5259227e26754a6186f721809ca895f0c
+  languageName: node
+  linkType: hard
+
 "json-stringify-safe@npm:~5.0.1":
   version: 5.0.1
   resolution: "json-stringify-safe@npm:5.0.1"
@@ -8513,6 +8552,13 @@ __metadata:
     socks-proxy-agent: ^7.0.0
     ssri: ^10.0.0
   checksum: 7268bf274a0f6dcf0343829489a4506603ff34bd0649c12058753900b0eb29191dce5dba12680719a5d0a983d3e57810f594a12f3c18494e93a1fbc6348a4540
+  languageName: node
+  linkType: hard
+
+"mapbox-to-css-font@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "mapbox-to-css-font@npm:3.2.0"
+  checksum: 1f6be4eb0abfc64a38db1e12c6e41703aeb8d39ea7502fd7f43b7e5e804132b9b6f52b8a94419c60b4b156ef8ed4bb3770c53ca1ddf54b44bfd806e08f150c33
   languageName: node
   linkType: hard
 
@@ -9034,7 +9080,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:^1.2.0, minimist@npm:^1.2.3, minimist@npm:^1.2.6":
+"minimist@npm:^1.2.0, minimist@npm:^1.2.3, minimist@npm:^1.2.6, minimist@npm:^1.2.8":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8"
   checksum: 75a6d645fb122dad29c06a7597bddea977258957ed88d7a6df59b5cd3fe4a527e253e9bbf2e783e4b73657f9098b96a5fe96ab8a113655d4109108577ecf85b0
@@ -9684,6 +9730,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ol-mapbox-style@npm:^13.4.2":
+  version: 13.4.2
+  resolution: "ol-mapbox-style@npm:13.4.2"
+  dependencies:
+    "@maplibre/maplibre-gl-style-spec": ^24.4.1
+    mapbox-to-css-font: ^3.2.0
+  peerDependencies:
+    ol: "*"
+  checksum: f559553c19ab68e2e2d8b4fd65fe7b5b7cd75616fe11bdfa1fa59e5ed95f506c73e983d78195954f23610ea9de66b2849bf1a02c900830a59c98c9188cc531c4
+  languageName: node
+  linkType: hard
+
 "ol3-projection-switcher@npm:^0.1.3":
   version: 0.1.3
   resolution: "ol3-projection-switcher@npm:0.1.3"
@@ -9797,6 +9855,7 @@ __metadata:
     nuqs: ^2.8.9
     ol: ^10.6.1
     ol-ext: ^4.0.11
+    ol-mapbox-style: ^13.4.2
     ol3-projection-switcher: ^0.1.3
     openlayers: ^4.6.5
     postcss: 8.4.21
@@ -12369,6 +12428,13 @@ __metadata:
   version: 1.0.1
   resolution: "throttleit@npm:1.0.1"
   checksum: 32e0b12ca5810cd34dfce0408c7cb658dfd039848a073466eaac667ce6e846cafa53ac518e4b01dc6f34e6652b66fd29a5c6b666718ec5086ef328a9d029dc75
+  languageName: node
+  linkType: hard
+
+"tinyqueue@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "tinyqueue@npm:3.0.0"
+  checksum: 49a5454935991685512e2e1848e423fce1953b95e0fe0456b9a50d07ff0bfbf4c2b1a1682191dc2d520b37c554ef518ad225133cea9434eb9cfebf811fc61e71
   languageName: node
   linkType: hard
 

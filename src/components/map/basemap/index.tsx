@@ -6,6 +6,7 @@ import { RLayerTile } from 'rlayers';
 
 import { useSyncBasemapSettings } from '@/hooks/sync-query';
 
+import VectorBasemapLayer from '@/components/map/basemap/vector-basemap';
 import { BASEMAPS } from '@/components/map/controls/basemaps/constants';
 
 const BasemapLayer = () => {
@@ -16,14 +17,21 @@ const BasemapLayer = () => {
     () => BASEMAPS.find((b) => b.id === basemap) ?? BASEMAPS[0],
     [basemap]
   );
-  return (
-    <>
-      <RLayerTile
-        properties={{ label: 'Basemap' }}
-        url={selectedBasemap.url}
+  if (selectedBasemap.styleUrl) {
+    return (
+      <VectorBasemapLayer
+        styleUrl={selectedBasemap.styleUrl}
         attributions={selectedBasemap.attributions}
       />
-    </>
+    );
+  }
+
+  return (
+    <RLayerTile
+      properties={{ label: 'Basemap' }}
+      url={selectedBasemap.url}
+      attributions={selectedBasemap.attributions}
+    />
   );
 };
 
