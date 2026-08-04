@@ -42,6 +42,15 @@ export type LabelProps = {
  * as a white line over a dark casing so it reads over imagery and the gray
  * basemap alike, the same approach the label styles take with their halo; the
  * subnational lines are thinner and dimmer so national borders still lead.
+ *
+ * Borders and place names both come from OpenStreetMap, i.e. community mapping
+ * consensus, and this was a deliberate choice over Eurostat GISCO — the EU's own
+ * dataset, which carries a `POL_STAT` flag for disputed lines. The consequence
+ * is that a few depictions differ from official EU positions: Crimea is named as
+ * the Russian federal subject rather than as Ukrainian territory, and Kosovo
+ * carries neither the asterisk nor the UNSCR 1244 footnote that EC editorial
+ * rules ask for. Revisit this before the maps are used in anything the
+ * Commission publishes.
  */
 export const BOUNDARIES = {
   attributions:
