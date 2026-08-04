@@ -17,7 +17,11 @@ export type LabelProps = {
   id: 'dark' | 'light' | 'no-label';
   label: string;
   attributions: string;
-  url: string;
+  /**
+   * MapLibre style document holding only the text layers. Null on `no-label`,
+   * which draws nothing. Same deal as the basemap: edit the file to restyle.
+   */
+  styleUrl: string | null;
   thumb: string;
 };
 
@@ -46,30 +50,36 @@ export const BASEMAPS: BasemapProps[] = [
   },
 ];
 
+/**
+ * Both overlays are the same 11 text layers from `oemc.json`'s parent style,
+ * recoloured to read against a light or a dark map. Sprite icons (highway
+ * shields, town dots) are deliberately left out: text alone stays legible over
+ * satellite imagery as well as over the gray basemap.
+ */
 export const LABELS: LabelProps[] = [
   {
     id: 'dark',
     label: 'Dark',
-    // CARTO Dark Matter labels-only overlay — OSM data, CC BY open license
+    // Light text on a dark halo — for satellite imagery.
     attributions:
-      '© <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions" target="_blank">CARTO</a>',
-    url: 'https://basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png',
+      '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+    styleUrl: '/basemaps/labels-dark.json',
     thumb: '',
   },
   {
     id: 'light',
     label: 'Light',
-    // CARTO Voyager labels-only overlay — cleaner/minimal, fewer sea/ocean translations
+    // Gray text on a white halo — for the gray scale basemap.
     attributions:
-      '© <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions" target="_blank">CARTO</a>',
-    url: 'https://basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png',
-    thumb: 'https://ecodatacube.eu/images/osm_overview.png',
+      '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+    styleUrl: '/basemaps/labels-light.json',
+    thumb: '',
   },
   {
     id: 'no-label',
     label: 'Hide labels',
     attributions: null,
-    url: null,
+    styleUrl: null,
     thumb: null,
   },
 ];

@@ -6,8 +6,8 @@ import { RLayerTile } from 'rlayers';
 
 import { useSyncBasemapSettings } from '@/hooks/sync-query';
 
-import VectorBasemapLayer from '@/components/map/basemap/vector-basemap';
 import { BASEMAPS } from '@/components/map/controls/basemaps/constants';
+import VectorStyleLayer from '@/components/map/vector-style-layer';
 
 const BasemapLayer = () => {
   const [basemap] = useSyncBasemapSettings();
@@ -19,7 +19,7 @@ const BasemapLayer = () => {
   );
   if (selectedBasemap.styleUrl) {
     return (
-      <VectorBasemapLayer
+      <VectorStyleLayer
         styleUrl={selectedBasemap.styleUrl}
         attributions={selectedBasemap.attributions}
       />
