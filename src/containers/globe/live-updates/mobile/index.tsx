@@ -1,5 +1,7 @@
 'use client';
 
+import { useMemo, useState } from 'react';
+
 import { orderBy } from 'lodash-es';
 
 import { useTrackEvent, type EventSource } from '@/lib/analytics';
@@ -11,20 +13,20 @@ import {
 } from '@/hooks/publications';
 import { useSocialMedia } from '@/hooks/social-media';
 
-import SocialMediaDesktop from '@/containers/globe/social-media/desktop/carousel';
+import { SocialMediaContent } from '@/containers/globe/live-updates/desktop/carousel';
+import { toFeedItems } from '@/containers/globe/live-updates/feed-items';
 
 import Loading from '@/components/loading';
 
-import { toFeedItems } from '../feed-items';
-
-const SocialMediaFeed = ({
-  source = 'landing-globe',
+const LiveUpdatesFeed = ({
+  source = 'landing-globe-mobile',
   publicationsPerSource = DEFAULT_PUBLICATIONS_PER_SOURCE,
 }: {
   source?: EventSource;
   /** Publications fetched from *each* library (Zenodo, Zotero) for the carousel. */
   publicationsPerSource?: number;
 }) => {
+  const [count, setCount] = useState(1);
   const { data, isLoading } = useSocialMedia(null, {
     select: (data) => {
       const orderedData = orderBy(data, 'created_at', 'desc');
@@ -34,10 +36,13 @@ const SocialMediaFeed = ({
     },
   });
 
-  // Publications share the carousel with the posts; a slow or failing library
-  // just means fewer slides, never a blocked feed.
   const { data: publications } = useLatestPublications({ perSource: publicationsPerSource });
   const trackEvent = useTrackEvent();
+
+  // Every slide change sets `count` and re-renders this component; without the
+  // memo the feed would be re-merged and re-sorted on each one, handing the
+  // carousel a new array and a new identity for every item.
+  const feedItems = useMemo(() => toFeedItems(data, publications), [data, publications]);
 
   const handlePublicationSelect = (publication: Publication) =>
     trackEvent('Publication Open', {
@@ -55,12 +60,15 @@ const SocialMediaFeed = ({
           <Loading />
         </div>
       )}
-      <SocialMediaDesktop
-        data={toFeedItems(data, publications)}
+
+      <SocialMediaContent
+        data={feedItems}
+        setCount={setCount}
+        count={count}
         onPublicationSelect={handlePublicationSelect}
       />
     </aside>
   );
 };
 
-export default SocialMediaFeed;
+export default LiveUpdatesFeed;

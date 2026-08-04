@@ -6,12 +6,12 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 
 import type { Publication } from '@/hooks/publications';
 
+import type { FeedItem } from '@/containers/globe/live-updates/feed-items';
+import { Post } from '@/containers/globe/live-updates/post';
+
 import PublicationCard from '@/components/publications/card';
 import { Carousel, CarouselContent, CarouselItem, useCarousel } from '@/components/ui/carousel';
 import type { CarouselApi } from '@/components/ui/carousel';
-
-import type { FeedItem } from '../feed-items';
-import { Post } from '../post';
 
 const CarouselButton = ({ direction }: { direction: 'prev' | 'next' }) => {
   const { scrollPrev, scrollNext, canScrollPrev, canScrollNext } = useCarousel();

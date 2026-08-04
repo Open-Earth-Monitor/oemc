@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { useQueries } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
@@ -227,16 +229,26 @@ export function useLatestPublications({
     ],
   });
 
+  const [zenodo, zotero] = results;
+
+  // React Query keeps each `data` reference stable between renders, so keying the
+  // merge on them hands callers a stable array too — without this every render
+  // produces a new list and any downstream memo is defeated.
+  const data = useMemo(
+    () =>
+      [...(zenodo.data ?? []), ...(zotero.data ?? [])]
+        .sort(byPublicationDateDesc)
+        // Zenodo mirrors some Zotero entries; the sources publish independently
+        // so the same paper can arrive twice under different ids.
+        .filter(
+          (publication, index, all) =>
+            all.findIndex((other) => other.title === publication.title) === index
+        ),
+    [zenodo.data, zotero.data]
+  );
+
   return {
-    data: results
-      .flatMap((result) => result.data ?? [])
-      .sort(byPublicationDateDesc)
-      // Zenodo mirrors some Zotero entries; the sources publish independently so
-      // the same paper can arrive twice under different ids.
-      .filter(
-        (publication, index, all) =>
-          all.findIndex((other) => other.title === publication.title) === index
-      ),
+    data,
     isLoading: results.some((result) => result.isLoading),
     isError: results.every((result) => result.isError),
   };
