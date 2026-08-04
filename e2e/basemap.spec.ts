@@ -1,6 +1,26 @@
 import { test, expect } from '@playwright/test';
 
+import { BASEMAPS } from '../src/components/map/controls/basemaps/constants';
+
 const OPENFREEMAP_TILES = '**/tiles.openfreemap.org/**';
+
+test.describe('basemap catalogue', () => {
+  test('each basemap has exactly one kind of tile source', () => {
+    for (const basemap of BASEMAPS) {
+      expect(Boolean(basemap.url) !== Boolean(basemap.styleUrl), `${basemap.id}`).toBe(true);
+    }
+  });
+
+  test('imagery basemaps declare the zoom their host stops at', () => {
+    // Both hosts 404 above these levels. Losing the cap makes the imagery vanish
+    // as the user zooms in rather than stretching the deepest level available.
+    const ceilings = { s2cloudless: 16, blue_marble: 8 };
+
+    for (const [id, maxZoom] of Object.entries(ceilings)) {
+      expect(BASEMAPS.find((basemap) => basemap.id === id)?.maxZoom, id).toBe(maxZoom);
+    }
+  });
+});
 
 test.describe('vector basemap', () => {
   test('the bundled style draws no labels of its own', async ({ request }) => {
