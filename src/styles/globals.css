@@ -188,10 +188,23 @@
    alongside it rather than underneath. `max-w-md` is 28rem, plus a gap. */
 @media (min-width: 768px) {
   .ol-attribution {
+    /* Bounded on both sides: right of the sidebar, left of the legend
+       (`max-w-md` plus a gap), so the credits never slide under either. */
+    left: 460px !important;
     right: 29rem !important;
-    /* Clear of the footer links, which sit on the `bottom-3` row themselves. */
-    bottom: 44px !important;
-    max-width: min(50ch, calc(100% - 30rem)) !important;
+    bottom: 40px !important;
+    max-width: none !important;
+  }
+}
+
+/* From 1440 the bottom row is wide enough for the credits to sit on it, with the
+   footer links stacked above (`min-[1440px]:bottom-[60px]` on the links). Below
+   that the row cannot hold both, so the credits stay above the links instead. */
+@media (min-width: 1440px) {
+  .ol-attribution {
+    /* Clear of the back button in the bottom-left corner of the map. */
+    left: 500px !important;
+    bottom: 12px !important;
   }
 }
 
