@@ -13,7 +13,7 @@ import TileLayer from 'ol/layer/Tile';
 import { toLonLat } from 'ol/proj';
 import { Size } from 'ol/size';
 import TileWMS from 'ol/source/TileWMS';
-import { RMap } from 'rlayers';
+import { RControl, RMap } from 'rlayers';
 
 import { getHistogramData } from '@/lib/utils';
 import { fetchFeatureInfo, getFeatureInfoUrl, firstPropertyValue } from '@/lib/wms';
@@ -554,6 +554,14 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         onSingleClick={handleSingleClick}
         noDefaultControls
       >
+        {/*
+          `noDefaultControls` drops OpenLayers' own attribution control, so the
+          credits every tile host requires were being collected on the layers and
+          then never shown. Not collapsible: OpenFreeMap, NASA and Esri all make
+          visible attribution a condition of use, so it must not be hideable.
+        */}
+        <RControl.RAttribution collapsible={false} />
+
         <BasemapLayer />
 
         {!isLoading && isLayerActive && !!gs_name && (

@@ -163,6 +163,49 @@
   width: 1px;
 }
 
+/*
+ * Tile credits. Every host we use (OpenFreeMap, NASA, Esri) requires visible
+ * attribution, so this is rendered uncollapsed — which means the longest string
+ * has to wrap inside the map rather than run off the edge, and sit clear of the
+ * footer links along the bottom.
+ */
+.ol-attribution {
+  position: absolute !important;
+  right: 12px !important;
+  bottom: 34px !important;
+  left: auto !important;
+  top: auto !important;
+  max-width: min(70ch, calc(100% - 24px)) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px;
+  background: hsl(184 5% 19% / 0.55) !important;
+  backdrop-filter: blur(4px);
+  z-index: 40;
+}
+
+.ol-attribution ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 6px;
+  margin: 0;
+  padding: 0;
+  font-size: 10px;
+  line-height: 1.4;
+  text-align: right;
+  text-shadow: none !important;
+  color: hsl(60 16% 76%);
+}
+
+.ol-attribution a {
+  color: hsl(60 100% 95%);
+  text-decoration: underline;
+}
+
+/* The toggle is meaningless when the control cannot be collapsed. */
+.ol-attribution button {
+  display: none !important;
+}
+
 /* zoom control ropenlayers */
 .ol-control button {
   margin: 0 !important;
