@@ -196,6 +196,15 @@
   }
 }
 
+/* From 1900 the bottom row fits both, so the footer links go back to it
+   (`min-[1900px]:bottom-3`) and the credits are bounded left of them: the links
+   end at x 961, and without the bound the credits would run under that. */
+@media (min-width: 1900px) {
+  .ol-attribution {
+    left: 969px !important;
+  }
+}
+
 .ol-attribution ul {
   display: flex;
   flex-wrap: wrap;
