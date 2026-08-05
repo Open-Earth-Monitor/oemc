@@ -3,13 +3,13 @@ import type { FC, MouseEvent } from 'react';
 
 import { TooltipPortal } from '@radix-ui/react-tooltip';
 import { LuCirclePlay, LuCirclePause } from 'react-icons/lu';
-import { useInterval } from 'usehooks-ts';
 
 import cn from '@/lib/classnames';
 
 import type { LayerParsed } from '@/types/layers';
 
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
+import { usePacedTimelineStep } from '@/hooks/timeline';
 
 import {
   IconTooltip,
@@ -19,7 +19,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-const TIMEOUT_STEP_DURATION = 2500;
 const TICK_THRESHOLD = 20;
 
 const Timeline: FC<{
@@ -59,14 +58,13 @@ const Timeline: FC<{
     [layerId, compareLayers]
   );
 
-  useInterval(
-    () => {
-      if (!range?.length) return;
-      const nextRange = range[(range.indexOf(currentRange) + 1) % range.length];
-      void setLayers([{ ...layers?.[0], date: nextRange.value }]);
-    },
-    isPlaying ? TIMEOUT_STEP_DURATION : null
-  );
+  const goToNextDate = useCallback(() => {
+    if (!range?.length) return;
+    const nextRange = range[(range.indexOf(currentRange) + 1) % range.length];
+    void setLayers([{ ...layers?.[0], date: nextRange.value }]);
+  }, [range, currentRange, layers, setLayers]);
+
+  usePacedTimelineStep(isPlaying, goToNextDate);
 
   const handleTickClick = useCallback(
     (e: MouseEvent, value: string) => {
