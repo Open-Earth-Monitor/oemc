@@ -1,11 +1,14 @@
 'use client';
 
-import { FC, useCallback, useEffect, useRef } from 'react';
+import { FC, useCallback, useEffect, useId, useRef } from 'react';
 
+import { useSetAtom } from 'jotai';
 import TileLayer from 'ol/layer/Tile';
 import { unByKey } from 'ol/Observable';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerTileWMSProps, useOL } from 'rlayers';
+
+import { mapTilesLoadingAtom } from '@/app/store';
 
 import { WMS_CRS } from '../constants';
 
@@ -61,6 +64,29 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
   const hasPendingDateRef = useRef(false);
   const appliedDateRef = useRef(date);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const instanceId = useId();
+  const setTilesLoading = useSetAtom(mapTilesLoadingAtom);
+
+  /** Publish this layer's load state so timeline playback can wait for it. */
+  const publishLoading = useCallback(
+    (isLoading: boolean) => {
+      setTilesLoading((prev) =>
+        prev[instanceId] === isLoading ? prev : { ...prev, [instanceId]: isLoading }
+      );
+    },
+    [instanceId, setTilesLoading]
+  );
+
+  useEffect(() => {
+    return () =>
+      setTilesLoading((prev) => {
+        if (!(instanceId in prev)) return prev;
+        const next = { ...prev };
+        delete next[instanceId];
+        return next;
+      });
+  }, [instanceId, setTilesLoading]);
 
   const clearPendingTimeout = useCallback(() => {
     if (timeoutRef.current === null) return;
@@ -126,14 +152,18 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
     hasPendingDateRef.current = false;
     pendingDateRef.current = undefined;
     appliedDateRef.current = dateRef.current;
+    publishLoading(false);
 
     const onTileLoadStart = () => {
       loadingTilesRef.current += 1;
+      publishLoading(true);
     };
 
     const onTileLoadSettled = () => {
       loadingTilesRef.current = Math.max(0, loadingTilesRef.current - 1);
-      if (loadingTilesRef.current === 0) flushPendingDate();
+      if (loadingTilesRef.current > 0) return;
+      publishLoading(false);
+      flushPendingDate();
     };
 
     const listenerKeys = [
@@ -175,10 +205,13 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
 
     clearPendingTimeout();
     timeoutRef.current = setTimeout(() => {
+      // A tile load event never arrived: treat the source as idle so neither the pending
+      // date nor timeline playback stays blocked on it.
       loadingTilesRef.current = 0;
+      publishLoading(false);
       flushPendingDate();
     }, PENDING_DATE_TIMEOUT);
-  }, [date, applyDate, clearPendingTimeout, flushPendingDate]);
+  }, [date, applyDate, clearPendingTimeout, flushPendingDate, publishLoading]);
 
   useEffect(() => clearPendingTimeout, [clearPendingTimeout]);
 
