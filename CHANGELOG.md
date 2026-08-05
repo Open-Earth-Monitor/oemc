@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Map controls style update to new designs [OEMC-355](https://vizzuality.atlassian.net/browse/OEMC-355)
+- WMS date changes during timeline playback are throttled against in-flight tiles, so GeoServer no longer renders tiles the frontend discards [OEMC-443](https://vizzuality.atlassian.net/browse/OEMC-443)
 
 
 ## v1.0.0-alpha.6

@@ -1,12 +1,19 @@
 'use client';
 
-import { FC, useEffect, useRef } from 'react';
+import { FC, useCallback, useEffect, useRef } from 'react';
 
 import TileLayer from 'ol/layer/Tile';
+import { unByKey } from 'ol/Observable';
 import TileWMS from 'ol/source/TileWMS';
 import { RLayerTileWMSProps, useOL } from 'rlayers';
 
 import { WMS_CRS } from '../constants';
+
+/**
+ * Upper bound for how long a date change waits for in-flight tiles. Guards against a tile
+ * whose load event never arrives, which would otherwise stall playback for this layer.
+ */
+const PENDING_DATE_TIMEOUT = 10000;
 
 interface BufferedTileWMSProps extends RLayerTileWMSProps {
   layerName: string;
@@ -17,6 +24,11 @@ interface BufferedTileWMSProps extends RLayerTileWMSProps {
 /**
  * WMS tile layer that uses OL's native `updateParams()` for date changes.
  * Old tiles stay visible as interim tiles until new ones load — no blink.
+ *
+ * Date changes are throttled against the tiles still in flight: OL does not cancel pending
+ * tile requests on `updateParams()`, so firing one per playback tick leaves GeoServer
+ * rendering tiles nobody will use. Requests that arrive while tiles are loading are
+ * coalesced into the latest date, applied once the source goes idle.
  */
 const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
   url,
@@ -43,6 +55,36 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
   dateRef.current = date;
   const onLayerChangeRef = useRef(onLayerChange);
   onLayerChangeRef.current = onLayerChange;
+
+  const loadingTilesRef = useRef(0);
+  const pendingDateRef = useRef<string | undefined>(undefined);
+  const hasPendingDateRef = useRef(false);
+  const appliedDateRef = useRef(date);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearPendingTimeout = useCallback(() => {
+    if (timeoutRef.current === null) return;
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = null;
+  }, []);
+
+  const applyDate = useCallback((nextDate: string | undefined) => {
+    appliedDateRef.current = nextDate;
+    layerRef.current?.getSource()?.updateParams({ DIM_DATE: nextDate });
+  }, []);
+
+  /** Apply the coalesced date, if any. Called when the source goes idle or the guard fires. */
+  const flushPendingDate = useCallback(() => {
+    clearPendingTimeout();
+    if (!hasPendingDateRef.current) return;
+
+    const nextDate = pendingDateRef.current;
+    hasPendingDateRef.current = false;
+    pendingDateRef.current = undefined;
+
+    if (nextDate === appliedDateRef.current) return;
+    applyDate(nextDate);
+  }, [applyDate, clearPendingTimeout]);
 
   // Create layer + source once; recreate only on url/layerName change
   useEffect(() => {
@@ -78,11 +120,35 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
       properties,
     });
 
+    // The source starts fresh: no tiles in flight, nothing coalesced from the previous one
+    clearPendingTimeout();
+    loadingTilesRef.current = 0;
+    hasPendingDateRef.current = false;
+    pendingDateRef.current = undefined;
+    appliedDateRef.current = dateRef.current;
+
+    const onTileLoadStart = () => {
+      loadingTilesRef.current += 1;
+    };
+
+    const onTileLoadSettled = () => {
+      loadingTilesRef.current = Math.max(0, loadingTilesRef.current - 1);
+      if (loadingTilesRef.current === 0) flushPendingDate();
+    };
+
+    const listenerKeys = [
+      source.on('tileloadstart', onTileLoadStart),
+      source.on('tileloadend', onTileLoadSettled),
+      source.on('tileloaderror', onTileLoadSettled),
+    ];
+
     layerRef.current = layer;
     map.addLayer(layer);
     onLayerChangeRef.current?.(layer);
 
     return () => {
+      unByKey(listenerKeys);
+      clearPendingTimeout();
       map.removeLayer(layer);
       layerRef.current = null;
       onLayerChangeRef.current?.(null);
@@ -92,8 +158,29 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
 
   // Date change → updateParams keeps old tiles visible until new ones load
   useEffect(() => {
-    layerRef.current?.getSource()?.updateParams({ DIM_DATE: date });
-  }, [date]);
+    if (date === appliedDateRef.current) return;
+
+    // Source idle: request straight away
+    if (loadingTilesRef.current === 0) {
+      clearPendingTimeout();
+      hasPendingDateRef.current = false;
+      pendingDateRef.current = undefined;
+      applyDate(date);
+      return;
+    }
+
+    // Tiles still loading: keep only the latest date and wait for the source to go idle
+    pendingDateRef.current = date;
+    hasPendingDateRef.current = true;
+
+    clearPendingTimeout();
+    timeoutRef.current = setTimeout(() => {
+      loadingTilesRef.current = 0;
+      flushPendingDate();
+    }, PENDING_DATE_TIMEOUT);
+  }, [date, applyDate, clearPendingTimeout, flushPendingDate]);
+
+  useEffect(() => clearPendingTimeout, [clearPendingTimeout]);
 
   useEffect(() => {
     layerRef.current?.setOpacity(opacity);
