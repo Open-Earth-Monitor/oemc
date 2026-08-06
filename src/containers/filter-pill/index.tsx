@@ -6,7 +6,9 @@ export const FilterPill = ({ children }: { children?: React.ReactNode }) => (
   <Popover>
     <PopoverTrigger className="flex w-fit items-center space-x-4 rounded-full bg-white-500 px-5 py-2.5 font-satoshi text-sm font-medium text-black-500 hover:bg-accent-green focus:rounded-full disabled:pointer-events-none data-[state=closed]:bg-white-500 data-[state=open]:bg-accent-green">
       <span>Filter</span>
-      <FilterSVG className="text-black h-5 w-5" />
+      {/* `text-black` is not a class in this palette (`black` is a scale), so it
+          never applied: the icon inherits the trigger's colour instead. */}
+      <FilterSVG className="h-5 w-5" />
     </PopoverTrigger>
 
     <PopoverContent
