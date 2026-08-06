@@ -20,8 +20,10 @@ export const FooterDesktop: FC = () => {
         'px-5 md:px-5': pathname === '/',
       })}
     >
-      <div className="mx-8 flex w-full items-center justify-between gap-x-6 xl:m-auto">
-        <div className="flex flex-col items-start gap-y-1 py-3">
+      {/* Under 500px the two blocks cannot share a row: they stack, sharing on
+          top, then the EU logo and "Powered by" under it. */}
+      <div className="mx-0 flex w-full flex-col items-start gap-y-2 py-2 min-[500px]:mx-8 min-[500px]:flex-row min-[500px]:items-center min-[500px]:justify-between min-[500px]:gap-x-6 min-[500px]:gap-y-0 min-[500px]:py-0 xl:m-auto">
+        <div className="order-2 flex flex-col items-start gap-y-1 min-[500px]:order-1 min-[500px]:py-3">
           <a
             href="https://cordis.europa.eu/project/id/101059548"
             target="_blank"
@@ -43,7 +45,9 @@ export const FooterDesktop: FC = () => {
           </a>
           <PoweredBy />
         </div>
-        <SocialMedia />
+        <div className="order-1 min-[500px]:order-2">
+          <SocialMedia />
+        </div>
       </div>
     </footer>
   );

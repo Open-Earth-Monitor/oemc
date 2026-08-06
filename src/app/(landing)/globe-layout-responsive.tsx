@@ -20,7 +20,10 @@ function GlobeLayoutDesktop() {
         <Geostories />
       </div>
 
-      <div className="pointer-events-none absolute right-0 top-28 z-[1000] px-5 animate-in fade-in-0 slide-in-from-right-5 duration-700 delay-150 ease-out fill-mode-both">
+      {/* `bottom` as well as `top`: the panel is bounded by the globe area, which
+          ends where the footer starts, so a taller (wrapped) footer cannot be
+          overlapped no matter how much the feed and publications add up to. */}
+      <div className="pointer-events-none absolute bottom-8 right-0 top-28 z-[1000] flex flex-col px-5 animate-in fade-in-0 slide-in-from-right-5 duration-700 delay-150 ease-out fill-mode-both">
         <GlobeLiveUpdates />
       </div>
 

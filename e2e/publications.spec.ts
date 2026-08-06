@@ -49,15 +49,17 @@ test.describe('recent publications', () => {
     );
   });
 
-  test('shows one card per source inside the social feed carousel', async ({ page }) => {
+  test('lists the publications under the carousel, not inside it', async ({ page }) => {
     await page.goto('/', { waitUntil: 'load' });
 
-    await expect(page.getByTestId('publication-card-zenodo')).toBeVisible();
-    await expect(page.getByTestId('publication-card-zotero')).toBeVisible();
+    // Both entries render in their own list below the feed carousel, so they are
+    // reachable without paging through the posts.
+    const list = page.getByTestId('globe-publications');
+    await expect(list.getByTestId('publication-card-zenodo')).toBeVisible();
+    await expect(list.getByTestId('publication-card-zotero')).toBeVisible();
 
-    // Both live in the feed's carousel track rather than in a section of their
-    // own. The post count is live data, so the slide total is not asserted.
-    await expect(page.locator('aside [data-testid="publication-card-zenodo"]')).toHaveCount(1);
+    // Nothing publication-shaped is left in the carousel track.
+    await expect(page.locator('[role="region"] [data-testid^="publication-card-"]')).toHaveCount(0);
   });
 
   test('links out to the record and the publisher', async ({ page }) => {
@@ -74,7 +76,7 @@ test.describe('recent publications', () => {
     );
   });
 
-  test('drops the publication slides when both libraries fail', async ({ page }) => {
+  test('drops the publications list when both libraries fail', async ({ page }) => {
     await page.unroute('**/zenodo.org/api/records**');
     await page.unroute('**/api.zotero.org/groups/**');
     await page.route('**/zenodo.org/api/records**', (route) => route.abort());
@@ -93,7 +95,8 @@ test.describe('recent publications', () => {
     await page.goto('/', { waitUntil: 'load' });
     await Promise.all([zenodoFailed, zoteroFailed]);
 
-    // The social feed keeps working; it just has no publication slides.
+    // The social feed keeps working; the panel just loses the section.
+    await expect(page.getByTestId('globe-publications')).toHaveCount(0);
     await expect(page.getByTestId('publication-card-zenodo')).toHaveCount(0);
     await expect(page.getByTestId('publication-card-zotero')).toHaveCount(0);
   });
