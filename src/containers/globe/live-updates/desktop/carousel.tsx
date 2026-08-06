@@ -4,12 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 
-import type { Publication } from '@/hooks/publications';
+import cn from '@/lib/classnames';
 
-import type { FeedItem } from '@/containers/globe/live-updates/feed-items';
+import type { Post as PostTypes } from '@/hooks/social-media';
+
 import { Post } from '@/containers/globe/live-updates/post';
 
-import PublicationCard from '@/components/publications/card';
 import { Carousel, CarouselContent, CarouselItem, useCarousel } from '@/components/ui/carousel';
 import type { CarouselApi } from '@/components/ui/carousel';
 
@@ -92,12 +92,17 @@ export const SocialMediaContent = ({
   data,
   setCount,
   count,
-  onPublicationSelect,
+  fill = false,
 }: {
-  data: FeedItem[];
+  data?: PostTypes[];
   setCount: React.Dispatch<React.SetStateAction<number>>;
   count: number;
-  onPublicationSelect?: (publication: Publication) => void;
+  /**
+   * Take the height the parent gives and no more — the globe panel, which is
+   * bounded by the footer. Off in the mobile drawer, where the column simply
+   * grows and the drawer scrolls.
+   */
+  fill?: boolean;
 }) => {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const dataLength = data?.length ?? 0;
@@ -121,34 +126,33 @@ export const SocialMediaContent = ({
   }, [api, setCount]);
 
   return (
-    <div className="min-h-0 flex-1  xl:max-h-64">
+    <div className={cn('flex min-h-0 flex-col', fill && 'overflow-hidden')}>
+      {/* Column layout rather than a capped height: the arrows and dots then sit
+          in flow under the slides instead of overlapping whatever follows. When
+          `fill` is on, the slides are what gives way if the panel is short — a
+          post is a teaser and can be cropped, a publication card cannot. */}
       <Carousel
         opts={{ align: 'center', loop: true, slidesToScroll: 1, active: true }}
-        className="relative h-full"
+        className={cn('relative flex flex-col gap-y-4', fill && 'min-h-0')}
         setApi={setApi}
       >
-        <CarouselContent className="h-full">
-          {data?.map((item) => (
+        <CarouselContent className={cn(fill && 'min-h-0')}>
+          {data?.map((post) => (
             <CarouselItem
-              key={item.id}
-              className="flex h-full items-start justify-center  lg:max-w-md xl:max-w-xs"
+              key={post.id}
+              className={cn(
+                'flex items-start justify-center  lg:max-w-md xl:max-w-xs',
+                fill && 'h-full items-stretch'
+              )}
             >
-              <div className="mb-10 h-full w-full overflow-hidden rounded-3xl border border-black-100 bg-black-500  xl:mb-0">
-                {item.kind === 'post' ? (
-                  <Post post={item.post} />
-                ) : (
-                  <PublicationCard
-                    publication={item.publication}
-                    onSelect={onPublicationSelect}
-                    className="h-full min-h-[200px] rounded-3xl border-0"
-                  />
-                )}
+              <div className="h-full w-full overflow-hidden rounded-3xl border border-black-100 bg-black-500">
+                <Post post={post} />
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
 
-        <div className="relative z-10 m-auto flex w-full items-center justify-center gap-4 xl:-bottom-4">
+        <div className="relative z-10 m-auto flex w-full shrink-0 items-center justify-center gap-4">
           <CarouselButton direction="prev" />
           <CarouselDots api={api} total={dataLength} activeIndex={activeIndex} visibleDots={6} />
           <CarouselButton direction="next" />
@@ -160,20 +164,24 @@ export const SocialMediaContent = ({
 
 const SocialMediaDesktop = ({
   data,
-  onPublicationSelect,
+  children,
 }: {
-  data: FeedItem[];
-  onPublicationSelect?: (publication: Publication) => void;
+  data?: PostTypes[];
+  /** Rendered under the carousel, in the same column (the publications list). */
+  children?: React.ReactNode;
 }) => {
   const [count, setCount] = useState(1);
 
   const dataLength = data?.length ?? 0;
 
+  // The panel never grows past the area its parent gives it — the globe, which
+  // stops where the footer begins. Everything inside is sized against that box
+  // rather than allowed to run past it and be cut off at the edge.
   return (
-    <div className="pointer-events-auto h-fit w-full overflow-hidden rounded-2xl pb-16 xl:h-fit xl:w-[320px]">
-      <div className="h-full">
-        <div className="flex h-full flex-col gap-y-6">
-          <div className="flex items-end justify-between font-medium text-white-500">
+    <div className="pointer-events-auto flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl xl:w-[320px]">
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="flex min-h-0 flex-1 flex-col gap-y-6">
+          <div className="flex shrink-0 items-end justify-between font-medium text-white-500">
             <p>
               Latest insights <br /> and innovations.
             </p>
@@ -182,12 +190,13 @@ const SocialMediaDesktop = ({
             </span>
           </div>
 
-          <SocialMediaContent
-            data={data}
-            setCount={setCount}
-            count={count}
-            onPublicationSelect={onPublicationSelect}
-          />
+          <SocialMediaContent data={data} setCount={setCount} count={count} fill />
+
+          {/* Publications read as their own block, not as a caption of the
+              carousel, so they get a rule and clear space above. */}
+          {!!children && (
+            <div className="shrink-0 border-t border-white-900/10 pt-6">{children}</div>
+          )}
         </div>
       </div>
     </div>
