@@ -55,7 +55,11 @@ const LiveUpdatesFeed = ({
         </div>
       )}
       <SocialMediaDesktop data={data}>
-        <GlobePublications data={publications} onSelect={handlePublicationSelect} />
+        <GlobePublications
+          data={publications}
+          onSelect={handlePublicationSelect}
+          dropExtraWhenNarrow
+        />
       </SocialMediaDesktop>
     </aside>
   );

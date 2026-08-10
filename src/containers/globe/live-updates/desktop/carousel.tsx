@@ -22,14 +22,14 @@ const CarouselButton = ({ direction }: { direction: 'prev' | 'next' }) => {
     <button
       onClick={isPrev ? scrollPrev : scrollNext}
       disabled={isPrev ? !canScrollPrev : !canScrollNext}
-      className="z-10 shrink-0 rounded-full bg-white-950 p-2 shadow-md backdrop-blur-sm disabled:opacity-50"
+      className="z-10 shrink-0 rounded-full bg-white-950 p-1.5 shadow-md backdrop-blur-sm disabled:opacity-50"
       aria-label={isPrev ? 'Previous Slide' : 'Next Slide'}
       title={isPrev ? 'Previous post' : 'Next post'}
     >
       {isPrev ? (
-        <ChevronLeftIcon size={20} className="text-white-500" />
+        <ChevronLeftIcon size={18} className="text-white-500" />
       ) : (
-        <ChevronRightIcon size={20} className="text-white-500" />
+        <ChevronRightIcon size={18} className="text-white-500" />
       )}
     </button>
   );
@@ -65,7 +65,7 @@ const CarouselDots = ({
   if (!total) return null;
 
   return (
-    <div className="h-full overflow-x-hidden py-2" style={{ width: `${viewportWidth}px` }}>
+    <div className="h-full overflow-x-hidden py-1" style={{ width: `${viewportWidth}px` }}>
       <div
         className="flex items-center gap-2 px-2 transition-transform duration-300 ease-out"
         style={{ transform: `translateX(-${translateX}px)` }}
@@ -133,7 +133,7 @@ export const SocialMediaContent = ({
           post is a teaser and can be cropped, a publication card cannot. */}
       <Carousel
         opts={{ align: 'center', loop: true, slidesToScroll: 1, active: true }}
-        className={cn('relative flex flex-col gap-y-4', fill && 'min-h-0')}
+        className={cn('relative flex flex-col gap-y-2', fill && 'min-h-0')}
         setApi={setApi}
       >
         <CarouselContent className={cn(fill && 'min-h-0')}>
@@ -180,7 +180,7 @@ const SocialMediaDesktop = ({
   return (
     <div className="pointer-events-auto flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl xl:w-[320px]">
       <div className="flex min-h-0 flex-1 flex-col">
-        <div className="flex min-h-0 flex-1 flex-col gap-y-6">
+        <div className="flex min-h-0 flex-1 flex-col gap-y-4">
           <div className="flex shrink-0 items-end justify-between font-medium text-white-500">
             <p>
               Latest insights <br /> and innovations.
@@ -195,7 +195,7 @@ const SocialMediaDesktop = ({
           {/* Publications read as their own block, not as a caption of the
               carousel, so they get a rule and clear space above. */}
           {!!children && (
-            <div className="shrink-0 border-t border-white-900/10 pt-6">{children}</div>
+            <div className="shrink-0 border-t border-white-900/10 pt-4">{children}</div>
           )}
         </div>
       </div>
