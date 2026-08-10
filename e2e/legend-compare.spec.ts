@@ -119,8 +119,9 @@ test('compare can be closed when the date labels are long', async ({ page }) => 
   expect(box.x).toBeGreaterThanOrEqual(0);
   expect(box.x + box.width).toBeLessThanOrEqual(viewport.width);
 
-  // Clicking it clears comparison instead of opening the select.
+  // Clicking it clears comparison instead of opening the select it sits in.
   await close.first().click();
   await expect(page.getByRole('button', { name: 'Compare', exact: true }).first()).toBeVisible();
   await expect(page).not.toHaveURL(/compareLayers/);
+  await expect(page.getByRole('option')).toHaveCount(0);
 });
