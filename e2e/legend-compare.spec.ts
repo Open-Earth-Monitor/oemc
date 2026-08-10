@@ -2,8 +2,6 @@ import { test, expect, type Page } from '@playwright/test';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// Long range labels are what used to push the compare row past the legend width, taking the
-// close control off-screen with it (OEMC-444, reproduced on l62/l63).
 const LAYER_L1 = {
   layer_id: 'l1',
   title: 'Gross primary productivity',
