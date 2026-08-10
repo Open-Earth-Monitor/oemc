@@ -33,11 +33,11 @@ export const PoweredBy: FC<{ size?: 'sm' | 'md' }> = ({ size = 'sm' }) => {
         href="https://gilab.rs"
         target="_blank"
         rel="noopener noreferrer"
-        title="GILAB"
+        title="GILab"
         className={LINK_STYLES}
         data-test-id="gilab-link"
       >
-        GILAB
+        GILab
       </a>
     </p>
   );
