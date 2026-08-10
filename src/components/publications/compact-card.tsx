@@ -30,12 +30,12 @@ export const PublicationCompactCard = ({
       rel="noopener noreferrer"
       onClick={() => onSelect?.(publication)}
       className={cn(
-        'group/publication pointer-events-auto flex items-start justify-between gap-3 rounded-2xl border border-black-100 bg-black-500 p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green',
+        'group/publication pointer-events-auto flex items-start justify-between gap-3 rounded-2xl border border-black-100 bg-black-500 p-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green',
         className
       )}
       data-testid={`publication-card-${source}`}
     >
-      <div className="min-w-0 space-y-1">
+      <div className="min-w-0 space-y-0.5">
         <div className="flex items-center gap-2 text-[11px] font-medium">
           <span className="text-accent-green">{SOURCE_LABEL[source]}</span>
           {!!formattedDate && <span className="text-white-500/60">{formattedDate}</span>}

@@ -1,5 +1,7 @@
 'use client';
 
+import cn from '@/lib/classnames';
+
 import { byPublicationDateDesc, type Publication } from '@/hooks/publications';
 
 import PublicationCompactCard from '@/components/publications/compact-card';
@@ -47,6 +49,7 @@ export const GlobePublications = ({
   limit = DEFAULT_PUBLICATIONS_SHOWN,
   onSelect,
   dropExtraWhenShort = false,
+  dropExtraWhenNarrow = false,
 }: {
   data?: Publication[];
   limit?: number;
@@ -57,24 +60,31 @@ export const GlobePublications = ({
    * there is above the footer and scrolls the remainder, so it shows both.
    */
   dropExtraWhenShort?: boolean;
+  /**
+   * Same, for narrow desktops: the category filter is centred on the viewport and
+   * is 960px wide, so under 1680px it reaches into the panel's column and a
+   * second entry would sit on top of the last category. One entry ends above it.
+   */
+  dropExtraWhenNarrow?: boolean;
 }) => {
   const publications = pickAcrossLibraries(data ?? [], limit);
 
   if (!publications.length) return null;
 
   return (
-    <section className="space-y-3" data-testid="globe-publications">
+    <section className="space-y-2" data-testid="globe-publications">
       <p className="font-medium text-white-500">Latest publications.</p>
 
-      <ul className="space-y-2">
+      <ul className="space-y-1.5">
         {publications.map((publication, index) => (
           <li
             key={publication.id}
             // Under ~900px of viewport the panel has room for one entry beside a
             // post; a second would squeeze the carousel to nothing.
-            className={
-              dropExtraWhenShort && index > 0 ? '[@media(max-height:899px)]:hidden' : undefined
-            }
+            className={cn({
+              '[@media(max-height:899px)]:hidden': dropExtraWhenShort && index > 0,
+              'max-[1679px]:hidden': dropExtraWhenNarrow && index > 0,
+            })}
           >
             <PublicationCompactCard publication={publication} onSelect={onSelect} />
           </li>
