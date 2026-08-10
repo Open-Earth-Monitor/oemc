@@ -11,6 +11,7 @@ import type { LayerParsed } from '@/types/layers';
 
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
+import DateRangeLabel from '@/components/date-range-label';
 import {
   IconTooltip,
   Tooltip,
@@ -138,9 +139,14 @@ const Timeline: FC<{
                   )}
                 />
               )}
-              <div className="absolute left-0 right-0 top-2 flex justify-between font-satoshi text-sm tracking-tight text-secondary-500">
-                <div>{startRangelabel}</div>
-                <div>{endRangelabel}</div>
+              {/* Capped so long range labels break at their dash instead of colliding */}
+              <div className="absolute left-0 right-0 top-2 flex justify-between gap-2 font-satoshi text-sm tracking-tight text-secondary-500">
+                <div className="max-w-[48%]">
+                  <DateRangeLabel label={startRangelabel} />
+                </div>
+                <div className="max-w-[48%] text-right">
+                  <DateRangeLabel label={endRangelabel} />
+                </div>
               </div>
             </div>
           </div>

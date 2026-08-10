@@ -17,7 +17,14 @@ const ScrollArea = React.forwardRef<
   >
     <ScrollAreaPrimitive.Viewport
       id="sidebar-scroll-viewport"
-      className="h-full w-full grow rounded-[inherit]"
+      // Radix wraps the children in a `display: table` div. A table box never shrinks below
+      // its min-content, and nowrap text contributes its full width to min-content — so any
+      // long label made the wrapper grow past the viewport, and `w-full` children sized
+      // themselves against that overflowing width instead of the visible one. Forcing the
+      // wrapper to `block` gives children a definite width again, so `truncate` and
+      // flex-shrink work. Only the vertical scrollbar is rendered here, so losing the
+      // table's horizontal content measurement costs us nothing.
+      className="h-full w-full grow rounded-[inherit] [&>div]:!block"
     >
       {children}
     </ScrollAreaPrimitive.Viewport>
