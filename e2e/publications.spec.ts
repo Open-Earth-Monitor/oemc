@@ -50,16 +50,33 @@ test.describe('recent publications', () => {
   });
 
   test('lists the publications under the carousel, not inside it', async ({ page }) => {
+    // From 1680px the panel's column clears the centred category filter, so both
+    // entries are listed; below that only the first is (see the narrow case below).
+    await page.setViewportSize({ width: 1680, height: 900 });
     await page.goto('/', { waitUntil: 'load' });
 
     // Both entries render in their own list below the feed carousel, so they are
-    // reachable without paging through the posts.
+    // reachable without paging through the posts — and one comes from each library.
     const list = page.getByTestId('globe-publications');
     await expect(list.getByTestId('publication-card-zenodo')).toBeVisible();
     await expect(list.getByTestId('publication-card-zotero')).toBeVisible();
 
     // Nothing publication-shaped is left in the carousel track.
     await expect(page.locator('[role="region"] [data-testid^="publication-card-"]')).toHaveCount(0);
+  });
+
+  test('lists one publication while the category filter reaches into the column', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/', { waitUntil: 'load' });
+
+    // Newest first, so the Zotero item (2026-07-03) takes the single slot and the
+    // Zenodo record (2026-06-30) is the one dropped: a second card would sit on
+    // top of the last category in the filter.
+    const list = page.getByTestId('globe-publications');
+    await expect(list.getByTestId('publication-card-zotero')).toBeVisible();
+    await expect(list.getByTestId('publication-card-zenodo')).toBeHidden();
   });
 
   test('links out to the record and the publisher', async ({ page }) => {
