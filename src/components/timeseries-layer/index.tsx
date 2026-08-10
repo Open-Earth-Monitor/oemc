@@ -81,6 +81,21 @@ const TimeSeriesSameLayer: FC<{
 
   const hasAnyCompare = !!compareLayers?.[0]?.id;
 
+  const showCompareSelect = !!compareCurrentRange && (range?.length ?? 0) > 1;
+
+  const handleCloseCompare = useCallback(() => {
+    void setCompareLayers(null);
+  }, [setCompareLayers]);
+
+  /**
+   * The control sits inside the select trigger, so it has to claim the interaction before
+   * Radix does: the trigger opens on pointer down, not on click.
+   */
+  const swallowTriggerInteraction = useCallback((event: React.SyntheticEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+  }, []);
+
   return (
     <div className="flex w-full flex-col py-4">
       {/* Select dates */}
@@ -153,10 +168,8 @@ const TimeSeriesSameLayer: FC<{
             </Button>
           )}
           {hasAnyCompare && (
-            // The close button is a sibling of the select — never truncated with it — and the
-            // two travel together when the row wraps, so comparison can always be closed.
             <div className="flex min-w-[7rem] flex-1 items-center gap-2">
-              {compareCurrentRange && (range?.length ?? 0) > 1 && (
+              {showCompareSelect && (
                 <Select
                   value={compareCurrentRange?.value || range?.[0]?.value}
                   disabled={isPlaying}
@@ -177,7 +190,29 @@ const TimeSeriesSameLayer: FC<{
                       <SelectValue className="min-w-0">
                         <DateRangeLabel label={compareCurrentRange?.label || range?.[0]?.label} />
                       </SelectValue>
-                      <SelectIcon className="shrink-0" />
+                      <div className="flex shrink-0 items-center gap-2">
+                        {/* Not a <button>: this lives inside the trigger's own button element */}
+                        <span
+                          role="button"
+                          tabIndex={0}
+                          aria-label="Close comparison"
+                          title="Close comparison"
+                          className="text-accent-green hover:opacity-80"
+                          onPointerDown={swallowTriggerInteraction}
+                          onClick={(e) => {
+                            swallowTriggerInteraction(e);
+                            handleCloseCompare();
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key !== 'Enter' && e.key !== ' ') return;
+                            swallowTriggerInteraction(e);
+                            handleCloseCompare();
+                          }}
+                        >
+                          <LuX className="h-4 w-4" />
+                        </span>
+                        <SelectIcon />
+                      </div>
                     </div>
                   </SelectTrigger>
                   <SelectContent
@@ -196,15 +231,18 @@ const TimeSeriesSameLayer: FC<{
                   </SelectContent>
                 </Select>
               )}
-              <button
-                type="button"
-                aria-label="Close comparison"
-                title="Close comparison"
-                className="shrink-0 text-accent-green hover:opacity-80"
-                onClick={() => setCompareLayers(null)}
-              >
-                <LuX className="h-4 w-4" />
-              </button>
+              {/* Without a select to host it, the control still has to be reachable */}
+              {!showCompareSelect && (
+                <button
+                  type="button"
+                  aria-label="Close comparison"
+                  title="Close comparison"
+                  className="shrink-0 text-accent-green hover:opacity-80"
+                  onClick={handleCloseCompare}
+                >
+                  <LuX className="h-4 w-4" />
+                </button>
+              )}
             </div>
           )}
         </div>
