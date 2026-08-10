@@ -109,9 +109,13 @@ export const Controls: FC<ControlsProps> = ({
     [isDesktop, isMobile, mapRef, setBbox]
   );
   return (
+    // The zoom is rendered by OpenLayers into its own container, so it is placed
+    // with CSS (see `.ol-zoom` in globals.css) against this same anchor: 121px
+    // from the top below `md`, vertically centred from `md`. The offsets below
+    // leave a 6px gap around it — 48px buttons on mobile, 34px from `md`.
     <div
       className={cn({
-        'absolute right-5 top-1/3 z-40 flex -translate-y-[50%] flex-col space-y-1.5 sm:top-1/2 sm:-translate-y-[50%]':
+        'absolute right-5 top-[121px] z-40 flex flex-col space-y-1.5 md:top-1/2 md:-translate-y-1/2':
           true,
         [className]: !!className,
       })}
@@ -124,7 +128,7 @@ export const Controls: FC<ControlsProps> = ({
         isLoading={isLoadingLocationData}
         isFetching={isFetchingLocationData}
         isMobile={isMobile}
-        className="absolute right-0 top-[-56px] sm:top-[-134px]"
+        className="absolute right-0 top-[-54px] md:top-[-134px]"
       />
 
       <RControl.RZoom
@@ -138,7 +142,7 @@ export const Controls: FC<ControlsProps> = ({
 
       <div
         className={cn({
-          'absolute top-0 flex w-full flex-col items-end justify-end space-y-1.5 sm:top-[-26px]':
+          'absolute top-[102px] flex w-full flex-col items-end justify-end space-y-1.5 md:top-[-26px]':
             true,
         })}
       >

@@ -242,19 +242,20 @@
   outline-offset: 2px !important;
 }
 
+/* The zoom lives in OpenLayers' own control container, so it cannot flow with
+   the rest of the cluster in `map/controls`. Both are laid out against the same
+   anchor instead: below `md` the cluster hangs from 121px so it clears the
+   bottom drawer, from `md` it is centred and the zoom sits 94px above centre.
+   Sizes follow the `mobile` media query (max-width 767px) used for the buttons. */
 .ol-zoom {
   display: block !important;
-  flex-direction: column !important;
   position: absolute !important;
   right: 20px !important;
-  height: 68px !important;
-  align-items: center;
-  justify-content: center;
   z-index: 50 !important;
   left: unset !important;
   margin: 0 !important;
   border-radius: 50% !important;
-  @apply !top-[121px] h-[96px] w-[48px] sm:!top-[calc(50%-94px)] sm:h-[68px] sm:w-[34px];
+  @apply !top-[121px] h-[96px] w-[48px] md:!top-[calc(50%-94px)] md:h-[68px] md:w-[34px];
 }
 
 .ol-zoom-in,
