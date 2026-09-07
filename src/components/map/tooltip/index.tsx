@@ -164,7 +164,13 @@ const MapTooltip: FC<MapTooltipProps> = ({
   if (!position) return null;
 
   const hasLayer = !!data?.id;
-  const hasValue = data?.value !== null && data?.value !== undefined && data?.value !== 0;
+  // Zero is data. Fractions, counts and sums (e.g. bare soil fraction) are 0 over most
+  // of the map, and the point query still returns a full series there. Only a missing
+  // or non-numeric GetFeatureInfo value means there is nothing at this location.
+  const hasValue =
+    typeof data?.value === 'number'
+      ? Number.isFinite(data.value)
+      : data?.value !== null && data?.value !== undefined && data?.value !== '';
   const label = [countryName, nutsDataResponse?.NUTS_NAME].filter(Boolean).join(', ');
 
   const lonLat: [number, number] | null = (() => {
