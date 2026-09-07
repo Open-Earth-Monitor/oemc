@@ -8,7 +8,7 @@ import cn from '@/lib/classnames';
 
 import type { Post as PostTypes } from '@/hooks/social-media';
 
-import { Post } from '@/containers/globe/live-updates/post';
+import { Post, getPostLink } from '@/containers/globe/live-updates/post';
 
 import { Carousel, CarouselContent, CarouselItem, useCarousel } from '@/components/ui/carousel';
 import type { CarouselApi } from '@/components/ui/carousel';
@@ -46,9 +46,12 @@ const CarouselDots = ({
   activeIndex: number;
   visibleDots?: number;
 }) => {
-  const DOT_SIZE = 8; // h-1 w-1 => 4px
+  const DOT_SIZE = 8; // h-2 w-2 => 8px
   const GAP = 8; // gap-2 => 8px
   const STEP = DOT_SIZE + GAP;
+  // The active dot is scaled to 150% and needs 2px of air on every side so the
+  // viewport does not clip it at either end of the strip.
+  const PADDING = 4; // p-1 => 4px
 
   const maxStart = Math.max(0, total - visibleDots);
 
@@ -60,14 +63,22 @@ const CarouselDots = ({
   }, [activeIndex, total, visibleDots, maxStart]);
 
   const translateX = startIndex * STEP;
-  const viewportWidth = visibleDots * DOT_SIZE + (visibleDots - 1) * GAP;
+  // The strip is exactly as wide as the dots it shows plus the padding around
+  // them. Padding the strip without counting it here pushed the dots off-centre
+  // and clipped the last visible one.
+  const shownDots = Math.min(total, visibleDots);
+  const viewportWidth = shownDots * DOT_SIZE + (shownDots - 1) * GAP + PADDING * 2;
 
   if (!total) return null;
 
   return (
-    <div className="h-full overflow-x-hidden py-1" style={{ width: `${viewportWidth}px` }}>
+    <div
+      className="shrink-0 overflow-hidden"
+      style={{ width: `${viewportWidth}px` }}
+      data-testid="live-updates-dots"
+    >
       <div
-        className="flex items-center gap-2 px-2 transition-transform duration-300 ease-out"
+        className="flex items-center gap-2 p-1 transition-transform duration-300 ease-out"
         style={{ transform: `translateX(-${translateX}px)` }}
       >
         {Array.from({ length: total }).map((_, index) => (
@@ -88,11 +99,54 @@ const CarouselDots = ({
   );
 };
 
+/**
+ * One slide. The card is a link to the page the post shares, or to the post
+ * itself when it shares none, and opens in a new tab. Embla suppresses the
+ * click that ends a mouse drag, so swiping through the feed never opens
+ * anything. Falls back to a plain card only if the API sent no url at all.
+ */
+const PostCard = ({
+  post,
+  onSelect,
+}: {
+  post: PostTypes;
+  onSelect?: (post: PostTypes, url: string) => void;
+}) => {
+  const url = getPostLink(post);
+  const className =
+    'h-full w-full overflow-hidden rounded-3xl border border-black-100 bg-black-500';
+
+  if (!url) {
+    return (
+      <div className={className} data-testid="live-updates-post">
+        <Post post={post} />
+      </div>
+    );
+  }
+
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => onSelect?.(post, url)}
+      className={cn(
+        className,
+        'block transition-colors duration-500 hover:bg-black-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green'
+      )}
+      data-testid="live-updates-post"
+    >
+      <Post post={post} insideLink />
+    </a>
+  );
+};
+
 export const SocialMediaContent = ({
   data,
   setCount,
   count,
   fill = false,
+  onSelect,
 }: {
   data?: PostTypes[];
   setCount: React.Dispatch<React.SetStateAction<number>>;
@@ -103,6 +157,8 @@ export const SocialMediaContent = ({
    * grows and the drawer scrolls.
    */
   fill?: boolean;
+  /** Called when a card is followed, with the page it opens. */
+  onSelect?: (post: PostTypes, url: string) => void;
 }) => {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const dataLength = data?.length ?? 0;
@@ -145,9 +201,7 @@ export const SocialMediaContent = ({
                 fill && 'h-full items-stretch'
               )}
             >
-              <div className="h-full w-full overflow-hidden rounded-3xl border border-black-100 bg-black-500">
-                <Post post={post} />
-              </div>
+              <PostCard post={post} onSelect={onSelect} />
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -165,10 +219,13 @@ export const SocialMediaContent = ({
 const SocialMediaDesktop = ({
   data,
   children,
+  onSelect,
 }: {
   data?: PostTypes[];
   /** Rendered under the carousel, in the same column (the publications list). */
   children?: React.ReactNode;
+  /** Called when a card is followed, with the page it opens. */
+  onSelect?: (post: PostTypes, url: string) => void;
 }) => {
   const [count, setCount] = useState(1);
 
@@ -190,7 +247,13 @@ const SocialMediaDesktop = ({
             </span>
           </div>
 
-          <SocialMediaContent data={data} setCount={setCount} count={count} fill />
+          <SocialMediaContent
+            data={data}
+            setCount={setCount}
+            count={count}
+            onSelect={onSelect}
+            fill
+          />
 
           {/* Publications read as their own block, not as a caption of the
               carousel, so they get a rule and clear space above. */}

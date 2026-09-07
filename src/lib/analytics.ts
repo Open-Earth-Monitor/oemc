@@ -99,6 +99,12 @@ export type AnalyticsEvents = {
     title: string;
     source: EventSource;
   };
+  /** A live feed card was followed through to the post on Mastodon. */
+  'Post Open': {
+    post_id: string;
+    url: string;
+    source: EventSource;
+  };
 };
 
 /**
