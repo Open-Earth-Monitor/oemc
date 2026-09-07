@@ -11,7 +11,7 @@ import {
   DEFAULT_PUBLICATIONS_PER_SOURCE,
   type Publication,
 } from '@/hooks/publications';
-import { useSocialMedia } from '@/hooks/social-media';
+import { useSocialMedia, type Post } from '@/hooks/social-media';
 
 import { SocialMediaContent } from '@/containers/globe/live-updates/desktop/carousel';
 import GlobePublications from '@/containers/globe/live-updates/publications';
@@ -48,6 +48,9 @@ const LiveUpdatesFeed = ({
       },
     });
 
+  const handlePostSelect = (post: Post, url: string) =>
+    trackEvent('Post Open', { props: { post_id: post.id, url, source } });
+
   return (
     // The drawer caps its own height; the feed plus the publications list can
     // exceed it, so this column is what scrolls.
@@ -58,7 +61,12 @@ const LiveUpdatesFeed = ({
         </div>
       )}
 
-      <SocialMediaContent data={data} setCount={setCount} count={count} />
+      <SocialMediaContent
+        data={data}
+        setCount={setCount}
+        count={count}
+        onSelect={handlePostSelect}
+      />
 
       <div className="border-t border-white-900/10 pt-6 empty:hidden">
         <GlobePublications data={publications} onSelect={handlePublicationSelect} />

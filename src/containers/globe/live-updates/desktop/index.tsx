@@ -9,7 +9,7 @@ import {
   DEFAULT_PUBLICATIONS_PER_SOURCE,
   type Publication,
 } from '@/hooks/publications';
-import { useSocialMedia } from '@/hooks/social-media';
+import { useSocialMedia, type Post } from '@/hooks/social-media';
 
 import SocialMediaDesktop from '@/containers/globe/live-updates/desktop/carousel';
 import GlobePublications from '@/containers/globe/live-updates/publications';
@@ -47,6 +47,9 @@ const LiveUpdatesFeed = ({
       },
     });
 
+  const handlePostSelect = (post: Post, url: string) =>
+    trackEvent('Post Open', { props: { post_id: post.id, url, source } });
+
   return (
     <aside className="flex min-h-0 flex-1 flex-col">
       {isLoading && (
@@ -54,7 +57,7 @@ const LiveUpdatesFeed = ({
           <Loading />
         </div>
       )}
-      <SocialMediaDesktop data={data}>
+      <SocialMediaDesktop data={data} onSelect={handlePostSelect}>
         <GlobePublications
           data={publications}
           onSelect={handlePublicationSelect}
