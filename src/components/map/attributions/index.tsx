@@ -61,7 +61,15 @@ export const Controls: FC<ControlsPropsWithChildren> = ({
             </DialogTitle>
             <DialogDescription asChild>
               <div className="flex w-full items-center space-x-2">
-                <Image src="/images/landing/EU.svg" width={64} height={43} alt="eu" />
+                {/* Intrinsic size (53×35) in the props, display size in CSS —
+                    see the same note in `components/footer/desktop`. */}
+                <Image
+                  src="/images/landing/EU.svg"
+                  width={53}
+                  height={35}
+                  alt="eu"
+                  style={{ width: 64, height: 'auto' }}
+                />
 
                 <span
                   className="block flex-1 flex-wrap space-x-2"

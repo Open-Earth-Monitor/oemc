@@ -21,13 +21,15 @@ export type Account = {
 };
 
 export type Card = {
+  /** The page the post links to. Fosstodon sends it only when a preview card exists. */
+  url?: string;
   title: string;
   description?: string;
 };
 
 export type Reblog = {
   id: string;
-  card: Card;
+  card: Card | null;
   url: string;
   content: string;
   account: Account;
@@ -39,9 +41,10 @@ export type Post = {
   created_at: string;
   content: string;
   url: string;
-  card: Card;
+  card: Card | null;
   account: Account;
-  reblog?: Reblog;
+  /** Set on a boost; the wrapper then has empty `content`, no card and an `/activity` url. */
+  reblog?: Reblog | null;
   media_attachments: MediaAttachment[];
 };
 

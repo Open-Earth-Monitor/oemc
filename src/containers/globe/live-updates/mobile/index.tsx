@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { orderBy } from 'lodash-es';
 
@@ -11,10 +11,10 @@ import {
   DEFAULT_PUBLICATIONS_PER_SOURCE,
   type Publication,
 } from '@/hooks/publications';
-import { useSocialMedia } from '@/hooks/social-media';
+import { useSocialMedia, type Post } from '@/hooks/social-media';
 
 import { SocialMediaContent } from '@/containers/globe/live-updates/desktop/carousel';
-import { toFeedItems } from '@/containers/globe/live-updates/feed-items';
+import GlobePublications from '@/containers/globe/live-updates/publications';
 
 import Loading from '@/components/loading';
 
@@ -23,7 +23,7 @@ const LiveUpdatesFeed = ({
   publicationsPerSource = DEFAULT_PUBLICATIONS_PER_SOURCE,
 }: {
   source?: EventSource;
-  /** Publications fetched from *each* library (Zenodo, Zotero) for the carousel. */
+  /** Publications fetched from *each* library (Zenodo, Zotero) for the list. */
   publicationsPerSource?: number;
 }) => {
   const [count, setCount] = useState(1);
@@ -39,11 +39,6 @@ const LiveUpdatesFeed = ({
   const { data: publications } = useLatestPublications({ perSource: publicationsPerSource });
   const trackEvent = useTrackEvent();
 
-  // Every slide change sets `count` and re-renders this component; without the
-  // memo the feed would be re-merged and re-sorted on each one, handing the
-  // carousel a new array and a new identity for every item.
-  const feedItems = useMemo(() => toFeedItems(data, publications), [data, publications]);
-
   const handlePublicationSelect = (publication: Publication) =>
     trackEvent('Publication Open', {
       props: {
@@ -53,8 +48,13 @@ const LiveUpdatesFeed = ({
       },
     });
 
+  const handlePostSelect = (post: Post, url: string) =>
+    trackEvent('Post Open', { props: { post_id: post.id, url, source } });
+
   return (
-    <aside className="h-fit">
+    // The drawer caps its own height; the feed plus the publications list can
+    // exceed it, so this column is what scrolls.
+    <aside className="h-fit space-y-6 overflow-y-auto overscroll-contain">
       {isLoading && (
         <div>
           <Loading />
@@ -62,11 +62,15 @@ const LiveUpdatesFeed = ({
       )}
 
       <SocialMediaContent
-        data={feedItems}
+        data={data}
         setCount={setCount}
         count={count}
-        onPublicationSelect={handlePublicationSelect}
+        onSelect={handlePostSelect}
       />
+
+      <div className="border-t border-white-900/10 pt-6 empty:hidden">
+        <GlobePublications data={publications} onSelect={handlePublicationSelect} />
+      </div>
     </aside>
   );
 };

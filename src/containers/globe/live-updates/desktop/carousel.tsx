@@ -4,12 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 
-import type { Publication } from '@/hooks/publications';
+import cn from '@/lib/classnames';
 
-import type { FeedItem } from '@/containers/globe/live-updates/feed-items';
-import { Post } from '@/containers/globe/live-updates/post';
+import type { Post as PostTypes } from '@/hooks/social-media';
 
-import PublicationCard from '@/components/publications/card';
+import { Post, getPostLink } from '@/containers/globe/live-updates/post';
+
 import { Carousel, CarouselContent, CarouselItem, useCarousel } from '@/components/ui/carousel';
 import type { CarouselApi } from '@/components/ui/carousel';
 
@@ -22,14 +22,14 @@ const CarouselButton = ({ direction }: { direction: 'prev' | 'next' }) => {
     <button
       onClick={isPrev ? scrollPrev : scrollNext}
       disabled={isPrev ? !canScrollPrev : !canScrollNext}
-      className="z-10 shrink-0 rounded-full bg-white-950 p-2 shadow-md backdrop-blur-sm disabled:opacity-50"
+      className="z-10 shrink-0 rounded-full bg-white-950 p-1.5 shadow-md backdrop-blur-sm disabled:opacity-50"
       aria-label={isPrev ? 'Previous Slide' : 'Next Slide'}
       title={isPrev ? 'Previous post' : 'Next post'}
     >
       {isPrev ? (
-        <ChevronLeftIcon size={20} className="text-white-500" />
+        <ChevronLeftIcon size={18} className="text-white-500" />
       ) : (
-        <ChevronRightIcon size={20} className="text-white-500" />
+        <ChevronRightIcon size={18} className="text-white-500" />
       )}
     </button>
   );
@@ -46,9 +46,12 @@ const CarouselDots = ({
   activeIndex: number;
   visibleDots?: number;
 }) => {
-  const DOT_SIZE = 8; // h-1 w-1 => 4px
+  const DOT_SIZE = 8; // h-2 w-2 => 8px
   const GAP = 8; // gap-2 => 8px
   const STEP = DOT_SIZE + GAP;
+  // The active dot is scaled to 150% and needs 2px of air on every side so the
+  // viewport does not clip it at either end of the strip.
+  const PADDING = 4; // p-1 => 4px
 
   const maxStart = Math.max(0, total - visibleDots);
 
@@ -60,14 +63,22 @@ const CarouselDots = ({
   }, [activeIndex, total, visibleDots, maxStart]);
 
   const translateX = startIndex * STEP;
-  const viewportWidth = visibleDots * DOT_SIZE + (visibleDots - 1) * GAP;
+  // The strip is exactly as wide as the dots it shows plus the padding around
+  // them. Padding the strip without counting it here pushed the dots off-centre
+  // and clipped the last visible one.
+  const shownDots = Math.min(total, visibleDots);
+  const viewportWidth = shownDots * DOT_SIZE + (shownDots - 1) * GAP + PADDING * 2;
 
   if (!total) return null;
 
   return (
-    <div className="h-full overflow-x-hidden py-2" style={{ width: `${viewportWidth}px` }}>
+    <div
+      className="shrink-0 overflow-hidden"
+      style={{ width: `${viewportWidth}px` }}
+      data-testid="live-updates-dots"
+    >
       <div
-        className="flex items-center gap-2 px-2 transition-transform duration-300 ease-out"
+        className="flex items-center gap-2 p-1 transition-transform duration-300 ease-out"
         style={{ transform: `translateX(-${translateX}px)` }}
       >
         {Array.from({ length: total }).map((_, index) => (
@@ -88,16 +99,66 @@ const CarouselDots = ({
   );
 };
 
+/**
+ * One slide. The card is a link to the page the post shares, or to the post
+ * itself when it shares none, and opens in a new tab. Embla suppresses the
+ * click that ends a mouse drag, so swiping through the feed never opens
+ * anything. Falls back to a plain card only if the API sent no url at all.
+ */
+const PostCard = ({
+  post,
+  onSelect,
+}: {
+  post: PostTypes;
+  onSelect?: (post: PostTypes, url: string) => void;
+}) => {
+  const url = getPostLink(post);
+  const className =
+    'h-full w-full overflow-hidden rounded-3xl border border-black-100 bg-black-500';
+
+  if (!url) {
+    return (
+      <div className={className} data-testid="live-updates-post">
+        <Post post={post} />
+      </div>
+    );
+  }
+
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => onSelect?.(post, url)}
+      className={cn(
+        className,
+        'block transition-colors duration-500 hover:bg-black-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green'
+      )}
+      data-testid="live-updates-post"
+    >
+      <Post post={post} insideLink />
+    </a>
+  );
+};
+
 export const SocialMediaContent = ({
   data,
   setCount,
   count,
-  onPublicationSelect,
+  fill = false,
+  onSelect,
 }: {
-  data: FeedItem[];
+  data?: PostTypes[];
   setCount: React.Dispatch<React.SetStateAction<number>>;
   count: number;
-  onPublicationSelect?: (publication: Publication) => void;
+  /**
+   * Take the height the parent gives and no more — the globe panel, which is
+   * bounded by the footer. Off in the mobile drawer, where the column simply
+   * grows and the drawer scrolls.
+   */
+  fill?: boolean;
+  /** Called when a card is followed, with the page it opens. */
+  onSelect?: (post: PostTypes, url: string) => void;
 }) => {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const dataLength = data?.length ?? 0;
@@ -121,34 +182,31 @@ export const SocialMediaContent = ({
   }, [api, setCount]);
 
   return (
-    <div className="min-h-0 flex-1  xl:max-h-64">
+    <div className={cn('flex min-h-0 flex-col', fill && 'overflow-hidden')}>
+      {/* Column layout rather than a capped height: the arrows and dots then sit
+          in flow under the slides instead of overlapping whatever follows. When
+          `fill` is on, the slides are what gives way if the panel is short — a
+          post is a teaser and can be cropped, a publication card cannot. */}
       <Carousel
         opts={{ align: 'center', loop: true, slidesToScroll: 1, active: true }}
-        className="relative h-full"
+        className={cn('relative flex flex-col gap-y-2', fill && 'min-h-0')}
         setApi={setApi}
       >
-        <CarouselContent className="h-full">
-          {data?.map((item) => (
+        <CarouselContent className={cn(fill && 'min-h-0')}>
+          {data?.map((post) => (
             <CarouselItem
-              key={item.id}
-              className="flex h-full items-start justify-center  lg:max-w-md xl:max-w-xs"
+              key={post.id}
+              className={cn(
+                'flex items-start justify-center  lg:max-w-md xl:max-w-xs',
+                fill && 'h-full items-stretch'
+              )}
             >
-              <div className="mb-10 h-full w-full overflow-hidden rounded-3xl border border-black-100 bg-black-500  xl:mb-0">
-                {item.kind === 'post' ? (
-                  <Post post={item.post} />
-                ) : (
-                  <PublicationCard
-                    publication={item.publication}
-                    onSelect={onPublicationSelect}
-                    className="h-full min-h-[200px] rounded-3xl border-0"
-                  />
-                )}
-              </div>
+              <PostCard post={post} onSelect={onSelect} />
             </CarouselItem>
           ))}
         </CarouselContent>
 
-        <div className="relative z-10 m-auto flex w-full items-center justify-center gap-4 xl:-bottom-4">
+        <div className="relative z-10 m-auto flex w-full shrink-0 items-center justify-center gap-4">
           <CarouselButton direction="prev" />
           <CarouselDots api={api} total={dataLength} activeIndex={activeIndex} visibleDots={6} />
           <CarouselButton direction="next" />
@@ -160,20 +218,27 @@ export const SocialMediaContent = ({
 
 const SocialMediaDesktop = ({
   data,
-  onPublicationSelect,
+  children,
+  onSelect,
 }: {
-  data: FeedItem[];
-  onPublicationSelect?: (publication: Publication) => void;
+  data?: PostTypes[];
+  /** Rendered under the carousel, in the same column (the publications list). */
+  children?: React.ReactNode;
+  /** Called when a card is followed, with the page it opens. */
+  onSelect?: (post: PostTypes, url: string) => void;
 }) => {
   const [count, setCount] = useState(1);
 
   const dataLength = data?.length ?? 0;
 
+  // The panel never grows past the area its parent gives it — the globe, which
+  // stops where the footer begins. Everything inside is sized against that box
+  // rather than allowed to run past it and be cut off at the edge.
   return (
-    <div className="pointer-events-auto h-fit w-full overflow-hidden rounded-2xl pb-16 xl:h-fit xl:w-[320px]">
-      <div className="h-full">
-        <div className="flex h-full flex-col gap-y-6">
-          <div className="flex items-end justify-between font-medium text-white-500">
+    <div className="pointer-events-auto flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl xl:w-[320px]">
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="flex min-h-0 flex-1 flex-col gap-y-4">
+          <div className="flex shrink-0 items-end justify-between font-medium text-white-500">
             <p>
               Latest insights <br /> and innovations.
             </p>
@@ -186,8 +251,15 @@ const SocialMediaDesktop = ({
             data={data}
             setCount={setCount}
             count={count}
-            onPublicationSelect={onPublicationSelect}
+            onSelect={onSelect}
+            fill
           />
+
+          {/* Publications read as their own block, not as a caption of the
+              carousel, so they get a rule and clear space above. */}
+          {!!children && (
+            <div className="shrink-0 border-t border-white-900/10 pt-4">{children}</div>
+          )}
         </div>
       </div>
     </div>

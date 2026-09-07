@@ -1,7 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
-
 import { orderBy } from 'lodash-es';
 
 import { useTrackEvent, type EventSource } from '@/lib/analytics';
@@ -11,10 +9,10 @@ import {
   DEFAULT_PUBLICATIONS_PER_SOURCE,
   type Publication,
 } from '@/hooks/publications';
-import { useSocialMedia } from '@/hooks/social-media';
+import { useSocialMedia, type Post } from '@/hooks/social-media';
 
 import SocialMediaDesktop from '@/containers/globe/live-updates/desktop/carousel';
-import { toFeedItems } from '@/containers/globe/live-updates/feed-items';
+import GlobePublications from '@/containers/globe/live-updates/publications';
 
 import Loading from '@/components/loading';
 
@@ -23,7 +21,7 @@ const LiveUpdatesFeed = ({
   publicationsPerSource = DEFAULT_PUBLICATIONS_PER_SOURCE,
 }: {
   source?: EventSource;
-  /** Publications fetched from *each* library (Zenodo, Zotero) for the carousel. */
+  /** Publications fetched from *each* library (Zenodo, Zotero) for the list. */
   publicationsPerSource?: number;
 }) => {
   const { data, isLoading } = useSocialMedia(null, {
@@ -35,14 +33,10 @@ const LiveUpdatesFeed = ({
     },
   });
 
-  // Publications share the carousel with the posts; a slow or failing library
-  // just means fewer slides, never a blocked feed.
+  // Publications sit under the carousel in their own list; a slow or failing
+  // library costs the panel that section, never the posts.
   const { data: publications } = useLatestPublications({ perSource: publicationsPerSource });
   const trackEvent = useTrackEvent();
-
-  // The merge and sort only depend on the two queries, so they should not re-run
-  // when this component re-renders for any other reason.
-  const feedItems = useMemo(() => toFeedItems(data, publications), [data, publications]);
 
   const handlePublicationSelect = (publication: Publication) =>
     trackEvent('Publication Open', {
@@ -53,14 +47,23 @@ const LiveUpdatesFeed = ({
       },
     });
 
+  const handlePostSelect = (post: Post, url: string) =>
+    trackEvent('Post Open', { props: { post_id: post.id, url, source } });
+
   return (
-    <aside className="h-fit">
+    <aside className="flex min-h-0 flex-1 flex-col">
       {isLoading && (
         <div>
           <Loading />
         </div>
       )}
-      <SocialMediaDesktop data={feedItems} onPublicationSelect={handlePublicationSelect} />
+      <SocialMediaDesktop data={data} onSelect={handlePostSelect}>
+        <GlobePublications
+          data={publications}
+          onSelect={handlePublicationSelect}
+          dropExtraWhenNarrow
+        />
+      </SocialMediaDesktop>
     </aside>
   );
 };

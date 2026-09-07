@@ -39,56 +39,40 @@ async function expectDrawerBelow(page: Page, drawerTestId: string, floor: number
 test.describe('landing — mobile drawer height', () => {
   test.describe.configure({ timeout: 60_000 });
 
-  for (const v of VIEWPORTS) {
-    test(`geostories drawer opens below the header (${v.name})`, async ({ browser }) => {
-      const context = await browser.newContext(v.context);
-      const page = await context.newPage();
-      await page.goto('/', { waitUntil: 'load' });
-      await waitForLandingReady(page);
+  // Both drawers share the same height cap, so both are checked at every
+  // viewport: the live feed one used to be checked on a single tall phone,
+  // where enough room happened to be left even without a header cap.
+  const DRAWERS = ['geostories', 'live-updates'] as const;
 
-      const headerBox = await page
-        .locator('header')
-        .first()
-        .evaluate((el) => el.getBoundingClientRect().toJSON());
+  for (const drawerName of DRAWERS) {
+    for (const v of VIEWPORTS) {
+      test(`${drawerName} drawer opens below the header (${v.name})`, async ({ browser }) => {
+        const context = await browser.newContext(v.context);
+        const page = await context.newPage();
+        await page.goto('/', { waitUntil: 'load' });
+        await waitForLandingReady(page);
 
-      const trigger = page.getByTestId('mobile-geostories-trigger');
-      await expect(trigger).toBeVisible();
-      await trigger.click();
+        const headerBox = await page
+          .locator('header')
+          .first()
+          .evaluate((el) => el.getBoundingClientRect().toJSON());
 
-      const drawer = page.getByTestId('mobile-geostories-drawer');
-      await expect(drawer).toBeVisible();
+        const trigger = page.getByTestId(`mobile-${drawerName}-trigger`);
+        await expect(trigger).toBeVisible();
+        await trigger.click();
 
-      // Drawer's visible top edge must settle at or below the header's bottom.
-      // The drawer-header is the first visible element to the user — measuring
-      // the outer wrapper would include vaul's offscreen slide region.
-      await expectDrawerBelow(page, 'mobile-geostories-drawer', headerBox.bottom);
+        const drawer = page.getByTestId(`mobile-${drawerName}-drawer`);
+        await expect(drawer).toBeVisible();
 
-      await context.close();
-    });
+        // Drawer's visible top edge must settle at or below the header's bottom.
+        // The drawer-header is the first visible element to the user — measuring
+        // the outer wrapper would include vaul's offscreen slide region.
+        await expectDrawerBelow(page, `mobile-${drawerName}-drawer`, headerBox.bottom);
+
+        await context.close();
+      });
+    }
   }
-
-  test('live updates drawer opens below the header', async ({ browser }) => {
-    const context = await browser.newContext({ ...devices['iPhone 14 Pro'] });
-    const page = await context.newPage();
-    await page.goto('/', { waitUntil: 'load' });
-    await waitForLandingReady(page);
-
-    const headerBox = await page
-      .locator('header')
-      .first()
-      .evaluate((el) => el.getBoundingClientRect().toJSON());
-
-    const trigger = page.getByTestId('mobile-live-updates-trigger');
-    await expect(trigger).toBeVisible();
-    await trigger.click();
-
-    const drawer = page.getByTestId('mobile-live-updates-drawer');
-    await expect(drawer).toBeVisible();
-
-    await expectDrawerBelow(page, 'mobile-live-updates-drawer', headerBox.bottom);
-
-    await context.close();
-  });
 
   test('both mobile drawer triggers expose an accessible name', async ({ browser }) => {
     const context = await browser.newContext({ ...devices['iPhone 14 Pro'] });

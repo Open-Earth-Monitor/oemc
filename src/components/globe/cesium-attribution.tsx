@@ -2,11 +2,15 @@
 
 import { createElement, Fragment, ReactNode, useEffect, useMemo, useState } from 'react';
 
+import { createPortal } from 'react-dom';
+
 import Image from 'next/image';
 
 import { useCesium } from 'resium';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+
+import { GLOBE_ATTRIBUTION_SLOT_ID } from './attribution-slot';
 
 const POLL_MS = 500;
 
@@ -126,11 +130,20 @@ export default function CesiumAttribution() {
     };
   }, [viewer]);
 
-  return (
-    <div
-      data-testid="cesium-attribution"
-      className="pointer-events-auto absolute bottom-2 right-5 z-10 flex items-center gap-3 md:bottom-[60px] xl:bottom-2"
-    >
+  // The mobile landing layout offers a slot under the canvas for the credits to
+  // sit right above the footer. It mounts and unmounts as the layout switches
+  // between desktop and mobile, so it is polled rather than looked up once;
+  // `setState` with the same element bails out, so this is cheap.
+  const [slot, setSlot] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    const check = () => setSlot(document.getElementById(GLOBE_ATTRIBUTION_SLOT_ID));
+    check();
+    const id = window.setInterval(check, POLL_MS);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const content = (
+    <>
       <a
         href="https://cesium.com/"
         target="_blank"
@@ -172,6 +185,26 @@ export default function CesiumAttribution() {
           </TooltipContent>
         </Tooltip>
       )}
+    </>
+  );
+
+  if (slot) {
+    return createPortal(
+      <div data-testid="cesium-attribution" className="pointer-events-auto flex items-center gap-3">
+        {content}
+      </div>,
+      slot
+    );
+  }
+
+  // Desktop layout: the canvas reaches the footer, so its corner is already
+  // right above it.
+  return (
+    <div
+      data-testid="cesium-attribution"
+      className="pointer-events-auto absolute bottom-2 right-5 z-10 flex items-center gap-3"
+    >
+      {content}
     </div>
   );
 }

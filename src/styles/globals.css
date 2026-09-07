@@ -171,11 +171,13 @@
  */
 .ol-attribution {
   position: absolute !important;
-  left: auto !important;
   top: auto !important;
-  /* Above the 60px mobile toolbar, which is fixed to the bottom of the viewport. */
+  /* Below `md` the credits stack above the footer links, which themselves clear
+     the 60px bottom toolbar: 60 toolbar + 8 gap + 36 links + 4 gap. Both are
+     anchored to the left edge so the column reads as one block. */
+  left: 12px !important;
   right: 12px !important;
-  bottom: 68px !important;
+  bottom: 108px !important;
   max-width: min(70ch, calc(100% - 24px)) !important;
   padding: 2px 6px !important;
   border-radius: 4px;
@@ -188,6 +190,7 @@
    alongside it rather than underneath. `max-w-md` is 28rem, plus a gap. */
 @media (min-width: 768px) {
   .ol-attribution {
+    left: auto !important;
     right: 29rem !important;
     /* Bottom row of the map. The footer links move above them from `lg`, where
        the two would otherwise share the row (`lg:bottom-[76px]` on the links). */
@@ -196,26 +199,73 @@
   }
 }
 
-/* From 1900 the bottom row fits both, so the footer links go back to it
-   (`min-[1900px]:bottom-3`) and the credits are bounded left of them: the links
-   end at x 961, and without the bound the credits would run under that. */
+/* From 1440 the credits fit between the links' left edge (620px) and the legend,
+   so the two become one left-aligned column: the links take the bottom row
+   (`min-[1440px]:bottom-3`) and the credits stack on top of them — 12 row + 36
+   links + 8 gap. Credits grow upward as they wrap, which leaves the links put. */
+@media (min-width: 1440px) {
+  .ol-attribution {
+    left: 620px !important;
+    bottom: 56px !important;
+    max-width: none !important;
+  }
+}
+
+/* From 1900 the row fits both side by side, so the credits drop back into it
+   right of the links, which end at x 961. */
 @media (min-width: 1900px) {
   .ol-attribution {
     left: 969px !important;
+    bottom: 12px !important;
   }
 }
 
 .ol-attribution ul {
   display: flex;
+  /* One credit per line while stacked, so every line starts on the left edge
+     instead of continuing on the previous credit's last line. */
+  flex-direction: column;
+  align-items: flex-start;
   flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 0 6px;
   margin: 0;
   padding: 0;
   font-size: 10px;
   line-height: 1.4;
-  text-align: right;
+  /* Stacked above the footer links below `md` and again from 1440, so it reads
+     down the same left edge; in between, and from 1900, the credits share a row
+     with something to their right and hug it instead. */
+  text-align: left;
   text-shadow: none !important;
   color: hsl(60 16% 76%);
+}
+
+@media (min-width: 768px) {
+  .ol-attribution ul {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-end;
+    text-align: right;
+  }
+}
+
+@media (min-width: 1440px) {
+  .ol-attribution ul {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1900px) {
+  .ol-attribution ul {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-end;
+    text-align: right;
+  }
 }
 
 .ol-attribution a {
@@ -242,19 +292,20 @@
   outline-offset: 2px !important;
 }
 
+/* The zoom lives in OpenLayers' own control container, so it cannot flow with
+   the rest of the cluster in `map/controls`. Both are laid out against the same
+   anchor instead: below `md` the cluster hangs from 121px so it clears the
+   bottom drawer, from `md` it is centred and the zoom sits 94px above centre.
+   Sizes follow the `mobile` media query (max-width 767px) used for the buttons. */
 .ol-zoom {
   display: block !important;
-  flex-direction: column !important;
   position: absolute !important;
   right: 20px !important;
-  height: 68px !important;
-  align-items: center;
-  justify-content: center;
   z-index: 50 !important;
   left: unset !important;
   margin: 0 !important;
   border-radius: 50% !important;
-  @apply !top-[121px] h-[96px] w-[48px] sm:!top-[calc(50%-94px)] sm:h-[68px] sm:w-[34px];
+  @apply !top-[121px] h-[96px] w-[48px] md:!top-[calc(50%-94px)] md:h-[68px] md:w-[34px];
 }
 
 .ol-zoom-in,

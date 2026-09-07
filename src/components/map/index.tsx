@@ -614,10 +614,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
         {isLayerActive && <Legend />}
         {/* The tile credits take the bottom row (see `.ol-attribution` in
-            globals.css). From `lg` the links would share that row, so they stack
-            above the credits; from 1900 there is room for both side by side and
-            the links return to the row itself. */}
-        <Attributions className="absolute bottom-0 z-40 sm:left-auto sm:right-3 lg:bottom-[76px] lg:left-[620px] min-[1900px]:bottom-3" />
+            globals.css). Below `md` the bottom toolbar owns the last 60px, so the
+            links sit above it and the credits stack on top of them, both anchored
+            left. From `lg` the links clear the overlay panel at 620px and sit above
+            the credits' row. From 1440 there is finally room for the credits beside
+            the links' left edge, so the links take the bottom row and the credits
+            stack on top — a single left-aligned column, as on mobile. */}
+        <Attributions className="absolute bottom-[68px] left-3 z-40 md:bottom-0 md:left-auto md:right-3 lg:bottom-[76px] lg:left-[620px] lg:right-auto min-[1440px]:bottom-3" />
       </RMap>
 
       <MapTooltip

@@ -10,6 +10,8 @@ import CategoriesFiltersMobile from '@/containers/globe/filters/mobile';
 import Geostories from '@/containers/globe/geostories';
 import GlobeLiveUpdates from '@/containers/globe/live-updates/desktop';
 
+import { GLOBE_ATTRIBUTION_SLOT_ID } from '@/components/globe/attribution-slot';
+
 import GeostoriesGlobeMobile from './geostories-mobile';
 import LiveUpdatesGlobeMobile from './live-updates-mobile';
 
@@ -20,7 +22,10 @@ function GlobeLayoutDesktop() {
         <Geostories />
       </div>
 
-      <div className="pointer-events-none absolute right-0 top-28 z-[1000] px-5 animate-in fade-in-0 slide-in-from-right-5 duration-700 delay-150 ease-out fill-mode-both">
+      {/* `bottom` as well as `top`: the panel is bounded by the globe area, which
+          ends where the footer starts, so a taller (wrapped) footer cannot be
+          overlapped no matter how much the feed and publications add up to. */}
+      <div className="pointer-events-none absolute bottom-8 right-0 top-28 z-[1000] flex flex-col px-5 animate-in fade-in-0 slide-in-from-right-5 duration-700 delay-150 ease-out fill-mode-both">
         <GlobeLiveUpdates />
       </div>
 
@@ -46,8 +51,15 @@ function GlobeLayoutMobile() {
         <LiveUpdatesGlobeMobile />
       </div>
 
-      <div className="absolute bottom-2 left-5 z-10 md:bottom-[60px] xl:bottom-2">
-        <GlobeExploreData />
+      {/* The 72px the layout reserves under the globe canvas: the explore link
+          centered, then the Cesium credits right-aligned at the footer edge (they
+          portal into the slot). Between `md` and `xl` the footer is `fixed`, so the
+          whole block sits on top of it. */}
+      <div className="absolute inset-x-0 bottom-0 z-10 flex h-[4.5rem] flex-col md:max-xl:bottom-[var(--footer-height,0px)]">
+        <div className="flex h-10 items-center justify-center px-5">
+          <GlobeExploreData className="!m-0" />
+        </div>
+        <div id={GLOBE_ATTRIBUTION_SLOT_ID} className="flex h-8 items-center justify-end px-5" />
       </div>
     </>
   );

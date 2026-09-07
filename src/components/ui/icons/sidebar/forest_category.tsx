@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import cn from '@/lib/classnames';
 
 export const ForestIcon = ({ className }: { className?: string }) => {
   return (

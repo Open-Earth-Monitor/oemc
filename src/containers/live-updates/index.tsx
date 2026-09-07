@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 
 import { useMediaQuery } from 'react-responsive';
 
-import { orderBy } from 'lodash';
+import { orderBy } from 'lodash-es';
 
 import { mobile } from '@/lib/media-queries';
 

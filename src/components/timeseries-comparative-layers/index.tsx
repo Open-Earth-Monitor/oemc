@@ -13,6 +13,7 @@ import { timeSeriesPlaybackAtom } from '@/app/store';
 import { useLayer } from '@/hooks/layers';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
+import DateRangeLabel from '@/components/date-range-label';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -75,7 +76,8 @@ const TimeSeriesComparativeLayers: FC<{
       {/* Select dates */}
       <div className="flex flex-col space-y-2 text-secondary-500">
         <span className="text-sm">Select date:</span>
-        <div className="flex w-full items-center justify-between gap-4">
+        {/* Wraps to a column when the labels are too long to sit side by side */}
+        <div className="flex w-full min-w-0 flex-wrap items-center gap-2">
           {currentRange && (
             <Select
               value={currentRange.value}
@@ -83,16 +85,18 @@ const TimeSeriesComparativeLayers: FC<{
               open={contentVisibility}
               onOpenChange={setContentVisibility}
             >
-              <SelectTrigger className="w-fit min-w-0 max-w-full text-xs font-semibold">
+              <SelectTrigger className="h-auto min-w-[7rem] flex-1 text-xs font-semibold">
                 <div
                   className={cn(
                     buttonVariants({ variant: 'outline', size: 'sm' }),
-                    'w-full justify-between gap-2 overflow-hidden hover:bg-transparent'
+                    'min-h-8 h-auto w-full min-w-0 justify-between gap-2 overflow-hidden py-1 text-left leading-tight hover:bg-transparent'
                   )}
                   title={currentRange?.label}
                 >
-                  <SelectValue>{currentRange?.label}</SelectValue>
-                  <SelectIcon />
+                  <SelectValue className="min-w-0">
+                    <DateRangeLabel label={currentRange?.label} />
+                  </SelectValue>
+                  <SelectIcon className="shrink-0" />
                 </div>
               </SelectTrigger>
               <SelectContent
@@ -104,7 +108,7 @@ const TimeSeriesComparativeLayers: FC<{
                 <ScrollArea className="max-h-[200px] w-full">
                   {range?.map((r: LayerDateRange) => (
                     <SelectItem key={r.value} value={r.value} className="px-2">
-                      {r?.label}
+                      <DateRangeLabel label={r?.label} />
                     </SelectItem>
                   ))}
                 </ScrollArea>
@@ -116,7 +120,7 @@ const TimeSeriesComparativeLayers: FC<{
             <Button
               variant="outline"
               size="sm"
-              className="text-xs font-semibold"
+              className="shrink-0 text-xs font-semibold"
               onClick={() => {
                 setPlaying(false);
                 setComparisonLayers([{ id: comparisonLayerId, opacity }]);
@@ -130,14 +134,15 @@ const TimeSeriesComparativeLayers: FC<{
             <Button
               variant="outline"
               size="sm"
-              className="rounded-full text-xs font-semibold"
+              className="shrink-0 rounded-full text-xs font-semibold"
+              aria-label="Hide average"
               onClick={() => {
                 setPlaying(false);
                 setComparisonLayers(null);
               }}
             >
               <span>Hide average</span>
-              <LuX className="h-4 w-4 text-accent-green" />
+              <LuX className="h-4 w-4 shrink-0 text-accent-green" />
             </Button>
           )}
         </div>

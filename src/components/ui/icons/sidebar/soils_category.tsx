@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import cn from '@/lib/classnames';
 
 export const SoilsIcon = ({ className }: { className?: string }) => {
   return (
