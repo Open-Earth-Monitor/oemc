@@ -106,6 +106,17 @@ test.describe('live updates carousel', () => {
     await expect(first.locator('a')).toHaveCount(0);
   });
 
+  test('"Read more" on the live updates page follows the same link', async ({ page }) => {
+    await page.goto('/usage-stats', { waitUntil: 'load' });
+
+    const readMore = page.getByRole('link', { name: 'Read more' });
+    await expect(readMore.first()).toBeVisible();
+
+    // The boost used to link to its wrapper's `/activity` address.
+    await expect(readMore.first()).toHaveAttribute('href', CARD_URL);
+    await expect(readMore.nth(1)).toHaveAttribute('href', POST_WITH_MEDIA.url);
+  });
+
   test('the dot strip is centred between the arrows and shows whole dots', async ({ page }) => {
     const prev = page.getByRole('button', { name: 'Previous Slide' });
     const next = page.getByRole('button', { name: 'Next Slide' });
