@@ -2,6 +2,20 @@
  * @type { import('next').NextConfig }
  */
 
+/**
+ * Host the geostory covers are served from (see `getGeostoryImageUrl`). Read from
+ * the env so a preview pointed at another media server is still allowed by the
+ * image optimizer; falls back to production.
+ */
+const mediaHost = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_API_IMAGES_URL || 'https://api.earthmonitor.org')
+      .hostname;
+  } catch {
+    return 'api.earthmonitor.org';
+  }
+})();
+
 const nextConfig = {
   reactStrictMode: false,
   // Configure pageExtensions to include md and mdx
@@ -18,7 +32,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'api.earthmonitor.org',
+        hostname: mediaHost,
         pathname: '/media/**',
       },
       {
