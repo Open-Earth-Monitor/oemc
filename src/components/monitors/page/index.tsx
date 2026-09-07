@@ -79,7 +79,7 @@ const MonitorPage: React.FC<{ monitor_id: string }> = ({ monitor_id }) => {
           </div>
         </div>
       </div>
-      <MobileExploreToolbar>
+      <MobileExploreToolbar type="monitor">
         {isLoading ? (
           <Loading />
         ) : (
