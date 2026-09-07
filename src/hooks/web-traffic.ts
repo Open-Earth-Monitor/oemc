@@ -1,6 +1,6 @@
 import { useQuery, useQueries, UseQueryOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { sortBy } from 'lodash';
+import { sortBy } from 'lodash-es';
 
 import { CATEGORIES_COLORS, DEFAULT_COLOR } from '@/constants/categories';
 

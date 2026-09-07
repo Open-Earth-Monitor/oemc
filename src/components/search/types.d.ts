@@ -1,6 +1,4 @@
-import { AriaSearchFieldProps } from '@react-aria/searchfield';
-
-export interface SearchProps extends AriaSearchFieldProps {
+export interface SearchProps {
   placeholder?: string;
   value?: string;
   setValue?: (value: string) => void;

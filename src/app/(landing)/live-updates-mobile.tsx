@@ -29,13 +29,15 @@ export const LiveUpdatesGlobeMobile = () => {
       </DrawerTrigger>
       {/* The drawer is fixed to the bottom of the viewport, so it has to reserve
           the footer's own height — measured, because the mobile footer stacks
-          and is much taller than the desktop one — and scroll within what is
-          left instead of running underneath it. The `!` on the caps is needed
-          because the drawer primitive sets its own `max-h-[80vh]` behind a
-          data-attribute selector, which otherwise outranks them. */}
+          and is much taller than the desktop one — and stop under the header,
+          which ends 86px down (106px from `sm`: 20px offset + its height),
+          scrolling within what is left instead of running over either. The `!`
+          on the caps is needed because the drawer primitive sets its own
+          `max-h-[80vh]` behind a data-attribute selector, which otherwise
+          outranks them. */}
       <DrawerContent
         data-testid="mobile-live-updates-drawer"
-        className="mb-[var(--footer-height,40px)] !max-h-[calc(100dvh-var(--footer-height,40px))] space-y-5 overflow-y-auto bg-black-500 p-5 text-white-500"
+        className="mb-[var(--footer-height,40px)] !max-h-[calc(100dvh-var(--footer-height,40px)-86px)] space-y-5 overflow-y-auto bg-black-500 p-5 text-white-500 sm:!max-h-[calc(100dvh-var(--footer-height,40px)-106px)]"
       >
         <DrawerHeader className="flex flex-row items-center justify-between p-0">
           <DrawerTitle className="inline-flex text-white-500">

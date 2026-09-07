@@ -17,6 +17,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Map controls style update to new designs [OEMC-355](https://vizzuality.atlassian.net/browse/OEMC-355)
 - Timeline playback waits for the map tiles of the current date before advancing, keeping the slider and the map in sync and stopping GeoServer from rendering tiles the frontend discards [OEMC-443](https://vizzuality.atlassian.net/browse/OEMC-443)
 
+### Fixed
+
+- Homepage on phones and tablets: the "Explore our Monitors & Geostories" link and the Cesium credits sit under the globe, centered and right above the footer, instead of overlapping each other over the globe
+- Homepage on phones and tablets: the globe sits 10px lower so it clears the search and filter bar
+- Homepage geostories and live feed drawers stop under the header instead of sliding over it
+
+### Removed
+
+- Unused code: the old monitors catalogue, landing hero and social media components, the web-traffic page, old map layer and legend pieces, time-series chart extras, eight unused shadcn primitives, the cookies banner and the `MobileGlobeBar` container (73 files)
+- 36 npm dependencies nothing imported any more
+
 
 ## v1.0.0-alpha.6
 
