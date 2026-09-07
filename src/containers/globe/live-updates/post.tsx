@@ -14,7 +14,21 @@ export const getPostTarget = (post: PostTypes) => post.reblog ?? post;
  */
 export const getPostLink = (post: PostTypes) => {
   const target = getPostTarget(post);
-  return target.card?.url || target.url || undefined;
+  const candidate = target.card?.url || target.url;
+  return candidate && isHttpUrl(candidate) ? candidate : undefined;
+};
+
+/**
+ * `card.url` is whatever the linked site declared about itself, relayed by
+ * Fosstodon; only web addresses may end up in an `href`.
+ */
+const isHttpUrl = (raw: string) => {
+  try {
+    const { protocol } = new URL(raw);
+    return protocol === 'https:' || protocol === 'http:';
+  } catch {
+    return false;
+  }
 };
 
 /**
