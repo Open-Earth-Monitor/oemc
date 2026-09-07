@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Homepage geostories and live feed drawers stop under the header instead of sliding over it
 - Timeline playback: only one of the two mounted Timelines (desktop and mobile legend) drives playback, so dates are no longer skipped in pairs, and each date stays on screen for the full interval after its tiles load instead of switching the moment they land [OEMC-443](https://vizzuality.atlassian.net/browse/OEMC-443)
 - Map tooltip treats a value of 0 as data: layers that are 0 over most of the map, such as Bare soil fraction (BSF) dynamics, no longer report "No data" and hide the point histogram there
+- Map page on phones: the bottom toolbar reads "Geostory" on a geostory and "Monitor" on a monitor instead of always "Monitor", and its open drawer stops under the header instead of sliding over it on short screens
 
 ### Removed
 

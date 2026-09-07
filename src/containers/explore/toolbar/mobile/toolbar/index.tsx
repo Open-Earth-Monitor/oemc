@@ -10,7 +10,23 @@ import Legend from '@/components/map/legend/component';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-const MobileExploreToolbar: FC<PropsWithChildren> = ({ children }) => {
+/**
+ * The open drawer reaches up to the page header and no further. The header on
+ * phones (`sm:hidden` in the explore layout) is 66px tall — 10px padding above
+ * and below the 46px menu pill — and the toolbar's own two buttons take 60px
+ * under the drawer, so the drawer gets everything between: 100dvh − 126px. The
+ * previous `80vh` was blind to the header and slid under it on short screens.
+ * (Written out twice below: Tailwind only picks up literal class names.)
+ */
+const LABELS = {
+  monitor: 'Monitor',
+  geostory: 'Geostory',
+} as const;
+
+const MobileExploreToolbar: FC<PropsWithChildren<{ type: keyof typeof LABELS }>> = ({
+  type,
+  children,
+}) => {
   const [showDetails, setShowDetails] = useState(true);
   const [showLegend, setShowLegend] = useState(false);
 
@@ -18,18 +34,14 @@ const MobileExploreToolbar: FC<PropsWithChildren> = ({ children }) => {
     <div className="fixed bottom-0 left-0 z-50 w-full text-sm md:hidden">
       {/* Drawer / Sheet */}
       <div
-        className="
-          z-50 max-h-[80vh]
-           bg-black-500 text-white-500
-          transition-transform
-          "
+        className="z-50 max-h-[calc(100dvh-126px)] bg-black-500 text-white-500 transition-transform"
         style={{
           transform: showDetails || showLegend ? 'translateY(0)' : 'translateY(100%)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {showDetails && (
-          <div className={cn('relative  overflow-hidden p-4', showDetails && 'min-h-[80vh]')}>
+          <div className="relative min-h-[calc(100dvh-126px)] overflow-hidden p-4">
             <div className="absolute inset-0 z-10 flex flex-col overflow-hidden">
               <header className="flex shrink-0 px-6 pb-2 pt-6">
                 <BackToMonitorsAndGeostories />
@@ -68,7 +80,7 @@ const MobileExploreToolbar: FC<PropsWithChildren> = ({ children }) => {
             setShowDetails(!showDetails);
           }}
         >
-          <span>Monitor</span>
+          <span>{LABELS[type]}</span>
           <ChevronDownIcon
             size={24}
             className={cn({

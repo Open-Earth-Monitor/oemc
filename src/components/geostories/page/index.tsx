@@ -110,7 +110,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
           </div>
         </div>
       </div>
-      <MobileExploreToolbar>
+      <MobileExploreToolbar type="geostory">
         {isGeostoryLoading ? (
           <Loading />
         ) : (
