@@ -16,8 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Map controls style update to new designs [OEMC-355](https://vizzuality.atlassian.net/browse/OEMC-355)
 - Timeline playback waits for the map tiles of the current date before advancing, keeping the slider and the map in sync and stopping GeoServer from rendering tiles the frontend discards [OEMC-443](https://vizzuality.atlassian.net/browse/OEMC-443)
+- Homepage loading: geostory covers, Fosstodon avatars and post pictures are resized and served as WebP by Next's image optimizer instead of at their original size (one cover was 23 MiB for a 79px thumbnail); the starfield background is a preloaded, viewport-sized WebP instead of a 1.2 MiB CSS PNG; the Inter font swaps in instead of hiding text while it loads; the API, Fosstodon, Zotero and Esri origins are preconnected; the geostories list is fetched once instead of twice
+- Homepage carousel dots are 24px targets (the discs stay 8px), meeting the minimum touch target size
 
 ### Fixed
+
+- Zenodo publications load again: Zenodo sends no CORS headers, so the browser now reads them through the app's own `/api/zenodo/records` route, which also caches the answer for 15 minutes
+- Live feed cards no longer read as identical links to screen readers, and the author name is no longer a heading that skipped from `h1` to `h4`
+- Cesium's hidden credit links, which had no `href`, are kept out of the document so search engines stop flagging them as uncrawlable
 
 - Homepage on phones and tablets: the "Explore our Monitors & Geostories" link and the Cesium credits sit under the globe, centered and right above the footer, instead of overlapping each other over the globe
 - Homepage on phones and tablets: the globe sits 10px lower so it clears the search and filter bar
@@ -29,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Unused code: the old monitors catalogue, landing hero and social media components, the web-traffic page, old map layer and legend pieces, time-series chart extras, eight unused shadcn primitives, the cookies banner and the `MobileGlobeBar` container (73 files)
 - 36 npm dependencies nothing imported any more
+- The outdated direct `sharp` dependency: Next brings the version its image optimizer needs
 
 
 ## v1.0.0-alpha.6

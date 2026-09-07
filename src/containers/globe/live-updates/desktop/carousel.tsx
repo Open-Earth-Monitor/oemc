@@ -8,7 +8,7 @@ import cn from '@/lib/classnames';
 
 import type { Post as PostTypes } from '@/hooks/social-media';
 
-import { Post, getPostLink } from '@/containers/globe/live-updates/post';
+import { Post, getPostLink, getPostTarget } from '@/containers/globe/live-updates/post';
 
 import { Carousel, CarouselContent, CarouselItem, useCarousel } from '@/components/ui/carousel';
 import type { CarouselApi } from '@/components/ui/carousel';
@@ -46,12 +46,12 @@ const CarouselDots = ({
   activeIndex: number;
   visibleDots?: number;
 }) => {
-  const DOT_SIZE = 8; // h-2 w-2 => 8px
-  const GAP = 8; // gap-2 => 8px
-  const STEP = DOT_SIZE + GAP;
-  // The active dot is scaled to 150% and needs 2px of air on every side so the
-  // viewport does not clip it at either end of the strip.
-  const PADDING = 4; // p-1 => 4px
+  // Each dot is an 8px disc inside a 24px button: 24px is the minimum target
+  // size that passes WCAG 2.5.8, and the 8px discs alone failed the audit. The
+  // buttons sit edge to edge, so the step between dots is the button size and
+  // the scaled active disc (12px) still fits inside its own button.
+  const TARGET_SIZE = 24; // h-6 w-6 => 24px
+  const STEP = TARGET_SIZE;
 
   const maxStart = Math.max(0, total - visibleDots);
 
@@ -63,11 +63,10 @@ const CarouselDots = ({
   }, [activeIndex, total, visibleDots, maxStart]);
 
   const translateX = startIndex * STEP;
-  // The strip is exactly as wide as the dots it shows plus the padding around
-  // them. Padding the strip without counting it here pushed the dots off-centre
-  // and clipped the last visible one.
+  // The strip is exactly as wide as the buttons it shows; anything wider
+  // pushed the dots off-centre and clipped the last visible one.
   const shownDots = Math.min(total, visibleDots);
-  const viewportWidth = shownDots * DOT_SIZE + (shownDots - 1) * GAP + PADDING * 2;
+  const viewportWidth = shownDots * TARGET_SIZE;
 
   if (!total) return null;
 
@@ -78,7 +77,7 @@ const CarouselDots = ({
       data-testid="live-updates-dots"
     >
       <div
-        className="flex items-center gap-2 p-1 transition-transform duration-300 ease-out"
+        className="flex items-center transition-transform duration-300 ease-out"
         style={{ transform: `translateX(-${translateX}px)` }}
       >
         {Array.from({ length: total }).map((_, index) => (
@@ -87,16 +86,32 @@ const CarouselDots = ({
             type="button"
             onClick={() => api?.scrollTo(index)}
             aria-label={`Go to slide ${index + 1}`}
-            className={`h-2 w-2 shrink-0 rounded-full transition-all ${
-              activeIndex === index
-                ? 'scale-150 bg-gradient-to-br from-[#1EEDBF] to-[#75A1FF]'
-                : 'bg-white-500/40'
-            }`}
-          />
+            aria-current={activeIndex === index ? 'true' : undefined}
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+          >
+            <span
+              aria-hidden="true"
+              className={`block h-2 w-2 rounded-full transition-all ${
+                activeIndex === index
+                  ? 'scale-150 bg-gradient-to-br from-[#1EEDBF] to-[#75A1FF]'
+                  : 'bg-white-500/40'
+              }`}
+            />
+          </button>
         ))}
       </div>
     </div>
   );
+};
+
+/** What following a card opens, for assistive tech; see `PostCard`. */
+const describePostLink = (post: PostTypes) => {
+  const target = getPostTarget(post);
+  if (target.card?.title) return `Opens “${target.card.title}”`;
+  const date = new Date(post.created_at);
+  return Number.isNaN(date.getTime())
+    ? 'Opens the post on Fosstodon'
+    : `Opens the post from ${date.toLocaleDateString('en-GB', { dateStyle: 'long' })}`;
 };
 
 /**
@@ -137,6 +152,9 @@ const PostCard = ({
       data-testid="live-updates-post"
     >
       <Post post={post} insideLink />
+      {/* A card with a picture has only the author in its text, so several cards
+          would read as identical links. Name what each one opens. */}
+      <span className="sr-only">{describePostLink(post)}</span>
     </a>
   );
 };

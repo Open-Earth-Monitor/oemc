@@ -205,6 +205,14 @@ export default function Map3D({
 
   const [hover, setHover] = useState<HoverState>(null);
 
+  // Cesium mounts its own credit widgets: an "expand" anchor in the credit
+  // container and a lightbox with a "close" anchor in the viewport. Both are
+  // `<a>` without `href`, hidden by CSS, and audited as uncrawlable links. They
+  // are given detached elements so they never enter the document; the credits
+  // themselves are read off `viewer.creditDisplay` by `CesiumAttribution`.
+  const [creditContainer] = useState(() => document.createElement('div'));
+  const [creditViewport] = useState(() => document.createElement('div'));
+
   return (
     <div
       className={cn(
@@ -230,6 +238,8 @@ export default function Map3D({
         skyBox={false}
         orderIndependentTranslucency={false}
         contextOptions={CONTEXT_OPTIONS}
+        creditContainer={creditContainer}
+        creditViewport={creditViewport}
       >
         <ImageryLayer imageryProvider={esriImageryProvider} />
         <Scene backgroundColor={TRANSPARENT} />

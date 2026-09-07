@@ -27,8 +27,10 @@ export const PostHeader = ({ post }: { post: PostTypes }) => {
         height={56}
         className="shrink-0 rounded-full"
       />
+      {/* Not a heading: the pages that show posts have only an `h1`, so an `h4`
+          here skipped two levels in the outline. */}
       <div className="font-medium text-white-500">
-        <h4>{post?.reblog?.account.display_name || post?.account.display_name}</h4>
+        <p>{post?.reblog?.account.display_name || post?.account.display_name}</p>
         <span className="text-accent-green">@{data?.account.username}</span>
       </div>
     </div>
