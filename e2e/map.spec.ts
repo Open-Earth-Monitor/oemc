@@ -308,4 +308,61 @@ test.describe('map tooltip', () => {
     await expect(coords).toContainText('Coordinates:');
     await expect(coords).toContainText(/-?\d+\.\d+°,\s*-?\d+\.\d+°/);
   });
+
+  // GetFeatureInfo answers with the pixel value. For fractions, counts and sums
+  // (e.g. bare soil fraction) that value is 0 over most of the map, and the point
+  // query still has a full series there, so 0 must offer the histogram. Only a
+  // missing value means there is nothing at this location.
+  for (const { name, properties, expectHistogram } of [
+    { name: 'a value of 0', properties: { GRAY_INDEX: 0 }, expectHistogram: true },
+    { name: 'a null value', properties: { GRAY_INDEX: null }, expectHistogram: false },
+  ]) {
+    test(`${
+      expectHistogram ? 'offers' : 'withholds'
+    } the point histogram when GetFeatureInfo returns ${name}`, async ({ page }) => {
+      await page.route(
+        /geoserver\.earthmonitor\.org\/geoserver\/.*REQUEST=GetFeatureInfo/i,
+        (route) =>
+          route.fulfill({
+            contentType: 'application/json',
+            body: JSON.stringify({
+              type: 'FeatureCollection',
+              features: [{ type: 'Feature', properties }],
+            }),
+          })
+      );
+
+      const layerWithWms = {
+        ...LAYER_L1,
+        gs_name: 'oem:landcover',
+        gs_base_wms: 'https://geoserver.earthmonitor.org/geoserver/oem/wms',
+      };
+      await mockAPIs(page);
+      await page.route(new RegExp(`${API_URL}/layers`), (route) =>
+        route.fulfill({ json: [layerWithWms] })
+      );
+      await page.route(new RegExp(`${API_URL}/monitors/m1/layers`), (route) =>
+        route.fulfill({ json: [layerWithWms] })
+      );
+
+      await page.goto(LAYER_URL, { waitUntil: 'networkidle' });
+
+      const viewport = page.locator('.ol-viewport').first();
+      await expect(viewport).toBeVisible();
+      const box = await viewport.boundingBox();
+      if (!box) throw new Error('map viewport not laid out');
+      await page.mouse.click(box.x + box.width - 100, box.y + box.height / 2);
+
+      await expect(page.getByTestId('map-tooltip')).toBeVisible();
+      if (expectHistogram) {
+        await expect(page.getByTestId('map-tooltip-point-histogram')).toHaveText(
+          'Show point histogram'
+        );
+        await expect(page.getByTestId('map-tooltip-no-data')).toHaveCount(0);
+      } else {
+        await expect(page.getByTestId('map-tooltip-no-data')).toBeVisible();
+        await expect(page.getByTestId('map-tooltip-point-histogram')).toHaveCount(0);
+      }
+    });
+  }
 });
