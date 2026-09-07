@@ -37,13 +37,13 @@ test.describe('recent publications', () => {
   // Both feeds are stubbed: the section must render deterministically and the
   // tests must not depend on Zenodo or Zotero being reachable from CI.
   test.beforeEach(async ({ page }) => {
-    // Both hosts are cross-origin, so the stubs must send the CORS header the
-    // real APIs send — without it the browser discards the mocked response.
+    // Zotero is cross-origin, so its stub must send the CORS header the real API
+    // sends — without it the browser discards the mocked response. Zenodo is
+    // reached through the app's own `/api/zenodo/records` proxy (Zenodo itself
+    // sends no CORS headers), so that stub is same-origin.
     const CORS_HEADERS = { 'Access-Control-Allow-Origin': '*' };
 
-    await page.route('**/zenodo.org/api/records**', (route) =>
-      route.fulfill({ json: ZENODO_RECORD, headers: CORS_HEADERS })
-    );
+    await page.route('**/api/zenodo/records**', (route) => route.fulfill({ json: ZENODO_RECORD }));
     await page.route('**/api.zotero.org/groups/**', (route) =>
       route.fulfill({ json: ZOTERO_ITEM, headers: CORS_HEADERS })
     );
@@ -94,16 +94,16 @@ test.describe('recent publications', () => {
   });
 
   test('drops the publications list when both libraries fail', async ({ page }) => {
-    await page.unroute('**/zenodo.org/api/records**');
+    await page.unroute('**/api/zenodo/records**');
     await page.unroute('**/api.zotero.org/groups/**');
-    await page.route('**/zenodo.org/api/records**', (route) => route.abort());
+    await page.route('**/api/zenodo/records**', (route) => route.abort());
     await page.route('**/api.zotero.org/groups/**', (route) => route.abort());
 
     // Both requests are observed before asserting, so the check is about the
     // rendered result rather than about being early. `networkidle` is unusable
     // here: the globe streams Cesium tiles for as long as the page is open.
     const zenodoFailed = page.waitForEvent('requestfailed', (request) =>
-      request.url().includes('zenodo.org/api/records')
+      request.url().includes('/api/zenodo/records')
     );
     const zoteroFailed = page.waitForEvent('requestfailed', (request) =>
       request.url().includes('api.zotero.org/groups')
@@ -121,12 +121,11 @@ test.describe('recent publications', () => {
   test('lists records from both libraries newest first in the publications tab', async ({
     page,
   }) => {
-    await page.unroute('**/zenodo.org/api/records**');
+    await page.unroute('**/api/zenodo/records**');
     // Deliberately out of order: the hook must sort by publication date, not
     // trust the order Zenodo returns.
-    await page.route('**/zenodo.org/api/records**', (route) =>
+    await page.route('**/api/zenodo/records**', (route) =>
       route.fulfill({
-        headers: { 'Access-Control-Allow-Origin': '*' },
         json: {
           hits: {
             hits: [
