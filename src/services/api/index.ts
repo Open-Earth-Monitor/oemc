@@ -29,8 +29,10 @@ export const APIOpenStreetMapLocation = axios.create({
   headers: {},
 });
 
+// Zenodo sends no CORS headers, so the browser goes through the app's own route
+// handler (`src/app/api/zenodo`), which also caches the answer for everyone.
 export const APIZenodo = axios.create({
-  baseURL: 'https://zenodo.org/api',
+  baseURL: '/api/zenodo',
   headers: {},
 });
 
