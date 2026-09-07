@@ -118,15 +118,28 @@ test.describe('live updates carousel', () => {
   });
 
   test('the dot strip is centred between the arrows and shows whole dots', async ({ page }) => {
-    const prev = page.getByRole('button', { name: 'Previous Slide' });
-    const next = page.getByRole('button', { name: 'Next Slide' });
-    const strip = page.getByTestId('live-updates-dots');
+    // The feed panel slides in for 700ms after load. Boxes read while it moves
+    // disagree with each other, so wait for every finite animation to finish
+    // and then take all the rectangles in a single call, from the same frame.
+    await page.evaluate(() =>
+      Promise.all(
+        document
+          .getAnimations()
+          .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+          .map((a) => a.finished)
+      )
+    );
 
-    const [prevBox, nextBox, stripBox] = await Promise.all([
-      prev.boundingBox(),
-      next.boundingBox(),
-      strip.boundingBox(),
-    ]);
+    const { prevBox, nextBox, stripBox, boxes } = await page.evaluate(() => {
+      const rect = (el: Element | null) => el?.getBoundingClientRect().toJSON() as DOMRect;
+      const strip = document.querySelector('[data-testid="live-updates-dots"]');
+      return {
+        prevBox: rect(document.querySelector('button[aria-label="Previous Slide"]')),
+        nextBox: rect(document.querySelector('button[aria-label="Next Slide"]')),
+        stripBox: rect(strip),
+        boxes: Array.from(strip?.querySelectorAll('button') ?? []).map(rect),
+      };
+    });
 
     // Centred in the gap left between the two arrow buttons.
     const gapCentre = (prevBox.x + prevBox.width + nextBox.x) / 2;
@@ -134,9 +147,6 @@ test.describe('live updates carousel', () => {
 
     // Six dots are inside the strip, every one of them whole: none is cut at the
     // edge by a strip narrower than the dots it holds.
-    const boxes = await strip
-      .getByRole('button')
-      .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().toJSON() as DOMRect));
     const inside = boxes.filter(
       (b) => b.right > stripBox.x && b.left < stripBox.x + stripBox.width
     );

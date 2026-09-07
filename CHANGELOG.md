@@ -24,7 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Zenodo publications load again: Zenodo sends no CORS headers, so the browser now reads them through the app's own `/api/zenodo/records` route, which also caches the answer for 15 minutes
 - Live feed cards no longer read as identical links to screen readers, and the author name is no longer a heading that skipped from `h1` to `h4`
 - Cesium's hidden credit links, which had no `href`, are kept out of the document so search engines stop flagging them as uncrawlable
-
 - Homepage on phones and tablets: the "Explore our Monitors & Geostories" link and the Cesium credits sit under the globe, centered and right above the footer, instead of overlapping each other over the globe
 - Homepage on phones and tablets: the globe sits 10px lower so it clears the search and filter bar
 - Homepage geostories and live feed drawers stop under the header instead of sliding over it
