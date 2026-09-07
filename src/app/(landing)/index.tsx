@@ -35,7 +35,10 @@ export default function Page() {
     ]
   );
   const allPins = useGeostoryPins(params);
-  const { data: geostories } = useGeostories({});
+  // Same params as the pins (and the list panel) so React Query serves all three
+  // from one request. With no params this was a second, identical 700 KiB fetch
+  // of every geostory on every landing load.
+  const { data: geostories } = useGeostories({ params });
   const [selectedGeostoryId, setSelectedGeostoryId] = useState<string | null>(null);
 
   const selectedGeostory = useMemo(
