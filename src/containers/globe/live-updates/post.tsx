@@ -1,7 +1,27 @@
-import { Post as PostTypes } from '@/hooks/social-media';
+import Image from 'next/image';
+
+import type { MediaAttachment, Post as PostTypes } from '@/hooks/social-media';
 
 import { PostHeader } from '@/components/social-media/post-header';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+
+/**
+ * A post's picture. Fosstodon's `preview_url` is a 400–600px PNG, often 300 KiB+;
+ * as a CSS background it was downloaded as-is. Through `next/image` it is resized
+ * to the card and re-encoded as WebP. The card is 320px wide on the desktop
+ * globe and up to 448px (`max-w-md`) below `xl`.
+ */
+const PostMedia = ({ attachment }: { attachment: MediaAttachment }) => (
+  <div className="relative h-[150px] w-full flex-1 overflow-hidden rounded-sm">
+    <Image
+      src={attachment.preview_url}
+      alt={attachment.description ?? ''}
+      fill
+      sizes="(min-width: 1280px) 320px, 448px"
+      className="object-cover"
+    />
+  </div>
+);
 
 /** The status a card is about: the boosted one when the post is a boost. */
 export const getPostTarget = (post: PostTypes) => post.reblog ?? post;
@@ -61,14 +81,7 @@ export const Post = ({
             <CarouselContent>
               {data.media_attachments.map((att, index) => (
                 <CarouselItem key={index} className="w-full basis-auto">
-                  <div
-                    className="relative h-[150px] w-full flex-1 overflow-hidden rounded-sm"
-                    style={{
-                      backgroundImage: `url(${att.preview_url})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  />
+                  <PostMedia attachment={att} />
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -76,14 +89,7 @@ export const Post = ({
         )}
 
         {!!data?.media_attachments.length && data?.media_attachments.length === 1 && (
-          <div
-            className="relative h-[150px] w-full flex-1 overflow-hidden rounded-sm"
-            style={{
-              backgroundImage: `url(${data?.media_attachments[0].preview_url})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
+          <PostMedia attachment={data.media_attachments[0]} />
         )}
         {/* If no media attachments, show the card description */}
         {!data?.media_attachments?.length && (

@@ -1,3 +1,5 @@
+import { preconnect, prefetchDNS } from 'react-dom';
+
 import { Metadata } from 'next';
 
 import { Inter } from 'next/font/google';
@@ -26,7 +28,10 @@ const inter = Inter({
   fallback: ['system-ui', 'Helvetica Neue', 'Helvetica', 'Arial'],
   weight: ['400', '500'],
   style: ['normal'],
-  display: 'block',
+  // `block` hid all body text for up to 3 s while the file downloaded (1.7 s on
+  // a throttled run). The size-adjusted fallback next/font generates makes the
+  // swap nearly invisible, so text is readable from first paint.
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -105,7 +110,23 @@ const satoshi = localFont({
   fallback: ['system-ui', 'Helvetica Neue', 'Helvetica', 'Arial'],
 });
 
+/**
+ * Origins every page talks to as soon as it hydrates. Opening the connections
+ * while the HTML is still parsing takes the DNS + TLS round trips off the
+ * critical path of the first data request.
+ */
+const apiOrigin = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_API_URL ?? '').origin;
+  } catch {
+    return null;
+  }
+})();
+
 export default function RootLayout({ children }) {
+  if (apiOrigin) preconnect(apiOrigin);
+  prefetchDNS('https://plausible.earthmonitor.org');
+
   return (
     <html lang="en" className={`${satoshi.variable} ${inter.variable}`}>
       <body className="mx-auto min-h-screen overflow-x-hidden bg-black-500 font-inter">

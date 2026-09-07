@@ -1,10 +1,37 @@
+import { preconnect } from 'react-dom';
+
+import Image from 'next/image';
+
 import Header from '@/components/header';
+
+import bg from '../../../public/images/landing/bg.png';
 
 import { GlobeLayoutResponsive } from './globe-layout-responsive';
 
 export default function GlobeLayout({ children }: { children: React.ReactNode }) {
+  // Third parties the landing page hits right after hydration: the live feed,
+  // the publications list and the globe's imagery tiles.
+  preconnect('https://fosstodon.org');
+  preconnect('https://cdn.fosstodon.org');
+  preconnect('https://api.zotero.org');
+  preconnect('https://server.arcgisonline.com');
+
   return (
-    <div className="relative flex-1 overflow-hidden bg-[url('/images/landing/bg.png')] bg-cover bg-right-bottom text-primary">
+    <div className="relative flex-1 overflow-hidden text-primary">
+      {/* The starfield is the page's largest paint. As a CSS background it was
+          a 1.2 MiB PNG the browser only discovered after the stylesheet, with no
+          way to resize it per viewport. As an image element it is preloaded from
+          the HTML with high fetch priority, served as WebP and sized to the
+          screen. Empty alt: it is decoration behind the globe. */}
+      <Image
+        src={bg}
+        alt=""
+        fill
+        priority
+        fetchPriority="high"
+        sizes="100vw"
+        className="object-cover object-right-bottom"
+      />
       <h1 className="sr-only">Open Earth Monitor – Geospatial Data Explorer</h1>
       {/* Globe - full-screen base layer.
           In the mobile layout 72px are left free at the bottom for the explore link
