@@ -56,6 +56,9 @@ const nextConfig = {
         hostname: 'localhost',
       },
     ],
+    // Next 16 only encodes the qualities listed here. 75 is the default; 90 is
+    // for the small geostory covers, where compression softness shows.
+    qualities: [75, 90],
     // Covers and avatars change rarely; keep the optimized variants for 30 days
     // rather than the default 4 hours so repeat loads never hit the origin.
     minimumCacheTTL: 60 * 60 * 24 * 30,
