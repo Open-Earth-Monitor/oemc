@@ -61,9 +61,12 @@ export const GeostoriesGlobeMobile = () => {
             open states actually reach the icon. */}
         <ListSVG className="h-6 w-6" />
       </DrawerTrigger>
+      {/* Same sizing as the live feed drawer: clear the footer below and the
+          header above, scroll the rest. See `live-updates-mobile.tsx` for the
+          numbers and why the caps need `!`. */}
       <DrawerContent
         data-testid="mobile-geostories-drawer"
-        className="max-h-[calc(100dvh-80px)] space-y-5 bg-black-500 p-5 text-white-500 sm:max-h-[calc(100dvh-100px)]"
+        className="mb-[var(--footer-height,40px)] !max-h-[calc(100dvh-var(--footer-height,40px)-86px)] space-y-5 overflow-y-auto bg-black-500 p-5 text-white-500 sm:!max-h-[calc(100dvh-var(--footer-height,40px)-106px)]"
       >
         <DrawerHeader className="flex flex-row items-center justify-between p-0">
           <DrawerTitle className="inline-flex text-white-500">Geostories</DrawerTitle>

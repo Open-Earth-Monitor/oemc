@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import cn from '@/lib/classnames';
 
 export const ClimateAndHealthIcon = ({ className }: { className?: string }) => {
   return (
