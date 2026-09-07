@@ -15,7 +15,12 @@ import API from 'services/api';
  * Example: getGeostoryImageUrl('g1') → '{API_URL}/media/g1.jpg'
  */
 export const getGeostoryImageUrl = (geostoryId: string | number): string => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_IMAGES_URL || 'https://api.earthmonitor.org';
+  // The env value may carry a trailing slash (it does on Vercel). The media
+  // server tolerated `//media/…`, but the image optimizer matches the path
+  // against `/media/**` and rejects the double slash with a 400.
+  const baseUrl = (
+    process.env.NEXT_PUBLIC_API_IMAGES_URL || 'https://api.earthmonitor.org'
+  ).replace(/\/+$/, '');
   return `${baseUrl}/media/${geostoryId}.jpg`;
 };
 
