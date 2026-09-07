@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Homepage on phones and tablets: the "Explore our Monitors & Geostories" link and the Cesium credits sit under the globe, centered and right above the footer, instead of overlapping each other over the globe
 - Homepage on phones and tablets: the globe sits 10px lower so it clears the search and filter bar
 - Homepage geostories and live feed drawers stop under the header instead of sliding over it
+- Timeline playback: only one of the two mounted Timelines (desktop and mobile legend) drives playback, so dates are no longer skipped in pairs, and each date stays on screen for the full interval after its tiles load instead of switching the moment they land [OEMC-443](https://vizzuality.atlassian.net/browse/OEMC-443)
 - Map tooltip treats a value of 0 as data: layers that are 0 over most of the map, such as Bare soil fraction (BSF) dynamics, no longer report "No data" and hide the point histogram there
 
 ### Removed
