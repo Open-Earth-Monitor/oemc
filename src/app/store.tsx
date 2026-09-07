@@ -18,6 +18,16 @@ export const timeSeriesPlaybackAtom = atom<boolean>(true);
 /** Tiles in flight, keyed per WMS layer instance. Written by the map layers only. */
 export const mapTilesLoadingAtom = atom<Record<string, boolean>>({});
 
+/**
+ * Id of the Timeline instance that drives playback. The legend is rendered once per
+ * breakpoint, so two Timelines are mounted at any time with one hidden by CSS; only the
+ * owner steps, otherwise both advance the date and dates get skipped.
+ *
+ * No initial value on purpose: with `strict` off, `atom<string | null>(null)` resolves to
+ * the read-only overload and the setter types as `never`.
+ */
+export const timelinePlaybackOwnerAtom = atom<string>();
+
 /** True while any WMS layer still has tiles loading. Paces timeline playback. */
 export const areMapTilesLoadingAtom = atom<boolean>((get) =>
   Object.values(get(mapTilesLoadingAtom)).some(Boolean)
