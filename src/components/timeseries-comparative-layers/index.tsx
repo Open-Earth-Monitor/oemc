@@ -14,6 +14,7 @@ import { useLayer } from '@/hooks/layers';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
 import DateRangeLabel from '@/components/date-range-label';
+import Timeline from '@/components/timeline';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -24,8 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-import Timeline from './timeline';
 
 const TimeSeriesComparativeLayers: FC<{
   layerId: LayerParsed['layer_id'];
