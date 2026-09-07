@@ -5,7 +5,10 @@ import { FC, useCallback, useEffect, useId, useRef } from 'react';
 import { useSetAtom } from 'jotai';
 import TileLayer from 'ol/layer/Tile';
 import { unByKey } from 'ol/Observable';
+import type { TileSourceEvent } from 'ol/source/Tile';
 import TileWMS from 'ol/source/TileWMS';
+import type Tile from 'ol/Tile';
+import TileState from 'ol/TileState';
 import { RLayerTileWMSProps, useOL } from 'rlayers';
 
 import { mapTilesLoadingAtom } from '@/app/store';
@@ -32,6 +35,12 @@ interface BufferedTileWMSProps extends RLayerTileWMSProps {
  * tile requests on `updateParams()`, so firing one per playback tick leaves GeoServer
  * rendering tiles nobody will use. Requests that arrive while tiles are loading are
  * coalesced into the latest date, applied once the source goes idle.
+ *
+ * In-flight tiles are tracked per tile, through each tile's own `change` event, rather than
+ * by counting the source's `tileloadend` / `tileloaderror` events. The renderer evicts the
+ * oldest tiles from its cache after a render and disposes them, which moves a still-loading
+ * tile to `EMPTY` without the source emitting any end event. A counter would never return
+ * to zero after that, and playback would wait on the map forever.
  */
 const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
   url,
@@ -59,7 +68,8 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
   const onLayerChangeRef = useRef(onLayerChange);
   onLayerChangeRef.current = onLayerChange;
 
-  const loadingTilesRef = useRef(0);
+  /** Tiles still loading, each with the function that stops listening to it. */
+  const loadingTilesRef = useRef(new Map<Tile, () => void>());
   const pendingDateRef = useRef<string | undefined>(undefined);
   const hasPendingDateRef = useRef(false);
   const appliedDateRef = useRef(date);
@@ -92,6 +102,12 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
     if (timeoutRef.current === null) return;
     clearTimeout(timeoutRef.current);
     timeoutRef.current = null;
+  }, []);
+
+  /** Forget every tile still tracked as loading and stop listening to it. */
+  const releaseLoadingTiles = useCallback(() => {
+    loadingTilesRef.current.forEach((unlisten) => unlisten());
+    loadingTilesRef.current.clear();
   }, []);
 
   const applyDate = useCallback((nextDate: string | undefined) => {
@@ -148,36 +164,44 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
 
     // The source starts fresh: no tiles in flight, nothing coalesced from the previous one
     clearPendingTimeout();
-    loadingTilesRef.current = 0;
+    releaseLoadingTiles();
     hasPendingDateRef.current = false;
     pendingDateRef.current = undefined;
     appliedDateRef.current = dateRef.current;
     publishLoading(false);
 
-    const onTileLoadStart = () => {
-      loadingTilesRef.current += 1;
-      publishLoading(true);
-    };
-
-    const onTileLoadSettled = () => {
-      loadingTilesRef.current = Math.max(0, loadingTilesRef.current - 1);
-      if (loadingTilesRef.current > 0) return;
+    const onTileSettled = (tile: Tile) => {
+      loadingTilesRef.current.get(tile)?.();
+      loadingTilesRef.current.delete(tile);
+      if (loadingTilesRef.current.size > 0) return;
       publishLoading(false);
       flushPendingDate();
     };
 
-    const listenerKeys = [
-      source.on('tileloadstart', onTileLoadStart),
-      source.on('tileloadend', onTileLoadSettled),
-      source.on('tileloaderror', onTileLoadSettled),
-    ];
+    // A tile is settled the moment its state leaves LOADING, whatever it moves to: LOADED,
+    // ERROR, or EMPTY when the renderer disposes it before the request finished.
+    const onTileLoadStart = ({ tile }: TileSourceEvent) => {
+      if (loadingTilesRef.current.has(tile)) return;
+
+      const onTileChange = () => {
+        if (tile.getState() === TileState.LOADING) return;
+        onTileSettled(tile);
+      };
+
+      tile.addEventListener('change', onTileChange);
+      loadingTilesRef.current.set(tile, () => tile.removeEventListener('change', onTileChange));
+      publishLoading(true);
+    };
+
+    const listenerKey = source.on('tileloadstart', onTileLoadStart);
 
     layerRef.current = layer;
     map.addLayer(layer);
     onLayerChangeRef.current?.(layer);
 
     return () => {
-      unByKey(listenerKeys);
+      unByKey(listenerKey);
+      releaseLoadingTiles();
       clearPendingTimeout();
       map.removeLayer(layer);
       layerRef.current = null;
@@ -191,7 +215,7 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
     if (date === appliedDateRef.current) return;
 
     // Source idle: request straight away
-    if (loadingTilesRef.current === 0) {
+    if (loadingTilesRef.current.size === 0) {
       clearPendingTimeout();
       hasPendingDateRef.current = false;
       pendingDateRef.current = undefined;
@@ -205,13 +229,13 @@ const BufferedTileWMS: FC<BufferedTileWMSProps> = ({
 
     clearPendingTimeout();
     timeoutRef.current = setTimeout(() => {
-      // A tile load event never arrived: treat the source as idle so neither the pending
-      // date nor timeline playback stays blocked on it.
-      loadingTilesRef.current = 0;
+      // A tile never left LOADING: treat the source as idle so neither the pending date
+      // nor timeline playback stays blocked on it.
+      releaseLoadingTiles();
       publishLoading(false);
       flushPendingDate();
     }, PENDING_DATE_TIMEOUT);
-  }, [date, applyDate, clearPendingTimeout, flushPendingDate, publishLoading]);
+  }, [date, applyDate, clearPendingTimeout, flushPendingDate, publishLoading, releaseLoadingTiles]);
 
   useEffect(() => clearPendingTimeout, [clearPendingTimeout]);
 
