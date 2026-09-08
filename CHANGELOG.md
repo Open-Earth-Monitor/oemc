@@ -30,6 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Timeline playback: only one of the two mounted Timelines (desktop and mobile legend) drives playback, so dates are no longer skipped in pairs, and each date stays on screen for the full interval after its tiles load instead of switching the moment they land [OEMC-443](https://vizzuality.atlassian.net/browse/OEMC-443)
 - Map tooltip treats a value of 0 as data: layers that are 0 over most of the map, such as Bare soil fraction (BSF) dynamics, no longer report "No data" and hide the point histogram there
 - Map page on phones: the bottom toolbar reads "Geostory" on a geostory and "Monitor" on a monitor instead of always "Monitor", and its open drawer stops under the header instead of sliding over it on short screens
+- Map page on phones: the "Legend" tab only shows while a layer is on the map, as on desktop, instead of opening an empty legend for monitors and geostories without layers
+- Map page: the monitor and geostory "More info" dialogs have a visible close button; on phones, with no Escape key and the dialog edge to edge, there was no way to close them
+- "More info" use cases: a minted DOI shows as a DOI badge linking to the resolver (the API sends the bare code, which the badge rejected, so the plain link showed instead); blank DOIs and the "DOI NOT READY" placeholder show nothing; a web address is a plain link and is no longer dressed up as a DOI
 
 ### Removed
 
