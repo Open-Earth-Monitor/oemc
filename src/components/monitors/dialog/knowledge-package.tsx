@@ -1,51 +1,51 @@
 import { LuLink } from 'react-icons/lu';
 
-import cn from '@/lib/classnames';
-
 import type { Monitor } from '@/types/monitors';
 import { UseCase } from '@/types/monitors-and-geostories';
 
-import DoiBadge from '@/components/doi-badge';
+import DoiBadge, { isDoiResolverUrl, parseDoi } from '@/components/doi-badge';
 
-const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }: UseCase) => (
-  <div
-    key={title}
-    className={cn('grid grid-cols-2 items-start justify-between gap-8 space-y-2', {
-      flex: !doi?.length,
-    })}
-  >
-    {url ? (
-      <a
-        href={url}
-        className="hover:text-brand-700 flex items-start gap-2 text-brand-500"
-        target="_blank"
-        rel="noopener noreferrer"
-        title={title}
-      >
-        <LuLink className="h-6 w-6 shrink-0" />
-        <span className="underline">{title || url}</span>
-      </a>
-    ) : (
-      <span className="flex items-start text-brand-500">{title}</span>
-    )}
-    <span className="flex flex-wrap gap-1">
-      {doi &&
-        !!doi.length &&
-        doi.map((d) =>
-          d !== 'DOI NOT READY' ? (
-            <div className="flex w-full justify-end" key={d}>
-              <DoiBadge doi={d} key={d} />
-            </div>
-          ) : null
-        )}
-      {!doi && !!url && (
-        <div className="flex w-full justify-end" key={url}>
-          <DoiBadge doi={url} key={url} />
-        </div>
+/**
+ * One use case. A minted DOI is the citation, so it is shown as a DOI badge,
+ * which links to the resolver. A `url` is shown as a plain link unless it is
+ * just the DOI's own resolver address (the API sends both for the same
+ * publication). Blank DOIs, the "not ready" placeholder and ordinary web
+ * addresses never become badges.
+ */
+const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }) => {
+  const dois = Array.from(new Set((doi ?? []).map(parseDoi).filter(Boolean)));
+  // A use case whose only link is a resolver address has its DOI in the url.
+  const urlDoi = isDoiResolverUrl(url) ? parseDoi(url) : '';
+  if (urlDoi && !dois.includes(urlDoi)) dois.push(urlDoi);
+
+  const showLink = !!url && !urlDoi;
+
+  return (
+    <div className="flex items-start justify-between gap-8">
+      {showLink ? (
+        <a
+          href={url}
+          className="hover:text-brand-700 flex items-start gap-2 text-brand-500"
+          target="_blank"
+          rel="noopener noreferrer"
+          title={title}
+        >
+          <LuLink className="h-6 w-6 shrink-0" aria-hidden="true" />
+          <span className="underline">{title || url}</span>
+        </a>
+      ) : (
+        <span className="text-brand-500">{title}</span>
       )}
-    </span>
-  </div>
-);
+      {dois.length > 0 && (
+        <span className="flex shrink-0 flex-wrap justify-end gap-1">
+          {dois.map((d) => (
+            <DoiBadge doi={d} key={d} />
+          ))}
+        </span>
+      )}
+    </div>
+  );
+};
 
 const UseCases: React.FC<{ items: Monitor['use_case_link'] }> = ({ items }) => {
   if (!Array.isArray(items) || items.length === 0) {
