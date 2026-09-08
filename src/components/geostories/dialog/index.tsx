@@ -124,7 +124,13 @@ const GeostoryDialog: React.FC<GeostoryDialogProps> = ({
               )}
               {hasValidLink && <UseCases items={use_case_link} />}
 
-              <DialogClose className="right-10 top-10 flex h-4 items-center space-x-2 text-xs font-medium uppercase tracking-[0.96px] text-brand-500" />
+              {/* Without the icon the button had no visible content: on a phone,
+                  with no Escape key and the dialog edge to edge, there was
+                  nothing to close it with. */}
+              <DialogClose
+                hasIcon
+                className="right-4 top-4 flex h-6 items-center text-brand-500 opacity-100 sm:right-10 sm:top-10"
+              />
             </div>
           </DialogDescription>
         </DialogHeader>
