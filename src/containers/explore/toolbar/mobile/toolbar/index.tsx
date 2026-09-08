@@ -1,8 +1,10 @@
-import { FC, PropsWithChildren, useState } from 'react';
+import { FC, PropsWithChildren, useEffect, useState } from 'react';
 
 import { ChevronDownIcon } from 'lucide-react';
 
 import cn from '@/lib/classnames';
+
+import { useSyncLayersSettings } from '@/hooks/sync-query';
 
 import BackToMonitorsAndGeostories from '@/containers/sidebar/back-monitors-geostories-button';
 
@@ -30,6 +32,16 @@ const MobileExploreToolbar: FC<PropsWithChildren<{ type: keyof typeof LABELS }>>
   const [showDetails, setShowDetails] = useState(true);
   const [showLegend, setShowLegend] = useState(false);
 
+  // Same rule as the desktop map: there is a legend only while a layer is on
+  // the map. Monitors and geostories without layers, and a layer the user
+  // removed, leave nothing to show, so the tab goes with it.
+  const [layers] = useSyncLayersSettings();
+  const isLayerActive = !!layers?.[0]?.id;
+
+  useEffect(() => {
+    if (!isLayerActive) setShowLegend(false);
+  }, [isLayerActive]);
+
   return (
     <div className="fixed bottom-0 left-0 z-50 w-full text-sm md:hidden">
       {/* Drawer / Sheet */}
@@ -53,16 +65,18 @@ const MobileExploreToolbar: FC<PropsWithChildren<{ type: keyof typeof LABELS }>>
           </div>
         )}
 
-        <div
-          className={cn(
-            'transition-all',
-            showLegend
-              ? 'pointer-events-auto relative z-10 scale-100 opacity-100'
-              : 'pointer-events-none absolute inset-0 z-0 scale-95 opacity-0'
-          )}
-        >
-          <Legend />
-        </div>
+        {isLayerActive && (
+          <div
+            className={cn(
+              'transition-all',
+              showLegend
+                ? 'pointer-events-auto relative z-10 scale-100 opacity-100'
+                : 'pointer-events-none absolute inset-0 z-0 scale-95 opacity-0'
+            )}
+          >
+            <Legend />
+          </div>
+        )}
       </div>
 
       <div className="flex h-[60px]">
@@ -89,29 +103,32 @@ const MobileExploreToolbar: FC<PropsWithChildren<{ type: keyof typeof LABELS }>>
             })}
           />
         </Button>
-        <Button
-          className={cn({
-            'z-60 relative flex w-full justify-between rounded-none border-none bg-black-500 px-6 py-2  text-sm text-white-500':
-              true,
-            'bg-accent-green text-black-500': showLegend,
-          })}
-          onClick={() => {
-            if (showDetails) {
-              setShowDetails(false);
-            }
-
-            setShowLegend(!showLegend);
-          }}
-        >
-          <span>Legend</span>
-          <ChevronDownIcon
-            size={24}
+        {isLayerActive && (
+          <Button
+            data-testid="mobile-legend-toggle"
             className={cn({
-              'text-accent-green transition-all': true,
-              'rotate-180 text-black-500': showLegend,
+              'z-60 relative flex w-full justify-between rounded-none border-none bg-black-500 px-6 py-2  text-sm text-white-500':
+                true,
+              'bg-accent-green text-black-500': showLegend,
             })}
-          />
-        </Button>
+            onClick={() => {
+              if (showDetails) {
+                setShowDetails(false);
+              }
+
+              setShowLegend(!showLegend);
+            }}
+          >
+            <span>Legend</span>
+            <ChevronDownIcon
+              size={24}
+              className={cn({
+                'text-accent-green transition-all': true,
+                'rotate-180 text-black-500': showLegend,
+              })}
+            />
+          </Button>
+        )}
       </div>
     </div>
   );
