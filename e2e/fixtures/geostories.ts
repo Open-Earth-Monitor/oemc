@@ -23,11 +23,13 @@ export const FEATURED_GEOSTORY_IDS = [
   'g4',
   'g5',
   'g7',
+  'g8',
   'g10',
   'g11',
   'g12',
+  'g13',
+  'g14',
   'g19',
-  'g21',
   'g23',
   'g31',
   'g32',
@@ -51,7 +53,7 @@ const makeGeostory = (id: string, title: string, theme: Geostory['theme']): Geos
   monitors: [],
 });
 
-// 14 featured geostories spread across every category except Water (left empty on purpose).
+// 13 featured geostories spread across every category except Water (left empty on purpose).
 export const GEOSTORIES_FIXTURE: Geostory[] = [
   makeGeostory('g1', 'Crop Yield Trends', 'Agriculture'),
   makeGeostory('g7', 'Irrigated Farmland Change', 'Agriculture'),
@@ -59,7 +61,6 @@ export const GEOSTORIES_FIXTURE: Geostory[] = [
   makeGeostory('g10', 'Air Quality and Mortality', 'Climate & Health'),
   makeGeostory('g3', 'Soil Organic Carbon', 'Soil'),
   makeGeostory('g11', 'Soil Erosion Risk', 'Soil'),
-  makeGeostory('g21', 'Topsoil Moisture', 'Soil'),
   makeGeostory('g4', 'Forest Carbon Stocks', 'Forest'),
   makeGeostory('g12', 'Deforestation Hotspots', 'Forest'),
   makeGeostory('g31', 'Forest Canopy Height', 'Forest'),
