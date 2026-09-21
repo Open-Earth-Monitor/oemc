@@ -32,7 +32,7 @@ const DoiBadge: React.FC<{
       href={`https://doi.org/${code}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-white flex overflow-hidden whitespace-nowrap rounded-l-md text-xs font-medium"
+      className="flex overflow-hidden whitespace-nowrap rounded-l-md text-xs font-medium text-white-50"
     >
       <div>
         <span className="bg-[#5C5C5C] px-1.5">DOI</span>
