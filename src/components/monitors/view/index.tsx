@@ -9,6 +9,7 @@ import { Monitor } from '@/types/monitors';
 
 import DatasetCard from '@/components/datasets/card';
 import MonitorDialog from '@/components/monitors/dialog';
+import ExternalToolLink from '@/components/monitors/external-tool-link';
 import DatasetCardGeostory from '@/components/sidebar/card-geostory-content';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -24,12 +25,13 @@ interface MonitorViewProps {
 const MonitorView: FC<MonitorViewProps> = ({ data, geostoryLayers }) => {
   const [datasetStatus, setDatasetStatus] = useState<'open' | 'closed'>('open');
   const [geostoryStatus, setGeostoryStatus] = useState<'open' | 'closed'>('open');
-  const { color, description, geostories } = data || {};
+  const { color, description, geostories, external_tool } = data || {};
 
   return (
     <>
       <div className="relative space-y-6 py-3">
         <p>{description}</p>
+        <ExternalToolLink tool={external_tool} />
         <div className="space-y-4">
           <MonitorDialog {...data} />
         </div>
@@ -76,7 +78,9 @@ const MonitorView: FC<MonitorViewProps> = ({ data, geostoryLayers }) => {
           </CollapsibleContent>
         </Collapsible>
       ) : (
-        <p>No layers available for this monitor.</p>
+        // A monitor that lives in a dedicated application has no layers by
+        // design, so the notice would only read as an error there.
+        !external_tool && <p>No layers available for this monitor.</p>
       )}
       {/* Geostories cards */}
       {!!geostories?.length && (

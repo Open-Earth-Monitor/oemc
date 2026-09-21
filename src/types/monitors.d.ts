@@ -21,6 +21,8 @@ export type Monitor = {
   monitor_bbox: number[] | null;
   responsible_partner_name?: string;
   responsible_partner_url?: string;
+  /** Dedicated application for monitors that are not a set of map layers. */
+  external_tool?: { title: string; url: string };
 };
 
 export type MonitorParsed = Monitor & {

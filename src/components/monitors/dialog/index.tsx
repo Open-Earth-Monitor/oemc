@@ -12,6 +12,8 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 
+import ExternalToolLink from '../external-tool-link';
+
 import UseCases from './knowledge-package';
 
 type MonitorDialogProps = Partial<Monitor>;
@@ -23,6 +25,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
   use_case_link,
   responsible_partner_name,
   responsible_partner_url,
+  external_tool,
 }) => {
   const hasValidLink =
     Array.isArray(use_case_link) && use_case_link.some(({ title, url }) => Boolean(title || url));
@@ -56,6 +59,7 @@ const MonitorDialog: React.FC<MonitorDialogProps> = ({
               >
                 {description}
               </div>
+              <ExternalToolLink tool={external_tool} className="font-inter" />
             </header>
           </DialogTitle>
           <DialogDescription asChild>
