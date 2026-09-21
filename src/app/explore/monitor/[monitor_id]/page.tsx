@@ -8,6 +8,8 @@ import { SITE_NAME, absoluteUrl, serializeJsonLd, truncateForMeta } from '@/lib/
 
 import type { Monitor } from '@/types/monitors';
 
+import { applyMonitorOverride } from '@/constants/monitor-overrides';
+
 import MonitorPageComponent from '@/components/monitors/page';
 
 type Props = {
@@ -20,7 +22,8 @@ const getMonitor = cache(async (monitorId: string): Promise<Monitor | null> => {
     const { data } = await axios.get<Monitor[]>(
       `${process.env.NEXT_PUBLIC_API_URL}/monitors/monitor_id=${monitorId}`
     );
-    return data?.[0] ?? null;
+    const monitor = data?.[0];
+    return monitor ? applyMonitorOverride(monitor) : null;
   } catch {
     return null;
   }
@@ -67,6 +70,7 @@ export default async function ExploreMonitorMapPage({ params }: Props) {
     ...(monitor.author && { creator: { '@type': 'Organization', name: monitor.author } }),
     ...(monitor.date_created && { dateCreated: monitor.date_created }),
     ...(monitor.coverage && { spatialCoverage: monitor.coverage }),
+    ...(monitor.external_tool && { sameAs: monitor.external_tool.url }),
     isAccessibleForFree: true,
   };
 

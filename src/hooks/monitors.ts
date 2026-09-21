@@ -6,6 +6,7 @@ import type { Layer, LayerParsed } from '@/types/layers';
 import type { Monitor, MonitorParsed } from '@/types/monitors';
 
 import { CATEGORIES_COLORS, DEFAULT_COLOR } from '@/constants/categories';
+import { applyMonitorOverride } from '@/constants/monitor-overrides';
 
 import { parseBBox } from '@/utils/bbox';
 import { normalizeLayers } from '@/utils/layers';
@@ -37,7 +38,7 @@ export function useMonitor(
   return useQuery(['monitor', params], fetchMonitor, {
     // ...DEFAULT_QUERY_OPTIONS,
     select: (data) => ({
-      ...data,
+      ...applyMonitorOverride(data),
       color: CATEGORIES_COLORS[data.theme].base || DEFAULT_COLOR,
       colorOpacity: CATEGORIES_COLORS[data.theme].light || DEFAULT_COLOR,
       monitor_bbox: parseBBox(data.monitor_bbox, 'monitor'),
@@ -58,7 +59,7 @@ export function useMonitors(
     ...DEFAULT_QUERY_OPTIONS,
     select: (data) =>
       data.map((monitor) => ({
-        ...monitor,
+        ...applyMonitorOverride(monitor),
         monitor_bbox: parseBBox(monitor.monitor_bbox, 'monitor'),
         color: CATEGORIES_COLORS[monitor.theme].base || DEFAULT_COLOR,
         colorOpacity: CATEGORIES_COLORS[monitor.theme].light || DEFAULT_COLOR,
