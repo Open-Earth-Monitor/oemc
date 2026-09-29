@@ -115,6 +115,39 @@ test('legend', async ({ page }) => {
   ).toBeVisible();
 });
 
+/** Centre of an extent, to compare viewports without depending on the map's aspect ratio. */
+const centreOf = ([minX, minY, maxX, maxY]: number[]) => [(minX + maxX) / 2, (minY + maxY) / 2];
+
+const bboxFromUrl = async (page: Page) => {
+  await page.waitForURL((url) => url.searchParams.has('bbox'), { timeout: 15_000 });
+  return JSON.parse(new URL(page.url()).searchParams.get('bbox')) as number[];
+};
+
+test('flies to the bbox of a shared URL instead of the monitor bbox', async ({ page }) => {
+  await mockAPIs(page);
+  const shared = [1_000_000, 5_000_000, 2_000_000, 6_000_000];
+  await page.goto(`${LAYER_URL}&bbox=${JSON.stringify(shared)}`, { waitUntil: 'load' });
+  await expect(page.getByTestId('map-legend')).toBeVisible();
+  // Give the monitor bbox time to arrive and (wrongly) take over.
+  await page.waitForTimeout(1500);
+
+  const [cx, cy] = centreOf(await bboxFromUrl(page));
+  const [sx, sy] = centreOf(shared);
+  expect(Math.abs(cx - sx)).toBeLessThan(50_000);
+  expect(Math.abs(cy - sy)).toBeLessThan(50_000);
+});
+
+test('flies to the monitor bbox when the URL has none', async ({ page }) => {
+  await mockAPIs(page);
+  await page.goto(LAYER_URL, { waitUntil: 'load' });
+  await expect(page.getByTestId('map-legend')).toBeVisible();
+
+  const [cx, cy] = centreOf(await bboxFromUrl(page));
+  const [mx, my] = centreOf(MONITOR_M1.monitor_bbox);
+  expect(Math.abs(cx - mx)).toBeLessThan(50_000);
+  expect(Math.abs(cy - my)).toBeLessThan(50_000);
+});
+
 test('opacity 1 from url', async ({ page }) => {
   await mockAPIs(page);
   await page.goto(LAYER_URL, { waitUntil: 'load' });
