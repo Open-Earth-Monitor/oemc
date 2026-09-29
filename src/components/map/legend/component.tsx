@@ -110,7 +110,9 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
           <RemoveLayer className="pl-2" />
         </div>
       </div>
-      <ScrollArea className={cn({ 'max-h-[216px]': !isLoadingLayerData })}>
+      {/* Tall enough for two legends plus the timeline; each legend graphic
+          scrolls on its own beyond 216px. */}
+      <ScrollArea className={cn({ 'max-h-[70vh]': !isLoadingLayerData })}>
         {isLoadingLayerData ||
           (isLoadingLegendData && (
             <Loading className="relative flex h-10 w-full items-end justify-center py-6" />
@@ -119,13 +121,17 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
           !isErrorLayerData &&
           isFetchedLayerData &&
           !isLoadingLegendData &&
-          isFetchedLegendData && <LegendGraphic dataLayer={layerData} dataLegend={legendData} />}
+          isFetchedLegendData && (
+            <ScrollArea className="max-h-[216px]">
+              <LegendGraphic dataLayer={layerData} dataLegend={legendData} />
+            </ScrollArea>
+          )}
         {/* A second legend whenever the compare layer is a different layer, in
             monitors as well as geostories. Only its opacity is adjustable here:
             visibility and removal act on the primary layer. */}
         {compareLayerData && compareLayers?.[0]?.id !== layerId && (
           <div
-            className="flex w-full flex-col space-y-4 border-gray-600 bg-brand-500"
+            className="mt-4 flex w-full flex-col space-y-4 border-t border-secondary-900 bg-brand-500 pt-4"
             style={{ minWidth: legendWidth }}
           >
             <div

@@ -87,10 +87,12 @@ const Timeline: FC<{
   const endRangelabel = useMemo(() => range && range[range.length - 1]?.label, [range]);
 
   return (
-    <div className="flex w-full items-center space-x-3 py-3.5">
+    <div className="flex w-full items-start space-x-3 pb-4 pt-3.5">
       <IconTooltip label={isPlaying && isActive ? 'Pause' : 'Play'}>
+        {/* Centred on the 6px track, not on the track plus its labels */}
         <button
           type="button"
+          className="-mt-[9px]"
           onClick={handleTogglePlay}
           aria-label={isPlaying && isActive ? 'Pause timeline' : 'Play timeline'}
         >
@@ -137,14 +139,16 @@ const Timeline: FC<{
                   )}
                 />
               )}
-              {/* Capped so long range labels break at their dash instead of colliding */}
-              <div className="absolute left-0 right-0 top-2 flex justify-between gap-2 font-satoshi text-sm tracking-tight text-secondary-500">
-                <div className="max-w-[48%]">
-                  <DateRangeLabel label={startRangelabel} />
-                </div>
-                <div className="max-w-[48%] text-right">
-                  <DateRangeLabel label={endRangelabel} />
-                </div>
+            </div>
+            {/* In normal flow, so the row reserves its own height and is never
+                clipped at the legend's bottom edge. Capped so long range labels
+                break at their dash instead of colliding. */}
+            <div className="flex justify-between gap-2 font-satoshi text-sm tracking-tight text-secondary-500">
+              <div className="max-w-[48%]">
+                <DateRangeLabel label={startRangelabel} />
+              </div>
+              <div className="max-w-[48%] text-right">
+                <DateRangeLabel label={endRangelabel} />
               </div>
             </div>
           </div>

@@ -7,7 +7,9 @@ import { useLayer } from '@/hooks/layers';
 import { useMonitorLayers } from '@/hooks/monitors';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
-import TimeSeriesComparativeLayers from '@/components/timeseries-comparative-layers';
+import TimeSeriesComparativeLayers, {
+  PairedLayerToggle,
+} from '@/components/timeseries-comparative-layers';
 import TimeSeriesSameLayer from '@/components/timeseries-layer';
 
 export const LegendTimeseries: React.FC = () => {
@@ -78,15 +80,15 @@ export const LegendTimeseries: React.FC = () => {
           defaultActive={true}
           autoPlay={true}
           comparisonLayer={comparisonLayerData || null}
+          actions={hasPairedLayer ? <PairedLayerToggle layerId={pairedLayerId} /> : null}
         />
       )}
 
-      {hasPairedLayer && (
+      {!hasBaseRange && hasPairedLayer && (
         <TimeSeriesComparativeLayers
           layerId={pairedLayerId}
           range={mainLayer?.range}
           isActive={true}
-          hideTimeline={hasBaseRange}
         />
       )}
     </div>
