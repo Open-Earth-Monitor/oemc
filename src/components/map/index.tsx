@@ -198,9 +198,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     title: compareTitle,
   } = compareData || {};
 
-  // initial viewport
+  // initial viewport: a shared URL's bbox wins over the dataset's own.
   const dataBbox = useMemo(
-    () => predefinedBbox || bbox || initialViewState.bbox,
+    () => bbox || predefinedBbox || initialViewState.bbox,
     [bbox, predefinedBbox, initialViewState.bbox]
   );
   const initialViewport = {
@@ -374,16 +374,23 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
   const entryKey = `${type ?? ''}:${monitorId || (params.geostory_id as string) || ''}`;
   const fittedEntryRef = useRef<string | null>(null);
 
+  // The bbox the URL carried when this entry started, before any moveend
+  // rewrote it. A shared link's bbox must win over the dataset's own bbox, and
+  // only the value present on entry tells the two apart.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const entryBbox = useMemo(() => bbox, [entryKey]);
+
   useEffect(() => {
     if (!mapRef?.current) return;
     if (fittedEntryRef.current === entryKey) return;
-    // API-provided predefinedBbox wins; otherwise fall back to the URL bbox.
-    const target = predefinedBbox || bbox;
+    // The URL bbox flies at once; otherwise wait for the monitor's or the
+    // geostory's bbox to arrive from the API.
+    const target = entryBbox || predefinedBbox;
     if (!target) return;
     fittedEntryRef.current = entryKey;
     setBbox(target);
     mapRef.current.ol.getView()?.fit(target);
-  }, [entryKey, bbox, predefinedBbox, setBbox]);
+  }, [entryKey, entryBbox, predefinedBbox, setBbox]);
 
   useEffect(() => {
     if (!isLayerActive) {
