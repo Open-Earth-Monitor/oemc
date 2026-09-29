@@ -21,11 +21,11 @@ const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }) => {
   const showLink = !!url && !urlDoi;
 
   return (
-    <div className="flex items-start justify-between gap-8">
+    <div className="flex flex-wrap items-start justify-between gap-x-8 gap-y-2">
       {showLink ? (
         <a
           href={url}
-          className="hover:text-brand-700 flex items-start gap-2 text-brand-500"
+          className="hover:text-brand-700 flex min-w-0 flex-1 basis-60 items-start gap-2 text-brand-500"
           target="_blank"
           rel="noopener noreferrer"
           title={title}
@@ -34,10 +34,10 @@ const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }) => {
           <span className="underline">{title || url}</span>
         </a>
       ) : (
-        <span className="text-brand-500">{title}</span>
+        <span className="min-w-0 flex-1 basis-60 text-brand-500">{title}</span>
       )}
       {dois.length > 0 && (
-        <span className="flex shrink-0 flex-wrap justify-end gap-1">
+        <span className="flex max-w-full flex-wrap justify-end gap-1">
           {dois.map((d) => (
             <DoiBadge doi={d} key={d} />
           ))}
