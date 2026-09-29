@@ -14,6 +14,8 @@ const NutsLayer = () => {
       properties={{ label: 'NUTS' }}
       url="https://geoserver.earthmonitor.org/geoserver/oem/wms"
       opacity={0.2}
+      // Above the data layers (zIndex 1), below the country boundaries (99).
+      zIndex={2}
       params={{
         FORMAT: 'image/png',
         SERVICE: 'WMS',
