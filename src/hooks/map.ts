@@ -12,6 +12,8 @@ type UseParams = {
   lon: number;
   lat: number;
   layer_id: string;
+  srv_path?: string;
+  regex?: string;
 };
 
 const DEFAULT_QUERY_OPTIONS = {
