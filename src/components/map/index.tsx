@@ -5,7 +5,7 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, usePathname } from 'next/navigation';
 
 import { useQuery } from '@tanstack/react-query';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import type { MapBrowserEvent } from 'ol';
 import * as ol from 'ol';
 import type { Coordinate } from 'ol/coordinate';
@@ -84,7 +84,7 @@ function buildWmsSource(url: string, layerName: string) {
 }
 
 const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
-  const [isCompareMode, setIsCompareMode] = useAtom(compareFunctionalityAtom);
+  const isCompareMode = useAtomValue(compareFunctionalityAtom);
   const [position] = useSyncSwipeControlPosition();
   const [tooltipSide, setTooltipSide] = useState<'left' | 'right'>('left');
 
@@ -279,10 +279,11 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     setTooltipInfo((prev) => ({ ...prev, position: updatedPixel }));
   }, [tooltipInfo.coordinate]);
 
-  // Picking a second region for the same layer: the histogram's "Compare with
-  // another region" flow. With two layers active the compare slot belongs to
-  // the second layer instead, and every click feeds both layers the same region.
-  const isPickingCompareRegion = isCompareMode && !isCompareLayerActive;
+  // The histogram's "Compare with another region" flow: while it is on, clicks
+  // pick the second region and leave the first one alone. With two layers the
+  // second region belongs to the compare layer; otherwise to the main layer.
+  const isPickingCompareRegion = isCompareMode;
+  const compareSlotLayerId = compareLayerId ?? layerId;
 
   /**
    * Resolves the NUTS region under `coordinate` once and points the histogram
@@ -298,7 +299,9 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       const NUTS_ID = res?.nutsDataParams?.NUTS_ID ?? null;
 
       if (isPickingCompareRegion) {
-        setNutsDataParamsCompare(NUTS_ID ? { NUTS_ID, LAYER_ID: layerId } : NUTS_INITIAL_STATE);
+        setNutsDataParamsCompare(
+          NUTS_ID ? { NUTS_ID, LAYER_ID: compareSlotLayerId } : NUTS_INITIAL_STATE
+        );
         return;
       }
       setNutsDataParams(NUTS_ID ? { NUTS_ID, LAYER_ID: layerId } : NUTS_INITIAL_STATE);
@@ -310,6 +313,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
       wmsNutsSource,
       layerId,
       compareLayerId,
+      compareSlotLayerId,
       isCompareLayerActive,
       isPickingCompareRegion,
       setNutsDataParams,
@@ -412,14 +416,15 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     applyRegionAt,
   ]);
 
-  // activates timeseries and comparative mode if geostory is comparative and just the first time
-  // after that, the user should manage timeseries and comparative mode
+  // Activates the two layers of a comparative geostory once, on entry; after
+  // that the user manages them. The region histogram compares the two layers
+  // by itself whenever a compare layer is active, so the "compare with another
+  // region" flow is left to the user.
   useEffect(() => {
     if (hasInitializedComparativeGeostory.current) return;
     if (!isComparativeGeostory) return;
 
     hasInitializedComparativeGeostory.current = true;
-    setIsCompareMode(true);
     setCompareLayers([
       {
         id: layerPositionLeft?.layer_id,

@@ -169,14 +169,17 @@ const RegionsHistogram: FC<HistogramTypes> = ({ id, title, onCompareClose, color
   const { data: compareLayerData = DEFAULT_LAYER_COLORS } = useLayer<LayerColors>(
     { layer_id: histogramDataRegionRawCompare?.layer_id ?? '' },
     {
-      enabled: Boolean(histogramDataRegionRawCompare?.layer_id && compareFunctionalityInfo),
+      enabled: Boolean(histogramDataRegionRawCompare?.layer_id),
       select: (data) => getLayerColors(data.theme),
     }
   );
 
-  const isComparing = Boolean(
-    compareFunctionalityInfo && histogramDataRegionRawCompare?.dataset?.length
-  );
+  // The compare slot is filled either by the second layer (same region) or by
+  // a second region the user picked, so having its data is enough to compare.
+  const isComparing = Boolean(histogramDataRegionRawCompare?.dataset?.length);
+  // A second pill only makes sense for a different region.
+  const isSecondRegion =
+    !!compareNutsResponse?.NAME_LATN && nutsDataParamsCompare?.NUTS_ID !== nutsDataParams?.NUTS_ID;
   const isLoading = isLoadingDataHistogram || isLoadingDataCompareHistogram;
 
   const secondaryLayerColors = useMemo(() => {
@@ -305,7 +308,7 @@ const RegionsHistogram: FC<HistogramTypes> = ({ id, title, onCompareClose, color
             bgColor={mainLayerData.bgColor}
           />
 
-          {compareNutsResponse?.NAME_LATN && (
+          {isSecondRegion && (
             <LocationPill
               name={`${compareNutsResponse.NAME_LATN} - ${compareNutsResponse.CNTR_CODE}`}
               color={secondaryLayerColors.color}
