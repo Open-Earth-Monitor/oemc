@@ -61,12 +61,12 @@ test.describe('map page on phones — "More info" dialog', () => {
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
 
-    // Use cases. A minted DOI is a badge linking to the resolver, not a plain
-    // publication link; a blank DOI shows only the title; a web address is a
-    // plain link and never a badge.
-    const minted = dialog.getByText('Tools for Digitalisation of Agriculture in Ethiopia');
-    await expect(minted).toBeVisible();
-    await expect(minted.locator('xpath=ancestor::a')).toHaveCount(0);
+    // Use cases. The title links to its url, a DOI resolver address included,
+    // and a minted DOI is also a badge linking to the resolver; a blank DOI
+    // shows only the title; a web address is a plain link and never a badge.
+    await expect(
+      dialog.getByRole('link', { name: 'Tools for Digitalisation of Agriculture in Ethiopia' })
+    ).toHaveAttribute('href', 'https://doi.org/10.60566/ptm29-yhr16');
     await expect(
       dialog.getByRole('link', { name: /DOI\s*10\.60566\/ptm29-yhr16/ })
     ).toHaveAttribute('href', 'https://doi.org/10.60566/ptm29-yhr16');
