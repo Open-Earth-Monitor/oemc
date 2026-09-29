@@ -79,12 +79,11 @@ const SelectContent = forwardRef<
       ref={ref}
       align="center"
       sideOffset={5}
-      className={cn({
-        'relative z-50 min-w-min overflow-hidden rounded-xl bg-white-500 py-1 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2':
-          true,
-        'w-[var(--radix-select-trigger-width)]': position === 'popper',
-        className,
-      })}
+      className={cn(
+        'relative z-50 min-w-min overflow-hidden rounded-xl bg-white-500 py-1 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+        { 'w-[var(--radix-select-trigger-width)]': position === 'popper' },
+        className
+      )}
       position={position}
       {...props}
     >
@@ -118,11 +117,10 @@ const SelectItem = forwardRef<
     <SelectPrimitive.Item
       {...props}
       ref={ref}
-      className={cn({
-        'relative m-auto flex cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-sm px-3.5 py-2 text-sm capitalize text-black-500 outline-none hover:bg-accent-green data-[disabled]:pointer-events-none data-[disabled]:opacity-50':
-          true,
-        className: !!className,
-      })}
+      className={cn(
+        'relative m-auto flex cursor-pointer select-none items-center justify-center whitespace-nowrap rounded-sm px-3.5 py-2 text-sm capitalize text-black-500 outline-none hover:bg-accent-green data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        className
+      )}
     >
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
