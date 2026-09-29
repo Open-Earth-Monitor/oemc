@@ -172,6 +172,9 @@ const MapTooltip: FC<MapTooltipProps> = ({
       ? Number.isFinite(data.value)
       : data?.value !== null && data?.value !== undefined && data?.value !== '';
   const label = [countryName, nutsDataResponse?.NUTS_NAME].filter(Boolean).join(', ');
+  // The regions layer can be on with no region under the click (sea, outside
+  // Europe). Then the location is a point and the point histogram applies.
+  const hasRegion = isRegionsLayerActive && !!nutsDataResponse?.NUTS_NAME;
 
   const lonLat: [number, number] | null = (() => {
     if (!coordinate || coordinate.length < 2) return null;
@@ -252,17 +255,15 @@ const MapTooltip: FC<MapTooltipProps> = ({
             </p>
           )}
 
-          {hasLayer && hasValue && isRegionsLayerActive && (
+          {hasLayer && hasValue && hasRegion && (
             <p className="flex items-center gap-3 text-xs">
               <span className="whitespace-nowrap">Location Selected:</span>
-              {!!nutsDataResponse?.NUTS_NAME && (
-                <span
-                  data-testid="map-tooltip-location"
-                  className="whitespace-nowrap rounded-full bg-white-950 px-2 py-0.5"
-                >
-                  {label}
-                </span>
-              )}
+              <span
+                data-testid="map-tooltip-location"
+                className="whitespace-nowrap rounded-full bg-white-950 px-2 py-0.5"
+              >
+                {label}
+              </span>
             </p>
           )}
 
@@ -272,7 +273,7 @@ const MapTooltip: FC<MapTooltipProps> = ({
             </p>
           )}
 
-          {hasLayer && hasValue && !isRegionsLayerActive && (
+          {hasLayer && hasValue && !hasRegion && (
             <Button
               data-testid="map-tooltip-point-histogram"
               variant="outline"
@@ -282,7 +283,7 @@ const MapTooltip: FC<MapTooltipProps> = ({
               Show point histogram
             </Button>
           )}
-          {hasLayer && hasValue && isRegionsLayerActive && (
+          {hasLayer && hasValue && hasRegion && (
             <Button
               data-testid="map-tooltip-region-histogram"
               variant="outline"
