@@ -278,6 +278,43 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     setTooltipInfo((prev) => ({ ...prev, position: updatedPixel }));
   }, [tooltipInfo.coordinate]);
 
+  // Picking a second region for the same layer: the histogram's "Compare with
+  // another region" flow. With two layers active the compare slot belongs to
+  // the second layer instead, and every click feeds both layers the same region.
+  const isPickingCompareRegion = isCompareMode && !isCompareLayerActive;
+
+  /**
+   * Resolves the NUTS region under `coordinate` once and points the histogram
+   * queries at it: the main layer and, when active, the compare layer both get
+   * the region; while picking a second region only the compare slot changes.
+   */
+  const applyRegionAt = useCallback(
+    async (coordinate: Coordinate, resolution: number | undefined) => {
+      if (!resolution) return;
+      const res = await getHistogramData(wmsNutsSource, coordinate, resolution, layerId);
+      const NUTS_ID = res?.nutsDataParams?.NUTS_ID;
+      if (!NUTS_ID) return;
+
+      if (isPickingCompareRegion) {
+        setNutsDataParamsCompare({ NUTS_ID, LAYER_ID: layerId });
+        return;
+      }
+      setNutsDataParams({ NUTS_ID, LAYER_ID: layerId });
+      setNutsDataParamsCompare(
+        isCompareLayerActive ? { NUTS_ID, LAYER_ID: compareLayerId } : NUTS_INITIAL_STATE
+      );
+    },
+    [
+      wmsNutsSource,
+      layerId,
+      compareLayerId,
+      isCompareLayerActive,
+      isPickingCompareRegion,
+      setNutsDataParams,
+      setNutsDataParamsCompare,
+    ]
+  );
+
   const handleSingleClick = useCallback(
     (e: MapBrowserEvent<PointerEvent>): void => {
       const lonlat = toLonLat(e.coordinate);
@@ -298,41 +335,17 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
         };
       });
 
-      void (async () => {
-        try {
-          const resolution = e.map.getView()?.getResolution();
+      if (!isRegionsLayerActive) {
+        setNutsDataParams(NUTS_INITIAL_STATE);
+        setNutsDataParamsCompare(NUTS_INITIAL_STATE);
+        return;
+      }
 
-          if (!isRegionsLayerActive) {
-            setNutsDataParams(NUTS_INITIAL_STATE);
-            setNutsDataParamsCompare(NUTS_INITIAL_STATE);
-            return;
-          }
-
-          const res = await getHistogramData(wmsNutsSource, e.coordinate, resolution, layerId);
-          if (isCompareMode) {
-            const res = await getHistogramData(
-              wmsNutsSource,
-              e.coordinate,
-              resolution,
-              compareLayerId
-            );
-            const next = res?.nutsDataParams ?? NUTS_INITIAL_STATE;
-            setNutsDataParamsCompare({ ...next });
-          } else {
-            setNutsDataParams(res.nutsDataParams ?? NUTS_INITIAL_STATE);
-            setNutsDataParamsCompare(NUTS_INITIAL_STATE);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      })();
+      applyRegionAt(e.coordinate, e.map.getView()?.getResolution()).catch(console.error);
     },
     [
       isRegionsLayerActive,
-      isCompareMode,
-      wmsNutsSource,
-      layerId,
-      compareLayerId,
+      applyRegionAt,
       position.x,
       setNutsDataParams,
       setNutsDataParamsCompare,
@@ -381,32 +394,21 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     );
   }, [layerId, isRegionsLayerActive, setNutsDataParams]);
 
+  // Re-resolve the clicked region when the regions layer or the active layers
+  // change after the click. Not while picking a second region: that click is
+  // handled by handleSingleClick, and re-running here would overwrite region A.
   useEffect(() => {
-    if (!isRegionsLayerActive) return;
+    if (!isRegionsLayerActive || isPickingCompareRegion) return;
     if (!tooltipInfo.coordinate || !layerId || !mapRef.current) return;
     const resolution = mapRef.current.ol.getView?.()?.getResolution?.();
-    if (!resolution) return;
-    let cancelled = false;
-    void (async () => {
-      try {
-        const res = await getHistogramData(
-          wmsNutsSource,
-          tooltipInfo.coordinate,
-          resolution,
-          layerId
-        );
-        if (cancelled) return;
-        if (res?.nutsDataParams?.NUTS_ID) {
-          setNutsDataParams(res.nutsDataParams);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [isRegionsLayerActive, tooltipInfo.coordinate, layerId, wmsNutsSource, setNutsDataParams]);
+    applyRegionAt(tooltipInfo.coordinate, resolution).catch(console.error);
+  }, [
+    isRegionsLayerActive,
+    isPickingCompareRegion,
+    tooltipInfo.coordinate,
+    layerId,
+    applyRegionAt,
+  ]);
 
   // activates timeseries and comparative mode if geostory is comparative and just the first time
   // after that, the user should manage timeseries and comparative mode
@@ -494,9 +496,12 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
     const vLeft = firstPropertyValue(qLeft.data);
     const vRight = firstPropertyValue(qRight.data);
+    // Same region for both layers, or the second region while picking one.
     const nutsProps = qNuts.data?.features?.[0]?.properties ?? null;
-    if (nutsProps && !isCompareMode) setNutsDataResponse(nutsProps);
-    if (nutsProps && isCompareMode) setCompareNutsProperties(nutsProps);
+    if (nutsProps && !isPickingCompareRegion) setNutsDataResponse(nutsProps);
+    if (nutsProps && (isPickingCompareRegion || isCompareLayerActive)) {
+      setCompareNutsProperties(nutsProps);
+    }
 
     setTooltipInfo((prev) => ({
       ...prev,
@@ -535,7 +540,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     range,
     range_labels,
     isCompareLayerActive,
-    isCompareMode,
+    isPickingCompareRegion,
     setCompareNutsProperties,
   ]);
 
