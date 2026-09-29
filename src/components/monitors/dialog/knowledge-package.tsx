@@ -6,11 +6,11 @@ import { UseCase } from '@/types/monitors-and-geostories';
 import DoiBadge, { isDoiResolverUrl, parseDoi } from '@/components/doi-badge';
 
 /**
- * One use case. A minted DOI is the citation, so it is shown as a DOI badge,
- * which links to the resolver. A `url` is shown as a plain link unless it is
- * just the DOI's own resolver address (the API sends both for the same
- * publication). Blank DOIs, the "not ready" placeholder and ordinary web
- * addresses never become badges.
+ * One use case. The title links to `url` whenever there is one, including a
+ * DOI resolver address. Every minted DOI is also shown as a badge that links
+ * to `https://doi.org/<code>`; a DOI that only appears in `url` gets a badge
+ * too. Blank DOIs, the "not ready" placeholder and ordinary web addresses
+ * never become badges.
  */
 const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }) => {
   const dois = Array.from(new Set((doi ?? []).map(parseDoi).filter(Boolean)));
@@ -18,11 +18,9 @@ const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }) => {
   const urlDoi = isDoiResolverUrl(url) ? parseDoi(url) : '';
   if (urlDoi && !dois.includes(urlDoi)) dois.push(urlDoi);
 
-  const showLink = !!url && !urlDoi;
-
   return (
-    <div className="flex flex-wrap items-start justify-between gap-x-8 gap-y-2">
-      {showLink ? (
+    <div className="grid grid-cols-2 gap-x-8 gap-y-2">
+      {url ? (
         <a
           href={url}
           className="hover:text-brand-700 flex min-w-0 flex-1 basis-60 items-start gap-2 text-brand-500"
@@ -37,7 +35,7 @@ const UseCasesUnit: React.FC<UseCase> = ({ title, url, doi }) => {
         <span className="min-w-0 flex-1 basis-60 text-brand-500">{title}</span>
       )}
       {dois.length > 0 && (
-        <span className="flex max-w-full flex-wrap justify-end gap-1">
+        <span className="flex max-w-full flex-wrap justify-start gap-1">
           {dois.map((d) => (
             <DoiBadge doi={d} key={d} />
           ))}
@@ -56,7 +54,7 @@ const UseCases: React.FC<{ items: Monitor['use_case_link'] }> = ({ items }) => {
     <div className="border-t border-brand-500 py-4">
       <div className="flex flex-col space-y-6">
         <p className="whitespace-nowrap text-xl font-medium">Use cases:</p>
-        <div className="space-y-2 py-2 font-bold">
+        <div className="space-y-4 py-2 font-bold">
           {items.map((props, index) => (
             <UseCasesUnit key={index} {...props} />
           ))}
