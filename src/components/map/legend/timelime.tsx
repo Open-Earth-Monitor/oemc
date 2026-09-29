@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 
 import { usePathname } from 'next/navigation';
 
-import { useGeostory } from '@/hooks/geostories';
+import { useGeostoryLayers } from '@/hooks/geostories';
 import { useLayer } from '@/hooks/layers';
-import { useMonitor } from '@/hooks/monitors';
+import { useMonitorLayers } from '@/hooks/monitors';
 import { useSyncCompareLayersSettings, useSyncLayersSettings } from '@/hooks/sync-query';
 
 import TimeSeriesComparativeLayers from '@/components/timeseries-comparative-layers';
@@ -18,12 +18,28 @@ export const LegendTimeseries: React.FC = () => {
 
   const datasetId = usePathname().split('/')[3];
 
-  useGeostory({ geostory_id: datasetId }, { enabled: isGeostory && !!datasetId });
-
-  useMonitor({ monitor_id: datasetId }, { enabled: !isGeostory && !!datasetId });
-
   const baseLayerId = useMemo(() => layers?.[0]?.id, [layers]);
   const comparisonLayerId = useMemo(() => compareLayers?.[0]?.id, [compareLayers]);
+
+  // The layer a monitor or geostory pairs with the active one on the map's
+  // left side. Read from the dataset itself, not from the URL, so the pairing
+  // survives the comparison being closed and can be reopened.
+  const { data: monitorPairedLayer } = useMonitorLayers(
+    { monitor_id: datasetId },
+    {
+      enabled: !isGeostory && !!datasetId,
+      select: (data) => data.find(({ position }) => position === 'left') ?? null,
+    }
+  );
+  const { data: geostoryPairedLayer } = useGeostoryLayers(
+    { geostory_id: datasetId },
+    {
+      enabled: isGeostory && !!datasetId,
+      select: (data) => data.find(({ position }) => position === 'left') ?? null,
+    }
+  );
+  const pairedLayerId = (isGeostory ? geostoryPairedLayer : monitorPairedLayer)?.layer_id;
+  const hasPairedLayer = !!pairedLayerId && pairedLayerId !== baseLayerId;
 
   const { data: baseLayerData } = useLayer(
     {
@@ -50,14 +66,11 @@ export const LegendTimeseries: React.FC = () => {
     return baseLayerData;
   }, [baseLayerData, comparisonLayerData]);
 
-  const isSameLayer = useMemo(
-    () => baseLayerData?.position === comparisonLayerData?.position,
-    [baseLayerData, comparisonLayerData]
-  );
+  const hasBaseRange = !!baseLayerData?.range?.length;
 
   return (
     <div className="w-full overflow-hidden">
-      {baseLayerData?.range && !!baseLayerData.range.length && (
+      {hasBaseRange && (
         <TimeSeriesSameLayer
           layerId={mainLayer?.layer_id || ''}
           range={mainLayer?.range}
@@ -68,12 +81,12 @@ export const LegendTimeseries: React.FC = () => {
         />
       )}
 
-      {!!comparisonLayerId && !isSameLayer && (
+      {hasPairedLayer && (
         <TimeSeriesComparativeLayers
-          layerId={comparisonLayerId}
+          layerId={pairedLayerId}
           range={mainLayer?.range}
           isActive={true}
-          hideTimeline={!!baseLayerData?.range?.length}
+          hideTimeline={hasBaseRange}
         />
       )}
     </div>

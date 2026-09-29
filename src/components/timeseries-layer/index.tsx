@@ -79,6 +79,9 @@ const TimeSeriesSameLayer: FC<{
   );
 
   const hasAnyCompare = !!compareLayers?.[0]?.id;
+  // A different layer in the compare slot (a monitor's paired layer) is
+  // opened and closed by its own control, not by this one.
+  const isSameLayerCompare = compareLayers?.[0]?.id === layerId;
 
   const showCompareSelect = !!compareCurrentRange && (range?.length ?? 0) > 1;
 
@@ -166,7 +169,7 @@ const TimeSeriesSameLayer: FC<{
               Compare
             </Button>
           )}
-          {hasAnyCompare && (
+          {isSameLayerCompare && (
             <div className="flex min-w-[7rem] flex-1 items-center gap-2">
               {showCompareSelect && (
                 <Select
