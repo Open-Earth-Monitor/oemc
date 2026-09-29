@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useState } from 'react';
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { useAtom } from 'jotai';
 import { LuX } from 'react-icons/lu';
@@ -32,7 +32,9 @@ const TimeSeriesSameLayer: FC<{
   defaultActive?: boolean;
   autoPlay: boolean;
   comparisonLayer?: LayerParsed | null;
-}> = ({ range, isActive, layerId, defaultActive = false, autoPlay }) => {
+  /** Extra controls rendered at the end of the date row, e.g. the paired-layer toggle. */
+  actions?: ReactNode;
+}> = ({ range, isActive, layerId, defaultActive = false, autoPlay, actions }) => {
   const [layers, setLayers] = useSyncLayersSettings();
   const [compareLayers, setCompareLayers] = useSyncCompareLayersSettings();
 
@@ -99,7 +101,7 @@ const TimeSeriesSameLayer: FC<{
   }, []);
 
   return (
-    <div className="flex w-full flex-col py-4">
+    <div className="flex w-full flex-col pt-4">
       {/* Select dates */}
       <div className="flex flex-col space-y-2 text-secondary-500">
         <span className="text-sm">Select date:</span>
@@ -127,14 +129,13 @@ const TimeSeriesSameLayer: FC<{
                 </div>
               </SelectTrigger>
               <SelectContent
-                className="z-[1000] flex max-h-56 w-full min-w-fit items-center text-center"
-                alignOffset={-20}
-                sideOffset={0}
-                style={{ width: 'calc(100% - 2rem)' }}
+                className="z-[1000] max-h-56 w-max max-w-[calc(100vw-2rem)] text-left"
+                align="start"
+                sideOffset={4}
               >
                 <ScrollArea className="max-h-[200px] w-full">
                   {range?.map((r: LayerDateRange) => (
-                    <SelectItem key={r.value} value={r.value} className="px-2">
+                    <SelectItem key={r.value} value={r.value} className="m-0 justify-start px-2">
                       <DateRangeLabel label={r?.label} />
                     </SelectItem>
                   ))}
@@ -218,14 +219,17 @@ const TimeSeriesSameLayer: FC<{
                     </div>
                   </SelectTrigger>
                   <SelectContent
-                    className="z-[1000] flex max-h-56 w-full min-w-fit items-center text-center"
-                    alignOffset={-20}
-                    sideOffset={0}
-                    style={{ width: 'calc(100% - 2rem)' }}
+                    className="z-[1000] max-h-56 w-max max-w-[calc(100vw-2rem)] text-left"
+                    align="start"
+                    sideOffset={4}
                   >
                     <ScrollArea className="max-h-[200px] w-full">
                       {range?.map((r: LayerDateRange) => (
-                        <SelectItem key={r.value} value={r.value} className="px-2">
+                        <SelectItem
+                          key={r.value}
+                          value={r.value}
+                          className="m-0 justify-start px-2"
+                        >
                           <DateRangeLabel label={r?.label} />
                         </SelectItem>
                       ))}
@@ -247,6 +251,7 @@ const TimeSeriesSameLayer: FC<{
               )}
             </div>
           )}
+          {actions}
         </div>
       </div>
       {/* Timeline */}

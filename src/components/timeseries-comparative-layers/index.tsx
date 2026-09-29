@@ -1,7 +1,7 @@
 import { useMemo, useCallback, useState } from 'react';
 import type { FC } from 'react';
 
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { LuX } from 'react-icons/lu';
 
 import cn from '@/lib/classnames';
@@ -26,19 +26,63 @@ import {
 } from '@/components/ui/select';
 
 /**
- * Toggles the layer that a monitor or geostory pairs with the active one, so
- * the map shows both side by side. `layerId` is that paired layer; it is known
- * from the dataset, so the control stays available after the pair is closed.
+ * Shows or hides the layer that a monitor or geostory pairs with the active
+ * one, so the map displays both side by side. `layerId` is that paired layer;
+ * it is known from the dataset, so the control stays available after the pair
+ * is closed.
+ */
+export const PairedLayerToggle: FC<{ layerId: LayerParsed['layer_id'] }> = ({ layerId }) => {
+  const [layers] = useSyncLayersSettings();
+  const [comparisonLayers, setComparisonLayers] = useSyncCompareLayersSettings();
+  const setPlaying = useSetAtom(timeSeriesPlaybackAtom);
+
+  const opacity = layers?.[0]?.opacity;
+  const isCompareActive = comparisonLayers?.[0]?.id === layerId;
+
+  if (isCompareActive) {
+    return (
+      <Button
+        variant="outline"
+        size="sm"
+        className="shrink-0 rounded-full text-xs font-semibold"
+        aria-label="Hide average"
+        onClick={() => {
+          setPlaying(false);
+          void setComparisonLayers(null);
+        }}
+      >
+        <span>Hide average</span>
+        <LuX className="h-4 w-4 shrink-0 text-accent-green" />
+      </Button>
+    );
+  }
+
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      className="shrink-0 text-xs font-semibold"
+      onClick={() => {
+        setPlaying(false);
+        void setComparisonLayers([{ id: layerId, opacity }]);
+      }}
+    >
+      Show average
+    </Button>
+  );
+};
+
+/**
+ * Date row, paired-layer toggle and timeline for a layer without a time
+ * range of its own. When the active layer has a range, TimeSeriesSameLayer
+ * renders the row and hosts the toggle through its `actions` slot instead.
  */
 const TimeSeriesComparativeLayers: FC<{
   layerId: LayerParsed['layer_id'];
   range: LayerParsed['range'];
   isActive: boolean;
-  /** True when TimeSeriesSameLayer already renders the date select and timeline. */
-  hideTimeline?: boolean;
-}> = ({ range, isActive, layerId, hideTimeline = false }) => {
+}> = ({ range, isActive, layerId }) => {
   const [layers, setLayers] = useSyncLayersSettings();
-  const [comparisonLayers, setComparisonLayers] = useSyncCompareLayersSettings();
 
   const [isPlaying, setPlaying] = useAtom(timeSeriesPlaybackAtom);
 
@@ -63,43 +107,8 @@ const TimeSeriesComparativeLayers: FC<{
     [date, range]
   );
 
-  const isCompareActive = comparisonLayers?.[0]?.id === layerId;
-
-  const compareButton = isCompareActive ? (
-    <Button
-      variant="outline"
-      size="sm"
-      className="shrink-0 rounded-full text-xs font-semibold"
-      aria-label="Hide average"
-      onClick={() => {
-        setPlaying(false);
-        void setComparisonLayers(null);
-      }}
-    >
-      <span>Hide average</span>
-      <LuX className="h-4 w-4 shrink-0 text-accent-green" />
-    </Button>
-  ) : (
-    <Button
-      variant="outline"
-      size="sm"
-      className="shrink-0 text-xs font-semibold"
-      onClick={() => {
-        setPlaying(false);
-        void setComparisonLayers([{ id: layerId, opacity }]);
-      }}
-    >
-      Show average
-    </Button>
-  );
-
-  // The date select and timeline are already on screen: only add the toggle.
-  if (hideTimeline) {
-    return <div className="flex w-full justify-end pb-4">{compareButton}</div>;
-  }
-
   return (
-    <div className="flex w-full flex-col py-4">
+    <div className="flex w-full flex-col pt-4">
       {/* Select dates */}
       <div className="flex flex-col space-y-2 text-secondary-500">
         <span className="text-sm">Select date:</span>
@@ -127,14 +136,13 @@ const TimeSeriesComparativeLayers: FC<{
                 </div>
               </SelectTrigger>
               <SelectContent
-                className="z-[1000] flex max-h-56 w-full min-w-fit items-center text-center"
-                alignOffset={-20}
-                sideOffset={0}
-                style={{ width: 'calc(100% - 2rem)' }}
+                className="z-[1000] max-h-56 w-max max-w-[calc(100vw-2rem)] text-left"
+                align="start"
+                sideOffset={4}
               >
                 <ScrollArea className="max-h-[200px] w-full">
                   {range?.map((r: LayerDateRange) => (
-                    <SelectItem key={r.value} value={r.value} className="px-2">
+                    <SelectItem key={r.value} value={r.value} className="m-0 justify-start px-2">
                       <DateRangeLabel label={r?.label} />
                     </SelectItem>
                   ))}
@@ -143,7 +151,7 @@ const TimeSeriesComparativeLayers: FC<{
             </Select>
           )}
 
-          {compareButton}
+          <PairedLayerToggle layerId={layerId} />
         </div>
       </div>
       <Timeline
