@@ -26,6 +26,9 @@ const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => 
   const setNutsCompareResponse = useSetAtom(nutsDataResponseCompareAtom);
 
   const isRegionsLayerActive = useAtomValue(regionsLayerVisibilityAtom);
+  // The regions layer can be on with no region under the click (sea, outside
+  // Europe). Then the location is a point and the point histogram applies.
+  const hasRegion = isRegionsLayerActive && !!nutsDataParams?.NUTS_ID;
 
   const {
     data: histogramDataRegionRaw,
@@ -55,7 +58,7 @@ const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => 
       )}
 
       {!isLoadingDataHistogram &&
-        isRegionsLayerActive &&
+        hasRegion &&
         !isErrorDataHistogram &&
         histogramDataRegionRaw?.dataset?.length > 0 && (
           <RegionsHistogram
@@ -65,12 +68,12 @@ const Histogram: FC<HistogramProps> = ({ title, color, id }: HistogramProps) => 
             onCompareClose={onCloseCompareInfo}
           />
         )}
-      {!isLoadingDataHistogram && isRegionsLayerActive && isErrorDataHistogram && (
+      {!isLoadingDataHistogram && hasRegion && isErrorDataHistogram && (
         <p className="text-center text-sm text-secondary-500">
           No statistics found for the given NUTS ID and layer ID
         </p>
       )}
-      {!isLoadingDataHistogram && !isRegionsLayerActive && (
+      {!isLoadingDataHistogram && !hasRegion && (
         <PointHistogram color={color} title={title} id={id} />
       )}
     </div>

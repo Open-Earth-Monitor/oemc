@@ -56,6 +56,7 @@ import {
   WMS_INFO_FORMAT,
   WMS_CRS,
   NUTS_INITIAL_STATE,
+  NUTS_RESPONSE_INITIAL_STATE,
 } from './constants';
 // map controls
 import Controls from './controls';
@@ -287,21 +288,22 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
    * Resolves the NUTS region under `coordinate` once and points the histogram
    * queries at it: the main layer and, when active, the compare layer both get
    * the region; while picking a second region only the compare slot changes.
+   * No region under the click (sea, outside Europe) clears the slot instead,
+   * which makes the histogram fall back to the point query.
    */
   const applyRegionAt = useCallback(
     async (coordinate: Coordinate, resolution: number | undefined) => {
       if (!resolution) return;
       const res = await getHistogramData(wmsNutsSource, coordinate, resolution, layerId);
-      const NUTS_ID = res?.nutsDataParams?.NUTS_ID;
-      if (!NUTS_ID) return;
+      const NUTS_ID = res?.nutsDataParams?.NUTS_ID ?? null;
 
       if (isPickingCompareRegion) {
-        setNutsDataParamsCompare({ NUTS_ID, LAYER_ID: layerId });
+        setNutsDataParamsCompare(NUTS_ID ? { NUTS_ID, LAYER_ID: layerId } : NUTS_INITIAL_STATE);
         return;
       }
-      setNutsDataParams({ NUTS_ID, LAYER_ID: layerId });
+      setNutsDataParams(NUTS_ID ? { NUTS_ID, LAYER_ID: layerId } : NUTS_INITIAL_STATE);
       setNutsDataParamsCompare(
-        isCompareLayerActive ? { NUTS_ID, LAYER_ID: compareLayerId } : NUTS_INITIAL_STATE
+        NUTS_ID && isCompareLayerActive ? { NUTS_ID, LAYER_ID: compareLayerId } : NUTS_INITIAL_STATE
       );
     },
     [
@@ -496,11 +498,13 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
 
     const vLeft = firstPropertyValue(qLeft.data);
     const vRight = firstPropertyValue(qRight.data);
-    // Same region for both layers, or the second region while picking one.
-    const nutsProps = qNuts.data?.features?.[0]?.properties ?? null;
-    if (nutsProps && !isPickingCompareRegion) setNutsDataResponse(nutsProps);
-    if (nutsProps && (isPickingCompareRegion || isCompareLayerActive)) {
-      setCompareNutsProperties(nutsProps);
+    // Same region for both layers, or the second region while picking one. A
+    // click with no region under it clears the name so the tooltip and the
+    // histogram treat it as a point.
+    if (qNuts.isSuccess) {
+      const nutsProps = qNuts.data?.features?.[0]?.properties ?? NUTS_RESPONSE_INITIAL_STATE;
+      if (!isPickingCompareRegion) setNutsDataResponse(nutsProps);
+      if (isPickingCompareRegion || isCompareLayerActive) setCompareNutsProperties(nutsProps);
     }
 
     setTooltipInfo((prev) => ({
@@ -528,6 +532,7 @@ const Map: FC<CustomMapProps> = ({ initialViewState = DEFAULT_VIEWPORT }) => {
     qLeft.data,
     qRight.data,
     qNuts.data,
+    qNuts.isSuccess,
     setNutsDataResponse,
     layerId,
     compareLayerId,

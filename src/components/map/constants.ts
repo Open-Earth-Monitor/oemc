@@ -25,6 +25,11 @@ export const NUTS_INITIAL_STATE = {
   NUTS_ID: null,
   LAYER_ID: null,
 };
+export const NUTS_RESPONSE_INITIAL_STATE = {
+  NUTS_NAME: null,
+  NAME_LATN: null,
+  CNTR_CODE: null,
+};
 export const WMS_INFO_FORMAT = 'application/json';
 export const WMS_CRS = 'EPSG:3857';
 
