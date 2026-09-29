@@ -32,10 +32,10 @@ const DoiBadge: React.FC<{
       href={`https://doi.org/${code}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex shrink-0 whitespace-nowrap rounded-l-md text-xs font-medium text-white-50"
+      className="flex shrink-0 whitespace-nowrap text-xs font-medium text-white-50"
     >
       <div>
-        <span className="bg-[#5C5C5C] px-1.5">DOI</span>
+        <span className="rounded-l-md bg-[#5C5C5C] px-1.5">DOI</span>
         <span className="rounded-r-md bg-[#2282C2] px-1.5">{code}</span>
       </div>
     </Link>
