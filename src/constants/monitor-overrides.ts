@@ -16,6 +16,18 @@ export const MONITOR_OVERRIDES: Record<string, MonitorOverride> = {
       url: 'https://phi.danlooo.de/',
     },
   },
+  m9: {
+    external_tool: {
+      title: 'Link to the framework',
+      url: 'https://dailymeteo.com/explore?var=prcp&zoom=4.20&time_scale=mon&from=2017-01&to=2025-01&lon=-85.8340&lat=36.3465&basemap=satellite',
+    },
+  },
+  m19: {
+    external_tool: {
+      title: 'Link to the framework',
+      url: 'https://dailymeteo.com/explore?var=prcp&zoom=4.20&time_scale=mon&from=2017-01&to=2025-01&lon=-85.8340&lat=36.3465&basemap=satellite',
+    },
+  },
 };
 
 export function applyMonitorOverride<T extends Pick<Monitor, 'id'>>(monitor: T): T {
