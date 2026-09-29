@@ -256,11 +256,11 @@ const MapTooltip: FC<MapTooltipProps> = ({
           )}
 
           {hasLayer && hasValue && hasRegion && (
-            <p className="flex items-center gap-3 text-xs">
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
               <span className="whitespace-nowrap">Location Selected:</span>
               <span
                 data-testid="map-tooltip-location"
-                className="whitespace-nowrap rounded-full bg-white-950 px-2 py-0.5"
+                className="min-w-0 max-w-full break-words rounded-2xl bg-white-950 px-2 py-0.5"
               >
                 {label}
               </span>
