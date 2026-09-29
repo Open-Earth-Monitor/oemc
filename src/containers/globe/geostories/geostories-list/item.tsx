@@ -51,7 +51,11 @@ const GeostoryItem = (props: Geostory) => {
           className="font-medium text-white-500"
           style={{ color: CATEGORIES_COLORS[theme].base || '#FFFFFF' }}
         >
-          {label}
+          {/* Underline drawn as a 1px background that grows from the left on
+              hover. Cloned per line box so wrapped titles underline each line. */}
+          <span className="bg-gradient-to-r from-current to-current box-decoration-clone bg-[length:0%_1px] bg-left-bottom bg-no-repeat pb-0.5 transition-[background-size] duration-300 ease-out group-hover/item:bg-[length:100%_1px] group-focus-visible/item:bg-[length:100%_1px]">
+            {label}
+          </span>
         </span>
       </div>
     </Link>
