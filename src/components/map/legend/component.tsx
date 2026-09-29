@@ -1,7 +1,5 @@
 import { useState, useCallback, createRef, useLayoutEffect } from 'react';
 
-import { usePathname } from 'next/navigation';
-
 import cn from '@/lib/classnames';
 
 import { useLayer, useLegendGraphic } from '@/hooks/layers';
@@ -33,8 +31,6 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
     { layer_id: compareLayers?.[0]?.id, compare: true },
     { enabled: !!compareLayers }
   );
-
-  const isGeostory = usePathname().startsWith('/explore/geostory');
 
   // Info for layer on the left side
   const {
@@ -124,7 +120,10 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
           isFetchedLayerData &&
           !isLoadingLegendData &&
           isFetchedLegendData && <LegendGraphic dataLayer={layerData} dataLegend={legendData} />}
-        {isGeostory && compareLayerData && compareLayers?.[0]?.id !== layerId && (
+        {/* A second legend whenever the compare layer is a different layer, in
+            monitors as well as geostories. Only its opacity is adjustable here:
+            visibility and removal act on the primary layer. */}
+        {compareLayerData && compareLayers?.[0]?.id !== layerId && (
           <div
             className="flex w-full flex-col space-y-4 border-gray-600 bg-brand-500"
             style={{ minWidth: legendWidth }}
@@ -150,9 +149,7 @@ export const Legend: React.FC<{ children?: React.ReactNode }> = ({ children }) =
                     defaultValue={compareLayers?.[0].opacity}
                     onChange={handleCompareOpacity}
                   />
-                  {!isGeostory && <LayerVisibility />}
                 </div>
-                {!isGeostory && <RemoveLayer className="pl-2" />}
               </div>
             </div>
             <ScrollArea className="max-h-[216px]">

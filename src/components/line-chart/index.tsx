@@ -252,15 +252,21 @@ export const LineChart = ({
                             {numberFormat(accessors.yAccessor(d))} {unit}
                           </div>
                         )}
+                        {/* Either series can lack a datum at this date: two
+                            different layers rarely share the same range. */}
                         {dataCompare && (
                           <div>
-                            <div>
-                              {info.key} - {numberFormat((info.datum as { y: number }).y)}
-                            </div>
-                            <div>
-                              {compareInfo.key} -{' '}
-                              {numberFormat((compareInfo.datum as { y: number }).y)}
-                            </div>
+                            {info && (
+                              <div>
+                                {info.key} - {numberFormat((info.datum as { y: number }).y)}
+                              </div>
+                            )}
+                            {compareInfo && (
+                              <div>
+                                {compareInfo.key} -{' '}
+                                {numberFormat((compareInfo.datum as { y: number }).y)}
+                              </div>
+                            )}
                           </div>
                         )}
                       </TooltipInPortal>

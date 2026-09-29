@@ -12,9 +12,12 @@ import { transformPointData } from '@/lib/utils';
 
 import { histogramVisibilityAtom, lonLatAtom } from '@/app/store';
 
+import { CATEGORIES_COLORS } from '@/constants/categories';
+
 import { downloadCSV } from '@/hooks/datasets';
 import { useLayerParsedSource } from '@/hooks/layers';
 import { usePointData } from '@/hooks/map';
+import { useSyncCompareLayersSettings } from '@/hooks/sync-query';
 
 import { AnalysisSVG } from '@/SVGS/analysis';
 
@@ -61,10 +64,46 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryT
     enabled: !!lonLat && !!regex,
   });
 
-  const histogramPointData = useMemo(
-    () => ({ data: transformPointData(histogramData) }),
-    [histogramData]
+  // A compare layer that is a different layer gets its own series at the same
+  // point, so the chart shows both layers just like the map does.
+  const [compareLayers] = useSyncCompareLayersSettings();
+  const compareLayerId = compareLayers?.[0]?.id;
+  const hasCompareLayer = !!compareLayerId && compareLayerId !== id;
+
+  const { data: compareLayerData } = useLayerParsedSource(
+    { layer_id: compareLayerId },
+    { enabled: hasCompareLayer }
   );
+
+  const { data: compareHistogramData, isLoading: isLoadingCompareHistogram } = usePointData(
+    {
+      lon: lonLat?.[0] || 0,
+      lat: lonLat?.[1] || 0,
+      layer_id: compareLayerId,
+      srv_path: compareLayerData?.srv_path,
+      regex: compareLayerData?.regex,
+    },
+    { enabled: hasCompareLayer && !!lonLat && !!compareLayerData?.regex }
+  );
+
+  const histogramPointData = useMemo(
+    () => ({ title, data: transformPointData(histogramData) }),
+    [histogramData, title]
+  );
+
+  const compareHistogramPointData = useMemo(() => {
+    if (!hasCompareLayer || !compareHistogramData) return undefined;
+    return { title: compareLayerData?.title, data: transformPointData(compareHistogramData) };
+  }, [hasCompareLayer, compareHistogramData, compareLayerData?.title]);
+
+  // Fall back to the neutral colour when both layers share a theme, otherwise
+  // the two lines would be indistinguishable.
+  const compareColor = useMemo(() => {
+    const themeColor = CATEGORIES_COLORS[compareLayerData?.theme]?.base;
+    return themeColor && themeColor !== color ? themeColor : CATEGORIES_COLORS.Unknown.base;
+  }, [compareLayerData?.theme, color]);
+
+  const isLoading = isLoadingHistogram || (hasCompareLayer && isLoadingCompareHistogram);
 
   // Export the normalised rows rather than the raw response, so the CSV carries
   // the same label the chart plots.
@@ -128,17 +167,37 @@ const PointHistogram: FC<GeostoryTooltipInfo> = ({ title, color, id }: GeostoryT
             <span className="font-inter text-xs">CSV</span>
           </button>
         </div>
-        {isLoadingHistogram && <Loading />}
-        {!isLoadingHistogram && histogramError && (
+        {compareHistogramPointData && (
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-medium">
+            <span className="flex items-center gap-1.5">
+              <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+              {title}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ backgroundColor: compareColor }}
+              />
+              {compareHistogramPointData.title}
+            </span>
+          </div>
+        )}
+        {isLoading && <Loading />}
+        {!isLoading && histogramError && (
           <p data-testid="point-histogram-error" role="alert" className="text-alert-error text-sm">
             Error occurred while fetching the data:{' '}
             {(histogramError.response?.data as { message?: string })?.message ||
               histogramError.message}
           </p>
         )}
-        {!isLoadingHistogram && !histogramError && (
+        {!isLoading && !histogramError && (
           <div className="relative h-full w-full">
-            <LineChart data={histogramPointData} color={color} />
+            <LineChart
+              data={histogramPointData}
+              dataCompare={compareHistogramPointData}
+              color={color}
+              compareColor={compareColor}
+            />
           </div>
         )}
       </div>
