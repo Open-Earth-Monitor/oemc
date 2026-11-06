@@ -105,7 +105,7 @@ const Timeline: FC<{
       </IconTooltip>
       <Tooltip delayDuration={0}>
         <TooltipTrigger asChild>
-          <div className="relative flex w-full flex-col space-y-2 bg-white-950">
+          <div className="relative flex w-full flex-col space-y-2">
             <div className="max-w flex w-full overflow-hidden">
               {(range?.length ?? 0) <= TICK_THRESHOLD ? (
                 range?.map((r) => (

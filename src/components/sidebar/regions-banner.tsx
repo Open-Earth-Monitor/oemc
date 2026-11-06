@@ -33,7 +33,7 @@ export const RegionsBanner: React.FC = () => {
           src="/svgs/region.svg"
           alt=""
           aria-hidden="true"
-          width={56}
+          width={58}
           height={52}
           className="mx-auto -mt-4 mb-2 shrink-0"
         />
@@ -44,8 +44,8 @@ export const RegionsBanner: React.FC = () => {
           src="/svgs/region-comparison.svg"
           alt=""
           aria-hidden="true"
-          width={80}
-          height={64}
+          width={84}
+          height={52}
           className="mx-auto -mt-4 mb-2 shrink-0"
         />
       )}
