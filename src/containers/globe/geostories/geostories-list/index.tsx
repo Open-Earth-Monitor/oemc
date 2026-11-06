@@ -30,8 +30,8 @@ const GeostoriesList = ({ geostoriesList, isLoading }) => {
     FEATURED_GEOSTORIES.includes(geostory.id)
   );
   return (
-    <ScrollArea className="h-full w-full flex-1">
-      <div className="space-y-3 pr-8">
+    <ScrollArea scrollBarSide="left" edgeFade className="h-full w-full flex-1">
+      <div className="space-y-3 pl-3 pr-4">
         <p
           className="text-xs font-medium text-accent-green"
           data-testid="featured-geostories-count"

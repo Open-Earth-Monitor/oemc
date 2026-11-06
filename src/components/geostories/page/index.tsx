@@ -87,7 +87,7 @@ const GeostoryPage: React.FC<{ geostory_id: string }> = ({ geostory_id }) => {
               </div>
             </div>
 
-            <ScrollArea className="min-h-0 flex-1">
+            <ScrollArea scrollBarSide="left" className="min-h-0 flex-1">
               {isGeostoryLoading ? (
                 <Loading />
               ) : (

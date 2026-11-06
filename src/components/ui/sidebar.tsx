@@ -270,6 +270,9 @@ const Sidebar = forwardRef<
         <div
           className={cn(
             'h-svh fixed inset-y-0 z-10 hidden w-[--sidebar-width] overflow-y-auto transition-[left,right,width] duration-200 ease-linear md:flex',
+            // `rtl` puts the native scrollbar on the left so it does not overlap the globe;
+            // the inner panel resets to `ltr` so content is unaffected.
+            '[direction:rtl]',
             side === 'left'
               ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc((var(--sidebar-width)+132px)*-1)]'
               : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
@@ -283,7 +286,7 @@ const Sidebar = forwardRef<
         >
           <div
             data-sidebar="sidebar"
-            className="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow"
+            className="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col [direction:ltr] group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow"
           >
             {children}
           </div>
@@ -443,7 +446,8 @@ const SidebarContent = forwardRef<HTMLDivElement, ComponentProps<'div'>>(
         ref={ref}
         data-sidebar="content"
         className={cn(
-          'flex min-h-0 flex-1 flex-col gap-2 overflow-auto pr-1 group-data-[collapsible=icon]:overflow-hidden',
+          // Scrollbar on the left (see Sidebar); children reset to `ltr`.
+          'flex min-h-0 flex-1 flex-col gap-2 overflow-auto pl-1 [direction:rtl] group-data-[collapsible=icon]:overflow-hidden [&>*]:[direction:ltr]',
           className
         )}
         {...props}
