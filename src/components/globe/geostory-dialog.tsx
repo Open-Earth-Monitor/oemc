@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { LuArrowRight, LuX } from 'react-icons/lu';
@@ -14,8 +13,7 @@ import type { Geostory } from '@/types/geostories';
 
 import { CATEGORIES_COLORS, type CategoryId } from '@/constants/categories';
 
-import { getGeostoryImageUrl } from '@/hooks/geostories';
-
+import GeostoryImage from '@/components/geostories/image';
 import {
   Dialog,
   DialogContent,
@@ -184,8 +182,8 @@ export default function GeostoryDialog({ geostory, open, onOpenChange }: Geostor
 
         {/* Right panel — image */}
         <div className="relative min-h-[300px] w-[40%]">
-          <Image
-            src={getGeostoryImageUrl(geostory.id)}
+          <GeostoryImage
+            geostoryId={geostory.id}
             alt={geostory.title}
             fill
             sizes="200px"

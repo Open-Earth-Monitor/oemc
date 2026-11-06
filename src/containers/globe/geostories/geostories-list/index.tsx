@@ -7,22 +7,23 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import GeostoryItem from './item';
 
 const FEATURED_GEOSTORIES = [
-  'g1',
-  'g2',
-  'g3',
-  'g4',
-  'g5',
-  'g7',
-  'g8',
-  'g10',
-  'g11',
-  'g12',
-  'g13',
-  'g14',
-  'g19',
-  'g23',
-  'g31',
-  'g32',
+  'g1', // Urbanization trends (global)
+  'g2', // Losses and gains in primary productivity (global)
+  'g3', // Future vegetation for 2040, 2060 and 2080 (global)
+  'g4', // Soil-bare fraction dynamics (Europe)
+  'g5', // Drought at high resolution in Europe
+  'g7', // Soil tillage intensity (Europe)
+  'g8', // Potential reforested map of Europe
+  'g10', // Grassland and pastureland
+  'g11', // Gross primary productivity
+  'g12', // Flood risk index
+  'g13', // High-resolution water resources management
+  'g14', // Flood Susceptibility Map over Europe
+  'g19', // SIF-based vegetation productivity proxy
+  'g23', // Climate change (Europe)
+  'g31', // Air quality during COVID-19 (Europe)
+  'g32', // Soil Health Data Cube (SHDC)
+  'g33', // Zooming in on Air Quality
 ];
 
 const GeostoriesList = ({ geostoriesList, isLoading }) => {

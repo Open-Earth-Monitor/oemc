@@ -8,7 +8,7 @@ import { useTrackEvent } from '@/lib/analytics';
 
 import type { GeostoryParsed } from '@/types/geostories';
 
-import { getGeostoryImageUrl } from '@/hooks/geostories';
+import { getGeostoryBackgroundImage } from '@/hooks/geostories';
 
 import CardHeader from '@/components/sidebar/card-header';
 
@@ -23,7 +23,7 @@ function DatasetCardGeostory({ theme, title, color, id, geostory_bbox }: Geostor
       <div
         data-testid={`sidebar-geostory-card-${id}`}
         className="group/monitor-card relative h-40 space-y-2 border-l bg-cover bg-center p-[18px] font-satoshi transition-all duration-200 hover:border-l-4"
-        style={{ borderLeftColor: color, backgroundImage: `url(${getGeostoryImageUrl(id)})` }}
+        style={{ borderLeftColor: color, backgroundImage: getGeostoryBackgroundImage(id) }}
       >
         {/* overlay */}
         <div className="pointer-events-none absolute inset-0 bg-black-500/60" />

@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { useTrackEvent } from '@/lib/analytics';
@@ -7,7 +6,7 @@ import { Geostory } from '@/types/geostories';
 
 import { CATEGORIES_COLORS } from '@/constants/categories';
 
-import { getGeostoryImageUrl } from '@/hooks/geostories';
+import GeostoryImage from '@/components/geostories/image';
 
 const GeostoryItem = (props: Geostory) => {
   const { id, title: label, theme } = props;
@@ -34,8 +33,8 @@ const GeostoryItem = (props: Geostory) => {
             bitmap on 1x screens and 384px on 2x, so the browser downsamples a
             detailed image instead of showing a 96px one, and quality 90 keeps
             the covers crisp. The CSS still fixes the box at 79px. */}
-        <Image
-          src={getGeostoryImageUrl(id)}
+        <GeostoryImage
+          geostoryId={id}
           alt={label}
           width={158}
           height={158}

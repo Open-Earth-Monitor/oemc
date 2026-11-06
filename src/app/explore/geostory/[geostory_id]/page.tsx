@@ -8,9 +8,16 @@ import { SITE_NAME, absoluteUrl, serializeJsonLd, truncateForMeta } from '@/lib/
 
 import type { Geostory } from '@/types/geostories';
 
-import { getGeostoryImageUrl } from '@/hooks/geostories';
+import { resolveGeostoryImageUrl } from '@/hooks/geostories';
 
 import GeostoryPageComponent from '@/components/geostories/page';
+
+// Remote cover if the media API has it, else the bundled one made absolute
+// (crawlers need absolute image URLs).
+const getCoverUrl = async (geostoryId: string | number): Promise<string> => {
+  const url = await resolveGeostoryImageUrl(geostoryId);
+  return url.startsWith('/') ? absoluteUrl(url) : url;
+};
 
 type Props = {
   params: Promise<{ geostory_id: string }>;
@@ -36,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const canonical = `/explore/geostory/${geostory_id}`;
   const description = truncateForMeta(geostory.description);
-  const image = getGeostoryImageUrl(geostory.id);
+  const image = await getCoverUrl(geostory.id);
 
   return {
     title: geostory.title,
@@ -69,7 +76,7 @@ export default async function ExploreGeostoryMapPage({ params }: Props) {
     headline: geostory.title,
     description: truncateForMeta(geostory.description, 5000),
     url: absoluteUrl(`/explore/geostory/${geostory_id}`),
-    image: getGeostoryImageUrl(geostory.id),
+    image: await getCoverUrl(geostory.id),
     ...(geostory.author && { author: { '@type': 'Person', name: geostory.author } }),
     ...(geostory.date_created && { datePublished: geostory.date_created }),
     publisher: { '@type': 'Organization', name: SITE_NAME },
