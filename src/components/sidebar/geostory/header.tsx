@@ -27,7 +27,7 @@ const GeostoryHeader: FC<GeostoryProps> = ({ theme, title, color, id, className 
       <div
         className="absolute inset-0 bg-cover bg-bottom"
         style={{
-          backgroundImage: `url(${getGeostoryImageUrl(geostoryId)})`,
+          backgroundImage: `url("${getGeostoryImageUrl(geostoryId)}")`,
         }}
       />
 
