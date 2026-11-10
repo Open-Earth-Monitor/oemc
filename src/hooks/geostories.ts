@@ -21,7 +21,9 @@ export const getGeostoryImageUrl = (geostoryId: string | number): string => {
   const baseUrl = (
     process.env.NEXT_PUBLIC_API_IMAGES_URL || 'https://api.earthmonitor.org'
   ).replace(/\/+$/, '');
-  return `${baseUrl}/media/${geostoryId}.jpg`;
+  // The id can come from the route, so encode it before it lands in a URL or
+  // an unquoted CSS `url(...)`.
+  return `${baseUrl}/media/${encodeURIComponent(geostoryId)}.jpg`;
 };
 
 export type GeostoriesParams = {
