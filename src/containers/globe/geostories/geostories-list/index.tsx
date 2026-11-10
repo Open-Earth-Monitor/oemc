@@ -20,6 +20,7 @@ const FEATURED_GEOSTORIES = [
   'g13', // High-resolution water resources management
   'g14', // Flood Susceptibility Map over Europe
   'g19', // SIF-based vegetation productivity proxy
+  'g20', // Surface temperature change following afforestation
   'g23', // Climate change (Europe)
   'g31', // Air quality during COVID-19 (Europe)
   'g32', // Soil Health Data Cube (SHDC)

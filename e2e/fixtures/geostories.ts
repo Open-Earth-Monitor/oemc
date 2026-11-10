@@ -30,6 +30,7 @@ export const FEATURED_GEOSTORY_IDS = [
   'g13',
   'g14',
   'g19',
+  'g20',
   'g23',
   'g31',
   'g32',
@@ -66,6 +67,7 @@ export const GEOSTORIES_FIXTURE: Geostory[] = [
   makeGeostory('g31', 'Forest Canopy Height', 'Forest'),
   makeGeostory('g5', 'Species Richness', 'Biodiversity'),
   makeGeostory('g19', 'Habitat Connectivity', 'Biodiversity'),
+  makeGeostory('g20', 'Surface temperature change following afforestation', 'Forest'),
   makeGeostory('g23', 'Pollinator Distribution', 'Biodiversity'),
   makeGeostory('g32', 'Protected Area Coverage', 'Biodiversity'),
 ];
