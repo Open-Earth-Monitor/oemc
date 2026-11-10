@@ -24,41 +24,6 @@ export const getGeostoryImageUrl = (geostoryId: string | number): string => {
   return `${baseUrl}/media/${geostoryId}.jpg`;
 };
 
-/**
- * Local cover bundled in `public/`, used when the media API has no image for
- * a geostory. Root-relative so it resolves the same on nested routes.
- *
- * TODO: temporary. Once the media API serves these covers (currently g33),
- * delete `public/images/geostories/` and this fallback chain:
- * getGeostoryFallbackImageUrl, getGeostoryBackgroundImage,
- * resolveGeostoryImageUrl and `src/components/geostories/image.tsx`, and point
- * callers back at getGeostoryImageUrl.
- */
-export const getGeostoryFallbackImageUrl = (geostoryId: string | number): string =>
-  `/images/geostories/${geostoryId}.webp`;
-
-/**
- * CSS `background-image` value with the local cover layered under the remote
- * one: when the remote 404s its layer paints nothing and the local one shows.
- */
-export const getGeostoryBackgroundImage = (geostoryId: string | number): string =>
-  `url("${getGeostoryImageUrl(geostoryId)}"), url("${getGeostoryFallbackImageUrl(geostoryId)}")`;
-
-/**
- * Server-side: the remote cover if the media API serves it, else the local
- * one. For metadata/JSON-LD, where no browser can fall back on error.
- */
-export const resolveGeostoryImageUrl = async (geostoryId: string | number): Promise<string> => {
-  const remote = getGeostoryImageUrl(geostoryId);
-  try {
-    const res = await fetch(remote, { method: 'HEAD', next: { revalidate: 3600 } });
-    if (res.ok) return remote;
-  } catch {
-    // Network failure: fall through to the local cover.
-  }
-  return getGeostoryFallbackImageUrl(geostoryId);
-};
-
 export type GeostoriesParams = {
   geostory_id?: string | number;
   title?: string;

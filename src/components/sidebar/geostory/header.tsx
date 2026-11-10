@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 
 import cn from '@/lib/classnames';
 
-import { getGeostoryBackgroundImage } from '@/hooks/geostories';
+import { getGeostoryImageUrl } from '@/hooks/geostories';
 
 type GeostoryProps = {
   theme: string;
@@ -27,7 +27,7 @@ const GeostoryHeader: FC<GeostoryProps> = ({ theme, title, color, id, className 
       <div
         className="absolute inset-0 bg-cover bg-bottom"
         style={{
-          backgroundImage: getGeostoryBackgroundImage(geostoryId),
+          backgroundImage: `url(${getGeostoryImageUrl(geostoryId)})`,
         }}
       />
 
